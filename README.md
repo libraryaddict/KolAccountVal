@@ -9,7 +9,7 @@ This script uses JavaScript (Written in TypeScript) instead of ash, and offers t
 To install this script, use
 
 ```text
-svn checkout https://github.com/libraryaddict/KolAccountVal
+svn checkout https://github.com/libraryaddict/KolAccountVal/branches/release/
 ```
 
 To run, just use
