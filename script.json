@@ -1,0 +1,8 @@
+  {
+  "repo": "https://github.com/libraryaddict/KolMallHistory/branches/release/", 
+  "author": "Irrat", 
+  "name": "AccountVal", 
+  "shortDesc": "Script to value the worth of your account", 
+  "category": "information", 
+  "longDesc": "This JS script lets you find the worth of your account, you can have it only show items that are still tradeable, or everything including the iotms you've already bound to your account. This is a rewrite of soolar's accountval.ash script and is heavily inspired by their work"
+ }
