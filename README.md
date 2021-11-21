@@ -9,17 +9,17 @@ This script uses JavaScript (Written in TypeScript) instead of ash, and offers t
 To install this script, use
 
 ```text
-https://github.com/libraryaddict/AccountVal
+svn checkout https://github.com/libraryaddict/KolAccountVal
 ```
 
 To run, just use
 
 ```text
-accval
+accountval
 ```
 
 If you want to see only the tradeable stuff, use
 
 ```text
-accval true
+accountval true
 ```
