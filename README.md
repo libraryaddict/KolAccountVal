@@ -23,3 +23,9 @@ If you want to see only the tradeable stuff, use
 ```text
 accountval true
 ```
+
+If you have accountval.ash installed, use
+
+```text
+accountval.js
+```
