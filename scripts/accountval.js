@@ -231,10 +231,7 @@ AccountVal = /*#__PURE__*/function () {
 
         if (totalWorth <= 0) {
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-          this.ownedItems.get(i[0]) +
-          " " +
-          i[0] +
-          " that is straight up priceless!");
+          this.ownedItems.get(i[0]) + " " + i[0] + " that is mall extinct!");
 
         } else {
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
@@ -325,14 +322,14 @@ AccountVal = /*#__PURE__*/function () {
         return (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(item);
       }
 
-      if ((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalAge)(item) < 7 || (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item) < 10000) {
+      if ((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalAge)(item) < 14 || (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item) < 10000) {
         return (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item);
       }
 
-      var soldRecently = this.history.getAmountSold(item, 7);
+      var soldRecently = this.history.getAmountSold(item, 14);
 
       if (soldRecently >= 1) {
-        return this.history.getPriceSold(item, 7);
+        return this.history.getPriceSold(item, 14);
       }
 
       var lowestMall = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.mallPrice)(item);
@@ -349,6 +346,7 @@ AccountVal = /*#__PURE__*/function () {
 
       return lowestMall;
     } }, { key: "getNumber", value:
+
     function getNumber(number) {var trimAt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
       var str = number.toString().split(".");
 
