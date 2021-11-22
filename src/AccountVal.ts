@@ -163,10 +163,7 @@ class AccountVal {
 
       if (totalWorth <= 0) {
         print(
-          this.ownedItems.get(i[0]) +
-            " " +
-            i[0] +
-            " that is straight up priceless!"
+          this.ownedItems.get(i[0]) + " " + i[0] + " that is mall extinct!"
         );
       } else {
         print(
@@ -257,14 +254,14 @@ class AccountVal {
       return autosellPrice(item);
     }
 
-    if (historicalAge(item) < 7 || historicalPrice(item) < 10000) {
+    if (historicalAge(item) < 14 || historicalPrice(item) < 10000) {
       return historicalPrice(item);
     }
 
-    let soldRecently = this.history.getAmountSold(item, 7);
+    let soldRecently = this.history.getAmountSold(item, 14);
 
     if (soldRecently >= 1) {
-      return this.history.getPriceSold(item, 7);
+      return this.history.getPriceSold(item, 14);
     }
 
     let lowestMall = mallPrice(item);
@@ -281,6 +278,7 @@ class AccountVal {
 
     return lowestMall;
   }
+
   private getNumber(number: number, trimAt: number = 2): string {
     var str = number.toString().split(".");
 
