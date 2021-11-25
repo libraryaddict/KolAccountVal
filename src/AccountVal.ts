@@ -206,7 +206,7 @@ class AccountVal {
   }
 
   loadAccountValStuff(): AccValStuff[] {
-    let buffer = fileToBuffer("accountval_stuff.txt");
+    let buffer = fileToBuffer("accountval_binds.txt");
     let values: AccValStuff[] = [];
 
     for (let line of buffer.split("\n")) {
@@ -254,7 +254,10 @@ class AccountVal {
       return autosellPrice(item);
     }
 
-    if (historicalAge(item) < 14 || historicalPrice(item) < 10000) {
+    if (
+      historicalAge(item) < 14 ||
+      (historicalPrice(item) > 0 && historicalPrice(item) < 10000)
+    ) {
       return historicalPrice(item);
     }
 
