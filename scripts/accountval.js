@@ -274,7 +274,7 @@ AccountVal = /*#__PURE__*/function () {
     } }, { key: "loadAccountValStuff", value:
 
     function loadAccountValStuff() {
-      var buffer = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.fileToBuffer)("accountval_stuff.txt");
+      var buffer = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.fileToBuffer)("accountval_binds.txt");
       var values = [];var _iterator6 = _createForOfIteratorHelper(
 
       buffer.split("\n")),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var line = _step6.value;
@@ -322,7 +322,10 @@ AccountVal = /*#__PURE__*/function () {
         return (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(item);
       }
 
-      if ((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalAge)(item) < 14 || (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item) < 10000) {
+      if (
+      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalAge)(item) < 14 ||
+      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item) > 0 && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item) < 10000)
+      {
         return (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item);
       }
 
