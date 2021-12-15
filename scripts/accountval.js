@@ -751,7 +751,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {PageReso
 
       page.split("<tr>")),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
           var match = s.match(
-          /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \((\d+)\))?<\/td><\/tr>/);
+          /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/);
 
 
           if (match == null) {
@@ -971,11 +971,16 @@ AccountVal = /*#__PURE__*/function () {
 
           if (totalWorth <= 0) {
             lines.push(
-            this.ownedItems.get(_i.item) + " " + _i.item + " that is mall extinct!");
+            this.escapeHTML(
+            this.ownedItems.get(_i.item) +
+            " " +
+            _i.item +
+            " that is mall extinct!"));
+
 
           } else {
             var text =
-            this.ownedItems.get(_i.item) +
+            this.getNumber(this.ownedItems.get(_i.item)) +
             " " +
             _i.item +
             " worth a total of " +
@@ -989,7 +994,13 @@ AccountVal = /*#__PURE__*/function () {
             this.getNumber(_i.daysOutdated, 1) +
             " days ago";
 
-            lines.push("<font title='" + title + "'>" + text + "</font>");
+            lines.push(
+            "<font title='" +
+            this.escapeHTML(title) +
+            "'>" +
+            this.escapeHTML(text) +
+            "</font>");
+
           }
         }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
 
@@ -1040,6 +1051,15 @@ AccountVal = /*#__PURE__*/function () {
       if (meat > 0 && this.settings.playerId == null) {
         (0,external_kolmafia_.print)("This doesn't include your " + this.getNumber(meat) + " meat!");
       }
+    } }, { key: "escapeHTML", value:
+
+    function escapeHTML(str) {
+      return str.
+      replace(/&/g, "&amp;").
+      replace(/</g, "&lt;").
+      replace(/>/g, "&gt;").
+      replace(/"/g, "&quot;").
+      replace(/'/g, "&#039;");
     } }, { key: "addItem", value:
 
     function addItem(item) {var count = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
