@@ -195,6 +195,7 @@ class AccountVal {
       1
     ).price;
     let lines: string[] = [];
+    let mallExtinct = 0;
 
     for (let i of this.prices) {
       let totalWorth = i.price * this.ownedItems.get(i.item);
@@ -209,6 +210,8 @@ class AccountVal {
               " that is mall extinct!"
           )
         );
+
+        mallExtinct++;
       } else {
         let text =
           this.getNumber(this.ownedItems.get(i.item)) +
@@ -241,7 +244,7 @@ class AccountVal {
       printHtml(
         "<font color='gray'>Skipping " +
           this.getNumber(skipping) +
-          " lines and displaying only " +
+          " lines and displaying the last " +
           this.getNumber(this.settings.displayLimit) +
           " lines..</font>"
       );
@@ -255,7 +258,14 @@ class AccountVal {
       (this.settings.playerId == null ? "You" : "They") +
         " are worth " +
         this.getNumber(netvalue) +
-        " meat!"
+        " meat!" +
+        (mallExtinct > 0
+          ? " " +
+            (this.settings.playerId == null ? "You" : "They") +
+            " own " +
+            this.getNumber(mallExtinct) +
+            " mall extinct items!"
+          : "")
     );
 
     let mrAWorth = (0.0 + netvalue) / aWorth;

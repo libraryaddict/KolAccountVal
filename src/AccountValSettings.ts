@@ -62,7 +62,7 @@ export class AccountValSettings {
     );
     makeSetting(
       "doTradeables",
-      ["tradable", "tradeables", "trade", "true"],
+      ["tradeable", "tradeables", "trade", "tradable", "true"],
       "Should it do tradeables"
     );
     makeSetting(
@@ -71,6 +71,7 @@ export class AccountValSettings {
         "notrade",
         "nontrade",
         "notradeable",
+        "notradable",
         "nontradeable",
         "notradeables",
         "nontradeables",
