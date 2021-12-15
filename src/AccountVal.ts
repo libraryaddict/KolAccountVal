@@ -202,11 +202,16 @@ class AccountVal {
 
       if (totalWorth <= 0) {
         lines.push(
-          this.ownedItems.get(i.item) + " " + i.item + " that is mall extinct!"
+          this.escapeHTML(
+            this.ownedItems.get(i.item) +
+              " " +
+              i.item +
+              " that is mall extinct!"
+          )
         );
       } else {
         let text =
-          this.ownedItems.get(i.item) +
+          this.getNumber(this.ownedItems.get(i.item)) +
           " " +
           i.item +
           " worth a total of " +
@@ -220,7 +225,13 @@ class AccountVal {
           this.getNumber(i.daysOutdated, 1) +
           " days ago";
 
-        lines.push("<font title='" + title + "'>" + text + "</font>");
+        lines.push(
+          "<font title='" +
+            this.escapeHTML(title) +
+            "'>" +
+            this.escapeHTML(text) +
+            "</font>"
+        );
       }
     }
 
@@ -271,6 +282,15 @@ class AccountVal {
     if (meat > 0 && this.settings.playerId == null) {
       print("This doesn't include your " + this.getNumber(meat) + " meat!");
     }
+  }
+
+  escapeHTML(str: string): string {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
   addItem(item: Item, count: number = 1) {

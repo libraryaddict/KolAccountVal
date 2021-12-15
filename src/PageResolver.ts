@@ -41,7 +41,7 @@ export class FetchFromPage {
 
     for (let s of page.split("<tr>")) {
       let match = s.match(
-        /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \((\d+)\))?<\/td><\/tr>/
+        /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/
       );
 
       if (match == null) {
