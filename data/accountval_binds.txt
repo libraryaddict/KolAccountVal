@@ -50,6 +50,7 @@ i	familiar scrapbook	packaged familiar scrapbook
 i	industrial fire extinguisher	packaged industrial fire extinguisher
 i	Daylight Shavings Helmet	Packaged Daylight Shavings Helmet
 i	Packaged cold medicine cabinet	 Cold medicine cabinet
+i	box o' ghosts	gregarious ghostling
 
 
 

@@ -3,65 +3,82 @@ import {
   closetAmount,
   displayAmount,
   equippedAmount,
-  fileToBuffer,
-  getProperty,
-  getRelated,
-  haveFamiliar,
-  historicalAge,
-  historicalPrice,
   itemAmount,
-  mallPrice,
   myClosetMeat,
   myMeat,
   myStorageMeat,
   print,
+  printHtml,
   shopAmount,
   storageAmount,
-  visitUrl,
 } from "kolmafia";
-import { MallHistory } from "kol-mallhistory";
-const mallHistory = eval("require")("scripts/utils/mallhistory.js");
-
-enum ItemType {
-  UNTRADEABLE_ITEM,
-
-  BOOK,
-
-  PROPERTY,
-
-  EUDORA,
-
-  VISIT_URL_CHECK,
-}
-
-class AccValStuff {
-  itemType: ItemType;
-  tradeableItem: Item;
-  data1: string;
-  data2: string;
-}
+import { ItemResolver } from "./ItemResolver";
+import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
+import { AccountValSettings, PricingSettings } from "./AccountValSettings";
+import { FetchFromPage, StoreItem } from "./PageResolver";
 
 class AccountVal {
-  private tradeableOnly: boolean;
-  private history: MallHistory;
-  private visitCache: Map<string, string> = new Map();
   private ownedItems: Map<Item, number> = new Map();
+  private resolver: ItemResolver = new ItemResolver();
+  private priceResolver: PriceResolver;
+  private prices: ItemPrice[] = [];
+  private settings: AccountValSettings;
 
-  constructor(tradeableOnly: boolean) {
-    this.tradeableOnly = tradeableOnly;
-    this.history = new mallHistory.MallHistory();
-    this.loadItems();
+  constructor(settings: AccountValSettings, priceSettings: PricingSettings) {
+    this.settings = settings;
+    this.priceResolver = new PriceResolver(priceSettings);
+  }
+
+  loadPageItems() {
+    let pager = new FetchFromPage();
+
+    if (this.settings.fetchShop) {
+      let items = pager.getStore(this.settings.playerId);
+
+      items.forEach((i) => {
+        this.addItem(i.item, i.amount);
+      });
+    }
+
+    if (this.settings.fetchDisplaycase) {
+      let items = pager.getDisplaycase(this.settings.playerId);
+
+      items.forEach((v, k) => {
+        this.addItem(k, v);
+      });
+    }
+
+    this.resolveNoTrades();
   }
 
   loadItems() {
+    if (this.settings.playerId > 0) {
+      this.loadPageItems();
+      return;
+    }
+
     for (let item of Item.all()) {
-      let amount =
-        storageAmount(item) +
-        closetAmount(item) +
-        displayAmount(item) +
-        equippedAmount(item) +
-        itemAmount(item) +
-        shopAmount(item);
+      let amount = 0;
+
+      if (this.settings.fetchCloset) {
+        amount += closetAmount(item);
+      }
+
+      if (this.settings.fetchInventory) {
+        amount += equippedAmount(item) + itemAmount(item);
+      }
+
+      if (this.settings.fetchShop) {
+        amount += shopAmount(item);
+      }
+
+      if (this.settings.fetchStorage) {
+        amount += storageAmount(item);
+      }
+
+      if (this.settings.fetchDisplaycase) {
+        amount += displayAmount(item);
+      }
 
       if (amount == 0) {
         continue;
@@ -70,65 +87,61 @@ class AccountVal {
       this.ownedItems.set(item, amount);
     }
 
-    if (!this.tradeableOnly) {
-      let stuff = this.loadAccountValStuff();
+    this.resolveNoTrades();
 
-      for (let s of stuff) {
-        if (s.itemType == ItemType.UNTRADEABLE_ITEM) {
-          let count = this.ownedItems.get(Item.get(s.data1));
-
-          if (count == null) {
-            continue;
-          }
-
-          this.ownedItems.delete(Item.get(s.data1));
-
-          this.addItem(s.tradeableItem, count);
-        } else if (s.itemType == ItemType.BOOK) {
-          if (this.visitCheck("campground.php?action=bookshelf", s.data1)) {
-            this.addItem(s.tradeableItem, 1);
-          }
-        } else if (s.itemType == ItemType.EUDORA) {
-          if (this.visitCheck("account.php?tab=correspondence", s.data1)) {
-            this.addItem(s.tradeableItem, 1);
-          }
-        } else if (s.itemType == ItemType.PROPERTY) {
-          if (getProperty(s.data1) == "true") {
-            this.addItem(s.tradeableItem, 1);
-          }
-        } else if (s.itemType == ItemType.VISIT_URL_CHECK) {
-          if (this.visitCheck(s.data1, s.data2)) {
-            this.addItem(s.tradeableItem, 1);
-          }
-        }
-      }
-
-      for (let fam of Familiar.all()) {
-        if (!haveFamiliar(fam)) {
-          continue;
-        }
-
-        this.addItem(fam.hatchling, 1);
-      }
-
-      if (this.ownedItems.get(Item.get("gregarious ghostling")) > 0) {
-        // I hate that this is hardcoded but that's the way it is for now
-        this.addItem(Item.get("box o' ghosts"), 1);
-      }
+    if (this.settings.doFamiliars) {
+      this.resolver.resolveFamiliars(this.ownedItems);
     }
 
+    if (this.settings.fetchEverywhere) {
+      // Now we add items that are bound. But wait! Some of these are still tradeables!
+      for (let item of this.resolver.getUrledItems()) {
+        // If we're skipping bound items, or we're skipping untradeables
+        if (!this.settings.doBound || !this.settings.doTradeables) {
+          let tradeableWorkshed = this.resolver.isWorkshedAndTradeable(item);
+
+          if (
+            tradeableWorkshed
+              ? !this.settings.doTradeables
+              : !this.settings.doBound
+          ) {
+            continue;
+          }
+        }
+
+        this.addItem(item);
+      }
+    }
+  }
+
+  private resolveNoTrades() {
+    let copy: Map<Item, number> = new Map();
+
+    this.ownedItems.forEach((v, k) => {
+      copy.set(k, v);
+    });
+
     for (let item of Item.all()) {
-      if (item.tradeable || autosellPrice(item) > 0) {
-        continue;
+      if (item.tradeable) {
+        if (this.settings.doTradeables) {
+          continue;
+        }
+      } else {
+        if (this.settings.doNontradeables && autosellPrice(item) > 0) {
+          continue;
+        }
       }
 
       this.ownedItems.delete(item);
     }
+
+    if (this.settings.doBound) {
+      this.resolver.resolveBoundToTradeables(copy, this.ownedItems);
+    }
   }
 
-  doCheck() {
+  doPricing() {
     let checked = 0;
-    let items: [Item, number][] = [];
     let lastPrinted = Date.now();
 
     for (let i of this.ownedItems.keys()) {
@@ -146,140 +159,122 @@ class AccountVal {
         );
       }
 
-      items.push([i, this.itemPrice(i)]);
+      let price = this.priceResolver.itemPrice(
+        i,
+        this.ownedItems.get(i),
+        false,
+        this.settings.doSuperFast ? PriceType.HISTORICAL : null
+      );
+
+      if (price.price == 0) {
+        price = this.priceResolver.itemPrice(
+          i,
+          this.ownedItems.get(i),
+          false,
+          PriceType.MALL_SALES
+        );
+      }
+
+      this.prices.push(price);
     }
 
-    let netvalue: number = myMeat() + myClosetMeat() + myStorageMeat();
-
-    items.sort(
+    this.prices.sort(
       (v1, v2) =>
-        (v1[1] <= 0 ? 999_999_999 : v1[1]) * this.ownedItems.get(v1[0]) -
-        (v2[1] <= 0 ? 999_999_999 : v2[1]) * this.ownedItems.get(v2[0])
+        (v1.price <= 0 ? 999_999_999 : v1.price) *
+          this.ownedItems.get(v1.item) -
+        (v2.price <= 0 ? 999_999_999 : v2.price) * this.ownedItems.get(v2.item)
     );
+  }
 
-    for (let i of items) {
-      let totalWorth = i[1] * this.ownedItems.get(i[0]);
+  doCheck() {
+    let netvalue: number = 0;
+    this.doPricing();
+
+    let aWorth = this.priceResolver.itemPrice(
+      Item.get("Mr. Accessory"),
+      1
+    ).price;
+    let lines: string[] = [];
+
+    for (let i of this.prices) {
+      let totalWorth = i.price * this.ownedItems.get(i.item);
       netvalue += totalWorth;
 
       if (totalWorth <= 0) {
-        print(
-          this.ownedItems.get(i[0]) + " " + i[0] + " that is mall extinct!"
+        lines.push(
+          this.ownedItems.get(i.item) + " " + i.item + " that is mall extinct!"
         );
       } else {
-        print(
-          this.ownedItems.get(i[0]) +
-            " " +
-            i[0] +
-            " worth a total of " +
-            this.getNumber(totalWorth)
-        );
+        let text =
+          this.ownedItems.get(i.item) +
+          " " +
+          i.item +
+          " worth a total of " +
+          this.getNumber(totalWorth);
+
+        let title =
+          i.item.name +
+          " @ " +
+          this.getNumber(i.price) +
+          " meat each. Price valid as of " +
+          this.getNumber(i.daysOutdated, 1) +
+          " days ago";
+
+        lines.push("<font title='" + title + "'>" + text + "</font>");
       }
     }
 
-    print("You are worth " + this.getNumber(netvalue) + " meat!");
+    let skipping = Math.max(0, lines.length - this.settings.displayLimit);
 
-    let mrAWorth = (0.0 + netvalue) / 40_000_000; //this.itemPrice(Item.get("Mr. Accessory"));
+    if (skipping > 0) {
+      printHtml(
+        "<font color='gray'>Skipping " +
+          this.getNumber(skipping) +
+          " lines and displaying only " +
+          this.getNumber(this.settings.displayLimit) +
+          " lines..</font>"
+      );
+    }
+
+    for (let i = skipping; i < lines.length; i++) {
+      printHtml(lines[i]);
+    }
+
+    print(
+      (this.settings.playerId == null ? "You" : "They") +
+        " are worth " +
+        this.getNumber(netvalue) +
+        " meat!"
+    );
+
+    let mrAWorth = (0.0 + netvalue) / aWorth;
 
     print(
       "Going by the value of a Mr. Accessory, that's $" +
         this.getNumber(mrAWorth * 10)
     );
+
+    let meat = 0;
+
+    if (this.settings.fetchInventory) {
+      meat += myMeat();
+    }
+
+    if (this.settings.fetchCloset) {
+      meat += myClosetMeat();
+    }
+
+    if (this.settings.fetchStorage) {
+      meat += myStorageMeat();
+    }
+
+    if (meat > 0 && this.settings.playerId == null) {
+      print("This doesn't include your " + this.getNumber(meat) + " meat!");
+    }
   }
 
-  addItem(item: Item, count: number) {
-    if (this.ownedItems.has(item)) {
-      count += this.ownedItems.get(item);
-    }
-
-    this.ownedItems.set(item, count);
-  }
-
-  visitCheck(url: string, find: string) {
-    let page = this.visitCache.get(url);
-
-    if (page == null) {
-      page = visitUrl(url);
-      this.visitCache.set(url, page);
-    }
-
-    return page.includes(find);
-  }
-
-  loadAccountValStuff(): AccValStuff[] {
-    let buffer = fileToBuffer("accountval_binds.txt");
-    let values: AccValStuff[] = [];
-
-    for (let line of buffer.split("\n")) {
-      let spl = line.split("\t");
-
-      if (spl.length < 2) {
-        continue;
-      }
-
-      let e: ItemType;
-
-      switch (spl[0]) {
-        case "i":
-          e = ItemType.UNTRADEABLE_ITEM;
-          break;
-        case "b":
-          e = ItemType.BOOK;
-          break;
-        case "p":
-          e = ItemType.PROPERTY;
-          break;
-        case "e":
-          e = ItemType.EUDORA;
-          break;
-        case "v":
-          e = ItemType.VISIT_URL_CHECK;
-          break;
-      }
-
-      let v: AccValStuff = new AccValStuff();
-
-      v.itemType = e;
-      v.tradeableItem = Item.get(spl[1]);
-      v.data1 = spl[2];
-      v.data2 = spl[3];
-
-      values.push(v);
-    }
-
-    return values;
-  }
-
-  itemPrice(item: Item, ignoreFold: boolean = false): number {
-    if (!item.tradeable) {
-      return autosellPrice(item);
-    }
-
-    if (
-      historicalAge(item) < 14 ||
-      (historicalPrice(item) > 0 && historicalPrice(item) < 10000)
-    ) {
-      return historicalPrice(item);
-    }
-
-    let soldRecently = this.history.getAmountSold(item, 14);
-
-    if (soldRecently >= 1) {
-      return this.history.getPriceSold(item, 14);
-    }
-
-    let lowestMall = mallPrice(item);
-
-    if (ignoreFold) {
-      return lowestMall;
-    }
-
-    for (let foldable of Object.keys(getRelated(item, "fold"))) {
-      let folded = Item.get(foldable);
-
-      lowestMall = Math.min(this.itemPrice(folded, true));
-    }
-
-    return lowestMall;
+  addItem(item: Item, count: number = 1) {
+    this.ownedItems.set(item, (this.ownedItems.get(item) | 0) + count);
   }
 
   private getNumber(number: number, trimAt: number = 2): string {
@@ -292,15 +287,58 @@ class AccountVal {
     str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return str.join(".");
   }
-}
 
-export function main(tradeableOnly: boolean) {
-  if (tradeableOnly == null) {
+  doHelp() {
     print(
-      "To check the value of only tradeable items, provide `true` as a parameter!",
+      "AccountVal is a script to check what your account is worth, and find the good stuff fast.",
       "blue"
     );
+    print(
+      "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases",
+      "blue"
+    );
+
+    for (let setting of AccountValSettings.getSettings()) {
+      printHtml(
+        "<font color='gray' title='Aliases: " +
+          setting.names.join(", ") +
+          "'>" +
+          setting.names[0] +
+          " - " +
+          setting.desc +
+          "</font>"
+      );
+    }
+    // show - How many to show, defaults to 100
+    // count - How many we must have of this item
+    // sortby - Indiv Price, Total Price, Amount
+    // trade
+    // accountval price>3000 iprice>3000 show
+  }
+}
+
+export function main(command: string) {
+  let settings = new AccountValSettings();
+  let priceSettings = new PricingSettings();
+  let acc = new AccountVal(settings, priceSettings);
+
+  if (command == null) {
+    print("To fine tune what we check, provide the parameter 'help'", "blue");
+    command = "";
+  } else if (command.toLowerCase() == "help") {
+    acc.doHelp();
+    return;
   }
 
-  new AccountVal(tradeableOnly).doCheck();
+  let unknown = settings.doSettings(command.split(" "));
+
+  unknown = priceSettings.doSettings(unknown);
+
+  if (unknown.length > 0) {
+    print("Unrecognized params! " + unknown.join(", "), "red");
+    return;
+  }
+
+  acc.loadItems();
+  acc.doCheck();
 }
