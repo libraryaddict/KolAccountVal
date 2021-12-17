@@ -5,6 +5,8 @@ import {
   historicalPrice,
   mallPrice,
   getRelated,
+  print,
+  printHtml,
 } from "kolmafia";
 import { PricingSettings } from "./AccountValSettings";
 
@@ -39,9 +41,24 @@ export class PriceResolver {
   private settings: PricingSettings;
 
   constructor(settings: PricingSettings) {
-    this.history = new (eval("require")(
-      "scripts/utils/mallhistory.js"
-    ).MallHistory)();
+    try {
+      this.history = new (eval("require")(
+        "scripts/utils/mallhistory.js"
+      ).MallHistory)();
+    } catch (e) {
+      if (e != null && e.message != null && e.message.includes(" not found.")) {
+        print(
+          "A required library seems to be missing! This should've been installed automatically, try running in CLI:",
+          "red"
+        );
+        printHtml(
+          "<u color='gray'>svn checkout https://github.com/libraryaddict/KolMallHistory/branches/release/</u>"
+        );
+        print("");
+      }
+
+      throw e;
+    }
 
     this.settings = settings;
     this.fillSpecialCase();
