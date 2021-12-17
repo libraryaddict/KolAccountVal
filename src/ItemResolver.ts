@@ -177,6 +177,15 @@ export class ItemResolver {
         v.data2 = spl[3];
 
         values.push(v);
+
+        if (!v.tradeableItem.tradeable) {
+          print(
+            "Uh, looks like a typo was made. " +
+              v.tradeableItem +
+              " is not a tradeable item..",
+            "red"
+          );
+        }
       } catch (e) {
         print("You probably need to update mafia! Got an error! " + e, "red");
       }

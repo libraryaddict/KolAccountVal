@@ -195,26 +195,22 @@ class AccountVal {
       1
     ).price;
     let lines: string[] = [];
-    let mallExtinct = 0;
+    let mallExtinct: string[] = [];
 
     for (let i of this.prices) {
-      let totalWorth = i.price * this.ownedItems.get(i.item);
+      let count = this.ownedItems.get(i.item);
+      let totalWorth = i.price * count;
       netvalue += totalWorth;
 
       if (totalWorth <= 0) {
-        lines.push(
-          this.escapeHTML(
-            this.ownedItems.get(i.item) +
-              " " +
-              i.item +
-              " that is mall extinct!"
-          )
-        );
-
-        mallExtinct++;
+        if (count > 1) {
+          mallExtinct.push(count + " @ " + i.item);
+        } else {
+          mallExtinct.push("" + i.item);
+        }
       } else {
         let text =
-          this.getNumber(this.ownedItems.get(i.item)) +
+          this.getNumber(count) +
           " " +
           i.item +
           " worth a total of " +
@@ -254,18 +250,20 @@ class AccountVal {
       printHtml(lines[i]);
     }
 
+    if (mallExtinct.length > 0) {
+      print(
+        "There were " +
+          mallExtinct.length +
+          " mall extinct items! Items: " +
+          mallExtinct.join(", ")
+      );
+    }
+
     print(
       (this.settings.playerId == null ? "You" : "They") +
         " are worth " +
         this.getNumber(netvalue) +
-        " meat!" +
-        (mallExtinct > 0
-          ? " " +
-            (this.settings.playerId == null ? "You" : "They") +
-            " own " +
-            this.getNumber(mallExtinct) +
-            " mall extinct items!"
-          : "")
+        " meat!"
     );
 
     let mrAWorth = (0.0 + netvalue) / aWorth;
