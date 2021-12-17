@@ -571,12 +571,6 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
             return "continue";
           }
 
-          var isTrue = !arg.startsWith("-");
-
-          if (arg.startsWith("-") || arg.startsWith("+")) {
-            arg = arg.substring(1);
-          }
-
           var field = null;
           var name = arg.split("=")[0].toLowerCase();
 
@@ -591,6 +585,14 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
           if (field == null) {
             unknown.push(arg);
             return "continue";
+          }
+
+          var isTrue = !arg.startsWith("-") && !arg.startsWith("!");
+
+          if (arg.startsWith("-") || arg.startsWith("+") || arg.startsWith("!")) {
+            arg = arg.substring(1);
+          } else if (arg.includes("=") && !field.startsWith("=")) {
+            isTrue = (0,external_kolmafia_.toBoolean)(arg.split("=")[1]);
           }
 
           if (field.startsWith("=")) {
@@ -623,7 +625,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
           }};for (_iterator.s(); !(_step = _iterator.n()).done;) {var _ret = _loop();if (_ret === "continue") continue;
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
-      var wasSet = Object.keys(this).filter((k) => this[k] != null);
+      var wasSet = Object.keys(this).filter((k) => this[k] == true);
       this.fetchEverywhere =
       incompatible[0].find((v) => wasSet.includes(v)) == null;
 
@@ -1101,8 +1103,11 @@ AccountVal = /*#__PURE__*/function () {
       "blue");
 
       (0,external_kolmafia_.print)(
-      "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases",
-      "blue");var _iterator6 = AccountVal_createForOfIteratorHelper(
+      "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases.",
+      "blue");
+
+      (0,external_kolmafia_.printHtml)(
+      "<font color='blue'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>");var _iterator6 = AccountVal_createForOfIteratorHelper(
 
 
       AccountValSettings.getSettings()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var setting = _step6.value;
@@ -1129,25 +1134,38 @@ function main(command) {
   var priceSettings = new PricingSettings();
   var acc = new AccountVal(settings, priceSettings);
 
-  if (command == null) {
-    (0,external_kolmafia_.print)("To fine tune what we check, provide the parameter 'help'", "blue");
-    command = "";
-  } else if (command.toLowerCase() == "help") {
-    acc.doHelp();
-    return;
+  try {
+    if (command == null) {
+      (0,external_kolmafia_.print)("To fine tune what we check, provide the parameter 'help'", "blue");
+      command = "";
+    } else if (command.toLowerCase() == "help") {
+      acc.doHelp();
+      return;
+    }
+
+    var unknown = settings.doSettings(command.split(" "));
+
+    unknown = priceSettings.doSettings(unknown);
+
+    if (unknown.length > 0) {
+      (0,external_kolmafia_.print)("Unrecognized params! " + unknown.join(", "), "red");
+      return;
+    }
+
+    acc.loadItems();
+    acc.doCheck();
+  } finally {
+    var revision = (0,external_kolmafia_.getRevision)();
+
+    if (revision != null && revision > 0 && revision < 26000) {
+      (0,external_kolmafia_.printHtml)(
+      "<font color='red'>Warning! You are using an outdated version of KoLmafia! You're likely missing some items, and may not have the ability to render the 'title' attribute! You could even be missing wrapped text!</font>");
+
+      (0,external_kolmafia_.printHtml)(
+      "Downloads: <a color='blue' href='https://github.com/kolmafia/kolmafia/releases'>[Github]</a> or <a color='blue' href='https://ci.kolmafia.us/'>[Jenkins]</a> <a color='gray' href='https://ci.kolmafia.us/job/Kolmafia/lastSuccessfulBuild/artifact/dist/'>[Link to Jar]</a>");
+
+    }
   }
-
-  var unknown = settings.doSettings(command.split(" "));
-
-  unknown = priceSettings.doSettings(unknown);
-
-  if (unknown.length > 0) {
-    (0,external_kolmafia_.print)("Unrecognized params! " + unknown.join(", "), "red");
-    return;
-  }
-
-  acc.loadItems();
-  acc.doCheck();
 }
 })();
 
