@@ -1,4 +1,4 @@
-import { getPlayerId, toInt } from "kolmafia";
+import { getPlayerId, toBoolean, toInt } from "kolmafia";
 
 export class ValSetting {
   field: string;
@@ -144,12 +144,6 @@ export class AccountValSettings {
         continue;
       }
 
-      let isTrue = !arg.startsWith("-");
-
-      if (arg.startsWith("-") || arg.startsWith("+")) {
-        arg = arg.substring(1);
-      }
-
       let field: string = null;
       let name = arg.split("=")[0].toLowerCase();
 
@@ -164,6 +158,14 @@ export class AccountValSettings {
       if (field == null) {
         unknown.push(arg);
         continue;
+      }
+
+      let isTrue = !arg.startsWith("-") && !arg.startsWith("!");
+
+      if (arg.startsWith("-") || arg.startsWith("+") || arg.startsWith("!")) {
+        arg = arg.substring(1);
+      } else if (arg.includes("=") && !field.startsWith("=")) {
+        isTrue = toBoolean(arg.split("=")[1]);
       }
 
       if (field.startsWith("=")) {
@@ -196,7 +198,7 @@ export class AccountValSettings {
       }
     }
 
-    let wasSet: string[] = Object.keys(this).filter((k) => this[k] != null);
+    let wasSet: string[] = Object.keys(this).filter((k) => this[k] == true);
     this.fetchEverywhere =
       incompatible[0].find((v) => wasSet.includes(v)) == null;
 

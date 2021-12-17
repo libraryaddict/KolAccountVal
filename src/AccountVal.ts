@@ -3,6 +3,8 @@ import {
   closetAmount,
   displayAmount,
   equippedAmount,
+  getRevision,
+  getVersion,
   itemAmount,
   myClosetMeat,
   myMeat,
@@ -322,8 +324,11 @@ class AccountVal {
       "blue"
     );
     print(
-      "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases",
+      "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases.",
       "blue"
+    );
+    printHtml(
+      "<font color='blue'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>"
     );
 
     for (let setting of AccountValSettings.getSettings()) {
@@ -350,23 +355,36 @@ export function main(command: string) {
   let priceSettings = new PricingSettings();
   let acc = new AccountVal(settings, priceSettings);
 
-  if (command == null) {
-    print("To fine tune what we check, provide the parameter 'help'", "blue");
-    command = "";
-  } else if (command.toLowerCase() == "help") {
-    acc.doHelp();
-    return;
+  try {
+    if (command == null) {
+      print("To fine tune what we check, provide the parameter 'help'", "blue");
+      command = "";
+    } else if (command.toLowerCase() == "help") {
+      acc.doHelp();
+      return;
+    }
+
+    let unknown = settings.doSettings(command.split(" "));
+
+    unknown = priceSettings.doSettings(unknown);
+
+    if (unknown.length > 0) {
+      print("Unrecognized params! " + unknown.join(", "), "red");
+      return;
+    }
+
+    acc.loadItems();
+    acc.doCheck();
+  } finally {
+    let revision = getRevision();
+
+    if (revision != null && revision > 0 && revision < 26000) {
+      printHtml(
+        "<font color='red'>Warning! You are using an outdated version of KoLmafia! You're likely missing some items, and may not have the ability to render the 'title' attribute! You could even be missing wrapped text!</font>"
+      );
+      printHtml(
+        "Downloads: <a color='blue' href='https://github.com/kolmafia/kolmafia/releases'>[Github]</a> or <a color='blue' href='https://ci.kolmafia.us/'>[Jenkins]</a> <a color='gray' href='https://ci.kolmafia.us/job/Kolmafia/lastSuccessfulBuild/artifact/dist/'>[Link to Jar]</a>"
+      );
+    }
   }
-
-  let unknown = settings.doSettings(command.split(" "));
-
-  unknown = priceSettings.doSettings(unknown);
-
-  if (unknown.length > 0) {
-    print("Unrecognized params! " + unknown.join(", "), "red");
-    return;
-  }
-
-  acc.loadItems();
-  acc.doCheck();
 }
