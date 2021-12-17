@@ -406,6 +406,15 @@ var ItemResolver = /*#__PURE__*/function () {
             v.data2 = spl[3];
 
             values.push(v);
+
+            if (!v.tradeableItem.tradeable) {
+              (0,external_kolmafia_.print)(
+              "Uh, looks like a typo was made. " +
+              v.tradeableItem +
+              " is not a tradeable item..",
+              "red");
+
+            }
           } catch (e) {
             (0,external_kolmafia_.print)("You probably need to update mafia! Got an error! " + e, "red");
           }
@@ -965,26 +974,22 @@ AccountVal = /*#__PURE__*/function () {
       1).
       price;
       var lines = [];
-      var mallExtinct = 0;var _iterator5 = AccountVal_createForOfIteratorHelper(
+      var mallExtinct = [];var _iterator5 = AccountVal_createForOfIteratorHelper(
 
       this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i = _step5.value;
-          var totalWorth = _i.price * this.ownedItems.get(_i.item);
+          var count = this.ownedItems.get(_i.item);
+          var totalWorth = _i.price * count;
           netvalue += totalWorth;
 
           if (totalWorth <= 0) {
-            lines.push(
-            this.escapeHTML(
-            this.ownedItems.get(_i.item) +
-            " " +
-            _i.item +
-            " that is mall extinct!"));
-
-
-
-            mallExtinct++;
+            if (count > 1) {
+              mallExtinct.push(count + " @ " + _i.item);
+            } else {
+              mallExtinct.push("" + _i.item);
+            }
           } else {
             var text =
-            this.getNumber(this.ownedItems.get(_i.item)) +
+            this.getNumber(count) +
             " " +
             _i.item +
             " worth a total of " +
@@ -1024,18 +1029,20 @@ AccountVal = /*#__PURE__*/function () {
         (0,external_kolmafia_.printHtml)(lines[i]);
       }
 
+      if (mallExtinct.length > 0) {
+        (0,external_kolmafia_.print)(
+        "There were " +
+        mallExtinct.length +
+        " mall extinct items! Items: " +
+        mallExtinct.join(", "));
+
+      }
+
       (0,external_kolmafia_.print)(
       (this.settings.playerId == null ? "You" : "They") +
       " are worth " +
       this.getNumber(netvalue) +
-      " meat!" + (
-      mallExtinct > 0 ?
-      " " + (
-      this.settings.playerId == null ? "You" : "They") +
-      " own " +
-      this.getNumber(mallExtinct) +
-      " mall extinct items!" :
-      ""));
+      " meat!");
 
 
       var mrAWorth = (0.0 + netvalue) / aWorth;
