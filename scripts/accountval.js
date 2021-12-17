@@ -47,9 +47,24 @@ var PriceResolver = /*#__PURE__*/function () {
 
 
   function PriceResolver(settings) {_classCallCheck(this, PriceResolver);_defineProperty(this, "history", void 0);_defineProperty(this, "specialCase", new Map());_defineProperty(this, "settings", void 0);
-    this.history = new (eval("require")(
-    "scripts/utils/mallhistory.js").
-    MallHistory)();
+    try {
+      this.history = new (eval("require")(
+      "scripts/utils/mallhistory.js").
+      MallHistory)();
+    } catch (e) {
+      if (e != null && e.message != null && e.message.includes(" not found.")) {
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
+        "A required library seems to be missing! This should've been installed automatically, try running in CLI:",
+        "red");
+
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
+        "<u color='gray'>svn checkout https://github.com/libraryaddict/KolMallHistory/branches/release/</u>");
+
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("");
+      }
+
+      throw e;
+    }
 
     this.settings = settings;
     this.fillSpecialCase();
@@ -572,7 +587,12 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
           }
 
           var field = null;
-          var name = arg.split("=")[0].toLowerCase();
+          var name = arg.
+          split("=")[0].
+          toLowerCase().
+          replace("-", "").
+          replace("+", "").
+          replace("!", "");
 
           settings.forEach((setting) => {
             if (!setting.names.includes(name)) {
