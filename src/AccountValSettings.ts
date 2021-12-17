@@ -145,7 +145,12 @@ export class AccountValSettings {
       }
 
       let field: string = null;
-      let name = arg.split("=")[0].toLowerCase();
+      let name = arg
+        .split("=")[0]
+        .toLowerCase()
+        .replace("-", "")
+        .replace("+", "")
+        .replace("!", "");
 
       settings.forEach((setting) => {
         if (!setting.names.includes(name)) {
