@@ -302,10 +302,14 @@ var ItemResolver = /*#__PURE__*/function () {
     /**
      * Get the items from stuff like url visits
      */ }, { key: "getUrledItems", value:
-    function getUrledItems() {
+    function getUrledItems() {var workshedOnly = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var items = [];var _iterator2 = _createForOfIteratorHelper(
 
       this.accValStuff),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
+          if (workshedOnly && !s.data1.includes("campground.php?action=workshed")) {
+            continue;
+          }
+
           if (s.itemType == ItemType.BOOK) {
             if (this.visitCheck("campground.php?action=bookshelf", s.data1)) {
               items.push(s.tradeableItem);
@@ -896,7 +900,7 @@ AccountVal = /*#__PURE__*/function () {
 
       if (this.settings.fetchEverywhere) {
         // Now we add items that are bound. But wait! Some of these are still tradeables!
-        var _iterator2 = AccountVal_createForOfIteratorHelper(this.resolver.getUrledItems()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var item = _step2.value;
+        var _iterator2 = AccountVal_createForOfIteratorHelper(this.resolver.getUrledItems(!this.settings.doBound)),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var item = _step2.value;
             // If we're skipping bound items, or we're skipping untradeables
             if (!this.settings.doBound || !this.settings.doTradeables) {
               var tradeableWorkshed = this.resolver.isWorkshedAndTradeable(item);
@@ -995,6 +999,7 @@ AccountVal = /*#__PURE__*/function () {
       Item.get("Mr. Accessory"),
       1).
       price;
+
       var lines = [];
       var mallExtinct = [];var _iterator5 = AccountVal_createForOfIteratorHelper(
 
@@ -1009,30 +1014,32 @@ AccountVal = /*#__PURE__*/function () {
             } else {
               mallExtinct.push("" + _i.item);
             }
-          } else {
-            var text =
-            this.getNumber(count) +
-            " " +
-            _i.item +
-            " worth a total of " +
-            this.getNumber(totalWorth);
 
-            var title =
-            _i.item.name +
-            " @ " +
-            this.getNumber(_i.price) +
-            " meat each. Price valid as of " +
-            this.getNumber(_i.daysOutdated, 1) +
-            " days ago";
-
-            lines.push(
-            "<font title='" +
-            this.escapeHTML(title) +
-            "'>" +
-            this.escapeHTML(text) +
-            "</font>");
-
+            continue;
           }
+
+          var text =
+          this.getNumber(count) +
+          " " +
+          _i.item +
+          " worth a total of " +
+          this.getNumber(totalWorth);
+
+          var title =
+          _i.item.name +
+          " @ " +
+          this.getNumber(_i.price) +
+          " meat each. Price valid as of " +
+          this.getNumber(_i.daysOutdated, 1) +
+          " days ago";
+
+          lines.push(
+          "<font title='" +
+          this.escapeHTML(title) +
+          "'>" +
+          this.escapeHTML(text) +
+          "</font>");
+
         }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
 
       var skipping = Math.max(0, lines.length - this.settings.displayLimit);
