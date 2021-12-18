@@ -256,7 +256,18 @@ class AccountVal {
     }
 
     if (mallExtinct.length > 0) {
-      print(
+      let colors: string[] = ["#4f5893", "#934f4f"];
+
+      mallExtinct = mallExtinct.map(
+        (s, i) =>
+          "<font color='" +
+          colors[i % 2] +
+          "'>" +
+          this.escapeHTML(s) +
+          "</font>"
+      );
+
+      printHtml(
         "There were " +
           mallExtinct.length +
           " mall extinct items! Items: " +
