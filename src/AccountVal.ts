@@ -97,7 +97,7 @@ class AccountVal {
 
     if (this.settings.fetchEverywhere) {
       // Now we add items that are bound. But wait! Some of these are still tradeables!
-      for (let item of this.resolver.getUrledItems()) {
+      for (let item of this.resolver.getUrledItems(!this.settings.doBound)) {
         // If we're skipping bound items, or we're skipping untradeables
         if (!this.settings.doBound || !this.settings.doTradeables) {
           let tradeableWorkshed = this.resolver.isWorkshedAndTradeable(item);
@@ -196,6 +196,7 @@ class AccountVal {
       Item.get("Mr. Accessory"),
       1
     ).price;
+
     let lines: string[] = [];
     let mallExtinct: string[] = [];
 
@@ -210,30 +211,32 @@ class AccountVal {
         } else {
           mallExtinct.push("" + i.item);
         }
-      } else {
-        let text =
-          this.getNumber(count) +
-          " " +
-          i.item +
-          " worth a total of " +
-          this.getNumber(totalWorth);
 
-        let title =
-          i.item.name +
-          " @ " +
-          this.getNumber(i.price) +
-          " meat each. Price valid as of " +
-          this.getNumber(i.daysOutdated, 1) +
-          " days ago";
-
-        lines.push(
-          "<font title='" +
-            this.escapeHTML(title) +
-            "'>" +
-            this.escapeHTML(text) +
-            "</font>"
-        );
+        continue;
       }
+
+      let text =
+        this.getNumber(count) +
+        " " +
+        i.item +
+        " worth a total of " +
+        this.getNumber(totalWorth);
+
+      let title =
+        i.item.name +
+        " @ " +
+        this.getNumber(i.price) +
+        " meat each. Price valid as of " +
+        this.getNumber(i.daysOutdated, 1) +
+        " days ago";
+
+      lines.push(
+        "<font title='" +
+          this.escapeHTML(title) +
+          "'>" +
+          this.escapeHTML(text) +
+          "</font>"
+      );
     }
 
     let skipping = Math.max(0, lines.length - this.settings.displayLimit);

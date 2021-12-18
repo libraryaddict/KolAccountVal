@@ -58,10 +58,14 @@ export class ItemResolver {
   /**
    * Get the items from stuff like url visits
    */
-  getUrledItems(): Item[] {
+  getUrledItems(workshedOnly: boolean = false): Item[] {
     let items: Item[] = [];
 
     for (let s of this.accValStuff) {
+      if (workshedOnly && !s.data1.includes("campground.php?action=workshed")) {
+        continue;
+      }
+
       if (s.itemType == ItemType.BOOK) {
         if (this.visitCheck("campground.php?action=bookshelf", s.data1)) {
           items.push(s.tradeableItem);
