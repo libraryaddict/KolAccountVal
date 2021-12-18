@@ -387,12 +387,14 @@ var ItemResolver = /*#__PURE__*/function () {
 
     function loadAccountValStuff() {
       var buffer = (0,external_kolmafia_.fileToBuffer)("accountval_binds.txt");
-      var values = [];var _iterator5 = _createForOfIteratorHelper(
+      var values = [];
+      var version = 0;
+      var expectedVersion = 1;var _iterator5 = _createForOfIteratorHelper(
 
       buffer.split("\n")),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var line = _step5.value;
           var spl = line.split("\t");
 
-          if (spl.length < 2) {
+          if (spl.length < 2 || spl[0].startsWith("#")) {
             continue;
           }
 
@@ -413,7 +415,10 @@ var ItemResolver = /*#__PURE__*/function () {
               break;
             case "v":
               e = ItemType.VISIT_URL_CHECK;
-              break;}
+              break;
+            case "version":
+              version = (0,external_kolmafia_.toInt)(spl[1]);
+              continue;}
 
 
           try {
@@ -438,6 +443,17 @@ var ItemResolver = /*#__PURE__*/function () {
             (0,external_kolmafia_.print)("You probably need to update mafia! Got an error! " + e, "red");
           }
         }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
+
+      if (version == null || version < expectedVersion) {
+        (0,external_kolmafia_.print)(
+        "Your accountval_binds.txt is out of date! Try reinstalling AccountVal. Expected version " +
+        expectedVersion +
+        ", but got version " +
+        version,
+        "red");
+
+        (0,external_kolmafia_.wait)(3);
+      }
 
       return values;
     } }]);return ItemResolver;}();
