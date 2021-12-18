@@ -1,3 +1,5 @@
+version	1
+
 # Original data stolen from https://github.com/soolar/accountval.ash
 # Item Containers! Start with i
 i	packet of mayfly bait	mayfly bait necklace
@@ -129,4 +131,3 @@ v	Pok&eacute;fam Guide to Capturing All of Them	campground.php	Tall Grass
 v	Better Shrooms and Gardens catalog	campground.php	mushgarden.gif
 v	Packaged cold medicine cabinet	campground.php?action=workshed	cold medicine cabinet
 v	Packaged cold medicine cabinet	campground.php?action=workshed	Cold Medicine Cabinet
-

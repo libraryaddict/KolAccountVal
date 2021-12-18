@@ -3,7 +3,10 @@ import {
   getProperty,
   haveFamiliar,
   print,
+  toInt,
   visitUrl,
+  wait,
+  waitq,
 } from "kolmafia";
 
 class AccValStuff {
@@ -144,11 +147,13 @@ export class ItemResolver {
   loadAccountValStuff(): AccValStuff[] {
     let buffer = fileToBuffer("accountval_binds.txt");
     let values: AccValStuff[] = [];
+    let version: number = 0;
+    let expectedVersion: number = 1;
 
     for (let line of buffer.split("\n")) {
       let spl = line.split("\t");
 
-      if (spl.length < 2) {
+      if (spl.length < 2 || spl[0].startsWith("#")) {
         continue;
       }
 
@@ -170,6 +175,9 @@ export class ItemResolver {
         case "v":
           e = ItemType.VISIT_URL_CHECK;
           break;
+        case "version":
+          version = toInt(spl[1]);
+          continue;
       }
 
       try {
@@ -193,6 +201,17 @@ export class ItemResolver {
       } catch (e) {
         print("You probably need to update mafia! Got an error! " + e, "red");
       }
+    }
+
+    if (version == null || version < expectedVersion) {
+      print(
+        "Your accountval_binds.txt is out of date! Try reinstalling AccountVal. Expected version " +
+          expectedVersion +
+          ", but got version " +
+          version,
+        "red"
+      );
+      wait(3);
     }
 
     return values;
