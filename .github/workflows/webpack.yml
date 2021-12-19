@@ -34,8 +34,8 @@ jobs:
           git switch release
           rm -r scripts/
           rm -r data/
-          mv built/ .
+          mv built/scripts scripts
+          mv built/data data
           git add scripts/
-          git add data/
           git commit -m "Build Mafia files for commit $GITHUB_SHA"
           git push origin release
