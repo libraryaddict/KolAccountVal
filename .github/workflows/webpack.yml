@@ -30,9 +30,12 @@ jobs:
           git config user.name "Build Script"
           git config user.email "<>"
           git fetch --all
+          cp data built/data -r
           git switch release
           rm -r scripts/
-          mv built/scripts scripts
+          rm -r data/
+          mv built/ .
           git add scripts/
+          git add data/
           git commit -m "Build Mafia files for commit $GITHUB_SHA"
           git push origin release
