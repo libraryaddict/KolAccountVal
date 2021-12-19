@@ -1,3 +1,6 @@
+version	1
+
+# Original data stolen from https://github.com/soolar/accountval.ash
 # Item Containers! Start with i
 i	packet of mayfly bait	mayfly bait necklace
 i	Clan VIP Lounge invitation	Clan VIP Lounge key
@@ -44,10 +47,12 @@ i	packaged knock-off retro superhero cape	unwrapped knock-off retro superhero ca
 i	packaged miniature crystal ball	miniature crystal ball
 i	emotion chip	spinal-fluid-covered emotion chip
 i	power seed	potted power plant
-i	backup camera	packaged backup camera
-i	familiar scrapbook	packaged familiar scrapbook
-i	industrial fire extinguisher	packaged industrial fire extinguisher
-i	Daylight Shavings Helmet	Packaged Daylight Shavings Helmet
+i	packaged backup camera	backup camera
+i	packaged familiar scrapbook	familiar scrapbook
+i	packaged industrial fire extinguisher	industrial fire extinguisher
+i	Packaged Daylight Shavings Helmet	Daylight Shavings Helmet
+i	Packaged cold medicine cabinet	 Cold medicine cabinet
+i	box o' ghosts	gregarious ghostling
 
 
 
@@ -124,4 +129,5 @@ v	potted tea tree	campground.php?action=teatree	Tree Tea
 v	Granny Tood's Thanksgarden Catalog	campground.php	A Thanksgarden
 v	Pok&eacute;fam Guide to Capturing All of Them	campground.php	Tall Grass
 v	Better Shrooms and Gardens catalog	campground.php	mushgarden.gif
-
+v	Packaged cold medicine cabinet	campground.php?action=workshed	cold medicine cabinet
+v	Packaged cold medicine cabinet	campground.php?action=workshed	Cold Medicine Cabinet
