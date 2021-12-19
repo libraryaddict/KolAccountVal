@@ -1075,7 +1075,18 @@ AccountVal = /*#__PURE__*/function () {
       }
 
       if (mallExtinct.length > 0) {
-        (0,external_kolmafia_.print)(
+        var colors = ["#4f5893", "#934f4f"];
+
+        mallExtinct = mallExtinct.map(
+        (s, i) =>
+        "<font color='" +
+        colors[i % 2] +
+        "'>" +
+        this.escapeHTML(s) +
+        "</font>");
+
+
+        (0,external_kolmafia_.printHtml)(
         "There were " +
         mallExtinct.length +
         " mall extinct items! Items: " +
