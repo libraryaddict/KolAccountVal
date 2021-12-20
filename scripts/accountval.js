@@ -252,14 +252,16 @@ var external_kolmafia_ = __webpack_require__(530);
 function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
 var
 
-AccValStuff = /*#__PURE__*/_createClass(function AccValStuff() {_classCallCheck(this, AccValStuff);_defineProperty(this, "itemType", void 0);_defineProperty(this, "tradeableItem", void 0);_defineProperty(this, "data1", void 0);_defineProperty(this, "data2", void 0);});var
+AccValStuff = /*#__PURE__*/_createClass(function AccValStuff() {_classCallCheck(this, AccValStuff);_defineProperty(this, "itemType", void 0);_defineProperty(this, "actualItem", void 0);_defineProperty(this, "data1", void 0);_defineProperty(this, "data2", void 0);});var
 
 
 
 
 
 
-ItemType;(function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["VISIT_URL_CHECK"] = 4] = "VISIT_URL_CHECK";})(ItemType || (ItemType = {}));
+ItemType;(function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["GARDEN"] = 4] = "GARDEN";ItemType[ItemType["VISIT_URL_CHECK"] = 5] = "VISIT_URL_CHECK";})(ItemType || (ItemType = {}));
+
+
 
 
 
@@ -277,59 +279,37 @@ var ItemResolver = /*#__PURE__*/function () {
 
   function ItemResolver() {_classCallCheck(this, ItemResolver);_defineProperty(this, "visitCache", new Map());_defineProperty(this, "accValStuff", void 0);
     this.accValStuff = this.loadAccountValStuff();
-  }_createClass(ItemResolver, [{ key: "isWorkshedAndTradeable", value:
+  }
 
-    function isWorkshedAndTradeable(item) {
-      var foundShed = false;
-      var foundNontradeable = false;var _iterator = _createForOfIteratorHelper(
+  /**
+   * Get the items from stuff like url visits
+   */_createClass(ItemResolver, [{ key: "getUrledItems", value:
+    function getUrledItems() {
+      var items = [];var _iterator = _createForOfIteratorHelper(
 
       this.accValStuff),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var s = _step.value;
-          if (s.tradeableItem != item) {
-            continue;
-          }
-
-          if (
-          s.itemType == ItemType.VISIT_URL_CHECK &&
-          s.data1.includes("workshed"))
-          {
-            foundShed = true;
-          } else if (s.itemType == ItemType.UNTRADEABLE_ITEM) {
-            foundNontradeable = true;
-          }
-        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
-
-      return foundShed && !foundNontradeable;
-    }
-
-    /**
-     * Get the items from stuff like url visits
-     */ }, { key: "getUrledItems", value:
-    function getUrledItems() {var workshedOnly = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-      var items = [];var _iterator2 = _createForOfIteratorHelper(
-
-      this.accValStuff),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
-          if (workshedOnly && !s.data1.includes("campground.php?action=workshed")) {
-            continue;
-          }
-
           if (s.itemType == ItemType.BOOK) {
             if (this.visitCheck("campground.php?action=bookshelf", s.data1)) {
-              items.push(s.tradeableItem);
+              items.push([s.actualItem, "Bound"]);
             }
           } else if (s.itemType == ItemType.EUDORA) {
             if (this.visitCheck("account.php?tab=correspondence", s.data1)) {
-              items.push(s.tradeableItem);
+              items.push([s.actualItem, "Bound"]);
             }
           } else if (s.itemType == ItemType.PROPERTY) {
             if ((0,external_kolmafia_.getProperty)(s.data1) == "true") {
-              items.push(s.tradeableItem);
+              items.push([s.actualItem, "Bound"]);
             }
           } else if (s.itemType == ItemType.VISIT_URL_CHECK) {
             if (this.visitCheck(s.data1, s.data2)) {
-              items.push(s.tradeableItem);
+              items.push([s.actualItem, "Bound"]);
+            }
+          } else if (s.itemType == ItemType.GARDEN) {
+            if ((0,external_kolmafia_.myGardenType)() == s.data1) {
+              items.push([s.actualItem, "In Use"]);
             }
           }
-        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
       return items;
     } }, { key: "addItem", value:
@@ -349,45 +329,50 @@ var ItemResolver = /*#__PURE__*/function () {
     function resolveBoundToTradeables(
     copy,
     ownedItems)
-    {var _iterator3 = _createForOfIteratorHelper(
-      this.accValStuff),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var s = _step3.value;
+    {var _iterator2 = _createForOfIteratorHelper(
+      this.accValStuff),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
           if (s.itemType != ItemType.UNTRADEABLE_ITEM) {
             continue;
           }
 
           try {
             var item = Item.get(s.data1);
+            var v = void 0;var _iterator3 = _createForOfIteratorHelper(
 
-            var count = void 0;var _iterator4 = _createForOfIteratorHelper(
-
-            copy.keys()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var k = _step4.value;
+            copy.keys()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var k = _step3.value;
                 if (k.tradeableItem != item) {
                   continue;
                 }
 
-                count = copy.get(k);
+                v = k;
                 break;
-              }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
+              }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
-            if (count == null) {
+            if (v == null) {
               continue;
             }
 
-            this.addItem(ownedItems, s.tradeableItem, item.name, "Bound", count);
+            this.addItem(
+            ownedItems,
+            s.actualItem,
+            item.name,
+            v.bound == null ? "Bound" : v.bound,
+            copy.get(v));
+
           } catch (e) {
             (0,external_kolmafia_.print)("You probably need to update mafia! Got an error! " + e, "red");
           }
-        }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
+        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
     } }, { key: "resolveFamiliars", value:
 
-    function resolveFamiliars(ownedItems) {var _iterator5 = _createForOfIteratorHelper(
-      Familiar.all()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var fam = _step5.value;
+    function resolveFamiliars(ownedItems) {var _iterator4 = _createForOfIteratorHelper(
+      Familiar.all()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var fam = _step4.value;
           if (!(0,external_kolmafia_.haveFamiliar)(fam) || !fam.hatchling.tradeable) {
             continue;
           }
 
           this.addItem(ownedItems, fam.hatchling, fam + "", "Familiar");
-        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
+        }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
     } }, { key: "visitCheck", value:
 
     function visitCheck(url, find) {
@@ -403,16 +388,14 @@ var ItemResolver = /*#__PURE__*/function () {
 
     function loadAccountValStuff() {
       var buffer = (0,external_kolmafia_.fileToBuffer)("accountval_binds.txt");
-      var values = [];
-      var version = 0;
-      var expectedVersion = 1;var _iterator6 = _createForOfIteratorHelper(
+      var values = [];var _iterator5 = _createForOfIteratorHelper(
 
-      buffer.split("\n")),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var line = _step6.value;
-          var spl = line.split("\t");
-
-          if (spl.length < 2 || spl[0].startsWith("#")) {
+      buffer.split("\n")),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var line = _step5.value;
+          if (line.startsWith("#") || line.length == 0) {
             continue;
           }
+
+          var spl = line.split("\t");
 
           var e = void 0;
 
@@ -432,43 +415,45 @@ var ItemResolver = /*#__PURE__*/function () {
             case "v":
               e = ItemType.VISIT_URL_CHECK;
               break;
-            case "version":
-              version = (0,external_kolmafia_.toInt)(spl[1]);
-              continue;}
+            case "g":
+              e = ItemType.GARDEN;
+              break;
+            default:
+              (0,external_kolmafia_.print)("Found line '" + line + "' which I can't handle!");}
 
 
           try {
-            var v = new AccValStuff();
+            var _v = new AccValStuff();
 
-            v.itemType = e;
-            v.tradeableItem = Item.get(spl[1]);
-            v.data1 = spl[2];
-            v.data2 = spl[3];
+            _v.itemType = e;
+            _v.actualItem = Item.get(spl[1]);
+            _v.data1 = spl[2];
+            _v.data2 = spl[3];
 
-            values.push(v);
-
-            if (!v.tradeableItem.tradeable) {
-              (0,external_kolmafia_.print)(
-              "Uh, looks like a typo was made. " +
-              v.tradeableItem +
-              " is not a tradeable item..",
-              "red");
-
-            }
+            values.push(_v);
           } catch (e) {
             (0,external_kolmafia_.print)("You probably need to update mafia! Got an error! " + e, "red");
           }
-        }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
+        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
 
-      if (version == null || version < expectedVersion) {
-        (0,external_kolmafia_.print)(
-        "Your accountval_binds.txt is out of date! Try reinstalling AccountVal. Expected version " +
-        expectedVersion +
-        ", but got version " +
-        version,
-        "red");
+      loop: for (var _i = 0, _values = values; _i < _values.length; _i++) {var v = _values[_i];
+        if (v.actualItem.tradeable) {
+          continue;
+        }var _iterator6 = _createForOfIteratorHelper(
 
-        (0,external_kolmafia_.wait)(3);
+        values),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var v1 = _step6.value;
+            if (v1.itemType != ItemType.UNTRADEABLE_ITEM) {
+              continue;
+            }
+
+            if (Item.get(v1.data1) != v.actualItem) {
+              continue;
+            }
+
+            continue loop;
+          }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
+
+        (0,external_kolmafia_.print)("Missing a tradeable item for " + v.actualItem, "red");
       }
 
       return values;
@@ -936,41 +921,50 @@ AccountVal = /*#__PURE__*/function () {
           this.ownedItems.set(new ValItem(_item2), amount);
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
-      this.resolveNoTrades();
+      if (this.settings.fetchEverywhere) {
+        if (this.settings.doBound || this.settings.doTradeables) {
+          var i = (0,external_kolmafia_.getWorkshed)();
+
+          if (i != null && i != Item.get("None")) {
+            this.addItem(new ValItem(i, i.name, "In Use"));
+          }
+        }
+      }
 
       if (this.settings.doFamiliars) {
         this.resolver.resolveFamiliars(this.ownedItems);
       }
 
+      // Check our current workshed
       if (this.settings.fetchEverywhere) {
-        // Now we add items that are bound. But wait! Some of these are still tradeables!
-        var _iterator2 = AccountVal_createForOfIteratorHelper(this.resolver.getUrledItems(!this.settings.doBound)),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
-            var valItem = void 0;
+        if (this.settings.doBound || this.settings.doTradeables) {
+          var _i = (0,external_kolmafia_.getWorkshed)();
 
-            // If we're skipping bound items, or we're skipping untradeables
-            if (!this.settings.doBound || !this.settings.doTradeables) {
-              var tradeableWorkshed = this.resolver.isWorkshedAndTradeable(_item);
+          if (_i != null && _i != Item.get("None")) {
+            if (
+            _i.tradeable ? this.settings.doTradeables : this.settings.doBound)
+            {
+              this.addItem(new ValItem(_i, _i.name, "In Use"));
+            }
+          }
+        }
+      }
 
-              if (
-              tradeableWorkshed ?
-              !this.settings.doTradeables :
-              !this.settings.doBound)
-              {
-                continue;
-              }
-
-              if (tradeableWorkshed) {
-                valItem = new ValItem(_item, _item.name, "In Use");
-              }
+      if (this.settings.doBound) {var _iterator2 = AccountVal_createForOfIteratorHelper(
+        this.resolver.getUrledItems()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
+            if (
+            _item[0].tradeable ?
+            !this.settings.doTradeables :
+            !this.settings.doBound)
+            {
+              continue;
             }
 
-            if (valItem == null) {
-              valItem = new ValItem(_item, _item.name, "Bound");
-            }
-
-            this.addItem(valItem);
+            this.addItem(new ValItem(_item[0], _item[0].name, _item[1]));
           }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
       }
+
+      this.resolveNoTrades();
     } }, { key: "resolveNoTrades", value:
 
     function resolveNoTrades() {
@@ -1061,9 +1055,9 @@ AccountVal = /*#__PURE__*/function () {
       var lines = [];
       var mallExtinct = [];var _iterator5 = AccountVal_createForOfIteratorHelper(
 
-      this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i = _step5.value;
-          var _item4 = _i[0];
-          var price = _i[1];
+      this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i2 = _step5.value;
+          var _item4 = _i2[0];
+          var price = _i2[1];
           var count = this.ownedItems.get(_item4);
           var totalWorth = price.price * count;
           netvalue += totalWorth;
