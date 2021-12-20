@@ -102,16 +102,6 @@ class AccountVal {
       this.ownedItems.set(new ValItem(item), amount);
     }
 
-    if (this.settings.fetchEverywhere) {
-      if (this.settings.doBound || this.settings.doTradeables) {
-        let i = getWorkshed();
-
-        if (i != null && i != Item.get("None")) {
-          this.addItem(new ValItem(i, i.name, "In Use"));
-        }
-      }
-    }
-
     if (this.settings.doFamiliars) {
       this.resolver.resolveFamiliars(this.ownedItems);
     }
