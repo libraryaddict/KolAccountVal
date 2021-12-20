@@ -921,16 +921,6 @@ AccountVal = /*#__PURE__*/function () {
           this.ownedItems.set(new ValItem(_item2), amount);
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
-      if (this.settings.fetchEverywhere) {
-        if (this.settings.doBound || this.settings.doTradeables) {
-          var i = (0,external_kolmafia_.getWorkshed)();
-
-          if (i != null && i != Item.get("None")) {
-            this.addItem(new ValItem(i, i.name, "In Use"));
-          }
-        }
-      }
-
       if (this.settings.doFamiliars) {
         this.resolver.resolveFamiliars(this.ownedItems);
       }
@@ -938,13 +928,13 @@ AccountVal = /*#__PURE__*/function () {
       // Check our current workshed
       if (this.settings.fetchEverywhere) {
         if (this.settings.doBound || this.settings.doTradeables) {
-          var _i = (0,external_kolmafia_.getWorkshed)();
+          var i = (0,external_kolmafia_.getWorkshed)();
 
-          if (_i != null && _i != Item.get("None")) {
+          if (i != null && i != Item.get("None")) {
             if (
-            _i.tradeable ? this.settings.doTradeables : this.settings.doBound)
+            i.tradeable ? this.settings.doTradeables : this.settings.doBound)
             {
-              this.addItem(new ValItem(_i, _i.name, "In Use"));
+              this.addItem(new ValItem(i, i.name, "In Use"));
             }
           }
         }
@@ -1055,9 +1045,9 @@ AccountVal = /*#__PURE__*/function () {
       var lines = [];
       var mallExtinct = [];var _iterator5 = AccountVal_createForOfIteratorHelper(
 
-      this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i2 = _step5.value;
-          var _item4 = _i2[0];
-          var price = _i2[1];
+      this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i = _step5.value;
+          var _item4 = _i[0];
+          var price = _i[1];
           var count = this.ownedItems.get(_item4);
           var totalWorth = price.price * count;
           netvalue += totalWorth;
