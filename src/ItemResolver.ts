@@ -8,6 +8,7 @@ import {
   wait,
   waitq,
 } from "kolmafia";
+import { ValItem } from "./AccountVal";
 
 class AccValStuff {
   itemType: ItemType;
@@ -92,16 +93,20 @@ export class ItemResolver {
   }
 
   private addItem(
-    ownedItems: Map<Item, number>,
+    ownedItems: Map<ValItem, number>,
     item: Item,
+    name: string,
+    bound?: string,
     count: number = 1
   ) {
-    ownedItems.set(item, (ownedItems.get(item) | 0) + count);
+    let v = new ValItem(item, name, bound);
+
+    ownedItems.set(v, (ownedItems.get(v) | 0) + count);
   }
 
   resolveBoundToTradeables(
-    copy: Map<Item, number>,
-    ownedItems: Map<Item, number>
+    copy: Map<ValItem, number>,
+    ownedItems: Map<ValItem, number>
   ) {
     for (let s of this.accValStuff) {
       if (s.itemType != ItemType.UNTRADEABLE_ITEM) {
@@ -110,26 +115,36 @@ export class ItemResolver {
 
       try {
         let item = Item.get(s.data1);
-        let count = copy.get(item);
+
+        let count: number;
+
+        for (let k of copy.keys()) {
+          if (k.tradeableItem != item) {
+            continue;
+          }
+
+          count = copy.get(k);
+          break;
+        }
 
         if (count == null) {
           continue;
         }
 
-        this.addItem(ownedItems, s.tradeableItem, count);
+        this.addItem(ownedItems, s.tradeableItem, item.name, "Bound", count);
       } catch (e) {
         print("You probably need to update mafia! Got an error! " + e, "red");
       }
     }
   }
 
-  resolveFamiliars(ownedItems: Map<Item, number>) {
+  resolveFamiliars(ownedItems: Map<ValItem, number>) {
     for (let fam of Familiar.all()) {
       if (!haveFamiliar(fam) || !fam.hatchling.tradeable) {
         continue;
       }
 
-      this.addItem(ownedItems, fam.hatchling);
+      this.addItem(ownedItems, fam.hatchling, fam + "", "Familiar");
     }
   }
 

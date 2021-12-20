@@ -19,11 +19,23 @@ import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
 import { AccountValSettings, PricingSettings } from "./AccountValSettings";
 import { FetchFromPage, StoreItem } from "./PageResolver";
 
+export class ValItem {
+  name: string;
+  tradeableItem: Item;
+  bound: string;
+
+  constructor(item: Item, name: string = item.name, bound?: string) {
+    this.name = name;
+    this.tradeableItem = item;
+    this.bound = bound;
+  }
+}
+
 class AccountVal {
-  private ownedItems: Map<Item, number> = new Map();
+  private ownedItems: Map<ValItem, number> = new Map();
   private resolver: ItemResolver = new ItemResolver();
   private priceResolver: PriceResolver;
-  private prices: ItemPrice[] = [];
+  private prices: [ValItem, ItemPrice][] = [];
   private settings: AccountValSettings;
 
   constructor(settings: AccountValSettings, priceSettings: PricingSettings) {
@@ -38,7 +50,7 @@ class AccountVal {
       let items = pager.getStore(this.settings.playerId);
 
       items.forEach((i) => {
-        this.addItem(i.item, i.amount);
+        this.addItem(new ValItem(i.item), i.amount);
       });
     }
 
@@ -46,7 +58,7 @@ class AccountVal {
       let items = pager.getDisplaycase(this.settings.playerId);
 
       items.forEach((v, k) => {
-        this.addItem(k, v);
+        this.addItem(new ValItem(k), v);
       });
     }
 
@@ -86,7 +98,7 @@ class AccountVal {
         continue;
       }
 
-      this.ownedItems.set(item, amount);
+      this.ownedItems.set(new ValItem(item), amount);
     }
 
     this.resolveNoTrades();
@@ -98,6 +110,8 @@ class AccountVal {
     if (this.settings.fetchEverywhere) {
       // Now we add items that are bound. But wait! Some of these are still tradeables!
       for (let item of this.resolver.getUrledItems(!this.settings.doBound)) {
+        let valItem: ValItem;
+
         // If we're skipping bound items, or we're skipping untradeables
         if (!this.settings.doBound || !this.settings.doTradeables) {
           let tradeableWorkshed = this.resolver.isWorkshedAndTradeable(item);
@@ -109,27 +123,38 @@ class AccountVal {
           ) {
             continue;
           }
+
+          if (tradeableWorkshed) {
+            valItem = new ValItem(item, item.name, "In Use");
+          }
         }
 
-        this.addItem(item);
+        if (valItem == null) {
+          valItem = new ValItem(item, item.name, "Bound");
+        }
+
+        this.addItem(valItem);
       }
     }
   }
 
   private resolveNoTrades() {
-    let copy: Map<Item, number> = new Map();
+    let copy: Map<ValItem, number> = new Map();
 
     this.ownedItems.forEach((v, k) => {
       copy.set(k, v);
     });
 
-    for (let item of Item.all()) {
-      if (item.tradeable) {
+    for (let item of this.ownedItems.keys()) {
+      if (item.tradeableItem.tradeable) {
         if (this.settings.doTradeables) {
           continue;
         }
       } else {
-        if (this.settings.doNontradeables && autosellPrice(item) > 0) {
+        if (
+          this.settings.doNontradeables &&
+          autosellPrice(item.tradeableItem) > 0
+        ) {
           continue;
         }
       }
@@ -162,7 +187,7 @@ class AccountVal {
       }
 
       let price = this.priceResolver.itemPrice(
-        i,
+        i.tradeableItem,
         this.ownedItems.get(i),
         false,
         this.settings.doSuperFast ? PriceType.HISTORICAL : null
@@ -170,21 +195,22 @@ class AccountVal {
 
       if (price.price == 0) {
         price = this.priceResolver.itemPrice(
-          i,
+          i.tradeableItem,
           this.ownedItems.get(i),
           false,
           PriceType.MALL_SALES
         );
       }
 
-      this.prices.push(price);
+      this.prices.push([i, price]);
     }
 
     this.prices.sort(
       (v1, v2) =>
-        (v1.price <= 0 ? 999_999_999 : v1.price) *
-          this.ownedItems.get(v1.item) -
-        (v2.price <= 0 ? 999_999_999 : v2.price) * this.ownedItems.get(v2.item)
+        (v1[1].price <= 0 ? 999_999_999 : v1[1].price) *
+          this.ownedItems.get(v1[0]) -
+        (v2[1].price <= 0 ? 999_999_999 : v2[1].price) *
+          this.ownedItems.get(v2[0])
     );
   }
 
@@ -201,15 +227,25 @@ class AccountVal {
     let mallExtinct: string[] = [];
 
     for (let i of this.prices) {
-      let count = this.ownedItems.get(i.item);
-      let totalWorth = i.price * count;
+      let item = i[0];
+      let price = i[1];
+      let count = this.ownedItems.get(item);
+      let totalWorth = price.price * count;
       netvalue += totalWorth;
+
+      let name = this.escapeHTML(item.name);
+
+      if (item.bound != null) {
+        name = `${name} (<font color='#db2525'>${this.escapeHTML(
+          item.bound
+        )}</font>)`;
+      }
 
       if (totalWorth <= 0) {
         if (count > 1) {
-          mallExtinct.push(count + " @ " + i.item);
+          mallExtinct.push(count + " @ " + name);
         } else {
-          mallExtinct.push("" + i.item);
+          mallExtinct.push(name);
         }
 
         continue;
@@ -218,24 +254,26 @@ class AccountVal {
       let text =
         this.getNumber(count) +
         " " +
-        i.item +
+        name +
         " worth a total of " +
         this.getNumber(totalWorth);
 
+      let titleName = item.name;
+
+      if (item.bound != null) {
+        titleName = item.name + " (" + item.tradeableItem.name + ")";
+      }
+
       let title =
-        i.item.name +
+        titleName +
         " @ " +
-        this.getNumber(i.price) +
+        this.getNumber(price.price) +
         " meat each. Price valid as of " +
-        this.getNumber(i.daysOutdated, 1) +
+        this.getNumber(price.daysOutdated, 1) +
         " days ago";
 
       lines.push(
-        "<font title='" +
-          this.escapeHTML(title) +
-          "'>" +
-          this.escapeHTML(text) +
-          "</font>"
+        "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>"
       );
     }
 
@@ -259,12 +297,7 @@ class AccountVal {
       let colors: string[] = ["#4f5893", "#934f4f"];
 
       mallExtinct = mallExtinct.map(
-        (s, i) =>
-          "<font color='" +
-          colors[i % 2] +
-          "'>" +
-          this.escapeHTML(s) +
-          "</font>"
+        (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>"
       );
 
       printHtml(
@@ -279,7 +312,8 @@ class AccountVal {
       (this.settings.playerId == null ? "You" : "They") +
         " are worth " +
         this.getNumber(netvalue) +
-        " meat!"
+        " meat!",
+      "blue"
     );
 
     let mrAWorth = (0.0 + netvalue) / aWorth;
@@ -317,7 +351,7 @@ class AccountVal {
       .replace(/'/g, "&#039;");
   }
 
-  addItem(item: Item, count: number = 1) {
+  addItem(item: ValItem, count: number = 1) {
     this.ownedItems.set(item, (this.ownedItems.get(item) | 0) + count);
   }
 
@@ -371,7 +405,10 @@ export function main(command: string) {
 
   try {
     if (command == null) {
-      print("To fine tune what we check, provide the parameter 'help'", "blue");
+      print(
+        "To fine tune what we check, including to tradeables only.. Provide the parameter 'help'",
+        "blue"
+      );
       command = "";
     } else if (command.toLowerCase() == "help") {
       acc.doHelp();
