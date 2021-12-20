@@ -242,13 +242,15 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
+  "ValItem": () => (/* binding */ ValItem),
   "main": () => (/* binding */ main)
 });
 
 // EXTERNAL MODULE: external "kolmafia"
 var external_kolmafia_ = __webpack_require__(530);
 ;// CONCATENATED MODULE: ./src/ItemResolver.ts
-function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var
+function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+var
 
 AccValStuff = /*#__PURE__*/_createClass(function AccValStuff() {_classCallCheck(this, AccValStuff);_defineProperty(this, "itemType", void 0);_defineProperty(this, "tradeableItem", void 0);_defineProperty(this, "data1", void 0);_defineProperty(this, "data2", void 0);});var
 
@@ -334,10 +336,14 @@ var ItemResolver = /*#__PURE__*/function () {
 
     function addItem(
     ownedItems,
-    item)
+    item,
+    name,
+    bound)
 
-    {var count = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-      ownedItems.set(item, (ownedItems.get(item) | 0) + count);
+    {var count = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+      var v = new ValItem(item, name, bound);
+
+      ownedItems.set(v, (ownedItems.get(v) | 0) + count);
     } }, { key: "resolveBoundToTradeables", value:
 
     function resolveBoundToTradeables(
@@ -351,27 +357,37 @@ var ItemResolver = /*#__PURE__*/function () {
 
           try {
             var item = Item.get(s.data1);
-            var count = copy.get(item);
+
+            var count = void 0;var _iterator4 = _createForOfIteratorHelper(
+
+            copy.keys()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var k = _step4.value;
+                if (k.tradeableItem != item) {
+                  continue;
+                }
+
+                count = copy.get(k);
+                break;
+              }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
 
             if (count == null) {
               continue;
             }
 
-            this.addItem(ownedItems, s.tradeableItem, count);
+            this.addItem(ownedItems, s.tradeableItem, item.name, "Bound", count);
           } catch (e) {
             (0,external_kolmafia_.print)("You probably need to update mafia! Got an error! " + e, "red");
           }
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
     } }, { key: "resolveFamiliars", value:
 
-    function resolveFamiliars(ownedItems) {var _iterator4 = _createForOfIteratorHelper(
-      Familiar.all()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var fam = _step4.value;
+    function resolveFamiliars(ownedItems) {var _iterator5 = _createForOfIteratorHelper(
+      Familiar.all()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var fam = _step5.value;
           if (!(0,external_kolmafia_.haveFamiliar)(fam) || !fam.hatchling.tradeable) {
             continue;
           }
 
-          this.addItem(ownedItems, fam.hatchling);
-        }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
+          this.addItem(ownedItems, fam.hatchling, fam + "", "Familiar");
+        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
     } }, { key: "visitCheck", value:
 
     function visitCheck(url, find) {
@@ -389,9 +405,9 @@ var ItemResolver = /*#__PURE__*/function () {
       var buffer = (0,external_kolmafia_.fileToBuffer)("accountval_binds.txt");
       var values = [];
       var version = 0;
-      var expectedVersion = 1;var _iterator5 = _createForOfIteratorHelper(
+      var expectedVersion = 1;var _iterator6 = _createForOfIteratorHelper(
 
-      buffer.split("\n")),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var line = _step5.value;
+      buffer.split("\n")),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var line = _step6.value;
           var spl = line.split("\t");
 
           if (spl.length < 2 || spl[0].startsWith("#")) {
@@ -442,7 +458,7 @@ var ItemResolver = /*#__PURE__*/function () {
           } catch (e) {
             (0,external_kolmafia_.print)("You probably need to update mafia! Got an error! " + e, "red");
           }
-        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
+        }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
 
       if (version == null || version < expectedVersion) {
         (0,external_kolmafia_.print)(
@@ -832,11 +848,23 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {PageReso
       return map;
     } }]);return FetchFromPage;}();
 ;// CONCATENATED MODULE: ./src/AccountVal.ts
-function AccountVal_createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = AccountVal_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function AccountVal_unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return AccountVal_arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return AccountVal_arrayLikeToArray(o, minLen);}function AccountVal_arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function AccountVal_classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function AccountVal_defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function AccountVal_createClass(Constructor, protoProps, staticProps) {if (protoProps) AccountVal_defineProperties(Constructor.prototype, protoProps);if (staticProps) AccountVal_defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function AccountVal_defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+function AccountVal_createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = AccountVal_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function AccountVal_unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return AccountVal_arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return AccountVal_arrayLikeToArray(o, minLen);}function AccountVal_arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function AccountVal_defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function AccountVal_createClass(Constructor, protoProps, staticProps) {if (protoProps) AccountVal_defineProperties(Constructor.prototype, protoProps);if (staticProps) AccountVal_defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function AccountVal_classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function AccountVal_defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
 
 
 
-var
+
+
+var ValItem = /*#__PURE__*/AccountVal_createClass(
+
+
+
+
+function ValItem(item) {var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : item.name;var bound = arguments.length > 2 ? arguments[2] : undefined;AccountVal_classCallCheck(this, ValItem);AccountVal_defineProperty(this, "name", void 0);AccountVal_defineProperty(this, "tradeableItem", void 0);AccountVal_defineProperty(this, "bound", void 0);
+  this.name = name;
+  this.tradeableItem = item;
+  this.bound = bound;
+});var
+
 
 AccountVal = /*#__PURE__*/function () {
 
@@ -857,7 +885,7 @@ AccountVal = /*#__PURE__*/function () {
         var items = pager.getStore(this.settings.playerId);
 
         items.forEach((i) => {
-          this.addItem(i.item, i.amount);
+          this.addItem(new ValItem(i.item), i.amount);
         });
       }
 
@@ -865,7 +893,7 @@ AccountVal = /*#__PURE__*/function () {
         var _items = pager.getDisplaycase(this.settings.playerId);
 
         _items.forEach((v, k) => {
-          this.addItem(k, v);
+          this.addItem(new ValItem(k), v);
         });
       }
 
@@ -878,34 +906,34 @@ AccountVal = /*#__PURE__*/function () {
         return;
       }var _iterator = AccountVal_createForOfIteratorHelper(
 
-      Item.all()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item = _step.value;
+      Item.all()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item2 = _step.value;
           var amount = 0;
 
           if (this.settings.fetchCloset) {
-            amount += (0,external_kolmafia_.closetAmount)(_item);
+            amount += (0,external_kolmafia_.closetAmount)(_item2);
           }
 
           if (this.settings.fetchInventory) {
-            amount += (0,external_kolmafia_.equippedAmount)(_item) + (0,external_kolmafia_.itemAmount)(_item);
+            amount += (0,external_kolmafia_.equippedAmount)(_item2) + (0,external_kolmafia_.itemAmount)(_item2);
           }
 
           if (this.settings.fetchShop) {
-            amount += (0,external_kolmafia_.shopAmount)(_item);
+            amount += (0,external_kolmafia_.shopAmount)(_item2);
           }
 
           if (this.settings.fetchStorage) {
-            amount += (0,external_kolmafia_.storageAmount)(_item);
+            amount += (0,external_kolmafia_.storageAmount)(_item2);
           }
 
           if (this.settings.fetchDisplaycase) {
-            amount += (0,external_kolmafia_.displayAmount)(_item);
+            amount += (0,external_kolmafia_.displayAmount)(_item2);
           }
 
           if (amount == 0) {
             continue;
           }
 
-          this.ownedItems.set(_item, amount);
+          this.ownedItems.set(new ValItem(_item2), amount);
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
       this.resolveNoTrades();
@@ -916,10 +944,12 @@ AccountVal = /*#__PURE__*/function () {
 
       if (this.settings.fetchEverywhere) {
         // Now we add items that are bound. But wait! Some of these are still tradeables!
-        var _iterator2 = AccountVal_createForOfIteratorHelper(this.resolver.getUrledItems(!this.settings.doBound)),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var item = _step2.value;
+        var _iterator2 = AccountVal_createForOfIteratorHelper(this.resolver.getUrledItems(!this.settings.doBound)),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
+            var valItem = void 0;
+
             // If we're skipping bound items, or we're skipping untradeables
             if (!this.settings.doBound || !this.settings.doTradeables) {
-              var tradeableWorkshed = this.resolver.isWorkshedAndTradeable(item);
+              var tradeableWorkshed = this.resolver.isWorkshedAndTradeable(_item);
 
               if (
               tradeableWorkshed ?
@@ -928,9 +958,17 @@ AccountVal = /*#__PURE__*/function () {
               {
                 continue;
               }
+
+              if (tradeableWorkshed) {
+                valItem = new ValItem(_item, _item.name, "In Use");
+              }
             }
 
-            this.addItem(item);
+            if (valItem == null) {
+              valItem = new ValItem(_item, _item.name, "Bound");
+            }
+
+            this.addItem(valItem);
           }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
       }
     } }, { key: "resolveNoTrades", value:
@@ -942,18 +980,21 @@ AccountVal = /*#__PURE__*/function () {
         copy.set(k, v);
       });var _iterator3 = AccountVal_createForOfIteratorHelper(
 
-      Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var item = _step3.value;
-          if (item.tradeable) {
+      this.ownedItems.keys()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _item3 = _step3.value;
+          if (_item3.tradeableItem.tradeable) {
             if (this.settings.doTradeables) {
               continue;
             }
           } else {
-            if (this.settings.doNontradeables && (0,external_kolmafia_.autosellPrice)(item) > 0) {
+            if (
+            this.settings.doNontradeables &&
+            (0,external_kolmafia_.autosellPrice)(_item3.tradeableItem) > 0)
+            {
               continue;
             }
           }
 
-          this.ownedItems.delete(item);
+          this.ownedItems.delete(_item3);
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       if (this.settings.doBound) {
@@ -981,7 +1022,7 @@ AccountVal = /*#__PURE__*/function () {
           }
 
           var price = this.priceResolver.itemPrice(
-          i,
+          i.tradeableItem,
           this.ownedItems.get(i),
           false,
           this.settings.doSuperFast ? PriceResolver/* PriceType.HISTORICAL */.FT.HISTORICAL : null);
@@ -989,21 +1030,22 @@ AccountVal = /*#__PURE__*/function () {
 
           if (price.price == 0) {
             price = this.priceResolver.itemPrice(
-            i,
+            i.tradeableItem,
             this.ownedItems.get(i),
             false,
             PriceResolver/* PriceType.MALL_SALES */.FT.MALL_SALES);
 
           }
 
-          this.prices.push(price);
+          this.prices.push([i, price]);
         }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
 
       this.prices.sort(
       (v1, v2) =>
-      (v1.price <= 0 ? 999999999 : v1.price) *
-      this.ownedItems.get(v1.item) -
-      (v2.price <= 0 ? 999999999 : v2.price) * this.ownedItems.get(v2.item));
+      (v1[1].price <= 0 ? 999999999 : v1[1].price) *
+      this.ownedItems.get(v1[0]) -
+      (v2[1].price <= 0 ? 999999999 : v2[1].price) *
+      this.ownedItems.get(v2[0]));
 
     } }, { key: "doCheck", value:
 
@@ -1020,15 +1062,25 @@ AccountVal = /*#__PURE__*/function () {
       var mallExtinct = [];var _iterator5 = AccountVal_createForOfIteratorHelper(
 
       this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i = _step5.value;
-          var count = this.ownedItems.get(_i.item);
-          var totalWorth = _i.price * count;
+          var _item4 = _i[0];
+          var price = _i[1];
+          var count = this.ownedItems.get(_item4);
+          var totalWorth = price.price * count;
           netvalue += totalWorth;
+
+          var name = this.escapeHTML(_item4.name);
+
+          if (_item4.bound != null) {
+            name = "".concat(name, " (<font color='#db2525'>").concat(this.escapeHTML(
+            _item4.bound), "</font>)");
+
+          }
 
           if (totalWorth <= 0) {
             if (count > 1) {
-              mallExtinct.push(count + " @ " + _i.item);
+              mallExtinct.push(count + " @ " + name);
             } else {
-              mallExtinct.push("" + _i.item);
+              mallExtinct.push(name);
             }
 
             continue;
@@ -1037,24 +1089,26 @@ AccountVal = /*#__PURE__*/function () {
           var text =
           this.getNumber(count) +
           " " +
-          _i.item +
+          name +
           " worth a total of " +
           this.getNumber(totalWorth);
 
+          var titleName = _item4.name;
+
+          if (_item4.bound != null) {
+            titleName = _item4.name + " (" + _item4.tradeableItem.name + ")";
+          }
+
           var title =
-          _i.item.name +
+          titleName +
           " @ " +
-          this.getNumber(_i.price) +
+          this.getNumber(price.price) +
           " meat each. Price valid as of " +
-          this.getNumber(_i.daysOutdated, 1) +
+          this.getNumber(price.daysOutdated, 1) +
           " days ago";
 
           lines.push(
-          "<font title='" +
-          this.escapeHTML(title) +
-          "'>" +
-          this.escapeHTML(text) +
-          "</font>");
+          "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>");
 
         }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
 
@@ -1078,12 +1132,7 @@ AccountVal = /*#__PURE__*/function () {
         var colors = ["#4f5893", "#934f4f"];
 
         mallExtinct = mallExtinct.map(
-        (s, i) =>
-        "<font color='" +
-        colors[i % 2] +
-        "'>" +
-        this.escapeHTML(s) +
-        "</font>");
+        (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>");
 
 
         (0,external_kolmafia_.printHtml)(
@@ -1098,7 +1147,8 @@ AccountVal = /*#__PURE__*/function () {
       (this.settings.playerId == null ? "You" : "They") +
       " are worth " +
       this.getNumber(netvalue) +
-      " meat!");
+      " meat!",
+      "blue");
 
 
       var mrAWorth = (0.0 + netvalue) / aWorth;
@@ -1190,7 +1240,10 @@ function main(command) {
 
   try {
     if (command == null) {
-      (0,external_kolmafia_.print)("To fine tune what we check, provide the parameter 'help'", "blue");
+      (0,external_kolmafia_.print)(
+      "To fine tune what we check, including to tradeables only.. Provide the parameter 'help'",
+      "blue");
+
       command = "";
     } else if (command.toLowerCase() == "help") {
       acc.doHelp();
