@@ -2,6 +2,7 @@ import {
   fileToBuffer,
   getProperty,
   haveFamiliar,
+  myGardenType,
   print,
   toInt,
   visitUrl,
@@ -12,7 +13,7 @@ import { ValItem } from "./AccountVal";
 
 class AccValStuff {
   itemType: ItemType;
-  tradeableItem: Item;
+  actualItem: Item;
   data1: string;
   data2: string;
 }
@@ -26,6 +27,8 @@ enum ItemType {
 
   EUDORA,
 
+  GARDEN,
+
   VISIT_URL_CHECK,
 }
 
@@ -37,54 +40,32 @@ export class ItemResolver {
     this.accValStuff = this.loadAccountValStuff();
   }
 
-  isWorkshedAndTradeable(item: Item): boolean {
-    let foundShed = false;
-    let foundNontradeable = false;
-
-    for (let s of this.accValStuff) {
-      if (s.tradeableItem != item) {
-        continue;
-      }
-
-      if (
-        s.itemType == ItemType.VISIT_URL_CHECK &&
-        s.data1.includes("workshed")
-      ) {
-        foundShed = true;
-      } else if (s.itemType == ItemType.UNTRADEABLE_ITEM) {
-        foundNontradeable = true;
-      }
-    }
-
-    return foundShed && !foundNontradeable;
-  }
-
   /**
    * Get the items from stuff like url visits
    */
-  getUrledItems(workshedOnly: boolean = false): Item[] {
-    let items: Item[] = [];
+  getUrledItems(): [Item, string?][] {
+    let items: [Item, string][] = [];
 
     for (let s of this.accValStuff) {
-      if (workshedOnly && !s.data1.includes("campground.php?action=workshed")) {
-        continue;
-      }
-
       if (s.itemType == ItemType.BOOK) {
         if (this.visitCheck("campground.php?action=bookshelf", s.data1)) {
-          items.push(s.tradeableItem);
+          items.push([s.actualItem, "Bound"]);
         }
       } else if (s.itemType == ItemType.EUDORA) {
         if (this.visitCheck("account.php?tab=correspondence", s.data1)) {
-          items.push(s.tradeableItem);
+          items.push([s.actualItem, "Bound"]);
         }
       } else if (s.itemType == ItemType.PROPERTY) {
         if (getProperty(s.data1) == "true") {
-          items.push(s.tradeableItem);
+          items.push([s.actualItem, "Bound"]);
         }
       } else if (s.itemType == ItemType.VISIT_URL_CHECK) {
         if (this.visitCheck(s.data1, s.data2)) {
-          items.push(s.tradeableItem);
+          items.push([s.actualItem, "Bound"]);
+        }
+      } else if (s.itemType == ItemType.GARDEN) {
+        if (myGardenType() == s.data1) {
+          items.push([s.actualItem, "In Use"]);
         }
       }
     }
@@ -115,23 +96,28 @@ export class ItemResolver {
 
       try {
         let item = Item.get(s.data1);
-
-        let count: number;
+        let v: ValItem;
 
         for (let k of copy.keys()) {
           if (k.tradeableItem != item) {
             continue;
           }
 
-          count = copy.get(k);
+          v = k;
           break;
         }
 
-        if (count == null) {
+        if (v == null) {
           continue;
         }
 
-        this.addItem(ownedItems, s.tradeableItem, item.name, "Bound", count);
+        this.addItem(
+          ownedItems,
+          s.actualItem,
+          item.name,
+          v.bound == null ? "Bound" : v.bound,
+          copy.get(v)
+        );
       } catch (e) {
         print("You probably need to update mafia! Got an error! " + e, "red");
       }
@@ -162,15 +148,13 @@ export class ItemResolver {
   loadAccountValStuff(): AccValStuff[] {
     let buffer = fileToBuffer("accountval_binds.txt");
     let values: AccValStuff[] = [];
-    let version: number = 0;
-    let expectedVersion: number = 1;
 
     for (let line of buffer.split("\n")) {
-      let spl = line.split("\t");
-
-      if (spl.length < 2 || spl[0].startsWith("#")) {
+      if (line.startsWith("#") || line.length == 0) {
         continue;
       }
+
+      let spl = line.split("\t");
 
       let e: ItemType;
 
@@ -190,43 +174,45 @@ export class ItemResolver {
         case "v":
           e = ItemType.VISIT_URL_CHECK;
           break;
-        case "version":
-          version = toInt(spl[1]);
-          continue;
+        case "g":
+          e = ItemType.GARDEN;
+          break;
+        default:
+          print("Found line '" + line + "' which I can't handle!");
       }
 
       try {
         let v: AccValStuff = new AccValStuff();
 
         v.itemType = e;
-        v.tradeableItem = Item.get(spl[1]);
+        v.actualItem = Item.get(spl[1]);
         v.data1 = spl[2];
         v.data2 = spl[3];
 
         values.push(v);
-
-        if (!v.tradeableItem.tradeable) {
-          print(
-            "Uh, looks like a typo was made. " +
-              v.tradeableItem +
-              " is not a tradeable item..",
-            "red"
-          );
-        }
       } catch (e) {
         print("You probably need to update mafia! Got an error! " + e, "red");
       }
     }
 
-    if (version == null || version < expectedVersion) {
-      print(
-        "Your accountval_binds.txt is out of date! Try reinstalling AccountVal. Expected version " +
-          expectedVersion +
-          ", but got version " +
-          version,
-        "red"
-      );
-      wait(3);
+    loop: for (let v of values) {
+      if (v.actualItem.tradeable) {
+        continue;
+      }
+
+      for (let v1 of values) {
+        if (v1.itemType != ItemType.UNTRADEABLE_ITEM) {
+          continue;
+        }
+
+        if (Item.get(v1.data1) != v.actualItem) {
+          continue;
+        }
+
+        continue loop;
+      }
+
+      print("Missing a tradeable item for " + v.actualItem, "red");
     }
 
     return values;

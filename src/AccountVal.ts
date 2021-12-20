@@ -5,6 +5,7 @@ import {
   equippedAmount,
   getRevision,
   getVersion,
+  getWorkshed,
   itemAmount,
   myClosetMeat,
   myMeat,
@@ -101,41 +102,50 @@ class AccountVal {
       this.ownedItems.set(new ValItem(item), amount);
     }
 
-    this.resolveNoTrades();
+    if (this.settings.fetchEverywhere) {
+      if (this.settings.doBound || this.settings.doTradeables) {
+        let i = getWorkshed();
+
+        if (i != null && i != Item.get("None")) {
+          this.addItem(new ValItem(i, i.name, "In Use"));
+        }
+      }
+    }
 
     if (this.settings.doFamiliars) {
       this.resolver.resolveFamiliars(this.ownedItems);
     }
 
+    // Check our current workshed
     if (this.settings.fetchEverywhere) {
-      // Now we add items that are bound. But wait! Some of these are still tradeables!
-      for (let item of this.resolver.getUrledItems(!this.settings.doBound)) {
-        let valItem: ValItem;
+      if (this.settings.doBound || this.settings.doTradeables) {
+        let i = getWorkshed();
 
-        // If we're skipping bound items, or we're skipping untradeables
-        if (!this.settings.doBound || !this.settings.doTradeables) {
-          let tradeableWorkshed = this.resolver.isWorkshedAndTradeable(item);
-
+        if (i != null && i != Item.get("None")) {
           if (
-            tradeableWorkshed
-              ? !this.settings.doTradeables
-              : !this.settings.doBound
+            i.tradeable ? this.settings.doTradeables : this.settings.doBound
           ) {
-            continue;
-          }
-
-          if (tradeableWorkshed) {
-            valItem = new ValItem(item, item.name, "In Use");
+            this.addItem(new ValItem(i, i.name, "In Use"));
           }
         }
-
-        if (valItem == null) {
-          valItem = new ValItem(item, item.name, "Bound");
-        }
-
-        this.addItem(valItem);
       }
     }
+
+    if (this.settings.doBound) {
+      for (let item of this.resolver.getUrledItems()) {
+        if (
+          item[0].tradeable
+            ? !this.settings.doTradeables
+            : !this.settings.doBound
+        ) {
+          continue;
+        }
+
+        this.addItem(new ValItem(item[0], item[0].name, item[1]));
+      }
+    }
+
+    this.resolveNoTrades();
   }
 
   private resolveNoTrades() {

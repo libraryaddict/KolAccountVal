@@ -1,5 +1,3 @@
-version	1
-
 # Original data stolen from https://github.com/soolar/accountval.ash
 # Item Containers! Start with i
 i	packet of mayfly bait	mayfly bait necklace
@@ -53,6 +51,7 @@ i	packaged industrial fire extinguisher	industrial fire extinguisher
 i	Packaged Daylight Shavings Helmet	Daylight Shavings Helmet
 i	Packaged cold medicine cabinet	 Cold medicine cabinet
 i	box o' ghosts	gregarious ghostling
+i	Gordon Beer's Beer Garden Catalog	Packet of beer seeds
 
 
 
@@ -114,20 +113,18 @@ e	Our Daily Candles™ order form	Our Daily Candles
 
 # visit_url contains... Start with v
 v	Order of the Green Thumb Order Form	forestvillage.php	friarcottage.gif
-v	Little Geneticist DNA-Splicing Lab	campground.php?action=workshed	Little Geneticist DNA-Splicing
-v	portable Mayo Clinic	campground.php?action=workshed	The Mayo Clinic
 v	Haunted Doghouse	campground.php?action=doghouse	Spoopy
 v	Witchess Set	campground.php?action=witchess	Witchess Set
 v	Source terminal	campground.php?action=terminal	Source Terminal
-v	LI-11 Motor Pool voucher	campground.php?action=workshed	Your Asdon Martin
-v	Discontent&trade; Winter Garden Catalog	campground.php	Winter Garden
-v	Grumpy Bumpkin's Pumpkin Seed Catalog	campground.php	Pumpkin Patch
-v	Mint Salton Pepper's Peppermint Seed Catalog	campground.php	Peppermint Patch
-v	Pete & Jackie's Dragon Tooth Emporium Catalog	campground.php	Bone Garden
-v	Gordon Beer's Beer Garden Catalog	campground.php	Beer Garden
 v	potted tea tree	campground.php?action=teatree	Tree Tea
-v	Granny Tood's Thanksgarden Catalog	campground.php	A Thanksgarden
-v	Pok&eacute;fam Guide to Capturing All of Them	campground.php	Tall Grass
-v	Better Shrooms and Gardens catalog	campground.php	mushgarden.gif
-v	Packaged cold medicine cabinet	campground.php?action=workshed	cold medicine cabinet
-v	Packaged cold medicine cabinet	campground.php?action=workshed	Cold Medicine Cabinet
+
+
+# Gardens
+g	packet of pumpkin seeds	PUMPKIN	
+g	Peppermint Pip Packet	PEPPERMINT
+g	packet of dragon's teeth	SKELETON
+g	Packet of beer seeds	BEER
+g	packet of winter seeds	WINTER
+g	packet of thanksgarden seeds	THANKSGARDEN
+g	packet of tall grass seeds	GRASS
+g	packet of mushroom spores	MUSHROOM
