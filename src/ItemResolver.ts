@@ -9,7 +9,7 @@ import {
   wait,
   waitq,
 } from "kolmafia";
-import { ValItem } from "./AccountVal";
+import { ItemStatus, ValItem } from "./AccountVal";
 
 class AccValStuff {
   itemType: ItemType;
@@ -43,29 +43,29 @@ export class ItemResolver {
   /**
    * Get the items from stuff like url visits
    */
-  getUrledItems(): [Item, string?][] {
-    let items: [Item, string][] = [];
+  getUrledItems(): [Item, ItemStatus?][] {
+    let items: [Item, ItemStatus][] = [];
 
     for (let s of this.accValStuff) {
       if (s.itemType == ItemType.BOOK) {
         if (this.visitCheck("campground.php?action=bookshelf", s.data1)) {
-          items.push([s.actualItem, "Bound"]);
+          items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.EUDORA) {
         if (this.visitCheck("account.php?tab=correspondence", s.data1)) {
-          items.push([s.actualItem, "Bound"]);
+          items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.PROPERTY) {
         if (getProperty(s.data1) == "true") {
-          items.push([s.actualItem, "Bound"]);
+          items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.VISIT_URL_CHECK) {
         if (this.visitCheck(s.data1, s.data2)) {
-          items.push([s.actualItem, "Bound"]);
+          items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.GARDEN) {
         if (myGardenType() == s.data1) {
-          items.push([s.actualItem, "In Use"]);
+          items.push([s.actualItem, ItemStatus.IN_USE]);
         }
       }
     }
@@ -77,7 +77,7 @@ export class ItemResolver {
     ownedItems: Map<ValItem, number>,
     item: Item,
     name: string,
-    bound?: string,
+    bound?: ItemStatus,
     count: number = 1
   ) {
     let v = new ValItem(item, name, bound);
@@ -115,7 +115,7 @@ export class ItemResolver {
           ownedItems,
           s.actualItem,
           item.name,
-          v.bound == null ? "Bound" : v.bound,
+          v.bound == null ? ItemStatus.BOUND : v.bound,
           copy.get(v)
         );
       } catch (e) {
@@ -130,7 +130,7 @@ export class ItemResolver {
         continue;
       }
 
-      this.addItem(ownedItems, fam.hatchling, fam + "", "Familiar");
+      this.addItem(ownedItems, fam.hatchling, fam + "", ItemStatus.FAMILIAR);
     }
   }
 

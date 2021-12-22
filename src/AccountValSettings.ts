@@ -215,6 +215,8 @@ export class AccountValSettings {
       if (this.doFamiliars == null) {
         this.doFamiliars = false;
       }
+    } else if (this.doFamiliars == null && this.doBound) {
+      this.doFamiliars = true;
     }
 
     for (let f of settings.map((s) => s.field)) {

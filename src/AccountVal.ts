@@ -20,15 +20,41 @@ import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
 import { AccountValSettings, PricingSettings } from "./AccountValSettings";
 import { FetchFromPage, StoreItem } from "./PageResolver";
 
+export enum ItemStatus {
+  BOUND,
+
+  FAMILIAR,
+
+  IN_USE,
+}
+
 export class ValItem {
   name: string;
   tradeableItem: Item;
-  bound: string;
+  bound: ItemStatus;
 
-  constructor(item: Item, name: string = item.name, bound?: string) {
+  constructor(item: Item, name: string = item.name, bound?: ItemStatus) {
     this.name = name;
     this.tradeableItem = item;
     this.bound = bound;
+  }
+
+  getBound(): string {
+    if (this.bound == null) {
+      return null;
+    }
+
+    if (this.bound == ItemStatus.BOUND) {
+      return "Bound";
+    } else if (this.bound == ItemStatus.FAMILIAR) {
+      return "Familiar";
+    } else if (this.bound == ItemStatus.IN_USE) {
+      return "In Use";
+    }
+  }
+
+  isBound(): boolean {
+    return this.bound != null && this.bound != ItemStatus.IN_USE;
   }
 }
 
@@ -115,7 +141,7 @@ class AccountVal {
           if (
             i.tradeable ? this.settings.doTradeables : this.settings.doBound
           ) {
-            this.addItem(new ValItem(i, i.name, "In Use"));
+            this.addItem(new ValItem(i, i.name, ItemStatus.IN_USE));
           }
         }
       }
@@ -145,25 +171,41 @@ class AccountVal {
       copy.set(k, v);
     });
 
+    if (this.settings.doBound) {
+      this.resolver.resolveBoundToTradeables(copy, this.ownedItems);
+    }
+
     for (let item of this.ownedItems.keys()) {
-      if (item.tradeableItem.tradeable) {
-        if (this.settings.doTradeables) {
-          continue;
-        }
-      } else {
-        if (
-          this.settings.doNontradeables &&
-          autosellPrice(item.tradeableItem) > 0
-        ) {
-          continue;
-        }
+      // If we're doing bound items, and this is a bound item..
+      if (this.settings.doBound && item.isBound()) {
+        continue;
+      }
+
+      // If we're doing familiars and this is a familiar
+      if (this.settings.doFamiliars && item.bound == ItemStatus.FAMILIAR) {
+        continue;
+      }
+
+      // If we're doing tradeables, and this isn't a bound item, and is tradeable
+      if (
+        this.settings.doTradeables &&
+        item.tradeableItem.tradeable &&
+        !item.isBound()
+      ) {
+        continue;
+      }
+
+      // If we're doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
+      if (
+        this.settings.doNontradeables &&
+        item.tradeableItem.tradeable &&
+        !item.isBound() &&
+        autosellPrice(item.tradeableItem) > 0
+      ) {
+        continue;
       }
 
       this.ownedItems.delete(item);
-    }
-
-    if (this.settings.doBound) {
-      this.resolver.resolveBoundToTradeables(copy, this.ownedItems);
     }
   }
 
@@ -237,7 +279,7 @@ class AccountVal {
 
       if (item.bound != null) {
         name = `${name} (<font color='#db2525'>${this.escapeHTML(
-          item.bound
+          item.getBound()
         )}</font>)`;
       }
 
@@ -322,6 +364,14 @@ class AccountVal {
       "Going by the value of a Mr. Accessory, that's $" +
         this.getNumber(mrAWorth * 10)
     );
+
+    this.printMeat();
+  }
+
+  printMeat() {
+    if (!this.settings.doTradeables) {
+      return;
+    }
 
     let meat = 0;
 
