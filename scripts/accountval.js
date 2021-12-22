@@ -242,6 +242,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
+  "ItemStatus": () => (/* binding */ ItemStatus),
   "ValItem": () => (/* binding */ ValItem),
   "main": () => (/* binding */ main)
 });
@@ -290,23 +291,23 @@ var ItemResolver = /*#__PURE__*/function () {
       this.accValStuff),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var s = _step.value;
           if (s.itemType == ItemType.BOOK) {
             if (this.visitCheck("campground.php?action=bookshelf", s.data1)) {
-              items.push([s.actualItem, "Bound"]);
+              items.push([s.actualItem, ItemStatus.BOUND]);
             }
           } else if (s.itemType == ItemType.EUDORA) {
             if (this.visitCheck("account.php?tab=correspondence", s.data1)) {
-              items.push([s.actualItem, "Bound"]);
+              items.push([s.actualItem, ItemStatus.BOUND]);
             }
           } else if (s.itemType == ItemType.PROPERTY) {
             if ((0,external_kolmafia_.getProperty)(s.data1) == "true") {
-              items.push([s.actualItem, "Bound"]);
+              items.push([s.actualItem, ItemStatus.BOUND]);
             }
           } else if (s.itemType == ItemType.VISIT_URL_CHECK) {
             if (this.visitCheck(s.data1, s.data2)) {
-              items.push([s.actualItem, "Bound"]);
+              items.push([s.actualItem, ItemStatus.BOUND]);
             }
           } else if (s.itemType == ItemType.GARDEN) {
             if ((0,external_kolmafia_.myGardenType)() == s.data1) {
-              items.push([s.actualItem, "In Use"]);
+              items.push([s.actualItem, ItemStatus.IN_USE]);
             }
           }
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
@@ -356,7 +357,7 @@ var ItemResolver = /*#__PURE__*/function () {
             ownedItems,
             s.actualItem,
             item.name,
-            v.bound == null ? "Bound" : v.bound,
+            v.bound == null ? ItemStatus.BOUND : v.bound,
             copy.get(v));
 
           } catch (e) {
@@ -371,7 +372,7 @@ var ItemResolver = /*#__PURE__*/function () {
             continue;
           }
 
-          this.addItem(ownedItems, fam.hatchling, fam + "", "Familiar");
+          this.addItem(ownedItems, fam.hatchling, fam + "", ItemStatus.FAMILIAR);
         }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
     } }, { key: "visitCheck", value:
 
@@ -678,6 +679,8 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         if (this.doFamiliars == null) {
           this.doFamiliars = false;
         }
+      } else if (this.doFamiliars == null && this.doBound) {
+        this.doFamiliars = true;
       }var _iterator2 = AccountValSettings_createForOfIteratorHelper(
 
       settings.map((s) => s.field)),_step2;try {var _loop2 = function _loop2() {var f = _step2.value;
@@ -833,22 +836,48 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {PageReso
       return map;
     } }]);return FetchFromPage;}();
 ;// CONCATENATED MODULE: ./src/AccountVal.ts
-function AccountVal_createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = AccountVal_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function AccountVal_unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return AccountVal_arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return AccountVal_arrayLikeToArray(o, minLen);}function AccountVal_arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function AccountVal_defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function AccountVal_createClass(Constructor, protoProps, staticProps) {if (protoProps) AccountVal_defineProperties(Constructor.prototype, protoProps);if (staticProps) AccountVal_defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function AccountVal_classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function AccountVal_defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+function AccountVal_createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = AccountVal_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function AccountVal_unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return AccountVal_arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return AccountVal_arrayLikeToArray(o, minLen);}function AccountVal_arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function AccountVal_classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function AccountVal_defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function AccountVal_createClass(Constructor, protoProps, staticProps) {if (protoProps) AccountVal_defineProperties(Constructor.prototype, protoProps);if (staticProps) AccountVal_defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function AccountVal_defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
 
 
 
 
 
-var ValItem = /*#__PURE__*/AccountVal_createClass(
+var ItemStatus;(function (ItemStatus) {ItemStatus[ItemStatus["BOUND"] = 0] = "BOUND";ItemStatus[ItemStatus["FAMILIAR"] = 1] = "FAMILIAR";ItemStatus[ItemStatus["IN_USE"] = 2] = "IN_USE";})(ItemStatus || (ItemStatus = {}));
 
 
 
 
-function ValItem(item) {var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : item.name;var bound = arguments.length > 2 ? arguments[2] : undefined;AccountVal_classCallCheck(this, ValItem);AccountVal_defineProperty(this, "name", void 0);AccountVal_defineProperty(this, "tradeableItem", void 0);AccountVal_defineProperty(this, "bound", void 0);
-  this.name = name;
-  this.tradeableItem = item;
-  this.bound = bound;
-});var
+
+
+
+var ValItem = /*#__PURE__*/function () {
+
+
+
+
+  function ValItem(item) {var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : item.name;var bound = arguments.length > 2 ? arguments[2] : undefined;AccountVal_classCallCheck(this, ValItem);AccountVal_defineProperty(this, "name", void 0);AccountVal_defineProperty(this, "tradeableItem", void 0);AccountVal_defineProperty(this, "bound", void 0);
+    this.name = name;
+    this.tradeableItem = item;
+    this.bound = bound;
+  }AccountVal_createClass(ValItem, [{ key: "getBound", value:
+
+    function getBound() {
+      if (this.bound == null) {
+        return null;
+      }
+
+      if (this.bound == ItemStatus.BOUND) {
+        return "Bound";
+      } else if (this.bound == ItemStatus.FAMILIAR) {
+        return "Familiar";
+      } else if (this.bound == ItemStatus.IN_USE) {
+        return "In Use";
+      }
+    } }, { key: "isBound", value:
+
+    function isBound() {
+      return this.bound != null && this.bound != ItemStatus.IN_USE;
+    } }]);return ValItem;}();var
 
 
 AccountVal = /*#__PURE__*/function () {
@@ -934,7 +963,7 @@ AccountVal = /*#__PURE__*/function () {
             if (
             i.tradeable ? this.settings.doTradeables : this.settings.doBound)
             {
-              this.addItem(new ValItem(i, i.name, "In Use"));
+              this.addItem(new ValItem(i, i.name, ItemStatus.IN_USE));
             }
           }
         }
@@ -962,28 +991,44 @@ AccountVal = /*#__PURE__*/function () {
 
       this.ownedItems.forEach((v, k) => {
         copy.set(k, v);
-      });var _iterator3 = AccountVal_createForOfIteratorHelper(
+      });
+
+      if (this.settings.doBound) {
+        this.resolver.resolveBoundToTradeables(copy, this.ownedItems);
+      }var _iterator3 = AccountVal_createForOfIteratorHelper(
 
       this.ownedItems.keys()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _item3 = _step3.value;
-          if (_item3.tradeableItem.tradeable) {
-            if (this.settings.doTradeables) {
-              continue;
-            }
-          } else {
-            if (
-            this.settings.doNontradeables &&
-            (0,external_kolmafia_.autosellPrice)(_item3.tradeableItem) > 0)
-            {
-              continue;
-            }
+          // If we're doing bound items, and this is a bound item..
+          if (this.settings.doBound && _item3.isBound()) {
+            continue;
+          }
+
+          // If we're doing familiars and this is a familiar
+          if (this.settings.doFamiliars && _item3.bound == ItemStatus.FAMILIAR) {
+            continue;
+          }
+
+          // If we're doing tradeables, and this isn't a bound item, and is tradeable
+          if (
+          this.settings.doTradeables &&
+          _item3.tradeableItem.tradeable &&
+          !_item3.isBound())
+          {
+            continue;
+          }
+
+          // If we're doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
+          if (
+          this.settings.doNontradeables &&
+          _item3.tradeableItem.tradeable &&
+          !_item3.isBound() &&
+          (0,external_kolmafia_.autosellPrice)(_item3.tradeableItem) > 0)
+          {
+            continue;
           }
 
           this.ownedItems.delete(_item3);
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
-
-      if (this.settings.doBound) {
-        this.resolver.resolveBoundToTradeables(copy, this.ownedItems);
-      }
     } }, { key: "doPricing", value:
 
     function doPricing() {
@@ -1056,7 +1101,7 @@ AccountVal = /*#__PURE__*/function () {
 
           if (_item4.bound != null) {
             name = "".concat(name, " (<font color='#db2525'>").concat(this.escapeHTML(
-            _item4.bound), "</font>)");
+            _item4.getBound()), "</font>)");
 
           }
 
@@ -1141,6 +1186,14 @@ AccountVal = /*#__PURE__*/function () {
       "Going by the value of a Mr. Accessory, that's $" +
       this.getNumber(mrAWorth * 10));
 
+
+      this.printMeat();
+    } }, { key: "printMeat", value:
+
+    function printMeat() {
+      if (!this.settings.doTradeables) {
+        return;
+      }
 
       var meat = 0;
 
