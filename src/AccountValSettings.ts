@@ -21,6 +21,7 @@ export class AccountValSettings {
   playerId: number;
   displayLimit = 100;
   minimumMeat = 0;
+  maxAge: number = 14;
 
   static getSettings(): ValSetting[] {
     let settings = [];
@@ -120,6 +121,12 @@ export class AccountValSettings {
       "doSuperFast",
       ["fast", "superfast", "speed", "quick", "rough"],
       "Try resolve everything with historical price, no matter how outdated"
+    );
+
+    makeSetting(
+      "maxAge",
+      ["age", "maxage", "days"],
+      "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date. Default of 14"
     );
 
     return settings;

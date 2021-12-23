@@ -218,7 +218,7 @@ class AccountVal {
         lastPrinted = Date.now();
         print(
           "Checking value of " +
-            i +
+            i.name +
             " (" +
             checked +
             " / " +
@@ -466,6 +466,9 @@ export function main(command: string) {
     }
 
     let unknown = settings.doSettings(command.split(" "));
+
+    priceSettings.maxHistoricalAge = settings.maxAge;
+    priceSettings.maxMallSalesAge = settings.maxAge;
 
     unknown = priceSettings.doSettings(unknown);
 
