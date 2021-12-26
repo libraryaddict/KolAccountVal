@@ -1,4 +1,5 @@
 import {
+  abort,
   autosellPrice,
   closetAmount,
   displayAmount,
@@ -6,6 +7,7 @@ import {
   getRevision,
   getVersion,
   getWorkshed,
+  isCoinmasterItem,
   itemAmount,
   myClosetMeat,
   myMeat,
@@ -14,10 +16,15 @@ import {
   printHtml,
   shopAmount,
   storageAmount,
+  toInt,
 } from "kolmafia";
 import { ItemResolver } from "./ItemResolver";
 import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
-import { AccountValSettings, PricingSettings } from "./AccountValSettings";
+import {
+  AccountValSettings,
+  PricingSettings,
+  SortBy,
+} from "./AccountValSettings";
 import { FetchFromPage, StoreItem } from "./PageResolver";
 
 export enum ItemStatus {
@@ -176,33 +183,35 @@ class AccountVal {
     }
 
     for (let item of this.ownedItems.keys()) {
-      // If we're doing bound items, and this is a bound item..
-      if (this.settings.doBound && item.isBound()) {
-        continue;
-      }
+      if (this.ownedItems.get(item) >= this.settings.minimumAmount) {
+        // If we're doing bound items, and this is a bound item..
+        if (this.settings.doBound && item.isBound()) {
+          continue;
+        }
 
-      // If we're doing familiars and this is a familiar
-      if (this.settings.doFamiliars && item.bound == ItemStatus.FAMILIAR) {
-        continue;
-      }
+        // If we're doing familiars and this is a familiar
+        if (this.settings.doFamiliars && item.bound == ItemStatus.FAMILIAR) {
+          continue;
+        }
 
-      // If we're doing tradeables, and this isn't a bound item, and is tradeable
-      if (
-        this.settings.doTradeables &&
-        item.tradeableItem.tradeable &&
-        !item.isBound()
-      ) {
-        continue;
-      }
+        // If we're doing tradeables, and this isn't a bound item, and is tradeable
+        if (
+          this.settings.doTradeables &&
+          item.tradeableItem.tradeable &&
+          !item.isBound()
+        ) {
+          continue;
+        }
 
-      // If we're doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
-      if (
-        this.settings.doNontradeables &&
-        item.tradeableItem.tradeable &&
-        !item.isBound() &&
-        autosellPrice(item.tradeableItem) > 0
-      ) {
-        continue;
+        // If we're doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
+        if (
+          this.settings.doNontradeables &&
+          item.tradeableItem.tradeable &&
+          !item.isBound() &&
+          autosellPrice(item.tradeableItem) > 0
+        ) {
+          continue;
+        }
       }
 
       this.ownedItems.delete(item);
@@ -244,16 +253,141 @@ class AccountVal {
         );
       }
 
+      if (price.price < this.settings.minimumMeat) {
+        this.ownedItems.delete(i);
+        continue;
+      }
+
       this.prices.push([i, price]);
     }
 
-    this.prices.sort(
-      (v1, v2) =>
-        (v1[1].price <= 0 ? 999_999_999 : v1[1].price) *
-          this.ownedItems.get(v1[0]) -
-        (v2[1].price <= 0 ? 999_999_999 : v2[1].price) *
-          this.ownedItems.get(v2[0])
-    );
+    this.doSort();
+  }
+
+  doSort() {
+    if (this.settings.sortBy == SortBy.TOTAL_PRICE) {
+      this.prices.sort(
+        (v1, v2) =>
+          (v1[1].price <= 0 ? 999_999_999 : v1[1].price) *
+            this.ownedItems.get(v1[0]) -
+          (v2[1].price <= 0 ? 999_999_999 : v2[1].price) *
+            this.ownedItems.get(v2[0])
+      );
+    } else if (this.settings.sortBy == SortBy.PRICE) {
+      this.prices.sort(
+        (v1, v2) =>
+          (v1[1].price <= 0 ? 999_999_999 : v1[1].price) -
+          (v2[1].price <= 0 ? 999_999_999 : v2[1].price)
+      );
+    } else if (this.settings.sortBy == SortBy.QUANTITY) {
+      this.prices.sort(
+        (v1, v2) => this.ownedItems.get(v1[0]) - this.ownedItems.get(v2[0])
+      );
+    } else if (this.settings.sortBy == SortBy.NAME) {
+      this.prices.sort((v1, v2) => v1[0].name.localeCompare(v2[0].name));
+    } else if (this.settings.sortBy == SortBy.ITEM_ID) {
+      this.prices.sort(
+        (v1, v2) => toInt(v1[0].tradeableItem) - toInt(v2[0].tradeableItem)
+      );
+    } else if (this.settings.sortBy == "SortBy.SALES_VOLUME") {
+      // Removed for now cos it does too many hits
+      let toUpdate: Item[] = [];
+
+      for (let i of this.prices) {
+        let item = i[1].item;
+
+        if (!item.tradeable || item.gift) {
+          continue;
+        }
+
+        // If its an item we buy from NPCs
+        if (
+          autosellPrice(item) > 0 &&
+          i[1].price < 1000 &&
+          isCoinmasterItem(item)
+        ) {
+          continue;
+        }
+
+        let v = this.priceResolver.history.getMallRecords(item, 7, false);
+
+        if (v == null) {
+          toUpdate.push(item);
+          continue;
+        }
+
+        let priceTotal = i[1].price * this.ownedItems.get(i[0]);
+        // If our expected price is different from mall price by a bigger margin than expected.. Aka 50% more expensive/cheap
+        let priceDiff =
+          i[1].price > v.getPriceSold(30)
+            ? v.getPriceSold(30) / i[1].price
+            : i[1].price / v.getPriceSold(30);
+
+        let days = priceDiff < 0.5 ? 7 : priceTotal > 5_000_000 ? 30 : 100;
+        let daysOld = (Date.now() / 1000 - v.lastUpdated) / (24 * 60 * 60);
+
+        if (daysOld < days) {
+          continue;
+        }
+
+        toUpdate.push(item);
+      }
+
+      print(
+        "Need to update " +
+          this.getNumber(toUpdate.length) +
+          " items mall histories",
+        "blue"
+      );
+
+      let last = Date.now();
+      let progress: number = 0;
+
+      for (let i of toUpdate) {
+        if (last + 5000 < Date.now()) {
+          last = Date.now();
+
+          print(
+            "Checking sales volume of " +
+              i.name +
+              " (" +
+              progress +
+              " / " +
+              toUpdate.length +
+              ")",
+            "blue"
+          );
+        }
+
+        progress++;
+        this.priceResolver.history.getAmountSold(i, 30);
+      }
+
+      this.prices.sort((v1, v2) => {
+        let s1 = this.priceResolver.history.getMallRecords(
+          v1[1].item,
+          1,
+          false
+        );
+        let s2 = this.priceResolver.history.getMallRecords(
+          v2[1].item,
+          1,
+          false
+        );
+
+        return (
+          (s1 == null ? 0 : s1.getAmountSold(30)) -
+          (s2 == null ? 0 : s2.getAmountSold(30))
+        );
+      });
+    } else {
+      abort("Unknown sort option " + this.settings.sortBy);
+    }
+
+    if (this.settings.reverseSort) {
+      print("Reverse");
+      this.prices.reverse();
+    }
   }
 
   doCheck() {
@@ -350,11 +484,10 @@ class AccountVal {
       );
     }
 
+    let pronoun = this.settings.playerId == null ? "You" : "They";
+
     print(
-      (this.settings.playerId == null ? "You" : "They") +
-        " are worth " +
-        this.getNumber(netvalue) +
-        " meat!",
+      pronoun + " are worth " + this.getNumber(netvalue) + " meat!",
       "blue"
     );
 
@@ -465,7 +598,30 @@ export function main(command: string) {
       return;
     }
 
-    let unknown = settings.doSettings(command.split(" "));
+    let tCommand = command;
+    let spl: string[] = [];
+    let match: RegExpMatchArray;
+
+    // Splitting so we can do name="Tom the Hunk"
+    while (
+      (match = tCommand.match(/(?:^| )([^ ]+=(\"|')[^=]+(\"|'))(?:$| )/)) !=
+      null
+    ) {
+      let v = match[1];
+
+      while (v.includes('"') || v.includes("'")) {
+        v = v.replace('"', "").replace("'", "");
+      }
+
+      spl.push(v);
+      tCommand = tCommand.replace(match[1], "").trim().replace(/ +/, " ");
+    }
+
+    if (tCommand.length > 0) {
+      spl.push(...tCommand.split(" "));
+    }
+
+    let unknown = settings.doSettings(spl);
 
     priceSettings.maxHistoricalAge = settings.maxAge;
     priceSettings.maxMallSalesAge = settings.maxAge;

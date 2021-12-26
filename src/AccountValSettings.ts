@@ -1,9 +1,25 @@
-import { getPlayerId, toBoolean, toInt } from "kolmafia";
+import { getPlayerId, print, stopCounter, toBoolean, toInt } from "kolmafia";
+import { ValItem } from "./AccountVal";
+import { ItemPrice } from "./PriceResolver";
 
 export class ValSetting {
   field: string;
   names: string[];
   desc: string;
+}
+
+export enum SortBy {
+  PRICE,
+
+  QUANTITY,
+
+  // SALES_VOLUME,
+
+  ITEM_ID,
+
+  NAME,
+
+  TOTAL_PRICE,
 }
 
 export class AccountValSettings {
@@ -21,7 +37,10 @@ export class AccountValSettings {
   playerId: number;
   displayLimit = 100;
   minimumMeat = 0;
+  minimumAmount = 1;
   maxAge: number = 14;
+  sortBy: SortBy = SortBy.TOTAL_PRICE;
+  reverseSort: boolean = false;
 
   static getSettings(): ValSetting[] {
     let settings = [];
@@ -95,12 +114,25 @@ export class AccountValSettings {
 
     makeSetting(
       "=minimumMeat",
-      ["minmeat", "minimummeat", "meat", "minmeat", "min-meat"],
+      [
+        "minmeat",
+        "minimummeat",
+        "meat",
+        "minmeat",
+        "min-meat",
+        "minprice",
+        "price",
+      ],
       "Each item total worth, at least this amount. (meat=4000)"
     );
     makeSetting(
+      "=minimumAmount",
+      ["amount", "count", "minimumamount", "minamount"],
+      "At least this many items (meat=4000)"
+    );
+    makeSetting(
       "=displayLimit",
-      ["limit", "displaylimit", "maxdisplay"],
+      ["limit", "displaylimit", "maxdisplay", "lines"],
       "Limit results to display this amount (limit=100)"
     );
     makeSetting(
@@ -115,7 +147,7 @@ export class AccountValSettings {
         "name",
         "username",
       ],
-      "Target another player's DC and Shop. Can provide the dc/shop param"
+      'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces'
     );
     makeSetting(
       "doSuperFast",
@@ -127,6 +159,13 @@ export class AccountValSettings {
       "maxAge",
       ["age", "maxage", "days"],
       "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date. Default of 14"
+    );
+
+    makeSetting(
+      "@sortBy",
+      ["sort", "sortby", "sorted"],
+      "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " +
+        Object.keys(SortBy).join(", ")
     );
 
     return settings;
@@ -176,11 +215,40 @@ export class AccountValSettings {
 
       if (arg.startsWith("-") || arg.startsWith("+") || arg.startsWith("!")) {
         arg = arg.substring(1);
-      } else if (arg.includes("=") && !field.startsWith("=")) {
+      } else if (
+        arg.includes("=") &&
+        !field.startsWith("=") &&
+        !field.startsWith("@")
+      ) {
         isTrue = toBoolean(arg.split("=")[1]);
       }
 
-      if (field.startsWith("=")) {
+      if (field.startsWith("@")) {
+        if (!arg.includes("=")) {
+          unknown.push(arg);
+          continue;
+        }
+
+        let v = arg.substring(arg.indexOf("=") + 1);
+
+        if (v.length == 0) {
+          unknown.push(arg);
+          continue;
+        }
+
+        let sortBy: SortBy =
+          SortBy[
+            Object.keys(SortBy).find((k) => k.toLowerCase() == v.toLowerCase())
+          ];
+
+        if (sortBy == null) {
+          unknown.push(arg);
+          continue;
+        }
+
+        this.sortBy = sortBy;
+        this.reverseSort = !isTrue;
+      } else if (field.startsWith("=")) {
         if (!arg.includes("=")) {
           unknown.push(arg);
           continue;

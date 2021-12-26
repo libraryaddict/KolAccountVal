@@ -36,7 +36,7 @@ export class ItemPrice {
 }
 
 export class PriceResolver {
-  private history: MallHistory;
+  history: MallHistory;
   private specialCase: Map<Item, number> = new Map();
   private settings: PricingSettings;
 
