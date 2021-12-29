@@ -504,7 +504,14 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     1);AccountValSettings_defineProperty(this, "maxAge",
     14);AccountValSettings_defineProperty(this, "sortBy",
     SortBy.TOTAL_PRICE);AccountValSettings_defineProperty(this, "reverseSort",
+    false);AccountValSettings_defineProperty(this, "shopWorth",
     false);}AccountValSettings_createClass(AccountValSettings, [{ key: "doSettings", value:
+
+
+
+
+
+
 
 
 
@@ -754,8 +761,8 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         if (this.doFamiliars == null) {
           this.doFamiliars = false;
         }
-      } else if (this.doFamiliars == null && this.doBound) {
-        this.doFamiliars = true;
+      } else if (this.doFamiliars == null && this.doBound != null) {
+        this.doFamiliars = this.doBound;
       }var _iterator2 = AccountValSettings_createForOfIteratorHelper(
 
       settings.map((s) => s.field)),_step2;try {var _loop2 = function _loop2() {var f = _step2.value;
@@ -787,7 +794,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       return false;
-    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(name, aliases, desc) {var setting = new ValSetting();setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting("fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting("fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting("fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting("fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting("fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting("doTradeables", ["tradeable", "tradeables", "trade", "tradable", "true"], "Should it do tradeables");makeSetting("doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting("doFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item)");makeSetting("doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting("=minimumMeat", ["minmeat", "minimummeat", "meat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount. (meat=4000)");makeSetting("=minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items (meat=4000)");makeSetting("=displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount (limit=100)");makeSetting("=playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting("doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting("maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date. Default of 14");makeSetting("@sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).join(", "));return settings;} }]);return AccountValSettings;}();
+    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(name, aliases, desc) {var setting = new ValSetting();setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting("fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting("fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting("fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting("fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting("fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting("doTradeables", ["tradeable", "tradeables", "trade", "tradable", "true"], "Should it do tradeables");makeSetting("doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting("doFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting("doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting("=minimumMeat", ["minmeat", "minimummeat", "meat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount. (meat=4000)");makeSetting("=minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items (meat=4000)");makeSetting("=displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount (limit=100)");makeSetting("=playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting("doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting("maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date. Default of 14");makeSetting("@sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).join(", "));makeSetting("shopWorth", ["worth", "shopworth"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");return settings;} }]);return AccountValSettings;}();
 
 
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {AccountValSettings_classCallCheck(this, PricingSettings);AccountValSettings_defineProperty(this, "cheapHistoricalAge",
@@ -917,7 +924,9 @@ function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToA
 
 
 
-var ItemStatus;(function (ItemStatus) {ItemStatus[ItemStatus["BOUND"] = 0] = "BOUND";ItemStatus[ItemStatus["FAMILIAR"] = 1] = "FAMILIAR";ItemStatus[ItemStatus["IN_USE"] = 2] = "IN_USE";})(ItemStatus || (ItemStatus = {}));
+var ItemStatus;(function (ItemStatus) {ItemStatus[ItemStatus["BOUND"] = 0] = "BOUND";ItemStatus[ItemStatus["FAMILIAR"] = 1] = "FAMILIAR";ItemStatus[ItemStatus["IN_USE"] = 2] = "IN_USE";ItemStatus[ItemStatus["SHOP_WORTH"] = 3] = "SHOP_WORTH";})(ItemStatus || (ItemStatus = {}));
+
+
 
 
 
@@ -930,17 +939,14 @@ var ValItem = /*#__PURE__*/function () {
 
 
 
-  function ValItem(item) {var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : item.name;var bound = arguments.length > 2 ? arguments[2] : undefined;AccountVal_classCallCheck(this, ValItem);AccountVal_defineProperty(this, "name", void 0);AccountVal_defineProperty(this, "tradeableItem", void 0);AccountVal_defineProperty(this, "bound", void 0);
+
+  function ValItem(item) {var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : item.name;var bound = arguments.length > 2 ? arguments[2] : undefined;AccountVal_classCallCheck(this, ValItem);AccountVal_defineProperty(this, "name", void 0);AccountVal_defineProperty(this, "tradeableItem", void 0);AccountVal_defineProperty(this, "bound", void 0);AccountVal_defineProperty(this, "shopWorth", void 0);
     this.name = name;
     this.tradeableItem = item;
     this.bound = bound;
   }AccountVal_createClass(ValItem, [{ key: "getBound", value:
 
     function getBound() {
-      if (this.bound == null) {
-        return null;
-      }
-
       if (this.bound == ItemStatus.BOUND) {
         return "Bound";
       } else if (this.bound == ItemStatus.FAMILIAR) {
@@ -948,10 +954,12 @@ var ValItem = /*#__PURE__*/function () {
       } else if (this.bound == ItemStatus.IN_USE) {
         return "In Use";
       }
+
+      return null;
     } }, { key: "isBound", value:
 
     function isBound() {
-      return this.bound != null && this.bound != ItemStatus.IN_USE;
+      return this.bound == ItemStatus.BOUND || this.bound == ItemStatus.FAMILIAR;
     } }]);return ValItem;}();var
 
 
@@ -974,7 +982,14 @@ AccountVal = /*#__PURE__*/function () {
         var items = pager.getStore(this.settings.playerId);
 
         items.forEach((i) => {
-          this.addItem(new ValItem(i.item), i.amount);
+          var item = new ValItem(i.item);
+
+          if (this.settings.shopWorth) {
+            item.bound = ItemStatus.SHOP_WORTH;
+            item.shopWorth = i.price;
+          }
+
+          this.addItem(item, i.amount);
         });
       }
 
@@ -1006,16 +1021,25 @@ AccountVal = /*#__PURE__*/function () {
             amount += (0,external_kolmafia_.equippedAmount)(_item2) + (0,external_kolmafia_.itemAmount)(_item2);
           }
 
-          if (this.settings.fetchShop) {
-            amount += (0,external_kolmafia_.shopAmount)(_item2);
-          }
-
           if (this.settings.fetchStorage) {
             amount += (0,external_kolmafia_.storageAmount)(_item2);
           }
 
           if (this.settings.fetchDisplaycase) {
             amount += (0,external_kolmafia_.displayAmount)(_item2);
+          }
+
+          if (this.settings.fetchShop) {
+            if (this.settings.shopWorth && (0,external_kolmafia_.shopAmount)(_item2) > 0) {
+              var _i = new ValItem(_item2);
+              _i.bound = ItemStatus.SHOP_WORTH;
+              _i.shopWorth = (0,external_kolmafia_.shopPrice)(_item2);
+
+              this.ownedItems.set(_i, (0,external_kolmafia_.shopAmount)(_item2));
+              continue;
+            } else {
+              amount += (0,external_kolmafia_.shopAmount)(_item2);
+            }
           }
 
           if (amount == 0) {
@@ -1183,8 +1207,8 @@ AccountVal = /*#__PURE__*/function () {
         // Removed for now cos it does too many hits
         var toUpdate = [];var _iterator5 = AccountVal_createForOfIteratorHelper(
 
-        this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i2 = _step5.value;
-            var _item4 = _i2[1].item;
+        this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i3 = _step5.value;
+            var _item4 = _i3[1].item;
 
             if (!_item4.tradeable || _item4.gift) {
               continue;
@@ -1193,7 +1217,7 @@ AccountVal = /*#__PURE__*/function () {
             // If its an item we buy from NPCs
             if (
             (0,external_kolmafia_.autosellPrice)(_item4) > 0 &&
-            _i2[1].price < 1000 &&
+            _i3[1].price < 1000 &&
             (0,external_kolmafia_.isCoinmasterItem)(_item4))
             {
               continue;
@@ -1206,12 +1230,12 @@ AccountVal = /*#__PURE__*/function () {
               continue;
             }
 
-            var priceTotal = _i2[1].price * this.ownedItems.get(_i2[0]);
+            var priceTotal = _i3[1].price * this.ownedItems.get(_i3[0]);
             // If our expected price is different from mall price by a bigger margin than expected.. Aka 50% more expensive/cheap
             var priceDiff =
-            _i2[1].price > v.getPriceSold(30) ?
-            v.getPriceSold(30) / _i2[1].price :
-            _i2[1].price / v.getPriceSold(30);
+            _i3[1].price > v.getPriceSold(30) ?
+            v.getPriceSold(30) / _i3[1].price :
+            _i3[1].price / v.getPriceSold(30);
 
             var days = priceDiff < 0.5 ? 7 : priceTotal > 5000000 ? 30 : 100;
             var daysOld = (Date.now() / 1000 - v.lastUpdated) / (24 * 60 * 60);
@@ -1233,7 +1257,7 @@ AccountVal = /*#__PURE__*/function () {
         var last = Date.now();
         var progress = 0;
 
-        for (var _i = 0, _toUpdate = toUpdate; _i < _toUpdate.length; _i++) {var i = _toUpdate[_i];
+        for (var _i2 = 0, _toUpdate = toUpdate; _i2 < _toUpdate.length; _i2++) {var i = _toUpdate[_i2];
           if (last + 5000 < Date.now()) {
             last = Date.now();
 
@@ -1290,20 +1314,62 @@ AccountVal = /*#__PURE__*/function () {
       price;
 
       var lines = [];
-      var mallExtinct = [];var _iterator6 = AccountVal_createForOfIteratorHelper(
+      var mallExtinct = [];
+      var shopNetValue = 0;
+      var shopPricedAt = 0;var _iterator6 = AccountVal_createForOfIteratorHelper(
 
-      this.prices),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var _i3 = _step6.value;
-          var _item5 = _i3[0];
-          var price = _i3[1];
+      this.prices),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var _i4 = _step6.value;
+          var _item5 = _i4[0];
+          var price = _i4[1];
           var count = this.ownedItems.get(_item5);
           var totalWorth = price.price * count;
           netvalue += totalWorth;
 
+          var titleName = _item5.name;
+
+          if (_item5.name != _item5.tradeableItem.name) {
+            titleName = _item5.name + " (" + _item5.tradeableItem.name + ")";
+          }
+
+          var title =
+          titleName +
+          " @ " +
+          this.getNumber(price.price) +
+          " meat each. Price valid as of " +
+          this.getNumber(price.daysOutdated, 1) +
+          " days ago";
+
+          if (_item5.shopWorth > 0) {
+            title += ". Shop selling at: " + this.getNumber(_item5.shopWorth);
+          }
+
           var name = this.escapeHTML(_item5.name);
 
           if (_item5.bound != null) {
-            name = "".concat(name, " (<font color='#db2525'>").concat(this.escapeHTML(
-            _item5.getBound()), "</font>)");
+            var boundInfo = void 0;
+            var color = "#db2525";
+
+            if (_item5.bound == ItemStatus.SHOP_WORTH) {
+              var overpricedPerc = _item5.shopWorth / price.price;
+
+              if (_item5.shopWorth < 999999000) {
+                shopPricedAt += _item5.shopWorth * count;
+                shopNetValue += totalWorth;
+              }
+
+              if (overpricedPerc <= 1.05) {
+                color = "#196f3d";
+              }
+
+              boundInfo = "Price: ".concat(this.getNumber(
+              Math.round(overpricedPerc * 100)), "%");
+
+            } else {
+              boundInfo = _item5.getBound();
+            }
+
+            name = "".concat(name, " (<font color='").concat(color, "' title='").concat(title, "'>").concat(this.escapeHTML(
+            boundInfo), "</font>)");
 
           }
 
@@ -1323,20 +1389,6 @@ AccountVal = /*#__PURE__*/function () {
           name +
           " worth a total of " +
           this.getNumber(totalWorth);
-
-          var titleName = _item5.name;
-
-          if (_item5.bound != null) {
-            titleName = _item5.name + " (" + _item5.tradeableItem.name + ")";
-          }
-
-          var title =
-          titleName +
-          " @ " +
-          this.getNumber(price.price) +
-          " meat each. Price valid as of " +
-          this.getNumber(price.daysOutdated, 1) +
-          " days ago";
 
           lines.push(
           "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>");
@@ -1387,6 +1439,23 @@ AccountVal = /*#__PURE__*/function () {
       "Going by the value of a Mr. Accessory, that's $" +
       this.getNumber(mrAWorth * 10));
 
+
+      if (
+      shopPricedAt > 0 &&
+      this.prices.filter((v) => v[0].bound == ItemStatus.SHOP_WORTH).length ==
+      this.prices.length)
+      {
+        shopPricedAt /= shopNetValue;
+        (0,external_kolmafia_.print)("Overall, the shop is ".concat(
+        this.getNumber(
+        Math.round(shopPricedAt * 100)), "% of mall"));
+
+
+        (0,external_kolmafia_.print)(
+        "Disclaimer: Cheapest price being 100% can mean we're comparing prices against.. this shop.",
+        "gray");
+
+      }
 
       this.printMeat();
     } }, { key: "printMeat", value:
@@ -1515,6 +1584,7 @@ function main(command) {
 
     priceSettings.maxHistoricalAge = settings.maxAge;
     priceSettings.maxMallSalesAge = settings.maxAge;
+    priceSettings.cheapHistoricalAge = settings.maxAge * 10;
 
     unknown = priceSettings.doSettings(unknown);
 
