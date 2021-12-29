@@ -41,6 +41,7 @@ export class AccountValSettings {
   maxAge: number = 14;
   sortBy: SortBy = SortBy.TOTAL_PRICE;
   reverseSort: boolean = false;
+  shopWorth: boolean = false;
 
   static getSettings(): ValSetting[] {
     let settings = [];
@@ -104,7 +105,7 @@ export class AccountValSettings {
     makeSetting(
       "doFamiliars",
       ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"],
-      "Should it do familiars (Resolves to their item)"
+      "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set"
     );
     makeSetting(
       "doBound",
@@ -166,6 +167,12 @@ export class AccountValSettings {
       ["sort", "sortby", "sorted"],
       "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " +
         Object.keys(SortBy).join(", ")
+    );
+
+    makeSetting(
+      "shopWorth",
+      ["worth", "shopworth"],
+      "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate"
     );
 
     return settings;
@@ -290,8 +297,8 @@ export class AccountValSettings {
       if (this.doFamiliars == null) {
         this.doFamiliars = false;
       }
-    } else if (this.doFamiliars == null && this.doBound) {
-      this.doFamiliars = true;
+    } else if (this.doFamiliars == null && this.doBound != null) {
+      this.doFamiliars = this.doBound;
     }
 
     for (let f of settings.map((s) => s.field)) {

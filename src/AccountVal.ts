@@ -15,6 +15,7 @@ import {
   print,
   printHtml,
   shopAmount,
+  shopPrice,
   storageAmount,
   toInt,
 } from "kolmafia";
@@ -33,12 +34,15 @@ export enum ItemStatus {
   FAMILIAR,
 
   IN_USE,
+
+  SHOP_WORTH,
 }
 
 export class ValItem {
   name: string;
   tradeableItem: Item;
   bound: ItemStatus;
+  shopWorth: number;
 
   constructor(item: Item, name: string = item.name, bound?: ItemStatus) {
     this.name = name;
@@ -47,10 +51,6 @@ export class ValItem {
   }
 
   getBound(): string {
-    if (this.bound == null) {
-      return null;
-    }
-
     if (this.bound == ItemStatus.BOUND) {
       return "Bound";
     } else if (this.bound == ItemStatus.FAMILIAR) {
@@ -58,10 +58,12 @@ export class ValItem {
     } else if (this.bound == ItemStatus.IN_USE) {
       return "In Use";
     }
+
+    return null;
   }
 
   isBound(): boolean {
-    return this.bound != null && this.bound != ItemStatus.IN_USE;
+    return this.bound == ItemStatus.BOUND || this.bound == ItemStatus.FAMILIAR;
   }
 }
 
@@ -84,7 +86,14 @@ class AccountVal {
       let items = pager.getStore(this.settings.playerId);
 
       items.forEach((i) => {
-        this.addItem(new ValItem(i.item), i.amount);
+        let item = new ValItem(i.item);
+
+        if (this.settings.shopWorth) {
+          item.bound = ItemStatus.SHOP_WORTH;
+          item.shopWorth = i.price;
+        }
+
+        this.addItem(item, i.amount);
       });
     }
 
@@ -116,16 +125,25 @@ class AccountVal {
         amount += equippedAmount(item) + itemAmount(item);
       }
 
-      if (this.settings.fetchShop) {
-        amount += shopAmount(item);
-      }
-
       if (this.settings.fetchStorage) {
         amount += storageAmount(item);
       }
 
       if (this.settings.fetchDisplaycase) {
         amount += displayAmount(item);
+      }
+
+      if (this.settings.fetchShop) {
+        if (this.settings.shopWorth && shopAmount(item) > 0) {
+          let i = new ValItem(item);
+          i.bound = ItemStatus.SHOP_WORTH;
+          i.shopWorth = shopPrice(item);
+
+          this.ownedItems.set(i, shopAmount(item));
+          continue;
+        } else {
+          amount += shopAmount(item);
+        }
       }
 
       if (amount == 0) {
@@ -401,6 +419,8 @@ class AccountVal {
 
     let lines: string[] = [];
     let mallExtinct: string[] = [];
+    let shopNetValue: number = 0;
+    let shopPricedAt: number = 0;
 
     for (let i of this.prices) {
       let item = i[0];
@@ -409,11 +429,51 @@ class AccountVal {
       let totalWorth = price.price * count;
       netvalue += totalWorth;
 
+      let titleName = item.name;
+
+      if (item.name != item.tradeableItem.name) {
+        titleName = item.name + " (" + item.tradeableItem.name + ")";
+      }
+
+      let title =
+        titleName +
+        " @ " +
+        this.getNumber(price.price) +
+        " meat each. Price valid as of " +
+        this.getNumber(price.daysOutdated, 1) +
+        " days ago";
+
+      if (item.shopWorth > 0) {
+        title += ". Shop selling at: " + this.getNumber(item.shopWorth);
+      }
+
       let name = this.escapeHTML(item.name);
 
       if (item.bound != null) {
-        name = `${name} (<font color='#db2525'>${this.escapeHTML(
-          item.getBound()
+        let boundInfo: string;
+        let color = "#db2525";
+
+        if (item.bound == ItemStatus.SHOP_WORTH) {
+          let overpricedPerc = item.shopWorth / price.price;
+
+          if (item.shopWorth < 999_999_000) {
+            shopPricedAt += item.shopWorth * count;
+            shopNetValue += totalWorth;
+          }
+
+          if (overpricedPerc <= 1.05) {
+            color = "#196f3d";
+          }
+
+          boundInfo = `Price: ${this.getNumber(
+            Math.round(overpricedPerc * 100)
+          )}%`;
+        } else {
+          boundInfo = item.getBound();
+        }
+
+        name = `${name} (<font color='${color}' title='${title}'>${this.escapeHTML(
+          boundInfo
         )}</font>)`;
       }
 
@@ -433,20 +493,6 @@ class AccountVal {
         name +
         " worth a total of " +
         this.getNumber(totalWorth);
-
-      let titleName = item.name;
-
-      if (item.bound != null) {
-        titleName = item.name + " (" + item.tradeableItem.name + ")";
-      }
-
-      let title =
-        titleName +
-        " @ " +
-        this.getNumber(price.price) +
-        " meat each. Price valid as of " +
-        this.getNumber(price.daysOutdated, 1) +
-        " days ago";
 
       lines.push(
         "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>"
@@ -497,6 +543,23 @@ class AccountVal {
       "Going by the value of a Mr. Accessory, that's $" +
         this.getNumber(mrAWorth * 10)
     );
+
+    if (
+      shopPricedAt > 0 &&
+      this.prices.filter((v) => v[0].bound == ItemStatus.SHOP_WORTH).length ==
+        this.prices.length
+    ) {
+      shopPricedAt /= shopNetValue;
+      print(
+        `Overall, the shop is ${this.getNumber(
+          Math.round(shopPricedAt * 100)
+        )}% of mall`
+      );
+      print(
+        "Disclaimer: Cheapest price being 100% can mean we're comparing prices against.. this shop.",
+        "gray"
+      );
+    }
 
     this.printMeat();
   }
@@ -625,6 +688,7 @@ export function main(command: string) {
 
     priceSettings.maxHistoricalAge = settings.maxAge;
     priceSettings.maxMallSalesAge = settings.maxAge;
+    priceSettings.cheapHistoricalAge = settings.maxAge * 10;
 
     unknown = priceSettings.doSettings(unknown);
 
