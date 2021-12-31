@@ -16,6 +16,7 @@ import {
   printHtml,
   shopAmount,
   shopPrice,
+  stashAmount,
   storageAmount,
   toInt,
 } from "kolmafia";
@@ -131,6 +132,10 @@ class AccountVal {
 
       if (this.settings.fetchDisplaycase) {
         amount += displayAmount(item);
+      }
+
+      if (this.settings.fetchClan) {
+        amount += stashAmount(item);
       }
 
       if (this.settings.fetchShop) {

@@ -28,6 +28,7 @@ export class AccountValSettings {
   fetchInventory: boolean;
   fetchShop: boolean;
   fetchDisplaycase: boolean;
+  fetchClan: boolean = false;
   fetchEverywhere: boolean = true;
   doSuperFast: boolean = false;
   doTradeables: boolean;
@@ -80,6 +81,11 @@ export class AccountValSettings {
       "fetchDisplaycase",
       ["displaycase", "display", "dc"],
       "Should it fetch from the displaycase"
+    );
+    makeSetting(
+      "fetchClan",
+      ["clan", "stash"],
+      "Should it check clan's stash? False by default"
     );
     makeSetting(
       "doTradeables",
@@ -187,6 +193,7 @@ export class AccountValSettings {
         "fetchShop",
         "fetchInventory",
         "fetchDisplaycase",
+        "fetchClan",
       ],
       ["doTradeables", "doNontradeables", "doBound", "doFamiliars"],
     ];
@@ -269,12 +276,12 @@ export class AccountValSettings {
         }
 
         if (field == "=playerId") {
-          if (!v.match(/$[0-9]+^/)) {
+          if (!v.match(/^[0-9]+$/)) {
             v = getPlayerId(v);
           }
         }
 
-        if (!v.match(/$[0-9]+^/)) {
+        if (!v.match(/^[0-9]+$/)) {
           unknown.push(arg);
           continue;
         }
@@ -287,6 +294,7 @@ export class AccountValSettings {
 
     let wasSet: string[] = Object.keys(this).filter((k) => this[k] == true);
     this.fetchEverywhere =
+      !this.fetchClan &&
       incompatible[0].find((v) => wasSet.includes(v)) == null;
 
     if (!this.fetchEverywhere) {
