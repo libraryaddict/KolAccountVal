@@ -486,12 +486,13 @@ var SortBy;(function (SortBy) {SortBy[SortBy["PRICE"] = 0] = "PRICE";SortBy[Sort
 
 
 
-var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings() {AccountValSettings_classCallCheck(this, AccountValSettings);AccountValSettings_defineProperty(this, "fetchCloset", void 0);AccountValSettings_defineProperty(this, "fetchStorage", void 0);AccountValSettings_defineProperty(this, "fetchInventory", void 0);AccountValSettings_defineProperty(this, "fetchShop", void 0);AccountValSettings_defineProperty(this, "fetchDisplaycase", void 0);AccountValSettings_defineProperty(this, "fetchEverywhere",
+var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings() {AccountValSettings_classCallCheck(this, AccountValSettings);AccountValSettings_defineProperty(this, "fetchCloset", void 0);AccountValSettings_defineProperty(this, "fetchStorage", void 0);AccountValSettings_defineProperty(this, "fetchInventory", void 0);AccountValSettings_defineProperty(this, "fetchShop", void 0);AccountValSettings_defineProperty(this, "fetchDisplaycase", void 0);AccountValSettings_defineProperty(this, "fetchClan",
 
 
 
 
 
+    false);AccountValSettings_defineProperty(this, "fetchEverywhere",
     true);AccountValSettings_defineProperty(this, "doSuperFast",
     false);AccountValSettings_defineProperty(this, "doTradeables", void 0);AccountValSettings_defineProperty(this, "doNontradeables", void 0);AccountValSettings_defineProperty(this, "doBound", void 0);AccountValSettings_defineProperty(this, "doFamiliars", void 0);AccountValSettings_defineProperty(this, "playerId", void 0);AccountValSettings_defineProperty(this, "displayLimit",
 
@@ -642,6 +643,11 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
 
 
+
+
+
+
+
     function doSettings(args) {var _this = this;
       var unknown = [];
       var incompatible = [
@@ -650,7 +656,8 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
       "fetchStorage",
       "fetchShop",
       "fetchInventory",
-      "fetchDisplaycase"],
+      "fetchDisplaycase",
+      "fetchClan"],
 
       ["doTradeables", "doNontradeables", "doBound", "doFamiliars"]];
 
@@ -733,12 +740,12 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
             }
 
             if (field == "=playerId") {
-              if (!_v.match(/[0-9]+/)) {
+              if (!_v.match(/^[0-9]+$/)) {
                 _v = (0,external_kolmafia_.getPlayerId)(_v);
               }
             }
 
-            if (!_v.match(/[0-9]+/)) {
+            if (!_v.match(/^[0-9]+$/)) {
               unknown.push(arg);
               return "continue";
             }
@@ -751,6 +758,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
       var wasSet = Object.keys(this).filter((k) => this[k] == true);
       this.fetchEverywhere =
+      !this.fetchClan &&
       incompatible[0].find((v) => wasSet.includes(v)) == null;
 
       if (!this.fetchEverywhere) {
@@ -794,7 +802,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       return false;
-    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(name, aliases, desc) {var setting = new ValSetting();setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting("fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting("fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting("fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting("fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting("fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting("doTradeables", ["tradeable", "tradeables", "trade", "tradable", "true"], "Should it do tradeables");makeSetting("doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting("doFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting("doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting("=minimumMeat", ["minmeat", "minimummeat", "meat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount. (meat=4000)");makeSetting("=minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items (meat=4000)");makeSetting("=displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount (limit=100)");makeSetting("=playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting("doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting("maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date. Default of 14");makeSetting("@sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).join(", "));makeSetting("shopWorth", ["worth", "shopworth"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");return settings;} }]);return AccountValSettings;}();
+    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(name, aliases, desc) {var setting = new ValSetting();setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting("fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting("fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting("fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting("fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting("fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting("fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting("doTradeables", ["tradeable", "tradeables", "trade", "tradable", "true"], "Should it do tradeables");makeSetting("doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting("doFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting("doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting("=minimumMeat", ["minmeat", "minimummeat", "meat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount. (meat=4000)");makeSetting("=minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items (meat=4000)");makeSetting("=displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount (limit=100)");makeSetting("=playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting("doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting("maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date. Default of 14");makeSetting("@sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).join(", "));makeSetting("shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");return settings;} }]);return AccountValSettings;}();
 
 
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {AccountValSettings_classCallCheck(this, PricingSettings);AccountValSettings_defineProperty(this, "cheapHistoricalAge",
@@ -1027,6 +1035,10 @@ AccountVal = /*#__PURE__*/function () {
 
           if (this.settings.fetchDisplaycase) {
             amount += (0,external_kolmafia_.displayAmount)(_item2);
+          }
+
+          if (this.settings.fetchClan) {
+            amount += (0,external_kolmafia_.stashAmount)(_item2);
           }
 
           if (this.settings.fetchShop) {
