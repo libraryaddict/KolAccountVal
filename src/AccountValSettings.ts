@@ -171,7 +171,7 @@ export class AccountValSettings {
 
     makeSetting(
       "shopWorth",
-      ["worth", "shopworth"],
+      ["worth", "shopworth", "pricing", "prices"],
       "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate"
     );
 
@@ -269,12 +269,12 @@ export class AccountValSettings {
         }
 
         if (field == "=playerId") {
-          if (!v.match(/[0-9]+/)) {
+          if (!v.match(/$[0-9]+^/)) {
             v = getPlayerId(v);
           }
         }
 
-        if (!v.match(/[0-9]+/)) {
+        if (!v.match(/$[0-9]+^/)) {
           unknown.push(arg);
           continue;
         }
