@@ -1,25 +1,30 @@
-import { getPlayerId, print, stopCounter, toBoolean, toInt } from "kolmafia";
-import { ValItem } from "./AccountVal";
-import { ItemPrice } from "./PriceResolver";
+import { getPlayerId, toBoolean, toInt } from "kolmafia";
+
+export enum FieldType {
+  NUMBER,
+  SORTBY,
+  BOOLEAN,
+  NAME,
+  STRING,
+}
 
 export class ValSetting {
+  type: FieldType;
   field: string;
   names: string[];
   desc: string;
 }
 
 export enum SortBy {
+  NAME,
+  QUANTITY,
   PRICE,
 
-  QUANTITY,
+  TOTAL_PRICE,
 
   // SALES_VOLUME,
 
   ITEM_ID,
-
-  NAME,
-
-  TOTAL_PRICE,
 }
 
 export class AccountValSettings {
@@ -43,13 +48,20 @@ export class AccountValSettings {
   sortBy: SortBy = SortBy.TOTAL_PRICE;
   reverseSort: boolean = false;
   shopWorth: boolean = false;
+  javascriptFilter: string;
 
   static getSettings(): ValSetting[] {
     let settings = [];
 
-    function makeSetting(name: string, aliases: string[], desc: string) {
+    function makeSetting(
+      type: FieldType,
+      name: string,
+      aliases: string[],
+      desc: string
+    ) {
       let setting = new ValSetting();
 
+      setting.type = type;
       setting.field = name;
       setting.names = aliases;
       setting.desc = desc;
@@ -58,41 +70,49 @@ export class AccountValSettings {
     }
 
     makeSetting(
+      FieldType.BOOLEAN,
       "fetchCloset",
       ["closet", "clos"],
       "Should it fetch from the closet"
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "fetchStorage",
       ["storage", "stor", "hagnk", "hagnks"],
       "Should it fetch from storage"
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "fetchShop",
       ["store", "mall", "shop"],
       "Should it fetch from the shop"
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "fetchInventory",
       ["inventory", "inv"],
       "Should it fetch from your inventory"
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "fetchDisplaycase",
       ["displaycase", "display", "dc"],
       "Should it fetch from the displaycase"
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "fetchClan",
       ["clan", "stash"],
       "Should it check clan's stash? False by default"
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "doTradeables",
       ["tradeable", "tradeables", "trade", "tradable", "true"],
       "Should it do tradeables"
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "doNontradeables",
       [
         "notrade",
@@ -109,41 +129,47 @@ export class AccountValSettings {
       "Should it do non-tradeables (Resolves to tradeables if it can)"
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "doFamiliars",
       ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"],
       "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set"
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "doBound",
       ["bound", "bind", "bounded", "binds", "binded"],
       "Should it do items that are bound to your account (Generally only iotms)"
     );
 
     makeSetting(
-      "=minimumMeat",
+      FieldType.NUMBER,
+      "minimumMeat",
       [
+        "meat",
         "minmeat",
         "minimummeat",
-        "meat",
         "minmeat",
         "min-meat",
         "minprice",
         "price",
       ],
-      "Each item total worth, at least this amount. (meat=4000)"
+      "Each item total worth, at least this amount."
     );
     makeSetting(
-      "=minimumAmount",
+      FieldType.NUMBER,
+      "minimumAmount",
       ["amount", "count", "minimumamount", "minamount"],
-      "At least this many items (meat=4000)"
+      "At least this many items"
     );
     makeSetting(
-      "=displayLimit",
+      FieldType.NUMBER,
+      "displayLimit",
       ["limit", "displaylimit", "maxdisplay", "lines"],
-      "Limit results to display this amount (limit=100)"
+      "Limit results to display this amount"
     );
     makeSetting(
-      "=playerId",
+      FieldType.NAME,
+      "playerId",
       [
         "player",
         "playerid",
@@ -157,28 +183,41 @@ export class AccountValSettings {
       'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces'
     );
     makeSetting(
+      FieldType.BOOLEAN,
       "doSuperFast",
       ["fast", "superfast", "speed", "quick", "rough"],
       "Try resolve everything with historical price, no matter how outdated"
     );
 
     makeSetting(
+      FieldType.NUMBER,
       "maxAge",
       ["age", "maxage", "days"],
-      "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date. Default of 14"
+      "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date"
     );
 
     makeSetting(
-      "@sortBy",
+      FieldType.SORTBY,
+      "sortBy",
       ["sort", "sortby", "sorted"],
       "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " +
-        Object.keys(SortBy).join(", ")
+        Object.keys(SortBy)
+          .filter((s) => s.length > 2)
+          .join(", ")
     );
 
     makeSetting(
+      FieldType.BOOLEAN,
       "shopWorth",
       ["worth", "shopworth", "pricing", "prices"],
       "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate"
+    );
+
+    makeSetting(
+      FieldType.STRING,
+      "javascriptFilter",
+      ["jsfilter", "javascriptfilter", "javascript", "js"],
+      'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.get("None")"'
     );
 
     return settings;
@@ -204,7 +243,7 @@ export class AccountValSettings {
         continue;
       }
 
-      let field: string = null;
+      let setting: ValSetting;
       let name = arg
         .split("=")[0]
         .toLowerCase()
@@ -212,15 +251,15 @@ export class AccountValSettings {
         .replace("+", "")
         .replace("!", "");
 
-      settings.forEach((setting) => {
-        if (!setting.names.includes(name)) {
+      settings.forEach((s) => {
+        if (!s.names.includes(name)) {
           return;
         }
 
-        field = setting.field;
+        setting = s;
       });
 
-      if (field == null) {
+      if (setting == null) {
         unknown.push(arg);
         continue;
       }
@@ -229,15 +268,11 @@ export class AccountValSettings {
 
       if (arg.startsWith("-") || arg.startsWith("+") || arg.startsWith("!")) {
         arg = arg.substring(1);
-      } else if (
-        arg.includes("=") &&
-        !field.startsWith("=") &&
-        !field.startsWith("@")
-      ) {
+      } else if (arg.includes("=") && setting.type == FieldType.BOOLEAN) {
         isTrue = toBoolean(arg.split("=")[1]);
       }
 
-      if (field.startsWith("@")) {
+      if (setting.type == FieldType.SORTBY) {
         if (!arg.includes("=")) {
           unknown.push(arg);
           continue;
@@ -262,7 +297,10 @@ export class AccountValSettings {
 
         this.sortBy = sortBy;
         this.reverseSort = !isTrue;
-      } else if (field.startsWith("=")) {
+      } else if (
+        setting.type == FieldType.NUMBER ||
+        setting.type == FieldType.NAME
+      ) {
         if (!arg.includes("=")) {
           unknown.push(arg);
           continue;
@@ -275,7 +313,7 @@ export class AccountValSettings {
           continue;
         }
 
-        if (field == "=playerId") {
+        if (setting.type == FieldType.NAME) {
           if (!v.match(/^[0-9]+$/)) {
             v = getPlayerId(v);
           }
@@ -286,9 +324,23 @@ export class AccountValSettings {
           continue;
         }
 
-        this[field.substring(1)] = toInt(v);
+        this[setting.field] = toInt(v);
+      } else if (setting.type == FieldType.STRING) {
+        if (!arg.includes("=")) {
+          unknown.push(arg);
+          continue;
+        }
+
+        let v = arg.substring(arg.indexOf("=") + 1);
+
+        if (v.length == 0) {
+          unknown.push(arg);
+          continue;
+        }
+
+        this[setting.field] = v;
       } else {
-        this[field] = isTrue;
+        this[setting.field] = isTrue;
       }
     }
 

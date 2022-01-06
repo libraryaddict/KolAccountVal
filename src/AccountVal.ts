@@ -19,11 +19,13 @@ import {
   stashAmount,
   storageAmount,
   toInt,
+  toJson,
 } from "kolmafia";
 import { ItemResolver } from "./ItemResolver";
 import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
 import {
   AccountValSettings,
+  FieldType,
   PricingSettings,
   SortBy,
 } from "./AccountValSettings";
@@ -74,6 +76,7 @@ class AccountVal {
   private priceResolver: PriceResolver;
   private prices: [ValItem, ItemPrice][] = [];
   private settings: AccountValSettings;
+  private jsFilter: (item: Item, amount: number) => boolean;
 
   constructor(settings: AccountValSettings, priceSettings: PricingSettings) {
     this.settings = settings;
@@ -109,7 +112,27 @@ class AccountVal {
     this.resolveNoTrades();
   }
 
+  loadJsFilter() {
+    if (this.settings.javascriptFilter == null) {
+      return;
+    }
+    print(
+      "JS Filter has been set to: " + this.settings.javascriptFilter,
+      "gray"
+    );
+
+    try {
+      this.jsFilter = eval(this.settings.javascriptFilter);
+    } catch (e) {
+      print("Invalid jsfilter provided! Error as follows:", "red");
+      print();
+      throw e;
+    }
+  }
+
   loadItems() {
+    this.loadJsFilter();
+
     if (this.settings.playerId > 0) {
       this.loadPageItems();
       return;
@@ -206,6 +229,14 @@ class AccountVal {
     }
 
     for (let item of this.ownedItems.keys()) {
+      if (
+        this.jsFilter != null &&
+        !this.jsFilter(item.tradeableItem, this.ownedItems.get(item))
+      ) {
+        this.ownedItems.delete(item);
+        continue;
+      }
+
       if (this.ownedItems.get(item) >= this.settings.minimumAmount) {
         // If we're doing bound items, and this is a bound item..
         if (this.settings.doBound && item.isBound()) {
@@ -631,6 +662,22 @@ class AccountVal {
     );
 
     for (let setting of AccountValSettings.getSettings()) {
+      let defaultOf = ".</font> <font>Default is: ";
+
+      if (this.settings[setting.field] != null) {
+        let val = this.settings[setting.field];
+
+        if (setting.type == FieldType.NUMBER) {
+          val = setting.names[0] + "=" + val;
+        } else if (setting.type == FieldType.SORTBY) {
+          val = setting.names[0] + "=" + SortBy[val];
+        }
+
+        defaultOf += val;
+      } else {
+        defaultOf += "null";
+      }
+
       printHtml(
         "<font color='gray' title='Aliases: " +
           setting.names.join(", ") +
@@ -638,6 +685,7 @@ class AccountVal {
           setting.names[0] +
           " - " +
           setting.desc +
+          defaultOf +
           "</font>"
       );
     }
@@ -662,6 +710,7 @@ export function main(command: string) {
       );
       command = "";
     } else if (command.toLowerCase() == "help") {
+      settings.doSettings([]);
       acc.doHelp();
       return;
     }
@@ -672,14 +721,25 @@ export function main(command: string) {
 
     // Splitting so we can do name="Tom the Hunk"
     while (
-      (match = tCommand.match(/(?:^| )([^ ]+=(\"|')[^=]+(\"|'))(?:$| )/)) !=
+      (match = tCommand.match(/(?:^| )([^ =]+=(\"|').+?\"|')(?=(?:$| ))/)) !=
       null
     ) {
       let v = match[1];
+      let val = "";
 
-      while (v.includes('"') || v.includes("'")) {
-        v = v.replace('"', "").replace("'", "");
+      if (v.indexOf("=") > 0) {
+        val = v.substring(0, v.indexOf("=") + 1);
+        v = v.substring(val.length);
       }
+
+      if (
+        (v.startsWith('"') && v.endsWith('"')) ||
+        (v.startsWith("'") && v.endsWith("'"))
+      ) {
+        v = v.substring(1, v.length - 1);
+      }
+
+      v = val + v;
 
       spl.push(v);
       tCommand = tCommand.replace(match[1], "").trim().replace(/ +/, " ");
