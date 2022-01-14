@@ -458,9 +458,22 @@ class AccountVal {
     let shopNetValue: number = 0;
     let shopPricedAt: number = 0;
 
-    for (let i of this.prices) {
-      let item = i[0];
-      let price = i[1];
+    for (
+      let no = this.prices.length - 1;
+      no >= 0 && lines.length < this.settings.displayLimit;
+      no--
+    ) {
+      let item = this.prices[no][0];
+      let price = this.prices[no][1];
+
+      if (
+        this.settings.sales > 0 &&
+        this.priceResolver.history.getAmountSold(item.tradeableItem, 14) <
+          this.settings.sales
+      ) {
+        continue;
+      }
+
       let count = this.ownedItems.get(item);
       let totalWorth = price.price * count;
       netvalue += totalWorth;
@@ -535,7 +548,8 @@ class AccountVal {
       );
     }
 
-    let skipping = Math.max(0, lines.length - this.settings.displayLimit);
+    lines = lines.reverse();
+    let skipping = Math.max(0, this.prices.length - this.settings.displayLimit);
 
     if (skipping > 0) {
       printHtml(
@@ -547,8 +561,8 @@ class AccountVal {
       );
     }
 
-    for (let i = skipping; i < lines.length; i++) {
-      printHtml(lines[i]);
+    for (let line of lines) {
+      printHtml(line);
     }
 
     if (mallExtinct.length > 0) {
@@ -575,9 +589,12 @@ class AccountVal {
 
     let mrAWorth = (0.0 + netvalue) / aWorth;
 
-    print(
-      "Going by the value of a Mr. Accessory, that's $" +
-        this.getNumber(mrAWorth * 10)
+    printHtml(
+      `<font title='With Mr. Accessory worth being ${this.getNumber(
+        aWorth
+      )} meat'>Going by the value of a Mr. Accessory, that's $${this.getNumber(
+        mrAWorth * 10
+      )}</font>`
     );
 
     if (

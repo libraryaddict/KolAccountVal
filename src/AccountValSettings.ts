@@ -45,6 +45,7 @@ export class AccountValSettings {
   minimumMeat = 0;
   minimumAmount = 1;
   maxAge: number = 14;
+  sales: number = 0;
   sortBy: SortBy = SortBy.TOTAL_PRICE;
   reverseSort: boolean = false;
   shopWorth: boolean = false;
@@ -218,6 +219,13 @@ export class AccountValSettings {
       "javascriptFilter",
       ["jsfilter", "javascriptfilter", "javascript", "js"],
       'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.get("None")"'
+    );
+
+    makeSetting(
+      FieldType.NUMBER,
+      "sales",
+      ["sales"],
+      "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed"
     );
 
     return settings;
