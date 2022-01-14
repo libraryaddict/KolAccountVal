@@ -4,7 +4,10 @@ import {
   haveFamiliar,
   myGardenType,
   print,
+  setProperty,
+  toBoolean,
   toInt,
+  toItem,
   visitUrl,
   wait,
   waitq,
@@ -35,9 +38,35 @@ enum ItemType {
 export class ItemResolver {
   private visitCache: Map<string, string> = new Map();
   private accValStuff: AccValStuff[];
+  private accountValCache: Map<Item, boolean> = new Map();
+  private accountValCachePropName = "_accountValUrlCache";
 
   constructor() {
     this.accValStuff = this.loadAccountValStuff();
+  }
+
+  loadCache() {
+    let prop: string[] = getProperty(this.accountValCachePropName).split(",");
+
+    for (let p of prop) {
+      if (!p.includes(":")) {
+        continue;
+      }
+
+      let spl = p.split(":");
+
+      this.accountValCache.set(toItem(toInt(spl[0])), toBoolean(spl[1]));
+    }
+  }
+
+  saveCache() {
+    let values: string[] = [];
+
+    this.accountValCache.forEach((val, key) => {
+      values.push(toInt(key) + ":" + val);
+    });
+
+    setProperty(this.accountValCachePropName, values.join(","));
   }
 
   /**
@@ -45,14 +74,27 @@ export class ItemResolver {
    */
   getUrledItems(): [Item, ItemStatus?][] {
     let items: [Item, ItemStatus][] = [];
+    let origSize = this.accountValCache.size;
 
     for (let s of this.accValStuff) {
       if (s.itemType == ItemType.BOOK) {
-        if (this.visitCheck("campground.php?action=bookshelf", s.data1)) {
+        if (
+          this.visitCheck(
+            s.actualItem,
+            "campground.php?action=bookshelf",
+            s.data1
+          )
+        ) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.EUDORA) {
-        if (this.visitCheck("account.php?tab=correspondence", s.data1)) {
+        if (
+          this.visitCheck(
+            s.actualItem,
+            "account.php?tab=correspondence",
+            s.data1
+          )
+        ) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.PROPERTY) {
@@ -60,7 +102,7 @@ export class ItemResolver {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.VISIT_URL_CHECK) {
-        if (this.visitCheck(s.data1, s.data2)) {
+        if (this.visitCheck(s.actualItem, s.data1, s.data2)) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.GARDEN) {
@@ -68,6 +110,10 @@ export class ItemResolver {
           items.push([s.actualItem, ItemStatus.IN_USE]);
         }
       }
+    }
+
+    if (origSize != this.accountValCache.size) {
+      this.saveCache();
     }
 
     return items;
@@ -134,7 +180,11 @@ export class ItemResolver {
     }
   }
 
-  visitCheck(url: string, find: string) {
+  visitCheck(item: Item, url: string, find: string) {
+    if (this.accountValCache.has(item)) {
+      return this.accountValCache.get(item);
+    }
+
     let page = this.visitCache.get(url);
 
     if (page == null) {
@@ -142,7 +192,11 @@ export class ItemResolver {
       this.visitCache.set(url, page);
     }
 
-    return page.includes(find);
+    let result: boolean = page.includes(find);
+
+    this.accountValCache.set(item, result);
+
+    return result;
   }
 
   loadAccountValStuff(): AccValStuff[] {
@@ -215,6 +269,7 @@ export class ItemResolver {
       print("Missing a tradeable item for " + v.actualItem, "red");
     }
 
+    this.loadCache();
     return values;
   }
 }
