@@ -307,7 +307,10 @@ class AccountVal {
         );
       }
 
-      if (price.price < this.settings.minimumMeat) {
+      if (
+        this.settings.minimumMeat > 0 &&
+        price.price < this.settings.minimumMeat
+      ) {
         this.ownedItems.delete(i);
         continue;
       }
