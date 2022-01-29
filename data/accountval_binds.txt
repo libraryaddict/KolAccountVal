@@ -52,7 +52,8 @@ i	Packaged Daylight Shavings Helmet	Daylight Shavings Helmet
 i	Packaged cold medicine cabinet	 Cold medicine cabinet
 i	box o' ghosts	gregarious ghostling
 i	Gordon Beer's Beer Garden Catalog	Packet of beer seeds
-
+i	Mint condition magnifying glass	cursed magnifying glass
+i	Undrilled cosmic bowling ball	cosmic bowling ball
 
 
 # Bookshelf stuff! Start with b
