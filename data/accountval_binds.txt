@@ -54,6 +54,27 @@ i	box o' ghosts	gregarious ghostling
 i	Gordon Beer's Beer Garden Catalog	Packet of beer seeds
 i	Mint condition magnifying glass	cursed magnifying glass
 i	Undrilled cosmic bowling ball	cosmic bowling ball
+i	Antique pair of blue jeans	Ellsbury's journal (used)
+i	warehouse key	mime army insignia (cryonics)
+i	warehouse key	mime army insignia (morale)
+i	warehouse key	mime army insignia (psychological warfare)
+i	warehouse key	mime army insignia (pyrotechnics)
+i	warehouse key	mime army insignia (sanitation)
+i	warehouse key	mime army insignia (espionage)
+i	warehouse key	mime army insignia (infantry)
+i	warehouse key	mime army insignia (intelligence)
+i	warehouse key	mime army infiltration glove
+i	warehouse key	mime army rations
+i	warehouse key	mime army wine
+i	warehouse key	mime army camouflage kit
+i	warehouse key	mime army superserum
+i	warehouse key	mime army challenge coin
+i	warehouse key	mime army shotglass
+i	warehouse key	miming corduroys
+i	warehouse key	miming beret
+i	warehouse key	miming gloves
+i	warehouse key	miming boots
+i	warehouse key	miming shirt
 
 
 # Bookshelf stuff! Start with b

@@ -203,7 +203,8 @@ class AccountVal {
     if (this.settings.doBound) {
       for (let item of this.resolver.getUrledItems()) {
         if (
-          item[0].tradeable
+          item[0].tradeable &&
+          (item[1] == ItemStatus.FAMILIAR || item[1] != ItemStatus.BOUND)
             ? !this.settings.doTradeables
             : !this.settings.doBound
         ) {

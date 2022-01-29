@@ -1,13 +1,17 @@
 import {
   fileToBuffer,
   getProperty,
+  getRevision,
   haveFamiliar,
+  haveSkill,
   myGardenType,
   print,
   setProperty,
+  skillModifier,
   toBoolean,
   toInt,
   toItem,
+  toSkill,
   visitUrl,
   wait,
   waitq,
@@ -33,20 +37,25 @@ enum ItemType {
   GARDEN,
 
   VISIT_URL_CHECK,
+
+  SKILL,
 }
 
 export class ItemResolver {
   private visitCache: Map<string, string> = new Map();
   private accValStuff: AccValStuff[];
   private accountValCache: Map<Item, boolean> = new Map();
-  private accountValCachePropName = "_accountValUrlCache";
+  private accountValUrlCachePropName = "_accountValUrlCache";
+  private accountValSkillCachePropName = "accountValSkillCache";
 
   constructor() {
     this.accValStuff = this.loadAccountValStuff();
   }
 
   loadCache() {
-    let prop: string[] = getProperty(this.accountValCachePropName).split(",");
+    let prop: string[] = getProperty(this.accountValUrlCachePropName).split(
+      ","
+    );
 
     for (let p of prop) {
       if (!p.includes(":")) {
@@ -66,7 +75,32 @@ export class ItemResolver {
       values.push(toInt(key) + ":" + val);
     });
 
-    setProperty(this.accountValCachePropName, values.join(","));
+    setProperty(this.accountValUrlCachePropName, values.join(","));
+  }
+
+  hasSkill(item: Item, skill: Skill) {
+    if (this.accountValCache.has(item)) {
+      return this.accountValCache.get(item);
+    }
+
+    let url = "charsheet.php";
+    let page = this.visitCache.get(url);
+
+    if (page == null) {
+      page = visitUrl(url);
+      this.visitCache.set(url, page);
+    }
+
+    let result: string[] = page.match(
+      new RegExp(
+        "whichskill=(" + toInt(skill) + ")[^/]+</a> ((P|(?:<b>HP</b>)))",
+        "g"
+      )
+    );
+
+    this.accountValCache.set(item, result != null);
+
+    return result;
   }
 
   /**
@@ -85,7 +119,7 @@ export class ItemResolver {
             s.data1
           )
         ) {
-          items.push([s.actualItem, ItemStatus.BOUND]);
+          //      items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.EUDORA) {
         if (
@@ -109,13 +143,18 @@ export class ItemResolver {
         if (myGardenType() == s.data1) {
           items.push([s.actualItem, ItemStatus.IN_USE]);
         }
+      } else if (s.itemType == ItemType.SKILL) {
+        if (this.hasSkill(s.actualItem, toSkill(s.data1))) {
+          items.push([s.actualItem, ItemStatus.BOUND]);
+        }
       }
     }
 
-    if (origSize != this.accountValCache.size) {
-      this.saveCache();
+    if (origSize == this.accountValCache.size) {
+      return items;
     }
 
+    this.saveCache();
     return items;
   }
 
@@ -249,6 +288,8 @@ export class ItemResolver {
       }
     }
 
+    this.loadSkills(values);
+
     loop: for (let v of values) {
       if (v.actualItem.tradeable) {
         continue;
@@ -271,5 +312,96 @@ export class ItemResolver {
 
     this.loadCache();
     return values;
+  }
+
+  loadSkills(values: AccValStuff[]) {
+    let cache: string = getProperty(this.accountValSkillCachePropName);
+
+    if (cache.split(",")[0] == getRevision().toString()) {
+      let spl = cache.substring(cache.indexOf(",") + 1).split(",");
+
+      for (let s of spl) {
+        let spl2 = s.split(/[:;]/);
+
+        let v: AccValStuff = new AccValStuff();
+
+        v.itemType = ItemType.SKILL;
+        v.actualItem = toItem(spl2[0]);
+
+        values.push(v);
+
+        // Skill
+        if (s.includes(":")) {
+          v.data1 = spl2[1];
+        } else {
+          // Item
+          v.data1 = toItem(toInt(spl2[1])).name;
+        }
+      }
+
+      return;
+    }
+
+    let newValues: AccValStuff[] = [];
+    let propValues: string[] = [getRevision().toString()];
+
+    // Now we load the skills we have
+    for (let i of Item.all()) {
+      // Skip items that don't last across ascensions
+      if (i.quest || i.gift) {
+        continue;
+      }
+
+      // Skip items that are not tradeable skills, because you either have a skill linked to an untradeable item, or a tradeable item.
+      // If its linked to an untradeable, then we can check the untradeable item itself. Not bother with the skill.
+      if (!i.tradeable) {
+        continue;
+      }
+
+      let skill = skillModifier(i, "Skill");
+
+      if (skill == Skill.get("None")) {
+        continue;
+      }
+
+      let v: AccValStuff = new AccValStuff();
+
+      v.itemType = ItemType.SKILL;
+      v.actualItem = i;
+      v.data1 = toInt(skill).toString();
+
+      values.push(v);
+      propValues.push(toInt(i) + ":" + v.data1);
+    }
+
+    for (let i of Item.all()) {
+      if (
+        i.tradeable ||
+        i.quest ||
+        i.gift ||
+        !i.name.match(/^.* \([a-zA-Z]+\)/) ||
+        skillModifier(i, "Skill") != Skill.get("None")
+      ) {
+        continue;
+      }
+
+      let name = i.name.substring(0, i.name.lastIndexOf("(") - 1);
+
+      for (let i2 of Item.all()) {
+        if (!i2.tradeable || i2.gift || i2.quest || !i2.name.includes(name)) {
+          continue;
+        }
+
+        let v: AccValStuff = new AccValStuff();
+        v.itemType = ItemType.UNTRADEABLE_ITEM;
+        v.actualItem = i2;
+        v.data1 = i.name;
+
+        values.push(v);
+        propValues.push(toInt(i2) + ";" + toInt(i));
+      }
+    }
+
+    setProperty(this.accountValSkillCachePropName, propValues.join(","));
   }
 }
