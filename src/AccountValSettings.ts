@@ -231,6 +231,20 @@ export class AccountValSettings {
     return settings;
   }
 
+  getSetting(alias: string): ValSetting {
+    alias = alias.toLowerCase();
+
+    for (let setting of AccountValSettings.getSettings()) {
+      if (!setting.names.includes(alias)) {
+        continue;
+      }
+
+      return setting;
+    }
+
+    return null;
+  }
+
   doSettings(args: string[]): string[] {
     let unknown: string[] = [];
     let incompatible: string[][] = [

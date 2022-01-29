@@ -627,21 +627,31 @@ class AccountVal {
     }
 
     let meat = 0;
+    let meatSources: string[] = [];
 
-    if (this.settings.fetchInventory) {
+    if (this.settings.fetchInventory && myMeat() != 0) {
       meat += myMeat();
+      meatSources.push(this.getNumber(myMeat()) + " in inventory");
     }
 
-    if (this.settings.fetchCloset) {
+    if (this.settings.fetchCloset && myClosetMeat() != 0) {
       meat += myClosetMeat();
+      meatSources.push(this.getNumber(myClosetMeat()) + " in closet");
     }
 
-    if (this.settings.fetchStorage) {
+    if (this.settings.fetchStorage && myStorageMeat() != 0) {
       meat += myStorageMeat();
+      meatSources.push(this.getNumber(myStorageMeat()) + " in storage");
     }
 
     if (meat > 0 && this.settings.playerId == null) {
-      print("This doesn't include your " + this.getNumber(meat) + " meat!");
+      printHtml(
+        "<font title='" +
+          meatSources.join(", ") +
+          "'>This doesn't include your " +
+          this.getNumber(meat) +
+          " meat!</font>"
+      );
     }
   }
 
@@ -682,6 +692,8 @@ class AccountVal {
       "<font color='blue'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>"
     );
 
+    let even = true;
+
     for (let setting of AccountValSettings.getSettings()) {
       let defaultOf = ".</font> <font>Default is: ";
 
@@ -700,15 +712,12 @@ class AccountVal {
       }
 
       printHtml(
-        "<font color='gray' title='Aliases: " +
-          setting.names.join(", ") +
-          "'>" +
-          setting.names[0] +
-          " - " +
-          setting.desc +
-          defaultOf +
-          "</font>"
+        `<font color='gray' title='Aliases: ${setting.names.join(", ")}'><b>${
+          setting.names[0]
+        }</b> - ${setting.desc}${defaultOf}</font>`
       );
+
+      even = !even;
     }
     // show - How many to show, defaults to 100
     // count - How many we must have of this item
@@ -737,8 +746,21 @@ export function main(command: string) {
     }
 
     let tCommand = command;
-    let spl: string[] = [];
     let match: RegExpMatchArray;
+
+    while ((match = tCommand.match(/(^| )([a-zA-Z]+ )/)) != null) {
+      let setting = settings.getSetting(match[2].trim());
+      tCommand = tCommand.replace(match[0], "");
+
+      if (setting == null) {
+        continue;
+      }
+
+      command = command.replace(match[0], match[1] + match[2].trim() + "=");
+    }
+
+    tCommand = command;
+    let spl: string[] = [];
 
     // Splitting so we can do name="Tom the Hunk"
     while (
