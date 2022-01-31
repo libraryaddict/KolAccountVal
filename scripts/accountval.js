@@ -195,7 +195,8 @@ AccountVal = /*#__PURE__*/function () {
       if (this.settings.doBound) {var _iterator2 = _createForOfIteratorHelper(
         this.resolver.getUrledItems()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
             if (
-            _item[0].tradeable ?
+            _item[0].tradeable && (
+            _item[1] == ItemStatus.FAMILIAR || _item[1] != ItemStatus.BOUND) ?
             !this.settings.doTradeables :
             !this.settings.doBound)
             {
@@ -299,7 +300,10 @@ AccountVal = /*#__PURE__*/function () {
 
           }
 
-          if (price.price < this.settings.minimumMeat) {
+          if (
+          this.settings.minimumMeat > 0 &&
+          price.price < this.settings.minimumMeat)
+          {
             this.ownedItems.delete(i);
             continue;
           }
@@ -615,21 +619,31 @@ AccountVal = /*#__PURE__*/function () {
       }
 
       var meat = 0;
+      var meatSources = [];
 
-      if (this.settings.fetchInventory) {
+      if (this.settings.fetchInventory && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myMeat)() != 0) {
         meat += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myMeat)();
+        meatSources.push(this.getNumber((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myMeat)()) + " in inventory");
       }
 
-      if (this.settings.fetchCloset) {
+      if (this.settings.fetchCloset && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myClosetMeat)() != 0) {
         meat += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myClosetMeat)();
+        meatSources.push(this.getNumber((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myClosetMeat)()) + " in closet");
       }
 
-      if (this.settings.fetchStorage) {
+      if (this.settings.fetchStorage && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myStorageMeat)() != 0) {
         meat += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myStorageMeat)();
+        meatSources.push(this.getNumber((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myStorageMeat)()) + " in storage");
       }
 
       if (meat > 0 && this.settings.playerId == null) {
-        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("This doesn't include your " + this.getNumber(meat) + " meat!");
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
+        "<font title='" +
+        meatSources.join(", ") +
+        "'>This doesn't include your " +
+        this.getNumber(meat) +
+        " meat!</font>");
+
       }
     } }, { key: "escapeHTML", value:
 
@@ -667,8 +681,10 @@ AccountVal = /*#__PURE__*/function () {
       "blue");
 
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-      "<font color='blue'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>");var _iterator7 = _createForOfIteratorHelper(
+      "<font color='blue'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>");
 
+
+      var even = true;var _iterator7 = _createForOfIteratorHelper(
 
       _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .AccountValSettings.getSettings */ .iX.getSettings()),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var setting = _step7.value;
           var defaultOf = ".</font> <font>Default is: ";
@@ -687,16 +703,13 @@ AccountVal = /*#__PURE__*/function () {
             defaultOf += "null";
           }
 
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-          "<font color='gray' title='Aliases: " +
-          setting.names.join(", ") +
-          "'>" +
-          setting.names[0] +
-          " - " +
-          setting.desc +
-          defaultOf +
-          "</font>");
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)("<font color='gray' title='Aliases: ".concat(
+          setting.names.join(", "), "'><b>").concat(
+          setting.names[0], "</b> - ").concat(
+          setting.desc).concat(defaultOf, "</font>"));
 
+
+          even = !even;
         }
         // show - How many to show, defaults to 100
         // count - How many we must have of this item
@@ -725,8 +738,21 @@ function main(command) {
     }
 
     var tCommand = command;
-    var spl = [];
     var match;
+
+    while ((match = tCommand.match(/(^| )([a-zA-Z]+ )/)) != null) {
+      var setting = settings.getSetting(match[2].trim());
+      tCommand = tCommand.replace(match[0], "");
+
+      if (setting == null) {
+        continue;
+      }
+
+      command = command.replace(match[0], match[1] + match[2].trim() + "=");
+    }
+
+    tCommand = command;
+    var spl = [];
 
     // Splitting so we can do name="Tom the Hunk"
     while (
@@ -851,7 +877,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     0);_defineProperty(this, "sortBy",
     SortBy.TOTAL_PRICE);_defineProperty(this, "reverseSort",
     false);_defineProperty(this, "shopWorth",
-    false);_defineProperty(this, "javascriptFilter", void 0);}_createClass(AccountValSettings, [{ key: "doSettings", value:
+    false);_defineProperty(this, "javascriptFilter", void 0);}_createClass(AccountValSettings, [{ key: "getSetting", value:
 
 
 
@@ -1033,6 +1059,20 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
 
 
+
+    function getSetting(alias) {
+      alias = alias.toLowerCase();var _iterator = _createForOfIteratorHelper(
+
+      AccountValSettings.getSettings()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var setting = _step.value;
+          if (!setting.names.includes(alias)) {
+            continue;
+          }
+
+          return setting;
+        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
+
+      return null;
+    } }, { key: "doSettings", value:
 
     function doSettings(args) {var _this = this;
       var unknown = [];
@@ -1047,9 +1087,9 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
       ["doTradeables", "doNontradeables", "doBound", "doFamiliars"]];
 
-      var settings = AccountValSettings.getSettings();var _iterator = _createForOfIteratorHelper(
+      var settings = AccountValSettings.getSettings();var _iterator2 = _createForOfIteratorHelper(
 
-      args),_step;try {var _loop = function _loop() {var arg = _step.value;
+      args),_step2;try {var _loop = function _loop() {var arg = _step2.value;
           if (arg.length == 0) {
             return "continue";
           }
@@ -1152,8 +1192,8 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
             _this[setting.field] = _v2;
           } else {
             _this[setting.field] = isTrue;
-          }};for (_iterator.s(); !(_step = _iterator.n()).done;) {var _ret = _loop();if (_ret === "continue") continue;
-        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
+          }};for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _ret = _loop();if (_ret === "continue") continue;
+        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
 
       var wasSet = Object.keys(this).filter((k) => this[k] == true);
       this.fetchEverywhere =
@@ -1170,9 +1210,9 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         }
       } else if (this.doFamiliars == null && this.doBound != null) {
         this.doFamiliars = this.doBound;
-      }var _iterator2 = _createForOfIteratorHelper(
+      }var _iterator3 = _createForOfIteratorHelper(
 
-      settings.map((s) => s.field)),_step2;try {var _loop2 = function _loop2() {var f = _step2.value;
+      settings.map((s) => s.field)),_step3;try {var _loop2 = function _loop2() {var f = _step3.value;
           if (_this[f] != null) {
             return "continue";
           }
@@ -1183,22 +1223,22 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
             return "continue";
           }
 
-          _this[f] = incomp.find((i) => wasSet.includes(i)) == null;};for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _ret2 = _loop2();if (_ret2 === "continue") continue;
-        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+          _this[f] = incomp.find((i) => wasSet.includes(i)) == null;};for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _ret2 = _loop2();if (_ret2 === "continue") continue;
+        }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       return unknown;
     } }, { key: "isArg", value:
 
     function isArg(arg, args) {
-      arg = arg.toLowerCase().split("=")[0];var _iterator3 = _createForOfIteratorHelper(
+      arg = arg.toLowerCase().split("=")[0];var _iterator4 = _createForOfIteratorHelper(
 
-      args),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var a = _step3.value;
+      args),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var a = _step4.value;
           if (arg != a) {
             continue;
           }
 
           return true;
-        }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
+        }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
 
       return false;
     } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc) {var setting = new ValSetting();setting.type = type;setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable", "true"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "doFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.get("None")"');makeSetting(FieldType.NUMBER, "sales", ["sales"], "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed");return settings;} }]);return AccountValSettings;}();
@@ -1216,9 +1256,9 @@ var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_cla
     14);}_createClass(PricingSettings, [{ key: "doSettings", value:
 
     function doSettings(args) {
-      var unknown = [];var _iterator4 = _createForOfIteratorHelper(
+      var unknown = [];var _iterator5 = _createForOfIteratorHelper(
 
-      args),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var arg = _step4.value;
+      args),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var arg = _step5.value;
           if (arg.length == 0) {
             continue;
           }
@@ -1234,21 +1274,21 @@ var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_cla
           }
 
           unknown.push(arg);
-        }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
+        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
 
       return unknown;
     } }, { key: "isArg", value:
 
     function isArg(arg, args) {
-      arg = arg.toLowerCase().split("=")[0];var _iterator5 = _createForOfIteratorHelper(
+      arg = arg.toLowerCase().split("=")[0];var _iterator6 = _createForOfIteratorHelper(
 
-      args),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var a = _step5.value;
+      args),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var a = _step6.value;
           if (arg != a) {
             continue;
           }
 
           return true;
-        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
+        }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
 
       return false;
     } }]);return PricingSettings;}();
@@ -1274,7 +1314,9 @@ AccValStuff = /*#__PURE__*/_createClass(function AccValStuff() {_classCallCheck(
 
 
 
-ItemType;(function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["GARDEN"] = 4] = "GARDEN";ItemType[ItemType["VISIT_URL_CHECK"] = 5] = "VISIT_URL_CHECK";})(ItemType || (ItemType = {}));
+ItemType;(function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["GARDEN"] = 4] = "GARDEN";ItemType[ItemType["VISIT_URL_CHECK"] = 5] = "VISIT_URL_CHECK";ItemType[ItemType["SKILL"] = 6] = "SKILL";})(ItemType || (ItemType = {}));
+
+
 
 
 
@@ -1294,12 +1336,15 @@ var ItemResolver = /*#__PURE__*/function () {
 
 
 
-  function ItemResolver() {_classCallCheck(this, ItemResolver);_defineProperty(this, "visitCache", new Map());_defineProperty(this, "accValStuff", void 0);_defineProperty(this, "accountValCache", new Map());_defineProperty(this, "accountValCachePropName", "_accountValUrlCache");
+
+  function ItemResolver() {_classCallCheck(this, ItemResolver);_defineProperty(this, "visitCache", new Map());_defineProperty(this, "accValStuff", void 0);_defineProperty(this, "accountValCache", new Map());_defineProperty(this, "accountValUrlCachePropName", "_accountValUrlCache");_defineProperty(this, "accountValSkillCachePropName", "accountValSkillCache");
     this.accValStuff = this.loadAccountValStuff();
   }_createClass(ItemResolver, [{ key: "loadCache", value:
 
     function loadCache() {
-      var prop = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)(this.accountValCachePropName).split(",");var _iterator = _createForOfIteratorHelper(
+      var prop = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)(this.accountValUrlCachePropName).split(
+      ",");var _iterator = _createForOfIteratorHelper(
+
 
       prop),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var p = _step.value;
           if (!p.includes(":")) {
@@ -1319,7 +1364,32 @@ var ItemResolver = /*#__PURE__*/function () {
         values.push((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(key) + ":" + val);
       });
 
-      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.setProperty)(this.accountValCachePropName, values.join(","));
+      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.setProperty)(this.accountValUrlCachePropName, values.join(","));
+    } }, { key: "hasSkill", value:
+
+    function hasSkill(item, skill) {
+      if (this.accountValCache.has(item)) {
+        return this.accountValCache.get(item);
+      }
+
+      var url = "charsheet.php";
+      var page = this.visitCache.get(url);
+
+      if (page == null) {
+        page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)(url);
+        this.visitCache.set(url, page);
+      }
+
+      var result = page.match(
+      new RegExp(
+      "whichskill=(" + (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(skill) + ")[^/]+</a> ((P|(?:<b>HP</b>)))",
+      "g"));
+
+
+
+      this.accountValCache.set(item, result != null);
+
+      return result;
     }
 
     /**
@@ -1338,7 +1408,7 @@ var ItemResolver = /*#__PURE__*/function () {
             s.data1))
 
             {
-              items.push([s.actualItem, _AccountVal__WEBPACK_IMPORTED_MODULE_1__.ItemStatus.BOUND]);
+              //      items.push([s.actualItem, ItemStatus.BOUND]);
             }
           } else if (s.itemType == ItemType.EUDORA) {
             if (
@@ -1362,13 +1432,18 @@ var ItemResolver = /*#__PURE__*/function () {
             if ((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myGardenType)() == s.data1) {
               items.push([s.actualItem, _AccountVal__WEBPACK_IMPORTED_MODULE_1__.ItemStatus.IN_USE]);
             }
+          } else if (s.itemType == ItemType.SKILL) {
+            if (this.hasSkill(s.actualItem, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toSkill)(s.data1))) {
+              items.push([s.actualItem, _AccountVal__WEBPACK_IMPORTED_MODULE_1__.ItemStatus.BOUND]);
+            }
           }
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
 
-      if (origSize != this.accountValCache.size) {
-        this.saveCache();
+      if (origSize == this.accountValCache.size) {
+        return items;
       }
 
+      this.saveCache();
       return items;
     } }, { key: "addItem", value:
 
@@ -1502,6 +1577,8 @@ var ItemResolver = /*#__PURE__*/function () {
           }
         }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
 
+      this.loadSkills(values);
+
       loop: for (var _i = 0, _values = values; _i < _values.length; _i++) {var v = _values[_i];
         if (v.actualItem.tradeable) {
           continue;
@@ -1524,6 +1601,97 @@ var ItemResolver = /*#__PURE__*/function () {
 
       this.loadCache();
       return values;
+    } }, { key: "loadSkills", value:
+
+    function loadSkills(values) {
+      var cache = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)(this.accountValSkillCachePropName);
+
+      if (cache.split(",")[0] == (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getRevision)().toString()) {
+        var spl = cache.substring(cache.indexOf(",") + 1).split(",");var _iterator8 = _createForOfIteratorHelper(
+
+        spl),_step8;try {for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {var s = _step8.value;
+            var spl2 = s.split(/[:;]/);
+
+            var v = new AccValStuff();
+
+            v.itemType = ItemType.SKILL;
+            v.actualItem = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toItem)(spl2[0]);
+
+            values.push(v);
+
+            // Skill
+            if (s.includes(":")) {
+              v.data1 = spl2[1];
+            } else {
+              // Item
+              v.data1 = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toItem)((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(spl2[1])).name;
+            }
+          }} catch (err) {_iterator8.e(err);} finally {_iterator8.f();}
+
+        return;
+      }
+
+      var newValues = [];
+      var propValues = [(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getRevision)().toString()];
+
+      // Now we load the skills we have
+      var _iterator9 = _createForOfIteratorHelper(Item.all()),_step9;try {for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {var i = _step9.value;
+          // Skip items that don't last across ascensions
+          if (i.quest || i.gift) {
+            continue;
+          }
+
+          // Skip items that are not tradeable skills, because you either have a skill linked to an untradeable item, or a tradeable item.
+          // If its linked to an untradeable, then we can check the untradeable item itself. Not bother with the skill.
+          if (!i.tradeable) {
+            continue;
+          }
+
+          var skill = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.skillModifier)(i, "Skill");
+
+          if (skill == Skill.get("None")) {
+            continue;
+          }
+
+          var _v2 = new AccValStuff();
+
+          _v2.itemType = ItemType.SKILL;
+          _v2.actualItem = i;
+          _v2.data1 = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(skill).toString();
+
+          values.push(_v2);
+          propValues.push((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(i) + ":" + _v2.data1);
+        }} catch (err) {_iterator9.e(err);} finally {_iterator9.f();}var _iterator10 = _createForOfIteratorHelper(
+
+      Item.all()),_step10;try {for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {var _i2 = _step10.value;
+          if (
+          _i2.tradeable ||
+          _i2.quest ||
+          _i2.gift ||
+          !_i2.name.match(/^.* \([a-zA-Z]+\)/) ||
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.skillModifier)(_i2, "Skill") != Skill.get("None"))
+          {
+            continue;
+          }
+
+          var name = _i2.name.substring(0, _i2.name.lastIndexOf("(") - 1);var _iterator11 = _createForOfIteratorHelper(
+
+          Item.all()),_step11;try {for (_iterator11.s(); !(_step11 = _iterator11.n()).done;) {var i2 = _step11.value;
+              if (!i2.tradeable || i2.gift || i2.quest || !i2.name.includes(name)) {
+                continue;
+              }
+
+              var _v3 = new AccValStuff();
+              _v3.itemType = ItemType.UNTRADEABLE_ITEM;
+              _v3.actualItem = i2;
+              _v3.data1 = _i2.name;
+
+              values.push(_v3);
+              propValues.push((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(i2) + ";" + (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(_i2));
+            }} catch (err) {_iterator11.e(err);} finally {_iterator11.f();}
+        }} catch (err) {_iterator10.e(err);} finally {_iterator10.f();}
+
+      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.setProperty)(this.accountValSkillCachePropName, propValues.join(","));
     } }]);return ItemResolver;}();
 
 /***/ }),
