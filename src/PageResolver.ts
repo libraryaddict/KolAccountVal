@@ -1,4 +1,4 @@
-import { print, toInt, toItem, visitUrl } from "kolmafia";
+import { Item, print, toInt, toItem, visitUrl } from "kolmafia";
 
 export class StoreItem {
   item: Item;

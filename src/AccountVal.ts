@@ -8,6 +8,7 @@ import {
   getVersion,
   getWorkshed,
   isCoinmasterItem,
+  Item,
   itemAmount,
   myClosetMeat,
   myMeat,
@@ -113,7 +114,7 @@ class AccountVal {
   }
 
   loadJsFilter() {
-    if (this.settings.javascriptFilter == null) {
+    if (this.settings.javascriptFilter == "") {
       return;
     }
     print(
@@ -186,7 +187,7 @@ class AccountVal {
     }
 
     // Check our current workshed
-    if (this.settings.fetchEverywhere) {
+    if (this.settings.fetchingEverywhereish) {
       if (this.settings.doBound || this.settings.doTradeables) {
         let i = getWorkshed();
 
@@ -238,38 +239,51 @@ class AccountVal {
         continue;
       }
 
-      if (this.ownedItems.get(item) >= this.settings.minimumAmount) {
-        // If we're doing bound items, and this is a bound item..
-        if (this.settings.doBound && item.isBound()) {
-          continue;
-        }
-
-        // If we're doing familiars and this is a familiar
-        if (this.settings.doFamiliars && item.bound == ItemStatus.FAMILIAR) {
-          continue;
-        }
-
-        // If we're doing tradeables, and this isn't a bound item, and is tradeable
-        if (
-          this.settings.doTradeables &&
-          item.tradeableItem.tradeable &&
-          !item.isBound()
-        ) {
-          continue;
-        }
-
-        // If we're doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
-        if (
-          this.settings.doNontradeables &&
-          item.tradeableItem.tradeable &&
-          !item.isBound() &&
-          autosellPrice(item.tradeableItem) > 0
-        ) {
-          continue;
-        }
+      if (
+        !item.isBound() &&
+        (!item.tradeableItem.tradeable || item.tradeableItem.gift) &&
+        autosellPrice(item.tradeableItem) == 0
+      ) {
+        this.ownedItems.delete(item);
+        continue;
       }
 
-      this.ownedItems.delete(item);
+      if (this.ownedItems.get(item) < this.settings.minimumAmount) {
+        this.ownedItems.delete(item);
+        continue;
+      }
+
+      // If we're doing bound items, and this is a bound item..
+      if (!this.settings.doBound && item.isBound()) {
+        this.ownedItems.delete(item);
+        continue;
+      }
+
+      // If we're doing familiars and this is a familiar
+      if (!this.settings.doFamiliars && item.bound == ItemStatus.FAMILIAR) {
+        this.ownedItems.delete(item);
+        continue;
+      }
+
+      // If we're not doing tradeables, and this isn't a bound item, and is tradeable
+      if (
+        !this.settings.doTradeables &&
+        item.tradeableItem.tradeable &&
+        !item.isBound()
+      ) {
+        this.ownedItems.delete(item);
+        continue;
+      }
+
+      // If we're not doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
+      if (
+        !this.settings.doNontradeables &&
+        !item.tradeableItem.tradeable &&
+        !item.isBound()
+      ) {
+        this.ownedItems.delete(item);
+        continue;
+      }
     }
   }
 
@@ -462,11 +476,7 @@ class AccountVal {
     let shopNetValue: number = 0;
     let shopPricedAt: number = 0;
 
-    for (
-      let no = this.prices.length - 1;
-      no >= 0 && lines.length < this.settings.displayLimit;
-      no--
-    ) {
+    for (let no = this.prices.length - 1; no >= 0; no--) {
       let item = this.prices[no][0];
       let price = this.prices[no][1];
 
@@ -481,6 +491,10 @@ class AccountVal {
       let count = this.ownedItems.get(item);
       let totalWorth = price.price * count;
       netvalue += totalWorth;
+
+      if (lines.length >= this.settings.displayLimit) {
+        continue;
+      }
 
       let titleName = item.name;
 
@@ -584,7 +598,7 @@ class AccountVal {
       );
     }
 
-    let pronoun = this.settings.playerId == null ? "You" : "They";
+    let pronoun = this.settings.playerId == 0 ? "You" : "They";
 
     print(
       pronoun + " are worth " + this.getNumber(netvalue) + " meat!",
@@ -644,7 +658,7 @@ class AccountVal {
       meatSources.push(this.getNumber(myStorageMeat()) + " in storage");
     }
 
-    if (meat > 0 && this.settings.playerId == null) {
+    if (meat > 0 && this.settings.playerId == 0) {
       printHtml(
         "<font title='" +
           meatSources.join(", ") +
@@ -748,15 +762,19 @@ export function main(command: string) {
     let tCommand = command;
     let match: RegExpMatchArray;
 
-    while ((match = tCommand.match(/(^| )([a-zA-Z]+ )/)) != null) {
-      let setting = settings.getSetting(match[2].trim());
-      tCommand = tCommand.replace(match[0], "");
+    while ((match = tCommand.match(/(^| )([a-zA-Z]+ )([^ ]+)/)) != null) {
+      tCommand = tCommand.replace(match[2], "");
 
-      if (setting == null) {
+      let setting = settings.getSetting(match[2].trim());
+      let setting2 = settings.getSetting(
+        (match[3] || "").replace("!", "").trim()
+      );
+
+      if (setting == null || setting2 != null) {
         continue;
       }
 
-      command = command.replace(match[0], match[1] + match[2].trim() + "=");
+      command = command.replace(match[2], match[2].trim() + "=");
     }
 
     tCommand = command;

@@ -7,6 +7,7 @@ import {
   getRelated,
   print,
   printHtml,
+  Item,
 } from "kolmafia";
 import { PricingSettings } from "./AccountValSettings";
 

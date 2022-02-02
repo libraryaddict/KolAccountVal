@@ -1,4 +1,4 @@
-import { getPlayerId, toBoolean, toInt } from "kolmafia";
+import { getPlayerId, print, toBoolean, toInt } from "kolmafia";
 
 export enum FieldType {
   NUMBER,
@@ -34,13 +34,13 @@ export class AccountValSettings {
   fetchShop: boolean;
   fetchDisplaycase: boolean;
   fetchClan: boolean = false;
-  fetchEverywhere: boolean = true;
+  fetchingEverywhereish: boolean = true; // If we're fetching from everywhere but maybe some areas
   doSuperFast: boolean = false;
   doTradeables: boolean;
   doNontradeables: boolean;
   doBound: boolean;
   doFamiliars: boolean;
-  playerId: number;
+  playerId: number = 0;
   displayLimit = 100;
   minimumMeat = 0;
   minimumAmount = 1;
@@ -49,7 +49,7 @@ export class AccountValSettings {
   sortBy: SortBy = SortBy.TOTAL_PRICE;
   reverseSort: boolean = false;
   shopWorth: boolean = false;
-  javascriptFilter: string;
+  javascriptFilter: string = "";
 
   static getSettings(): ValSetting[] {
     let settings = [];
@@ -247,18 +247,14 @@ export class AccountValSettings {
 
   doSettings(args: string[]): string[] {
     let unknown: string[] = [];
-    let incompatible: string[][] = [
-      [
-        "fetchCloset",
-        "fetchStorage",
-        "fetchShop",
-        "fetchInventory",
-        "fetchDisplaycase",
-        "fetchClan",
-      ],
-      ["doTradeables", "doNontradeables", "doBound", "doFamiliars"],
-    ];
+    let defaultValues: any[] = [];
+    let wasSet: string[] = [];
+
     let settings = AccountValSettings.getSettings();
+
+    for (let setting of settings) {
+      defaultValues[setting.field] = this[setting.field];
+    }
 
     for (let arg of args) {
       if (arg.length == 0) {
@@ -363,38 +359,54 @@ export class AccountValSettings {
         this[setting.field] = v;
       } else {
         this[setting.field] = isTrue;
+        wasSet.push(setting.field);
       }
     }
 
-    let wasSet: string[] = Object.keys(this).filter((k) => this[k] == true);
-    this.fetchEverywhere =
+    let fetchSources: string[] = [
+      "fetchCloset",
+      "fetchStorage",
+      "fetchShop",
+      "fetchInventory",
+      "fetchDisplaycase",
+      "fetchClan",
+    ];
+
+    // We can do fams if bound isn't false
+    // We can do bound if nontrade isn't false
+    // We can do notrade if tradeables isn't true
+    // We can do tradeables if non-trade isn't true
+
+    this.fetchingEverywhereish =
       !this.fetchClan &&
-      incompatible[0].find((v) => wasSet.includes(v)) == null;
+      fetchSources.find((v) => wasSet.includes(v) && this[v]) == null;
 
-    if (!this.fetchEverywhere) {
-      if (this.doBound == null) {
-        this.doBound = false;
-      }
+    if (!wasSet.includes("doTradeables")) {
+      this.doTradeables = wasSet.includes("doNontradeables")
+        ? !this.doNontradeables
+        : true;
+    }
 
-      if (this.doFamiliars == null) {
-        this.doFamiliars = false;
-      }
-    } else if (this.doFamiliars == null && this.doBound != null) {
+    if (!wasSet.includes("doNontradeables")) {
+      this.doNontradeables = wasSet.includes("doTradeables")
+        ? !this.doTradeables
+        : true;
+    }
+
+    if (!wasSet.includes("doBound")) {
+      this.doBound = this.fetchingEverywhereish && this.doNontradeables;
+    }
+
+    if (!wasSet.includes("doFamiliars")) {
       this.doFamiliars = this.doBound;
     }
 
-    for (let f of settings.map((s) => s.field)) {
-      if (this[f] != null) {
+    for (let fetchSource of fetchSources) {
+      if (this[fetchSource] != null) {
         continue;
       }
 
-      let incomp = incompatible.filter((v) => v.includes(f))[0];
-
-      if (incomp == null) {
-        continue;
-      }
-
-      this[f] = incomp.find((i) => wasSet.includes(i)) == null;
+      this[fetchSource] = this.fetchingEverywhereish;
     }
 
     return unknown;
