@@ -135,10 +135,10 @@ e	Our Daily Candles™ order form	Our Daily Candles
 
 # visit_url contains... Start with v
 v	Order of the Green Thumb Order Form	forestvillage.php	friarcottage.gif
-v	Haunted Doghouse	campground.php?action=doghouse	Spoopy
-v	Witchess Set	campground.php?action=witchess	Witchess Set
-v	Source terminal	campground.php?action=terminal	Source Terminal
-v	potted tea tree	campground.php?action=teatree	Tree Tea
+v	Haunted Doghouse	campground.php	campground.php?action=doghouse
+v	Witchess Set	campground.php	campground.php?action=witchess
+v	Source terminal	campground.php	campground.php?action=terminal
+v	potted tea tree	campground.php	campground.php?action=teatree
 
 
 # Gardens
