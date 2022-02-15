@@ -534,6 +534,7 @@ class AccountVal {
       let title =
         titleName +
         " @ " +
+        (price.accuracy == PriceType.MALL_SALES ? "last sold " : "") +
         this.getNumber(price.price) +
         " meat each. Price valid as of " +
         this.getNumber(price.daysOutdated, 1) +
@@ -866,11 +867,6 @@ export function main(command: string) {
     let spl: string[] = splitArguments(settings, command);
 
     let unknown = settings.doSettings(spl);
-
-    priceSettings.maxHistoricalAge = settings.maxAge;
-    priceSettings.maxMallSalesAge = settings.maxAge;
-
-    unknown = priceSettings.doSettings(unknown);
 
     if (unknown.length > 0) {
       print("Unrecognized params! " + unknown.join(", "), "red");

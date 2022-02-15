@@ -44,13 +44,13 @@ export class AccountValSettings {
   displayLimit = 100;
   minimumMeat = 0;
   minimumAmount = 1;
-  maxAge: number = 14;
+  maxAge: number = 999_999;
   sales: number = 0;
   sortBy: SortBy = SortBy.TOTAL_PRICE;
   reverseSort: boolean = false;
   shopWorth: boolean = false;
   javascriptFilter: string = "";
-  useLastSold: boolean = true;
+  useLastSold: boolean = false;
 
   static getSettings(): ValSetting[] {
     let settings = [];
@@ -231,9 +231,9 @@ export class AccountValSettings {
 
     makeSetting(
       FieldType.BOOLEAN,
-      "accurateHighValue",
-      ["accurate"],
-      "Set to true to always resolve items worth more than 100k by mall history"
+      "useLastSold",
+      ["useLastSold", "lastsold", "soldprice"],
+      "Resolve prices by their last sold, initial runs with this parameter can be quite slow"
     );
 
     return settings;
@@ -443,19 +443,18 @@ export class AccountValSettings {
 }
 
 export class PricingSettings {
+  public expensivePricesAt: number = 70_000_000;
   public cheapTotalsLessThan: number = 20_000_000;
   public cheapPricesLessThan: number = 2_000_000;
-
-  // The max historical age for any non-cheap item
-  public maxHistoricalAge: number = 14;
-
-  // The max mall sales data age
-  public maxMallSalesAge: number = 14;
 
   /**
    * A scaler on where we want stuff that's lower priced, to be updated less often. Returns day count.
    */
   getMaxPriceAge(price: number, amount: number): number {
+    if (price > this.expensivePricesAt) {
+      return 90;
+    }
+
     let total = price * amount;
 
     if (total > this.cheapTotalsLessThan) {
@@ -471,43 +470,5 @@ export class PricingSettings {
     }
 
     return 900;
-  }
-
-  doSettings(args: string[]): string[] {
-    let unknown: string[] = [];
-
-    for (let arg of args) {
-      if (arg.length == 0) {
-        continue;
-      }
-
-      if (this.isArg(arg, ["max-age", "age"])) {
-        let amount = arg.substring(arg.indexOf("=") + 1);
-
-        if (amount != null && amount.match(/[0-9]+/)) {
-          this.maxHistoricalAge = toInt(amount);
-          this.maxMallSalesAge = toInt(amount);
-          continue;
-        }
-      }
-
-      unknown.push(arg);
-    }
-
-    return unknown;
-  }
-
-  isArg(arg: string, args: string[]): boolean {
-    arg = arg.toLowerCase().split("=")[0];
-
-    for (let a of args) {
-      if (arg != a) {
-        continue;
-      }
-
-      return true;
-    }
-
-    return false;
   }
 }

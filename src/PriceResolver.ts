@@ -207,10 +207,12 @@ class MallHistoryPricing implements PriceVolunteer {
 
     let last = this.records.records[this.records.records.length - 1];
     let histPrice = last.meat;
-    let histAge = Math.min(
-      this.getAge(),
-      (Date.now() / 1000 - this.records.lastUpdated) / (24 * 60 * 60)
-    );
+    let histAge =
+      Math.min(
+        Date.now() / 1000 - last.date,
+        Date.now() / 1000 - this.records.lastUpdated
+      ) /
+      (24 * 60 * 60);
 
     let days = this.settings.getMaxPriceAge(histPrice, this.amount);
 
@@ -226,12 +228,14 @@ class MallHistoryPricing implements PriceVolunteer {
 
     if (last == null) return -1;
 
-    if (this.item == Item.get("Dreadsylvanian grimlet")) {
-      print(last.date + "");
-      print(this.records.lastUpdated + "");
-    }
+    let histAge =
+      Math.min(
+        Date.now() / 1000 - last.date,
+        Date.now() / 1000 - this.records.lastUpdated
+      ) /
+      (24 * 60 * 60);
 
-    return (Date.now() / 1000 - last.date) / (24 * 60 * 60);
+    return histAge / (24 * 60 * 60);
   }
 
   getPrice(): ItemPrice {
