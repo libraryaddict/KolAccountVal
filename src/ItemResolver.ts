@@ -78,6 +78,12 @@ export class ItemResolver {
       values.push(toInt(key) + ":" + val);
     });
 
+    let val = values.join(",");
+
+    if (getProperty(this.accountValUrlCachePropName) == val) {
+      return;
+    }
+
     setProperty(this.accountValUrlCachePropName, values.join(","));
   }
 

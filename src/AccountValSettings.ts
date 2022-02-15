@@ -50,6 +50,7 @@ export class AccountValSettings {
   reverseSort: boolean = false;
   shopWorth: boolean = false;
   javascriptFilter: string = "";
+  useLastSold: boolean = true;
 
   static getSettings(): ValSetting[] {
     let settings = [];
@@ -109,7 +110,7 @@ export class AccountValSettings {
     makeSetting(
       FieldType.BOOLEAN,
       "doTradeables",
-      ["tradeable", "tradeables", "trade", "tradable", "true"],
+      ["tradeable", "tradeables", "trade", "tradable"],
       "Should it do tradeables"
     );
     makeSetting(
@@ -228,6 +229,13 @@ export class AccountValSettings {
       "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed"
     );
 
+    makeSetting(
+      FieldType.BOOLEAN,
+      "accurateHighValue",
+      ["accurate"],
+      "Set to true to always resolve items worth more than 100k by mall history"
+    );
+
     return settings;
   }
 
@@ -287,7 +295,14 @@ export class AccountValSettings {
       if (arg.startsWith("-") || arg.startsWith("+") || arg.startsWith("!")) {
         arg = arg.substring(1);
       } else if (arg.includes("=") && setting.type == FieldType.BOOLEAN) {
-        isTrue = toBoolean(arg.split("=")[1]);
+        let v = arg.substring(arg.indexOf("=") + 1);
+
+        if (!v.toLowerCase().match("^(0|1|(true)|(false)|(yes)|(no))$")) {
+          unknown.push(arg);
+          continue;
+        }
+
+        isTrue = toBoolean(v);
       }
 
       if (setting.type == FieldType.SORTBY) {
@@ -428,15 +443,35 @@ export class AccountValSettings {
 }
 
 export class PricingSettings {
-  public cheapHistoricalAge: number = 300;
-  public cheapItemsWorth: number = 1_000;
-  public cheapTotalsLessThan: number = 2_000_000;
+  public cheapTotalsLessThan: number = 20_000_000;
+  public cheapPricesLessThan: number = 2_000_000;
 
   // The max historical age for any non-cheap item
   public maxHistoricalAge: number = 14;
 
   // The max mall sales data age
   public maxMallSalesAge: number = 14;
+
+  /**
+   * A scaler on where we want stuff that's lower priced, to be updated less often. Returns day count.
+   */
+  getMaxPriceAge(price: number, amount: number): number {
+    let total = price * amount;
+
+    if (total > this.cheapTotalsLessThan) {
+      return amount > 10 ? 90 : 180;
+    }
+
+    if (price > this.cheapPricesLessThan) {
+      return Math.max(90, 180 - amount * 5);
+    }
+
+    if (price > 1000) {
+      return 365;
+    }
+
+    return 900;
+  }
 
   doSettings(args: string[]): string[] {
     let unknown: string[] = [];
@@ -447,7 +482,7 @@ export class PricingSettings {
       }
 
       if (this.isArg(arg, ["max-age", "age"])) {
-        let amount = arg.split("=")[1];
+        let amount = arg.substring(arg.indexOf("=") + 1);
 
         if (amount != null && amount.match(/[0-9]+/)) {
           this.maxHistoricalAge = toInt(amount);

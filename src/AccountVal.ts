@@ -288,10 +288,56 @@ class AccountVal {
   }
 
   doPricing() {
-    let checked = 0;
-    let lastPrinted = Date.now();
+    let lastPrinted = 0;
+    let toCheck: [ValItem, ItemPrice][] = [];
+    let settings = this.settings;
+    let prices = this.prices;
+    let ownedItems = this.ownedItems;
+
+    let addPrice = function (item: ValItem, price: ItemPrice) {
+      if (settings.minimumMeat > 0 && price.price < settings.minimumMeat) {
+        ownedItems.delete(item);
+        return;
+      }
+
+      prices.push([item, price]);
+    };
 
     for (let i of this.ownedItems.keys()) {
+      let price: ItemPrice = this.priceResolver.itemPrice(
+        i.tradeableItem,
+        this.ownedItems.get(i),
+        false,
+        this.settings.doSuperFast
+          ? PriceType.HISTORICAL
+          : this.settings.useLastSold
+          ? PriceType.MALL_SALES
+          : null,
+        this.settings.doSuperFast,
+        true
+      );
+
+      if (price.price > 0) {
+        addPrice(i, price);
+      } else {
+        toCheck.push([i, price]);
+      }
+    }
+
+    // TODO Sort tocheck
+
+    let checked = -1;
+
+    if (toCheck.length > 200) {
+      print(
+        "Think this will take too long? Use the parameter 'fast', it's less accurate!",
+        "blue"
+      );
+    }
+
+    for (let check of toCheck) {
+      let i = check[0];
+
       if (++checked % 20 == 0 && lastPrinted + 1000 < Date.now()) {
         lastPrinted = Date.now();
         print(
@@ -300,37 +346,20 @@ class AccountVal {
             " (" +
             checked +
             " / " +
-            this.ownedItems.size +
+            toCheck.length +
             ")",
           "blue"
         );
       }
 
-      let price = this.priceResolver.itemPrice(
+      let price: ItemPrice = this.priceResolver.itemPrice(
         i.tradeableItem,
         this.ownedItems.get(i),
         false,
-        this.settings.doSuperFast ? PriceType.HISTORICAL : null
+        check[1].accuracy
       );
 
-      if (price.price == 0) {
-        price = this.priceResolver.itemPrice(
-          i.tradeableItem,
-          this.ownedItems.get(i),
-          false,
-          PriceType.MALL_SALES
-        );
-      }
-
-      if (
-        this.settings.minimumMeat > 0 &&
-        price.price < this.settings.minimumMeat
-      ) {
-        this.ownedItems.delete(i);
-        continue;
-      }
-
-      this.prices.push([i, price]);
+      addPrice(i, price);
     }
 
     this.doSort();
@@ -741,6 +770,81 @@ class AccountVal {
   }
 }
 
+function splitArguments(
+  settings: AccountValSettings,
+  command: string,
+  debugMessages: boolean = false
+): string[] {
+  let debug = function (message: string) {
+    if (!debugMessages) {
+      return;
+    }
+
+    print("DEBUG: " + message, "gray");
+  };
+
+  let tCommand = command;
+  let match: RegExpMatchArray;
+
+  while ((match = tCommand.match(/(^| )([a-zA-Z]+ )([^ ]+)/)) != null) {
+    tCommand = tCommand.replace(match[2], "");
+
+    let setting = settings.getSetting(match[2].trim());
+
+    let v2 = (match[3] || "").replace("!", "").split("=")[0].trim();
+    let setting2 = settings.getSetting(v2.toLowerCase() == "true" ? "" : v2);
+
+    if (setting == null || setting2 != null) {
+      debug(`'${match[2]}' is not a key parameter`);
+      continue;
+    }
+
+    command = command.replace(match[2], match[2].trim() + "=");
+    debug(
+      `Replacing '${match[2]}' as a key parameter, matched using '${match[0]}'`
+    );
+  }
+
+  tCommand = command;
+  let spl: string[] = [];
+
+  // Splitting so we can do name="Tom the Hunk"
+  while (
+    (match = tCommand.match(/(?:^| )([^ =]+=(\"|').+?\"|')(?=(?:$| ))/)) != null
+  ) {
+    let v = match[1];
+    let val = "";
+
+    if (v.indexOf("=") > 0) {
+      val = v.substring(0, v.indexOf("=") + 1);
+      v = v.substring(val.length);
+    }
+
+    if (
+      (v.startsWith('"') && v.endsWith('"')) ||
+      (v.startsWith("'") && v.endsWith("'"))
+    ) {
+      v = v.substring(1, v.length - 1);
+    }
+
+    v = val + v;
+
+    spl.push(v);
+    tCommand = tCommand.replace(match[1], "").trim().replace(/ +/, " ");
+    debug(`'${v} defined as a key="value", matched '${match[0]}'`);
+  }
+
+  if (tCommand.length > 0) {
+    for (let arg of tCommand.split(" ")) {
+      debug(`Found leftover parameter '${arg}`);
+      spl.push(arg);
+    }
+  }
+
+  debug("Final parameters are: " + spl.map((s) => `{${s}}`).join(" "));
+  return spl;
+}
+
 export function main(command: string) {
   let settings = new AccountValSettings();
   let priceSettings = new PricingSettings();
@@ -759,62 +863,12 @@ export function main(command: string) {
       return;
     }
 
-    let tCommand = command;
-    let match: RegExpMatchArray;
-
-    while ((match = tCommand.match(/(^| )([a-zA-Z]+ )([^ ]+)/)) != null) {
-      tCommand = tCommand.replace(match[2], "");
-
-      let setting = settings.getSetting(match[2].trim());
-      let setting2 = settings.getSetting(
-        (match[3] || "").replace("!", "").trim()
-      );
-
-      if (setting == null || setting2 != null) {
-        continue;
-      }
-
-      command = command.replace(match[2], match[2].trim() + "=");
-    }
-
-    tCommand = command;
-    let spl: string[] = [];
-
-    // Splitting so we can do name="Tom the Hunk"
-    while (
-      (match = tCommand.match(/(?:^| )([^ =]+=(\"|').+?\"|')(?=(?:$| ))/)) !=
-      null
-    ) {
-      let v = match[1];
-      let val = "";
-
-      if (v.indexOf("=") > 0) {
-        val = v.substring(0, v.indexOf("=") + 1);
-        v = v.substring(val.length);
-      }
-
-      if (
-        (v.startsWith('"') && v.endsWith('"')) ||
-        (v.startsWith("'") && v.endsWith("'"))
-      ) {
-        v = v.substring(1, v.length - 1);
-      }
-
-      v = val + v;
-
-      spl.push(v);
-      tCommand = tCommand.replace(match[1], "").trim().replace(/ +/, " ");
-    }
-
-    if (tCommand.length > 0) {
-      spl.push(...tCommand.split(" "));
-    }
+    let spl: string[] = splitArguments(settings, command);
 
     let unknown = settings.doSettings(spl);
 
     priceSettings.maxHistoricalAge = settings.maxAge;
     priceSettings.maxMallSalesAge = settings.maxAge;
-    priceSettings.cheapHistoricalAge = settings.maxAge * 10;
 
     unknown = priceSettings.doSettings(unknown);
 
