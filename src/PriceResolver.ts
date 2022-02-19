@@ -135,7 +135,13 @@ export class PriceResolver {
       return new ItemPrice(item, -1, resolver.getPriceType(), 0);
     }
 
-    return resolver.getPrice();
+    let price = resolver.getPrice();
+
+    if (price == null) {
+      price = mallPricing.getPrice();
+    }
+
+    return price;
 
     /*if (ignoreFold) {
       return new ItemPrice(item, lowestMall, PriceType.MALL, 0);
