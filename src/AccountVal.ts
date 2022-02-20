@@ -239,6 +239,7 @@ class AccountVal {
         continue;
       }
 
+      // If item can't be resolved to a price at all
       if (
         !item.isBound() &&
         (!item.tradeableItem.tradeable || item.tradeableItem.gift) &&
@@ -253,13 +254,13 @@ class AccountVal {
         continue;
       }
 
-      // If we're doing bound items, and this is a bound item..
+      // If we're not doing bound items, and this is a bound item..
       if (!this.settings.doBound && item.isBound()) {
         this.ownedItems.delete(item);
         continue;
       }
 
-      // If we're doing familiars and this is a familiar
+      // If we're not doing familiars and this is a familiar
       if (!this.settings.doFamiliars && item.bound == ItemStatus.FAMILIAR) {
         this.ownedItems.delete(item);
         continue;

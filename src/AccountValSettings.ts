@@ -51,6 +51,7 @@ export class AccountValSettings {
   shopWorth: boolean = false;
   javascriptFilter: string = "";
   useLastSold: boolean = false;
+  settingsDebug: boolean = false;
 
   static getSettings(): ValSetting[] {
     let settings = [];
@@ -269,6 +270,11 @@ export class AccountValSettings {
         continue;
       }
 
+      if (arg == "debug") {
+        this.settingsDebug = true;
+        continue;
+      }
+
       let setting: ValSetting;
       let name = arg
         .split("=")[0]
@@ -397,13 +403,17 @@ export class AccountValSettings {
       fetchSources.find((v) => wasSet.includes(v) && this[v]) == null;
 
     if (!wasSet.includes("doTradeables")) {
-      this.doTradeables = wasSet.includes("doNontradeables")
+      this.doTradeables = this.doBound
+        ? false
+        : wasSet.includes("doNontradeables")
         ? !this.doNontradeables
         : true;
     }
 
     if (!wasSet.includes("doNontradeables")) {
-      this.doNontradeables = wasSet.includes("doTradeables")
+      this.doNontradeables = this.doBound
+        ? false
+        : wasSet.includes("doTradeables")
         ? !this.doTradeables
         : true;
     }
@@ -422,6 +432,12 @@ export class AccountValSettings {
       }
 
       this[fetchSource] = this.fetchingEverywhereish;
+    }
+
+    if (this.settingsDebug) {
+      for (let setting of Object.keys(this)) {
+        print(setting + " = " + this[setting]);
+      }
     }
 
     return unknown;
