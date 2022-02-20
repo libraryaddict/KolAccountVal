@@ -64,10 +64,6 @@ i	warehouse key	mime army insignia (espionage)
 i	warehouse key	mime army insignia (infantry)
 i	warehouse key	mime army insignia (intelligence)
 i	warehouse key	mime army infiltration glove
-i	warehouse key	mime army rations
-i	warehouse key	mime army wine
-i	warehouse key	mime army camouflage kit
-i	warehouse key	mime army superserum
 i	warehouse key	mime army challenge coin
 i	warehouse key	mime army shotglass
 i	warehouse key	miming corduroys
