@@ -96,14 +96,14 @@ b	Tome of Rad Libs	Tome of Rad Libs
 
 
 # Property based detection! Start with p
-p	airplane charter: Spring Break Beach	sleazeAirportAlways
-p	airplane charter: Conspiracy Island	spookyAirportAlways
+p	airplane charter: Spring Break Beach	sleazeAirportAlways&!_sleazeAirportToday
+p	airplane charter: Conspiracy Island	spookyAirportAlways&!_spookyAirportToday
+p	airplane charter: Dinseylandfill	stenchAirportAlways&!_stenchAirportToday
+p	airplane charter: That 70s Volcano	hotAirportAlways&!_hotAirportToday
+p	airplane charter: The Glaciest	coldAirportAlways&!_coldAirportToday
 p	Chateau Mantegna room key	chateauAvailable
 p	bottle of lovebug pheromones	lovebugsUnlocked
-p	airplane charter: Dinseylandfill	stenchAirportAlways
-p	airplane charter: That 70s Volcano	hotAirportAlways
 p	shrine to the Barrel god	barrelShrineUnlocked
-p	airplane charter: The Glaciest	coldAirportAlways
 p	X-32-F snowman crate	snojoAvailable
 p	LT&T telegraph office deed	telegraphOfficeAvailable
 p	detective school application	hasDetectiveSchool

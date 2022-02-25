@@ -141,7 +141,7 @@ export class ItemResolver {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.PROPERTY) {
-        if (getProperty(s.data1) == "true") {
+        if (this.testProperty(s.data1)) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.VISIT_URL_CHECK) {
@@ -165,6 +165,21 @@ export class ItemResolver {
 
     this.saveCache();
     return items;
+  }
+
+  /**
+   * This way we can check if they have "always airport" and don't have "_airport today"
+   */
+  private testProperty(property: string): boolean {
+    let result: boolean = true;
+
+    for (let prop of property.split("&")) {
+      result =
+        result &&
+        (getProperty(prop.replace("!", "")) == "true") == !prop.includes("!");
+    }
+
+    return result;
   }
 
   private addItem(
@@ -351,7 +366,6 @@ export class ItemResolver {
       return;
     }
 
-    let newValues: AccValStuff[] = [];
     let propValues: string[] = [getRevision().toString()];
 
     // Now we load the skills we have
