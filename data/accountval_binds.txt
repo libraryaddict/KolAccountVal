@@ -107,15 +107,15 @@ p	shrine to the Barrel god	barrelShrineUnlocked
 p	X-32-F snowman crate	snojoAvailable
 p	LT&T telegraph office deed	telegraphOfficeAvailable
 p	detective school application	hasDetectiveSchool
-p	Build-a-City Gingerbread kit	gingerbreadCityAvailable
-p	heart-shaped crate	loveTunnelAvailable
-p	Spacegate access badge	spacegateAlways
-p	FantasyRealm membership packet	frAlways
+p	Build-a-City Gingerbread kit	gingerbreadCityAvailable&!_gingerbreadCityToday
+p	heart-shaped crate	loveTunnelAvailable&!_loveTunnelUsed
+p	Spacegate access badge	spacegateAlways&!_spacegateToday
+p	FantasyRealm membership packet	frAlways&!_frToday
 p	Horsery contract	horseryAvailable
-p	Neverending Party invitation envelope	neverendingPartyAlways
-p	voter registration form	voteAlways
-p	Boxing Day care package	daycareOpen
-p	PirateRealm membership packet	prAlways
+p	Neverending Party invitation envelope	neverendingPartyAlways&!_neverendingPartyToday
+p	voter registration form	voteAlways&!_voteToday
+p	Boxing Day care package	daycareOpen&!_daycareToday
+p	PirateRealm membership packet	prAlways&!_prToday
 p	Distant Woods Getaway Brochure	getawayCampsiteUnlocked
 
 
