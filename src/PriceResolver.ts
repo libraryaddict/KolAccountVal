@@ -110,6 +110,9 @@ export class PriceResolver {
         mallPricing,
       ].filter((p) => p.isViable() && !p.isOutdated());
 
+      // Ideally we should be sorting this by lowest price, not age
+      viablePrices.sort((v1, v2) => v1.getAge() - v2.getAge());
+
       resolver = viablePrices.length > 0 ? viablePrices[0] : salesPricing;
     }
 

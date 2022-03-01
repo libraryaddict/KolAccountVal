@@ -535,7 +535,9 @@ class AccountVal {
       let title =
         titleName +
         " @ " +
-        (price.accuracy == PriceType.MALL_SALES ? "last sold " : "") +
+        (price.accuracy == PriceType.MALL_SALES
+          ? "last sold "
+          : "last malled ") +
         this.getNumber(price.price) +
         " meat each. Price valid as of " +
         this.getNumber(price.daysOutdated, 1) +
@@ -796,7 +798,10 @@ function splitArguments(
     let v2 = (match[3] || "").replace("!", "").split("=")[0].trim();
     let setting2 = settings.getSetting(v2.toLowerCase() == "true" ? "" : v2);
 
-    if (setting == null || setting2 != null) {
+    if (
+      setting == null ||
+      (setting.type == FieldType.BOOLEAN && setting2 != null)
+    ) {
       debug(`'${match[2]}' is not a key parameter`);
       continue;
     }
