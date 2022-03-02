@@ -807,6 +807,7 @@ function splitArguments(
     }
 
     command = command.replace(match[2], match[2].trim() + "=");
+    tCommand = tCommand.replace(match[3], "");
     debug(
       `Replacing '${match[2]}' as a key parameter, matched using '${match[0]}'`
     );

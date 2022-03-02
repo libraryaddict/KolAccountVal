@@ -67,7 +67,7 @@ export class ItemResolver {
 
       let spl = p.split(":");
 
-      this.accountValCache.set(toItem(toInt(spl[0])), toBoolean(spl[1]));
+      this.accountValCache.set(toItem(toInt(spl[0])), spl[1].startsWith("t"));
     }
   }
 
@@ -75,7 +75,7 @@ export class ItemResolver {
     let values: string[] = [];
 
     this.accountValCache.forEach((val, key) => {
-      values.push(toInt(key) + ":" + val);
+      values.push(toInt(key) + ":" + (val ? "t" : "f"));
     });
 
     let val = values.join(",");
