@@ -139,6 +139,8 @@ class AccountVal {
       return;
     }
 
+    let famItems: Map<Item, number> = this.resolver.resolveFamiliarItems();
+
     for (let item of Item.all()) {
       let amount = 0;
 
@@ -148,6 +150,10 @@ class AccountVal {
 
       if (this.settings.fetchInventory) {
         amount += equippedAmount(item) + itemAmount(item);
+
+        if (famItems.has(item)) {
+          amount += famItems.get(item);
+        }
       }
 
       if (this.settings.fetchStorage) {

@@ -1,11 +1,13 @@
 import {
   Familiar,
+  familiarEquippedEquipment,
   fileToBuffer,
   getProperty,
   getRevision,
   haveFamiliar,
   haveSkill,
   Item,
+  myFamiliar,
   myGardenType,
   print,
   setProperty,
@@ -241,6 +243,29 @@ export class ItemResolver {
 
       this.addItem(ownedItems, fam.hatchling, fam + "", ItemStatus.FAMILIAR);
     }
+  }
+
+  /**
+   * Items that are equipped on an unused fam doesn't show otherwise
+   */
+  resolveFamiliarItems() {
+    let famEquipped: Map<Item, number> = new Map();
+
+    for (let fam of Familiar.all()) {
+      if (!haveFamiliar(fam) || myFamiliar() == fam) {
+        continue;
+      }
+
+      let item = familiarEquippedEquipment(fam);
+
+      if (item == null || item == Item.get("None")) {
+        continue;
+      }
+
+      famEquipped.set(item, (famEquipped.get(item) | 0) + 1);
+    }
+
+    return famEquipped;
   }
 
   visitCheck(item: Item, url: string, find: string) {
