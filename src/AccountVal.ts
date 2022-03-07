@@ -275,6 +275,10 @@ class AccountVal {
           val = setting.names[0] + "=" + SortBy[val];
         }
 
+        if (val == "" && typeof val != "boolean") {
+          val = "null";
+        }
+
         defaultOf += val;
       } else {
         defaultOf += "null";
@@ -307,7 +311,7 @@ class AccountVal {
           "blue"
         );
         command = "";
-      } else if (command.toLowerCase() == "help") {
+      } else if (command.toLowerCase().match(/([^a-z]|^)help([^a-z]|$)/)) {
         this.settings.doSettings([]);
         this.doHelp();
         return;
