@@ -21,7 +21,7 @@ import {
   wait,
   waitq,
 } from "kolmafia";
-import { ItemStatus, ValItem } from "./AccountVal";
+import { ItemStatus, ValItem } from "./AccountValLogic";
 
 class AccValStuff {
   itemType: ItemType;
