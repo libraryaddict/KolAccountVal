@@ -33,6 +33,7 @@ export class AccountValSettings {
   fetchInventory: boolean;
   fetchShop: boolean;
   fetchDisplaycase: boolean;
+  fetchSession: boolean = false;
   fetchClan: boolean = false;
   fetchingEverywhereish: boolean = true; // If we're fetching from everywhere but maybe some areas
   doSuperFast: boolean = false;
@@ -107,6 +108,12 @@ export class AccountValSettings {
       "fetchClan",
       ["clan", "stash"],
       "Should it check clan's stash? False by default"
+    );
+    makeSetting(
+      FieldType.BOOLEAN,
+      "fetchSession",
+      ["session"],
+      "Should it fetch using your current session of items acquired? False by default"
     );
     makeSetting(
       FieldType.BOOLEAN,
@@ -391,6 +398,7 @@ export class AccountValSettings {
       "fetchInventory",
       "fetchDisplaycase",
       "fetchClan",
+      "fetchSession",
     ];
 
     // We can do fams if bound isn't false
@@ -399,6 +407,7 @@ export class AccountValSettings {
     // We can do tradeables if non-trade isn't true
 
     this.fetchingEverywhereish =
+      !this.fetchSession &&
       !this.fetchClan &&
       fetchSources.find((v) => wasSet.includes(v) && this[v]) == null;
 

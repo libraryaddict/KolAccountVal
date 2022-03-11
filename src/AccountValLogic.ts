@@ -145,9 +145,14 @@ export class AccountValLogic {
     }
 
     let famItems: Map<Item, number> = this.resolver.resolveFamiliarItems();
+    let sessionItems: Map<Item, number> = this.resolver.resolveSessionItems();
 
     for (let item of Item.all()) {
       let amount = 0;
+
+      if (this.settings.fetchSession && sessionItems.has(item)) {
+        amount += sessionItems.get(item);
+      }
 
       if (this.settings.fetchCloset) {
         amount += closetAmount(item);

@@ -9,6 +9,7 @@ import {
   Item,
   myFamiliar,
   myGardenType,
+  mySessionItems,
   print,
   setProperty,
   Skill,
@@ -266,6 +267,16 @@ export class ItemResolver {
     }
 
     return famEquipped;
+  }
+
+  resolveSessionItems() {
+    let map: Map<Item, number> = new Map();
+
+    Object.entries(mySessionItems()).forEach((value) => {
+      map.set(Item.get(value[0]), value[1]);
+    });
+
+    return map;
   }
 
   visitCheck(item: Item, url: string, find: string) {
