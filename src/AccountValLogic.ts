@@ -122,6 +122,14 @@ export class AccountValLogic {
     if (this.settings.javascriptFilter == "") {
       return;
     }
+
+    while (this.settings.javascriptFilter.includes("$kol")) {
+      this.settings.javascriptFilter = this.settings.javascriptFilter.replace(
+        "$kol",
+        'require("kolmafia")'
+      );
+    }
+
     print(
       "JS Filter has been set to: " + this.settings.javascriptFilter,
       "gray"
