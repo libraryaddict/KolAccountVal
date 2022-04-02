@@ -2392,13 +2392,17 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
 
           even = !even;
-        }
-        // show - How many to show, defaults to 100
-        // count - How many we must have of this item
-        // sortby - Indiv Price, Total Price, Amount
-        // trade
-        // accountval price>3000 iprice>3000 show
-      } catch (err) {_iterator2.e(err);} finally {_iterator2.f();}} }, { key: "start", value:
+        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+
+      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
+      "<font color='gray'>Disclaimer: The prices shown are not absolute, and are generally priced at higher than what it really is worth.</font>");
+
+      // show - How many to show, defaults to 100
+      // count - How many we must have of this item
+      // sortby - Indiv Price, Total Price, Amount
+      // trade
+      // accountval price>3000 iprice>3000 show
+    } }, { key: "start", value:
 
     function start(command) {
       this.settings = new _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .AccountValSettings */ .iX();
