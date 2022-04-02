@@ -64,10 +64,6 @@ i	warehouse key	mime army insignia (espionage)
 i	warehouse key	mime army insignia (infantry)
 i	warehouse key	mime army insignia (intelligence)
 i	warehouse key	mime army infiltration glove
-i	warehouse key	mime army rations
-i	warehouse key	mime army wine
-i	warehouse key	mime army camouflage kit
-i	warehouse key	mime army superserum
 i	warehouse key	mime army challenge coin
 i	warehouse key	mime army shotglass
 i	warehouse key	miming corduroys
@@ -75,6 +71,7 @@ i	warehouse key	miming beret
 i	warehouse key	miming gloves
 i	warehouse key	miming boots
 i	warehouse key	miming shirt
+i	combat lover's locket lockbox	combat lover's locket
 
 
 # Bookshelf stuff! Start with b
@@ -100,26 +97,26 @@ b	Tome of Rad Libs	Tome of Rad Libs
 
 
 # Property based detection! Start with p
-p	airplane charter: Spring Break Beach	sleazeAirportAlways
-p	airplane charter: Conspiracy Island	spookyAirportAlways
+p	airplane charter: Spring Break Beach	sleazeAirportAlways&!_sleazeAirportToday
+p	airplane charter: Conspiracy Island	spookyAirportAlways&!_spookyAirportToday
+p	airplane charter: Dinseylandfill	stenchAirportAlways&!_stenchAirportToday
+p	airplane charter: That 70s Volcano	hotAirportAlways&!_hotAirportToday
+p	airplane charter: The Glaciest	coldAirportAlways&!_coldAirportToday
 p	Chateau Mantegna room key	chateauAvailable
 p	bottle of lovebug pheromones	lovebugsUnlocked
-p	airplane charter: Dinseylandfill	stenchAirportAlways
-p	airplane charter: That 70s Volcano	hotAirportAlways
 p	shrine to the Barrel god	barrelShrineUnlocked
-p	airplane charter: The Glaciest	coldAirportAlways
 p	X-32-F snowman crate	snojoAvailable
 p	LT&T telegraph office deed	telegraphOfficeAvailable
 p	detective school application	hasDetectiveSchool
-p	Build-a-City Gingerbread kit	gingerbreadCityAvailable
-p	heart-shaped crate	loveTunnelAvailable
-p	Spacegate access badge	spacegateAlways
-p	FantasyRealm membership packet	frAlways
+p	Build-a-City Gingerbread kit	gingerbreadCityAvailable&!_gingerbreadCityToday
+p	heart-shaped crate	loveTunnelAvailable&!_loveTunnelUsed
+p	Spacegate access badge	spacegateAlways&!_spacegateToday
+p	FantasyRealm membership packet	frAlways&!_frToday
 p	Horsery contract	horseryAvailable
-p	Neverending Party invitation envelope	neverendingPartyAlways
-p	voter registration form	voteAlways
-p	Boxing Day care package	daycareOpen
-p	PirateRealm membership packet	prAlways
+p	Neverending Party invitation envelope	neverendingPartyAlways&!_neverendingPartyToday
+p	voter registration form	voteAlways&!_voteToday
+p	Boxing Day care package	daycareOpen&!_daycareToday
+p	PirateRealm membership packet	prAlways&!_prToday
 p	Distant Woods Getaway Brochure	getawayCampsiteUnlocked
 
 
@@ -135,10 +132,10 @@ e	Our Daily Candles™ order form	Our Daily Candles
 
 # visit_url contains... Start with v
 v	Order of the Green Thumb Order Form	forestvillage.php	friarcottage.gif
-v	Haunted Doghouse	campground.php?action=doghouse	Spoopy
-v	Witchess Set	campground.php?action=witchess	Witchess Set
-v	Source terminal	campground.php?action=terminal	Source Terminal
-v	potted tea tree	campground.php?action=teatree	Tree Tea
+v	Haunted Doghouse	campground.php	campground.php?action=doghouse
+v	Witchess Set	campground.php	campground.php?action=witchess
+v	Source terminal	campground.php	campground.php?action=terminal
+v	potted tea tree	campground.php	campground.php?action=teatree
 
 
 # Gardens
