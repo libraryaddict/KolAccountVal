@@ -72,6 +72,7 @@ i	warehouse key	miming gloves
 i	warehouse key	miming boots
 i	warehouse key	miming shirt
 i	combat lover's locket lockbox	combat lover's locket
+i	undamaged Unbreakable Umbrella	Unbreakable umbrella (broken)
 
 
 # Bookshelf stuff! Start with b
