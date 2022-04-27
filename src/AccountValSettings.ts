@@ -468,7 +468,7 @@ export class AccountValSettings {
 }
 
 export class PricingSettings {
-  public expensivePricesAt: number = 70_000_000;
+  public expensivePricesAt: number = 40_000_000;
   public cheapTotalsLessThan: number = 20_000_000;
   public cheapPricesLessThan: number = 2_000_000;
 
@@ -477,7 +477,7 @@ export class PricingSettings {
    */
   getMaxPriceAge(price: number, amount: number): number {
     if (price > this.expensivePricesAt) {
-      return 90;
+      return 30;
     }
 
     let total = price * amount;

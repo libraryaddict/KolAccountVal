@@ -235,14 +235,16 @@ class MallHistoryPricing implements PriceVolunteer {
 
     let last = this.records.records[this.records.records.length - 1];
 
-    if (last == null) return -1;
+    if (last == null) {
+      return -1;
+    }
 
-    let histAge =
-      Math.min(
-        Date.now() / 1000 - last.date,
-        Date.now() / 1000 - this.records.lastUpdated
-      ) /
-      (24 * 60 * 60);
+    let dateNow = Date.now() / 1000;
+
+    let histAge = Math.min(
+      dateNow - last.date,
+      dateNow - this.records.lastUpdated
+    );
 
     return histAge / (24 * 60 * 60);
   }
