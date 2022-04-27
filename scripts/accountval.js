@@ -991,7 +991,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
 
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_classCallCheck(this, PricingSettings);_defineProperty(this, "expensivePricesAt",
-    70000000);_defineProperty(this, "cheapTotalsLessThan",
+    40000000);_defineProperty(this, "cheapTotalsLessThan",
     20000000);_defineProperty(this, "cheapPricesLessThan",
     2000000);}_createClass(PricingSettings, [{ key: "getMaxPriceAge", value:
 
@@ -1000,7 +1000,7 @@ var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_cla
      */
     function getMaxPriceAge(price, amount) {
       if (price > this.expensivePricesAt) {
-        return 90;
+        return 30;
       }
 
       var total = price * amount;
@@ -1903,14 +1903,16 @@ MallHistoryPricing = /*#__PURE__*/function () {
 
       var last = this.records.records[this.records.records.length - 1];
 
-      if (last == null) return -1;
+      if (last == null) {
+        return -1;
+      }
 
-      var histAge =
-      Math.min(
-      Date.now() / 1000 - last.date,
-      Date.now() / 1000 - this.records.lastUpdated) / (
+      var dateNow = Date.now() / 1000;
 
-      24 * 60 * 60);
+      var histAge = Math.min(
+      dateNow - last.date,
+      dateNow - this.records.lastUpdated);
+
 
       return histAge / (24 * 60 * 60);
     } }, { key: "getPrice", value:
