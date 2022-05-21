@@ -119,6 +119,8 @@ p	voter registration form	voteAlways&!_voteToday
 p	Boxing Day care package	daycareOpen&!_daycareToday
 p	PirateRealm membership packet	prAlways&!_prToday
 p	Distant Woods Getaway Brochure	getawayCampsiteUnlocked
+p	Undrilled cosmic bowling ball	hasCosmicBowlingBall
+p	MayDay™ supply package	hasMaydayContract
 
 
 
