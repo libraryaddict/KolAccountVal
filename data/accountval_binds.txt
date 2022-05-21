@@ -120,7 +120,7 @@ p	Boxing Day care package	daycareOpen&!_daycareToday
 p	PirateRealm membership packet	prAlways&!_prToday
 p	Distant Woods Getaway Brochure	getawayCampsiteUnlocked
 p	Undrilled cosmic bowling ball	hasCosmicBowlingBall
-p	MayDay™ supply package	hasMaydayContract
+p	MayDay™ contract	hasMaydayContract
 
 
 
