@@ -73,6 +73,8 @@ i	warehouse key	miming boots
 i	warehouse key	miming shirt
 i	combat lover's locket lockbox	combat lover's locket
 i	undamaged Unbreakable Umbrella	Unbreakable umbrella
+i	packaged June cleaver	June cleaver
+
 
 
 # Bookshelf stuff! Start with b
