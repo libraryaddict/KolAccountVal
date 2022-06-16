@@ -365,7 +365,7 @@ export class AccountValSettings {
           }
         }
 
-        if (!v.match(/^[0-9]+$/)) {
+        if (!v.match(/^[0-9,]+$/)) {
           unknown.push(arg);
           continue;
         }
