@@ -888,7 +888,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
               }
             }
 
-            if (!_v2.match(/^[0-9]+$/)) {
+            if (!_v2.match(/^[0-9,]+$/)) {
               unknown.push(arg);
               return "continue";
             }
