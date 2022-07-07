@@ -73,6 +73,7 @@ i	warehouse key	miming shirt
 i	combat lover's locket lockbox	combat lover's locket
 i	undamaged Unbreakable Umbrella	Unbreakable umbrella
 i	packaged June cleaver	June cleaver
+i	designer sweatpants (new old stock)	Designer sweatpants
 
 
 
