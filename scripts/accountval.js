@@ -2343,7 +2343,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
     } }, { key: "escapeHTML", value:
 
     function escapeHTML(str) {
-      return str.
+      return (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.entityDecode)(str).
       replace(/&/g, "&amp;").
       replace(/</g, "&lt;").
       replace(/>/g, "&gt;").
