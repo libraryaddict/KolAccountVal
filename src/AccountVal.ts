@@ -6,6 +6,7 @@ import {
   myClosetMeat,
   myStorageMeat,
   getRevision,
+  entityDecode,
 } from "kolmafia";
 import { AccountValLogic, ItemStatus, ValItem } from "./AccountValLogic";
 import {
@@ -240,7 +241,7 @@ class AccountVal {
   }
 
   escapeHTML(str: string): string {
-    return str
+    return entityDecode(str)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
