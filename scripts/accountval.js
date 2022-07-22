@@ -1362,7 +1362,7 @@ var ItemResolver = /*#__PURE__*/function () {
     } }, { key: "resolveFamiliars", value:
 
     function resolveFamiliars(familiars, ownedItems) {var _iterator6 = _createForOfIteratorHelper(
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var fam = _step6.value;
+      familiars),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var fam = _step6.value;
           if (!fam.hatchling.tradeable) {
             continue;
           }
