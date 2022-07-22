@@ -237,7 +237,7 @@ export class ItemResolver {
   }
 
   resolveFamiliars(familiars: Familiar[], ownedItems: Map<ValItem, number>) {
-    for (let fam of Familiar.all()) {
+    for (let fam of familiars) {
       if (!fam.hatchling.tradeable) {
         continue;
       }
