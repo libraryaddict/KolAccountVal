@@ -1,4 +1,12 @@
-import { Item, print, toInt, toItem, visitUrl } from "kolmafia";
+import {
+  Familiar,
+  Item,
+  print,
+  toFamiliar,
+  toInt,
+  toItem,
+  visitUrl,
+} from "kolmafia";
 
 export class StoreItem {
   item: Item;
@@ -8,6 +16,21 @@ export class StoreItem {
 }
 
 export class FetchFromPage {
+  getFamiliars(userId: number): Familiar[] {
+    let page = visitUrl("showfamiliars.php?who=" + userId);
+    let regex = /onClick='fam\((\d+)\)'/;
+    let match: string[];
+    let familiars: Familiar[] = [];
+
+    while ((match = page.match(regex)) != null) {
+      page = page.replace(match[0], "");
+
+      familiars.push(toFamiliar(toInt(match[1])));
+    }
+
+    return familiars;
+  }
+
   getStore(userId: number): StoreItem[] {
     let items: StoreItem[] = [];
 

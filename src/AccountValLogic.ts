@@ -4,9 +4,11 @@ import {
   closetAmount,
   displayAmount,
   equippedAmount,
+  Familiar,
   getRevision,
   getVersion,
   getWorkshed,
+  haveFamiliar,
   isCoinmasterItem,
   Item,
   itemAmount,
@@ -115,6 +117,12 @@ export class AccountValLogic {
       });
     }
 
+    if (this.settings.doFamiliars) {
+      let familiars = pager.getFamiliars(this.settings.playerId);
+
+      this.resolver.resolveFamiliars(familiars, this.ownedItems);
+    }
+
     this.resolveNoTrades();
   }
 
@@ -207,7 +215,10 @@ export class AccountValLogic {
     }
 
     if (this.settings.doFamiliars) {
-      this.resolver.resolveFamiliars(this.ownedItems);
+      this.resolver.resolveFamiliars(
+        Familiar.all().filter((f) => haveFamiliar(f)),
+        this.ownedItems
+      );
     }
 
     // Check our current workshed
