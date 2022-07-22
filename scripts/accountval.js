@@ -106,6 +106,12 @@ var AccountValLogic = /*#__PURE__*/function () {
         });
       }
 
+      if (this.settings.doFamiliars) {
+        var familiars = pager.getFamiliars(this.settings.playerId);
+
+        this.resolver.resolveFamiliars(familiars, this.ownedItems);
+      }
+
       this.resolveNoTrades();
     } }, { key: "loadJsFilter", value:
 
@@ -198,7 +204,10 @@ var AccountValLogic = /*#__PURE__*/function () {
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
       if (this.settings.doFamiliars) {
-        this.resolver.resolveFamiliars(this.ownedItems);
+        this.resolver.resolveFamiliars(
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all().filter((f) => (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.haveFamiliar)(f)),
+        this.ownedItems);
+
       }
 
       // Check our current workshed
@@ -1352,9 +1361,9 @@ var ItemResolver = /*#__PURE__*/function () {
         }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
     } }, { key: "resolveFamiliars", value:
 
-    function resolveFamiliars(ownedItems) {var _iterator6 = _createForOfIteratorHelper(
+    function resolveFamiliars(familiars, ownedItems) {var _iterator6 = _createForOfIteratorHelper(
       kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var fam = _step6.value;
-          if (!(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.haveFamiliar)(fam) || !fam.hatchling.tradeable) {
+          if (!fam.hatchling.tradeable) {
             continue;
           }
 
@@ -1600,7 +1609,22 @@ var StoreItem = /*#__PURE__*/_createClass(function StoreItem() {_classCallCheck(
 
 
 
-var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCallCheck(this, FetchFromPage);}_createClass(FetchFromPage, [{ key: "getStore", value:
+var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCallCheck(this, FetchFromPage);}_createClass(FetchFromPage, [{ key: "getFamiliars", value:
+    function getFamiliars(userId) {
+      var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)("showfamiliars.php?who=" + userId);
+      var regex = /onClick='fam\((\d+)\)'/;
+      var match;
+      var familiars = [];
+
+      while ((match = page.match(regex)) != null) {
+        page = page.replace(match[0], "");
+
+        familiars.push((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toFamiliar)((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(match[1])));
+      }
+
+      return familiars;
+    } }, { key: "getStore", value:
+
     function getStore(userId) {
       var items = [];
 
@@ -2125,6 +2149,10 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
 
     function doCheck() {
+      var pronoun =
+      !this.settings.playerId || this.settings.playerId == (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myId)()) ?
+      "You are" :
+      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getPlayerName)(this.settings.playerId) + " is";
       var netvalue = 0;
       this.logic.doPricing();
 
@@ -2267,10 +2295,8 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
       }
 
-      var pronoun = this.settings.playerId == 0 ? "You" : "They";
-
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-      pronoun + " are worth " + _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(netvalue) + " meat!",
+      pronoun + " worth " + _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(netvalue) + " meat!",
       "blue");
 
 
