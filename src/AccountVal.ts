@@ -7,6 +7,10 @@ import {
   myStorageMeat,
   getRevision,
   entityDecode,
+  getPlayerName,
+  getPlayerId,
+  toInt,
+  myId,
 } from "kolmafia";
 import { AccountValLogic, ItemStatus, ValItem } from "./AccountValLogic";
 import {
@@ -23,6 +27,10 @@ class AccountVal {
   private settings: AccountValSettings;
 
   doCheck() {
+    let pronoun =
+      !this.settings.playerId || this.settings.playerId == toInt(myId())
+        ? "You are"
+        : getPlayerName(this.settings.playerId) + " is";
     let netvalue: number = 0;
     this.logic.doPricing();
 
@@ -165,10 +173,8 @@ class AccountVal {
       );
     }
 
-    let pronoun = this.settings.playerId == 0 ? "You" : "They";
-
     print(
-      pronoun + " are worth " + AccountValUtils.getNumber(netvalue) + " meat!",
+      pronoun + " worth " + AccountValUtils.getNumber(netvalue) + " meat!",
       "blue"
     );
 
