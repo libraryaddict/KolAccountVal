@@ -117,7 +117,7 @@ export class AccountValLogic {
       });
     }
 
-    if (this.settings.doFamiliars) {
+    if (this.settings.fetchFamiliars != false) {
       let familiars = pager.getFamiliars(this.settings.playerId);
 
       this.resolver.resolveFamiliars(familiars, this.ownedItems);
@@ -214,7 +214,7 @@ export class AccountValLogic {
       this.ownedItems.set(new ValItem(item), amount);
     }
 
-    if (this.settings.doFamiliars) {
+    if (this.settings.fetchFamiliars != false) {
       this.resolver.resolveFamiliars(
         Familiar.all().filter((f) => haveFamiliar(f)),
         this.ownedItems
@@ -290,13 +290,21 @@ export class AccountValLogic {
       }
 
       // If we're not doing bound items, and this is a bound item..
-      if (!this.settings.doBound && item.isBound()) {
+      if (
+        !this.settings.doBound &&
+        item.isBound() &&
+        item.bound != ItemStatus.FAMILIAR
+      ) {
         this.ownedItems.delete(item);
         continue;
       }
 
       // If we're not doing familiars and this is a familiar
-      if (!this.settings.doFamiliars && item.bound == ItemStatus.FAMILIAR) {
+      if (
+        item.bound == ItemStatus.FAMILIAR &&
+        (this.settings.fetchFamiliars == false ||
+          (this.settings.fetchFamiliars == null && !this.settings.doBound))
+      ) {
         this.ownedItems.delete(item);
         continue;
       }

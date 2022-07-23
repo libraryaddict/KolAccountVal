@@ -40,7 +40,7 @@ export class AccountValSettings {
   doTradeables: boolean;
   doNontradeables: boolean;
   doBound: boolean;
-  doFamiliars: boolean;
+  fetchFamiliars: boolean;
   playerId: number = 0;
   displayLimit = 100;
   minimumMeat = 0;
@@ -140,7 +140,7 @@ export class AccountValSettings {
     );
     makeSetting(
       FieldType.BOOLEAN,
-      "doFamiliars",
+      "fetchFamiliars",
       ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"],
       "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set"
     );
@@ -399,6 +399,7 @@ export class AccountValSettings {
       "fetchDisplaycase",
       "fetchClan",
       "fetchSession",
+      "fetchFamiliars",
     ];
 
     // We can do fams if bound isn't false
@@ -431,12 +432,8 @@ export class AccountValSettings {
       this.doBound = this.fetchingEverywhereish && this.doNontradeables;
     }
 
-    if (!wasSet.includes("doFamiliars")) {
-      this.doFamiliars = this.doBound;
-    }
-
     for (let fetchSource of fetchSources) {
-      if (this[fetchSource] != null) {
+      if (this[fetchSource] != null || fetchSource == "fetchFamiliars") {
         continue;
       }
 
