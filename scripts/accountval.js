@@ -1071,7 +1071,9 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
         var setting = settings.getSetting(match[2].trim());
 
         var v2 = (match[3] || "").replace("!", "").split("=")[0].trim();
-        var setting2 = settings.getSetting(v2.toLowerCase() == "true" ? "" : v2);
+        var setting2 = settings.getSetting(
+        v2.toLowerCase() == "true" ? "" : v2);
+
 
         if (
         setting == null ||
@@ -1093,8 +1095,7 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
 
       // Splitting so we can do name="Tom the Hunk"
       while (
-      (match = tCommand.match(/(?:^| )([^ =]+=(\"|').+?\"|')(?=(?:$| ))/)) !=
-      null)
+      (match = tCommand.match(/(?:^| )([^ =]+=("|').+?"|')(?=(?:$| ))/)) != null)
       {
         var v = match[1];
         var val = "";
