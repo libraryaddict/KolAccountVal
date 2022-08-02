@@ -87,14 +87,14 @@ export class PriceResolver {
       return new ItemPrice(item, autosellPrice(item), PriceType.MALL, 0);
     }
 
-    let salesPricing = new MallHistoryPricing(
+    const salesPricing = new MallHistoryPricing(
       this.settings,
       this.history,
       item,
       amount
     );
-    let historyPricing = new HistoricalPricing(this.settings, item, amount);
-    let mallPricing = new MallSalesPricing(this.settings, item, amount);
+    const historyPricing = new HistoricalPricing(this.settings, item, amount);
+    const mallPricing = new MallSalesPricing(this.settings, item, amount);
     let resolver: PriceVolunteer;
 
     if (forcePricing == PriceType.HISTORICAL) {
@@ -104,7 +104,7 @@ export class PriceResolver {
     } else if (forcePricing == PriceType.MALL_SALES) {
       resolver = salesPricing;
     } else {
-      let viablePrices: PriceVolunteer[] = [
+      const viablePrices: PriceVolunteer[] = [
         salesPricing,
         historyPricing,
         mallPricing,
@@ -214,16 +214,16 @@ class MallHistoryPricing implements PriceVolunteer {
       return true;
     }
 
-    let last = this.records.records[this.records.records.length - 1];
-    let histPrice = last.meat;
-    let histAge =
+    const last = this.records.records[this.records.records.length - 1];
+    const histPrice = last.meat;
+    const histAge =
       Math.min(
         Date.now() / 1000 - last.date,
         Date.now() / 1000 - this.records.lastUpdated
       ) /
       (24 * 60 * 60);
 
-    let days = this.settings.getMaxPriceAge(histPrice, this.amount);
+    const days = this.settings.getMaxPriceAge(histPrice, this.amount);
 
     return histAge > days;
   }
@@ -233,15 +233,15 @@ class MallHistoryPricing implements PriceVolunteer {
       return -1;
     }
 
-    let last = this.records.records[this.records.records.length - 1];
+    const last = this.records.records[this.records.records.length - 1];
 
     if (last == null) {
       return -1;
     }
 
-    let dateNow = Date.now() / 1000;
+    const dateNow = Date.now() / 1000;
 
-    let histAge = Math.min(
+    const histAge = Math.min(
       dateNow - last.date,
       dateNow - this.records.lastUpdated
     );
@@ -254,7 +254,7 @@ class MallHistoryPricing implements PriceVolunteer {
       this.records = this.history.getMallRecords(this.item, 0.1, true);
     }
 
-    let last = this.records.records[this.records.records.length - 1];
+    const last = this.records.records[this.records.records.length - 1];
 
     if (last == null) {
       return null;
@@ -321,10 +321,10 @@ class HistoricalPricing implements PriceVolunteer {
   }
 
   isOutdated(): boolean {
-    let histPrice = historicalPrice(this.item);
-    let histAge = historicalAge(this.item);
+    const histPrice = historicalPrice(this.item);
+    const histAge = historicalAge(this.item);
 
-    let days = this.settings.getMaxPriceAge(histPrice, this.amount);
+    const days = this.settings.getMaxPriceAge(histPrice, this.amount);
 
     return histAge > days;
   }
@@ -334,7 +334,7 @@ class HistoricalPricing implements PriceVolunteer {
   }
 
   getPrice(): ItemPrice {
-    let histPrice = historicalPrice(this.item);
+    const histPrice = historicalPrice(this.item);
 
     if (histPrice <= 0) {
       return new MallSalesPricing(

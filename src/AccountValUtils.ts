@@ -7,7 +7,7 @@ export class AccountValUtils {
     command: string,
     debugMessages: boolean = false
   ): string[] {
-    let debug = function (message: string) {
+    const debug = function (message: string) {
       if (!debugMessages) {
         return;
       }
@@ -21,10 +21,12 @@ export class AccountValUtils {
     while ((match = tCommand.match(/(^| )([a-zA-Z]+ )([^ ]+)/)) != null) {
       tCommand = tCommand.replace(match[2], "");
 
-      let setting = settings.getSetting(match[2].trim());
+      const setting = settings.getSetting(match[2].trim());
 
-      let v2 = (match[3] || "").replace("!", "").split("=")[0].trim();
-      let setting2 = settings.getSetting(v2.toLowerCase() == "true" ? "" : v2);
+      const v2 = (match[3] || "").replace("!", "").split("=")[0].trim();
+      const setting2 = settings.getSetting(
+        v2.toLowerCase() == "true" ? "" : v2
+      );
 
       if (
         setting == null ||
@@ -42,12 +44,11 @@ export class AccountValUtils {
     }
 
     tCommand = command;
-    let spl: string[] = [];
+    const spl: string[] = [];
 
     // Splitting so we can do name="Tom the Hunk"
     while (
-      (match = tCommand.match(/(?:^| )([^ =]+=(\"|').+?\"|')(?=(?:$| ))/)) !=
-      null
+      (match = tCommand.match(/(?:^| )([^ =]+=("|').+?"|')(?=(?:$| ))/)) != null
     ) {
       let v = match[1];
       let val = "";
@@ -72,7 +73,7 @@ export class AccountValUtils {
     }
 
     if (tCommand.length > 0) {
-      for (let arg of tCommand.split(" ")) {
+      for (const arg of tCommand.split(" ")) {
         debug(`Found leftover parameter '${arg}`);
         spl.push(arg);
       }
@@ -83,7 +84,7 @@ export class AccountValUtils {
   }
 
   static getNumber(number: number, trimAt: number = 2): string {
-    var str = number.toString().split(".");
+    const str = number.toString().split(".");
 
     if (str.length > 1 && str[1].length > trimAt) {
       str[1] = str[1].substring(0, trimAt);

@@ -1,18 +1,17 @@
 import {
-  Item,
-  printHtml,
-  print,
-  myMeat,
-  myClosetMeat,
-  myStorageMeat,
-  getRevision,
   entityDecode,
   getPlayerName,
-  getPlayerId,
-  toInt,
+  getRevision,
+  Item,
+  myClosetMeat,
   myId,
+  myMeat,
+  myStorageMeat,
+  print,
+  printHtml,
+  toInt,
 } from "kolmafia";
-import { AccountValLogic, ItemStatus, ValItem } from "./AccountValLogic";
+import { AccountValLogic, ItemStatus } from "./AccountValLogic";
 import {
   AccountValSettings,
   FieldType,
@@ -27,14 +26,14 @@ class AccountVal {
   private settings: AccountValSettings;
 
   doCheck() {
-    let pronoun =
+    const pronoun =
       !this.settings.playerId || this.settings.playerId == toInt(myId())
         ? "You are"
         : getPlayerName(this.settings.playerId) + " is";
     let netvalue: number = 0;
     this.logic.doPricing();
 
-    let aWorth = this.logic.priceResolver.itemPrice(
+    const aWorth = this.logic.priceResolver.itemPrice(
       Item.get("Mr. Accessory"),
       1
     ).price;
@@ -45,8 +44,8 @@ class AccountVal {
     let shopPricedAt: number = 0;
 
     for (let no = this.logic.prices.length - 1; no >= 0; no--) {
-      let item = this.logic.prices[no][0];
-      let price = this.logic.prices[no][1];
+      const item = this.logic.prices[no][0];
+      const price = this.logic.prices[no][1];
 
       if (
         this.settings.sales > 0 &&
@@ -56,8 +55,8 @@ class AccountVal {
         continue;
       }
 
-      let count = this.logic.ownedItems.get(item);
-      let totalWorth = price.price * count;
+      const count = this.logic.ownedItems.get(item);
+      const totalWorth = price.price * count;
       netvalue += totalWorth;
 
       if (lines.length >= this.settings.displayLimit) {
@@ -93,7 +92,7 @@ class AccountVal {
         let color = "#db2525";
 
         if (item.bound == ItemStatus.SHOP_WORTH) {
-          let overpricedPerc = item.shopWorth / price.price;
+          const overpricedPerc = item.shopWorth / price.price;
 
           if (item.shopWorth < 999_999_000) {
             shopPricedAt += item.shopWorth * count;
@@ -126,7 +125,7 @@ class AccountVal {
         continue;
       }
 
-      let text =
+      const text =
         AccountValUtils.getNumber(count) +
         " " +
         name +
@@ -139,7 +138,7 @@ class AccountVal {
     }
 
     lines = lines.reverse();
-    let skipping = Math.max(
+    const skipping = Math.max(
       0,
       this.logic.prices.length - this.settings.displayLimit
     );
@@ -154,12 +153,12 @@ class AccountVal {
       );
     }
 
-    for (let line of lines) {
+    for (const line of lines) {
       printHtml(line);
     }
 
     if (mallExtinct.length > 0) {
-      let colors: string[] = ["#4f5893", "#934f4f"];
+      const colors: string[] = ["#4f5893", "#934f4f"];
 
       mallExtinct = mallExtinct.map(
         (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>"
@@ -178,7 +177,7 @@ class AccountVal {
       "blue"
     );
 
-    let mrAWorth = (0.0 + netvalue) / aWorth;
+    const mrAWorth = (0.0 + netvalue) / aWorth;
 
     printHtml(
       `<font title='With Mr. Accessory worth being ${AccountValUtils.getNumber(
@@ -214,7 +213,7 @@ class AccountVal {
     }
 
     let meat = 0;
-    let meatSources: string[] = [];
+    const meatSources: string[] = [];
 
     if (this.settings.fetchInventory && myMeat() != 0) {
       meat += myMeat();
@@ -270,7 +269,7 @@ class AccountVal {
 
     let even = true;
 
-    for (let setting of AccountValSettings.getSettings()) {
+    for (const setting of AccountValSettings.getSettings()) {
       let defaultOf = ".</font> <font>Default is: ";
 
       if (this.settings[setting.field] != null) {
@@ -312,7 +311,7 @@ class AccountVal {
 
   start(command: string) {
     this.settings = new AccountValSettings();
-    let priceSettings = new PricingSettings();
+    const priceSettings = new PricingSettings();
     this.logic = new AccountValLogic(this.settings, priceSettings);
 
     try {
@@ -328,12 +327,12 @@ class AccountVal {
         return;
       }
 
-      let spl: string[] = AccountValUtils.splitArguments(
+      const spl: string[] = AccountValUtils.splitArguments(
         this.settings,
         command
       );
 
-      let unknown = this.settings.doSettings(spl);
+      const unknown = this.settings.doSettings(spl);
 
       if (unknown.length > 0) {
         print("Unrecognized params! " + unknown.join(", "), "red");
@@ -343,7 +342,7 @@ class AccountVal {
       this.logic.loadItems();
       this.doCheck();
     } finally {
-      let revision = getRevision();
+      const revision = getRevision();
 
       if (revision != null && revision > 0 && revision < 26000) {
         printHtml(

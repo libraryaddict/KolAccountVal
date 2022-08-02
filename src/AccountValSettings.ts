@@ -55,7 +55,7 @@ export class AccountValSettings {
   settingsDebug: boolean = false;
 
   static getSettings(): ValSetting[] {
-    let settings = [];
+    const settings = [];
 
     function makeSetting(
       type: FieldType,
@@ -63,7 +63,7 @@ export class AccountValSettings {
       aliases: string[],
       desc: string
     ) {
-      let setting = new ValSetting();
+      const setting = new ValSetting();
 
       setting.type = type;
       setting.field = name;
@@ -250,7 +250,7 @@ export class AccountValSettings {
   getSetting(alias: string): ValSetting {
     alias = alias.toLowerCase();
 
-    for (let setting of AccountValSettings.getSettings()) {
+    for (const setting of AccountValSettings.getSettings()) {
       if (!setting.names.includes(alias)) {
         continue;
       }
@@ -262,13 +262,13 @@ export class AccountValSettings {
   }
 
   doSettings(args: string[]): string[] {
-    let unknown: string[] = [];
-    let defaultValues: any[] = [];
-    let wasSet: string[] = [];
+    const unknown: string[] = [];
+    const defaultValues: any[] = [];
+    const wasSet: string[] = [];
 
-    let settings = AccountValSettings.getSettings();
+    const settings = AccountValSettings.getSettings();
 
-    for (let setting of settings) {
+    for (const setting of settings) {
       defaultValues[setting.field] = this[setting.field];
     }
 
@@ -283,7 +283,7 @@ export class AccountValSettings {
       }
 
       let setting: ValSetting;
-      let name = arg
+      const name = arg
         .split("=")[0]
         .toLowerCase()
         .replace("-", "")
@@ -308,7 +308,7 @@ export class AccountValSettings {
       if (arg.startsWith("-") || arg.startsWith("+") || arg.startsWith("!")) {
         arg = arg.substring(1);
       } else if (arg.includes("=") && setting.type == FieldType.BOOLEAN) {
-        let v = arg.substring(arg.indexOf("=") + 1);
+        const v = arg.substring(arg.indexOf("=") + 1);
 
         if (!v.toLowerCase().match("^(0|1|(true)|(false)|(yes)|(no))$")) {
           unknown.push(arg);
@@ -324,14 +324,14 @@ export class AccountValSettings {
           continue;
         }
 
-        let v = arg.substring(arg.indexOf("=") + 1);
+        const v = arg.substring(arg.indexOf("=") + 1);
 
         if (v.length == 0) {
           unknown.push(arg);
           continue;
         }
 
-        let sortBy: SortBy =
+        const sortBy: SortBy =
           SortBy[
             Object.keys(SortBy).find((k) => k.toLowerCase() == v.toLowerCase())
           ];
@@ -377,7 +377,7 @@ export class AccountValSettings {
           continue;
         }
 
-        let v = arg.substring(arg.indexOf("=") + 1);
+        const v = arg.substring(arg.indexOf("=") + 1);
 
         if (v.length == 0) {
           unknown.push(arg);
@@ -391,7 +391,7 @@ export class AccountValSettings {
       }
     }
 
-    let fetchSources: string[] = [
+    const fetchSources: string[] = [
       "fetchCloset",
       "fetchStorage",
       "fetchShop",
@@ -432,7 +432,7 @@ export class AccountValSettings {
       this.doBound = this.fetchingEverywhereish && this.doNontradeables;
     }
 
-    for (let fetchSource of fetchSources) {
+    for (const fetchSource of fetchSources) {
       if (this[fetchSource] != null || fetchSource == "fetchFamiliars") {
         continue;
       }
@@ -441,7 +441,7 @@ export class AccountValSettings {
     }
 
     if (this.settingsDebug) {
-      for (let setting of Object.keys(this)) {
+      for (const setting of Object.keys(this)) {
         print(setting + " = " + this[setting]);
       }
     }
@@ -452,7 +452,7 @@ export class AccountValSettings {
   isArg(arg: string, args: string[]): boolean {
     arg = arg.toLowerCase().split("=")[0];
 
-    for (let a of args) {
+    for (const a of args) {
       if (arg != a) {
         continue;
       }
@@ -477,7 +477,7 @@ export class PricingSettings {
       return 30;
     }
 
-    let total = price * amount;
+    const total = price * amount;
 
     if (total > this.cheapTotalsLessThan) {
       return amount > 10 ? 90 : 180;

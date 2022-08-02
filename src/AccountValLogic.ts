@@ -92,13 +92,13 @@ export class AccountValLogic {
   }
 
   loadPageItems() {
-    let pager = new FetchFromPage();
+    const pager = new FetchFromPage();
 
     if (this.settings.fetchShop) {
-      let items = pager.getStore(this.settings.playerId);
+      const items = pager.getStore(this.settings.playerId);
 
       items.forEach((i) => {
-        let item = new ValItem(i.item);
+        const item = new ValItem(i.item);
 
         if (this.settings.shopWorth) {
           item.bound = ItemStatus.SHOP_WORTH;
@@ -110,7 +110,7 @@ export class AccountValLogic {
     }
 
     if (this.settings.fetchDisplaycase) {
-      let items = pager.getDisplaycase(this.settings.playerId);
+      const items = pager.getDisplaycase(this.settings.playerId);
 
       items.forEach((v, k) => {
         this.addItem(new ValItem(k), v);
@@ -118,7 +118,7 @@ export class AccountValLogic {
     }
 
     if (this.settings.fetchFamiliars != false) {
-      let familiars = pager.getFamiliars(this.settings.playerId);
+      const familiars = pager.getFamiliars(this.settings.playerId);
 
       this.resolver.resolveFamiliars(familiars, this.ownedItems);
     }
@@ -160,10 +160,10 @@ export class AccountValLogic {
       return;
     }
 
-    let famItems: Map<Item, number> = this.resolver.resolveFamiliarItems();
-    let sessionItems: Map<Item, number> = this.resolver.resolveSessionItems();
+    const famItems: Map<Item, number> = this.resolver.resolveFamiliarItems();
+    const sessionItems: Map<Item, number> = this.resolver.resolveSessionItems();
 
-    for (let item of Item.all()) {
+    for (const item of Item.all()) {
       let amount = 0;
 
       if (this.settings.fetchSession && sessionItems.has(item)) {
@@ -196,7 +196,7 @@ export class AccountValLogic {
 
       if (this.settings.fetchShop) {
         if (this.settings.shopWorth && shopAmount(item) > 0) {
-          let i = new ValItem(item);
+          const i = new ValItem(item);
           i.bound = ItemStatus.SHOP_WORTH;
           i.shopWorth = shopPrice(item);
 
@@ -224,7 +224,7 @@ export class AccountValLogic {
     // Check our current workshed
     if (this.settings.fetchingEverywhereish) {
       if (this.settings.doBound || this.settings.doTradeables) {
-        let i = getWorkshed();
+        const i = getWorkshed();
 
         if (i != null && i != Item.get("None")) {
           if (
@@ -237,7 +237,7 @@ export class AccountValLogic {
     }
 
     if (this.settings.doBound) {
-      for (let item of this.resolver.getUrledItems()) {
+      for (const item of this.resolver.getUrledItems()) {
         if (
           item[0].tradeable &&
           (item[1] == ItemStatus.FAMILIAR || item[1] != ItemStatus.BOUND)
@@ -255,7 +255,7 @@ export class AccountValLogic {
   }
 
   private resolveNoTrades() {
-    let copy: Map<ValItem, number> = new Map();
+    const copy: Map<ValItem, number> = new Map();
 
     this.ownedItems.forEach((v, k) => {
       copy.set(k, v);
@@ -265,7 +265,7 @@ export class AccountValLogic {
       this.resolver.resolveBoundToTradeables(copy, this.ownedItems);
     }
 
-    for (let item of this.ownedItems.keys()) {
+    for (const item of this.ownedItems.keys()) {
       if (
         this.jsFilter != null &&
         !this.jsFilter(item.tradeableItem, this.ownedItems.get(item))
@@ -333,12 +333,12 @@ export class AccountValLogic {
 
   doPricing() {
     let lastPrinted = 0;
-    let toCheck: [ValItem, ItemPrice][] = [];
-    let settings = this.settings;
-    let prices = this.prices;
-    let ownedItems = this.ownedItems;
+    const toCheck: [ValItem, ItemPrice][] = [];
+    const settings = this.settings;
+    const prices = this.prices;
+    const ownedItems = this.ownedItems;
 
-    let addPrice = function (item: ValItem, price: ItemPrice) {
+    const addPrice = function (item: ValItem, price: ItemPrice) {
       if (settings.minimumMeat > 0 && price.price < settings.minimumMeat) {
         ownedItems.delete(item);
         return;
@@ -347,8 +347,8 @@ export class AccountValLogic {
       prices.push([item, price]);
     };
 
-    for (let i of this.ownedItems.keys()) {
-      let price: ItemPrice = this.priceResolver.itemPrice(
+    for (const i of this.ownedItems.keys()) {
+      const price: ItemPrice = this.priceResolver.itemPrice(
         i.tradeableItem,
         this.ownedItems.get(i),
         false,
@@ -379,8 +379,8 @@ export class AccountValLogic {
       );
     }
 
-    for (let check of toCheck) {
-      let i = check[0];
+    for (const check of toCheck) {
+      const i = check[0];
 
       if (++checked % 20 == 0 && lastPrinted + 1000 < Date.now()) {
         lastPrinted = Date.now();
@@ -396,7 +396,7 @@ export class AccountValLogic {
         );
       }
 
-      let price: ItemPrice = this.priceResolver.itemPrice(
+      const price: ItemPrice = this.priceResolver.itemPrice(
         i.tradeableItem,
         this.ownedItems.get(i),
         false,
@@ -436,10 +436,10 @@ export class AccountValLogic {
       );
     } else if (this.settings.sortBy == "SortBy.SALES_VOLUME") {
       // Removed for now cos it does too many hits
-      let toUpdate: Item[] = [];
+      const toUpdate: Item[] = [];
 
-      for (let i of this.prices) {
-        let item = i[1].item;
+      for (const i of this.prices) {
+        const item = i[1].item;
 
         if (!item.tradeable || item.gift) {
           continue;
@@ -454,22 +454,22 @@ export class AccountValLogic {
           continue;
         }
 
-        let v = this.priceResolver.history.getMallRecords(item, 7, false);
+        const v = this.priceResolver.history.getMallRecords(item, 7, false);
 
         if (v == null) {
           toUpdate.push(item);
           continue;
         }
 
-        let priceTotal = i[1].price * this.ownedItems.get(i[0]);
+        const priceTotal = i[1].price * this.ownedItems.get(i[0]);
         // If our expected price is different from mall price by a bigger margin than expected.. Aka 50% more expensive/cheap
-        let priceDiff =
+        const priceDiff =
           i[1].price > v.getPriceSold(30)
             ? v.getPriceSold(30) / i[1].price
             : i[1].price / v.getPriceSold(30);
 
-        let days = priceDiff < 0.5 ? 7 : priceTotal > 5_000_000 ? 30 : 100;
-        let daysOld = (Date.now() / 1000 - v.lastUpdated) / (24 * 60 * 60);
+        const days = priceDiff < 0.5 ? 7 : priceTotal > 5_000_000 ? 30 : 100;
+        const daysOld = (Date.now() / 1000 - v.lastUpdated) / (24 * 60 * 60);
 
         if (daysOld < days) {
           continue;
@@ -488,7 +488,7 @@ export class AccountValLogic {
       let last = Date.now();
       let progress: number = 0;
 
-      for (let i of toUpdate) {
+      for (const i of toUpdate) {
         if (last + 5000 < Date.now()) {
           last = Date.now();
 
@@ -509,12 +509,12 @@ export class AccountValLogic {
       }
 
       this.prices.sort((v1, v2) => {
-        let s1 = this.priceResolver.history.getMallRecords(
+        const s1 = this.priceResolver.history.getMallRecords(
           v1[1].item,
           1,
           false
         );
-        let s2 = this.priceResolver.history.getMallRecords(
+        const s2 = this.priceResolver.history.getMallRecords(
           v2[1].item,
           1,
           false

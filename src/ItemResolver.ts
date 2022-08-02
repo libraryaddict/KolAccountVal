@@ -59,29 +59,29 @@ export class ItemResolver {
   }
 
   loadCache() {
-    let prop: string[] = getProperty(this.accountValUrlCachePropName).split(
+    const prop: string[] = getProperty(this.accountValUrlCachePropName).split(
       ","
     );
 
-    for (let p of prop) {
+    for (const p of prop) {
       if (!p.includes(":")) {
         continue;
       }
 
-      let spl = p.split(":");
+      const spl = p.split(":");
 
       this.accountValCache.set(toItem(toInt(spl[0])), spl[1].startsWith("t"));
     }
   }
 
   saveCache() {
-    let values: string[] = [];
+    const values: string[] = [];
 
     this.accountValCache.forEach((val, key) => {
       values.push(toInt(key) + ":" + (val ? "t" : "f"));
     });
 
-    let val = values.join(",");
+    const val = values.join(",");
 
     if (getProperty(this.accountValUrlCachePropName) == val) {
       return;
@@ -95,7 +95,7 @@ export class ItemResolver {
       return this.accountValCache.get(item);
     }
 
-    let url = "charsheet.php";
+    const url = "charsheet.php";
     let page = this.visitCache.get(url);
 
     if (page == null) {
@@ -103,7 +103,7 @@ export class ItemResolver {
       this.visitCache.set(url, page);
     }
 
-    let result: string[] = page.match(
+    const result: string[] = page.match(
       new RegExp(
         "whichskill=(" + toInt(skill) + ")[^/]+</a> ((P|(?:<b>HP</b>)))",
         "g"
@@ -119,10 +119,10 @@ export class ItemResolver {
    * Get the items from stuff like url visits
    */
   getUrledItems(): [Item, ItemStatus?][] {
-    let items: [Item, ItemStatus][] = [];
-    let origSize = this.accountValCache.size;
+    const items: [Item, ItemStatus][] = [];
+    const origSize = this.accountValCache.size;
 
-    for (let s of this.accValStuff) {
+    for (const s of this.accValStuff) {
       if (s.itemType == ItemType.BOOK) {
         if (
           this.visitCheck(
@@ -176,7 +176,7 @@ export class ItemResolver {
   private testProperty(property: string): boolean {
     let result: boolean = true;
 
-    for (let prop of property.split("&")) {
+    for (const prop of property.split("&")) {
       result =
         result &&
         (getProperty(prop.replace("!", "")) == "true") == !prop.includes("!");
@@ -192,7 +192,7 @@ export class ItemResolver {
     bound?: ItemStatus,
     count: number = 1
   ) {
-    let v = new ValItem(item, name, bound);
+    const v = new ValItem(item, name, bound);
 
     ownedItems.set(v, (ownedItems.get(v) | 0) + count);
   }
@@ -201,16 +201,16 @@ export class ItemResolver {
     copy: Map<ValItem, number>,
     ownedItems: Map<ValItem, number>
   ) {
-    for (let s of this.accValStuff) {
+    for (const s of this.accValStuff) {
       if (s.itemType != ItemType.UNTRADEABLE_ITEM) {
         continue;
       }
 
       try {
-        let item = Item.get(s.data1);
+        const item = Item.get(s.data1);
         let v: ValItem;
 
-        for (let k of copy.keys()) {
+        for (const k of copy.keys()) {
           if (k.tradeableItem != item) {
             continue;
           }
@@ -237,7 +237,7 @@ export class ItemResolver {
   }
 
   resolveFamiliars(familiars: Familiar[], ownedItems: Map<ValItem, number>) {
-    for (let fam of familiars) {
+    for (const fam of familiars) {
       if (!fam.hatchling.tradeable) {
         continue;
       }
@@ -250,14 +250,14 @@ export class ItemResolver {
    * Items that are equipped on an unused fam doesn't show otherwise
    */
   resolveFamiliarItems() {
-    let famEquipped: Map<Item, number> = new Map();
+    const famEquipped: Map<Item, number> = new Map();
 
-    for (let fam of Familiar.all()) {
+    for (const fam of Familiar.all()) {
       if (!haveFamiliar(fam) || myFamiliar() == fam) {
         continue;
       }
 
-      let item = familiarEquippedEquipment(fam);
+      const item = familiarEquippedEquipment(fam);
 
       if (item == null || item == Item.get("None")) {
         continue;
@@ -270,7 +270,7 @@ export class ItemResolver {
   }
 
   resolveSessionItems() {
-    let map: Map<Item, number> = new Map();
+    const map: Map<Item, number> = new Map();
 
     Object.entries(mySessionItems()).forEach((value) => {
       map.set(Item.get(value[0]), value[1]);
@@ -291,7 +291,7 @@ export class ItemResolver {
       this.visitCache.set(url, page);
     }
 
-    let result: boolean = page.includes(find);
+    const result: boolean = page.includes(find);
 
     this.accountValCache.set(item, result);
 
@@ -299,15 +299,15 @@ export class ItemResolver {
   }
 
   loadAccountValStuff(): AccValStuff[] {
-    let buffer = fileToBuffer("accountval_binds.txt");
-    let values: AccValStuff[] = [];
+    const buffer = fileToBuffer("accountval_binds.txt");
+    const values: AccValStuff[] = [];
 
-    for (let line of buffer.split("\n")) {
+    for (const line of buffer.split("\n")) {
       if (line.startsWith("#") || line.length == 0) {
         continue;
       }
 
-      let spl = line.split("\t");
+      const spl = line.split("\t");
 
       let e: ItemType;
 
@@ -335,7 +335,7 @@ export class ItemResolver {
       }
 
       try {
-        let v: AccValStuff = new AccValStuff();
+        const v: AccValStuff = new AccValStuff();
 
         v.itemType = e;
         v.actualItem = Item.get(spl[1]);
@@ -350,12 +350,12 @@ export class ItemResolver {
 
     this.loadSkills(values);
 
-    loop: for (let v of values) {
+    loop: for (const v of values) {
       if (v.actualItem.tradeable) {
         continue;
       }
 
-      for (let v1 of values) {
+      for (const v1 of values) {
         if (v1.itemType != ItemType.UNTRADEABLE_ITEM) {
           continue;
         }
@@ -375,15 +375,15 @@ export class ItemResolver {
   }
 
   loadSkills(values: AccValStuff[]) {
-    let cache: string = getProperty(this.accountValSkillCachePropName);
+    const cache: string = getProperty(this.accountValSkillCachePropName);
 
     if (cache.split(",")[0] == getRevision().toString()) {
-      let spl = cache.substring(cache.indexOf(",") + 1).split(",");
+      const spl = cache.substring(cache.indexOf(",") + 1).split(",");
 
-      for (let s of spl) {
-        let spl2 = s.split(/[:;]/);
+      for (const s of spl) {
+        const spl2 = s.split(/[:;]/);
 
-        let v: AccValStuff = new AccValStuff();
+        const v: AccValStuff = new AccValStuff();
 
         v.itemType = ItemType.SKILL;
         v.actualItem = toItem(spl2[0]);
@@ -402,10 +402,10 @@ export class ItemResolver {
       return;
     }
 
-    let propValues: string[] = [getRevision().toString()];
+    const propValues: string[] = [getRevision().toString()];
 
     // Now we load the skills we have
-    for (let i of Item.all()) {
+    for (const i of Item.all()) {
       // Skip items that don't last across ascensions
       if (i.quest || i.gift) {
         continue;
@@ -417,13 +417,13 @@ export class ItemResolver {
         continue;
       }
 
-      let skill = skillModifier(i, "Skill");
+      const skill = skillModifier(i, "Skill");
 
       if (skill == Skill.get("None")) {
         continue;
       }
 
-      let v: AccValStuff = new AccValStuff();
+      const v: AccValStuff = new AccValStuff();
 
       v.itemType = ItemType.SKILL;
       v.actualItem = i;
@@ -433,7 +433,7 @@ export class ItemResolver {
       propValues.push(toInt(i) + ":" + v.data1);
     }
 
-    for (let i of Item.all()) {
+    for (const i of Item.all()) {
       if (
         i.tradeable ||
         i.quest ||
@@ -444,14 +444,14 @@ export class ItemResolver {
         continue;
       }
 
-      let name = i.name.substring(0, i.name.lastIndexOf("(") - 1);
+      const name = i.name.substring(0, i.name.lastIndexOf("(") - 1);
 
-      for (let i2 of Item.all()) {
+      for (const i2 of Item.all()) {
         if (!i2.tradeable || i2.gift || i2.quest || !i2.name.includes(name)) {
           continue;
         }
 
-        let v: AccValStuff = new AccValStuff();
+        const v: AccValStuff = new AccValStuff();
         v.itemType = ItemType.UNTRADEABLE_ITEM;
         v.actualItem = i2;
         v.data1 = i.name;
