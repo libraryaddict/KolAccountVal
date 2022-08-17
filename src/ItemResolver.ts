@@ -5,7 +5,6 @@ import {
   getProperty,
   getRevision,
   haveFamiliar,
-  haveSkill,
   Item,
   myFamiliar,
   myGardenType,
@@ -14,13 +13,10 @@ import {
   setProperty,
   Skill,
   skillModifier,
-  toBoolean,
   toInt,
   toItem,
   toSkill,
   visitUrl,
-  wait,
-  waitq,
 } from "kolmafia";
 import { ItemStatus, ValItem } from "./AccountValLogic";
 

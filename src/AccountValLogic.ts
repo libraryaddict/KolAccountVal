@@ -5,34 +5,26 @@ import {
   displayAmount,
   equippedAmount,
   Familiar,
-  getRevision,
-  getVersion,
   getWorkshed,
   haveFamiliar,
   isCoinmasterItem,
   Item,
   itemAmount,
-  myClosetMeat,
-  myMeat,
-  myStorageMeat,
   print,
-  printHtml,
   shopAmount,
   shopPrice,
   stashAmount,
   storageAmount,
   toInt,
-  toJson,
 } from "kolmafia";
 import { ItemResolver } from "./ItemResolver";
 import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
 import {
   AccountValSettings,
-  FieldType,
   PricingSettings,
   SortBy,
 } from "./AccountValSettings";
-import { FetchFromPage, StoreItem } from "./PageResolver";
+import { FetchFromPage } from "./PageResolver";
 import { AccountValUtils } from "./AccountValUtils";
 
 export enum ItemStatus {

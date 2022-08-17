@@ -38,7 +38,7 @@ export class FetchFromPage {
 
     for (const s of page.split("<tr>")) {
       const match = s.match(
-        /selecteditem=(\d+).+?<b>.+?<\/b> \((\d+)\) +(?:\(Limit (\d+) \/ day\))?<\/td><td>((?:\d|,)+) Meat<\/td>/
+        /selecteditem=(\d+).+?<b>.+?<\/b> \(([\d,]+)\) +(?:\(Limit ([\d,]+) \/ day\))?<\/td><td>((?:\d|,)+) Meat<\/td>/
       );
 
       if (match == null) {

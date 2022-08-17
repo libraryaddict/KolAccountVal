@@ -263,7 +263,7 @@ export class AccountValSettings {
 
   doSettings(args: string[]): string[] {
     const unknown: string[] = [];
-    const defaultValues: any[] = [];
+    const defaultValues: unknown[] = [];
     const wasSet: string[] = [];
 
     const settings = AccountValSettings.getSettings();
