@@ -1638,7 +1638,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 
       page.split("<tr>")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var s = _step.value;
           var match = s.match(
-          /selecteditem=(\d+).+?<b>.+?<\/b> \((\d+)\) +(?:\(Limit (\d+) \/ day\))?<\/td><td>((?:\d|,)+) Meat<\/td>/);
+          /selecteditem=(\d+).+?<b>.+?<\/b> \(([\d,]+)\) +(?:\(Limit ([\d,]+) \/ day\))?<\/td><td>((?:\d|,)+) Meat<\/td>/);
 
 
           if (match == null) {
