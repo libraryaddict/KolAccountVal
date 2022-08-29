@@ -27,6 +27,15 @@ export enum SortBy {
   ITEM_ID,
 }
 
+const sortByAliases: Map<string, SortBy> = new Map([
+  ["count", SortBy.QUANTITY],
+  ["amount", SortBy.QUANTITY],
+  ["meat", SortBy.PRICE],
+  ["totalmeat", SortBy.TOTAL_PRICE],
+  ["totalprice", SortBy.TOTAL_PRICE],
+  ["id", SortBy.ITEM_ID],
+]);
+
 export class AccountValSettings {
   fetchCloset: boolean;
   fetchStorage: boolean;
@@ -331,10 +340,14 @@ export class AccountValSettings {
           continue;
         }
 
-        const sortBy: SortBy =
+        let sortBy: SortBy =
           SortBy[
             Object.keys(SortBy).find((k) => k.toLowerCase() == v.toLowerCase())
           ];
+
+        if (sortBy == null) {
+          sortBy = sortByAliases.get(v.toLowerCase());
+        }
 
         if (sortBy == null) {
           unknown.push(arg);
