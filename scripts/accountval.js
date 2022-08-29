@@ -567,6 +567,15 @@ var SortBy;(function (SortBy) {SortBy[SortBy["NAME"] = 0] = "NAME";SortBy[SortBy
 
 
 
+var sortByAliases = new Map([
+["count", SortBy.QUANTITY],
+["amount", SortBy.QUANTITY],
+["meat", SortBy.PRICE],
+["totalmeat", SortBy.TOTAL_PRICE],
+["totalprice", SortBy.TOTAL_PRICE],
+["id", SortBy.ITEM_ID]]);
+
+
 var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings() {_classCallCheck(this, AccountValSettings);_defineProperty(this, "fetchCloset", void 0);_defineProperty(this, "fetchStorage", void 0);_defineProperty(this, "fetchInventory", void 0);_defineProperty(this, "fetchShop", void 0);_defineProperty(this, "fetchDisplaycase", void 0);_defineProperty(this, "fetchSession",
 
 
@@ -875,6 +884,10 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
             SortBy[
             Object.keys(SortBy).find((k) => k.toLowerCase() == _v.toLowerCase())];
 
+
+            if (sortBy == null) {
+              sortBy = sortByAliases.get(_v.toLowerCase());
+            }
 
             if (sortBy == null) {
               unknown.push(arg);
