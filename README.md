@@ -21,8 +21,10 @@ accountval
 If you want to see only the tradeable stuff, use
 
 ```text
-accountval true
+accountval trade
 ```
+
+There's a ton of parameters you can use, provide `help` as a parameter.
 
 If you have accountval.ash installed, use
 
