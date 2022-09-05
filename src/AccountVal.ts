@@ -26,10 +26,11 @@ class AccountVal {
   private settings: AccountValSettings;
 
   doCheck() {
-    const pronoun =
-      !this.settings.playerId || this.settings.playerId == toInt(myId())
-        ? "You are"
-        : getPlayerName(this.settings.playerId) + " is";
+    const pronoun = this.settings.fetchClan
+      ? "The clan stash is"
+      : !this.settings.playerId || this.settings.playerId == toInt(myId())
+      ? "You are"
+      : getPlayerName(this.settings.playerId) + " is";
     let netvalue: number = 0;
     this.logic.doPricing();
 
