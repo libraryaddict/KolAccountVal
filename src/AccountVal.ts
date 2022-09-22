@@ -56,8 +56,10 @@ class AccountVal {
         continue;
       }
 
+      const worthEach = price.price * (1 / item.worthMultiplier);
+
       const count = this.logic.ownedItems.get(item);
-      const totalWorth = price.price * count;
+      const totalWorth = Math.round(worthEach * count);
       netvalue += totalWorth;
 
       if (lines.length >= this.settings.displayLimit) {
@@ -67,7 +69,12 @@ class AccountVal {
       let titleName = item.name;
 
       if (item.name != item.tradeableItem.name) {
-        titleName = item.name + " (" + item.tradeableItem.name + ")";
+        titleName =
+          item.name +
+          (item.worthMultiplier > 1 ? " x " + item.worthMultiplier : "") +
+          " (" +
+          item.tradeableItem.name +
+          ")";
       }
 
       let title =
@@ -93,7 +100,7 @@ class AccountVal {
         let color = "#db2525";
 
         if (item.bound == ItemStatus.SHOP_WORTH) {
-          const overpricedPerc = item.shopWorth / price.price;
+          const overpricedPerc = item.shopWorth / worthEach;
 
           if (item.shopWorth < 999_999_000) {
             shopPricedAt += item.shopWorth * count;

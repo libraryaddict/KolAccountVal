@@ -42,6 +42,7 @@ export class ValItem {
   tradeableItem: Item;
   bound: ItemStatus;
   shopWorth: number;
+  worthMultiplier: number = 1;
 
   constructor(item: Item, name: string = item.name, bound?: ItemStatus) {
     this.name = name;

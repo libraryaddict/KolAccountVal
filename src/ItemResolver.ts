@@ -186,9 +186,11 @@ export class ItemResolver {
     item: Item,
     name: string,
     bound?: ItemStatus,
-    count: number = 1
+    count: number = 1,
+    worthMultiplier: number = 1
   ) {
     const v = new ValItem(item, name, bound);
+    v.worthMultiplier = worthMultiplier;
 
     ownedItems.set(v, (ownedItems.get(v) | 0) + count);
   }
@@ -224,7 +226,8 @@ export class ItemResolver {
           s.actualItem,
           item.name,
           v.bound == null ? ItemStatus.BOUND : v.bound,
-          copy.get(v)
+          copy.get(v),
+          /\d+/.test(s.data2) ? toInt(s.data2) : 1
         );
       } catch (e) {
         print("You probably need to update mafia! Got an error! " + e, "red");
