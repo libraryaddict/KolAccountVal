@@ -40,7 +40,8 @@ var ValItem = /*#__PURE__*/function () {
 
 
 
-  function ValItem(item) {var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : item.name;var bound = arguments.length > 2 ? arguments[2] : undefined;_classCallCheck(this, ValItem);_defineProperty(this, "name", void 0);_defineProperty(this, "tradeableItem", void 0);_defineProperty(this, "bound", void 0);_defineProperty(this, "shopWorth", void 0);
+
+  function ValItem(item) {var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : item.name;var bound = arguments.length > 2 ? arguments[2] : undefined;_classCallCheck(this, ValItem);_defineProperty(this, "name", void 0);_defineProperty(this, "tradeableItem", void 0);_defineProperty(this, "bound", void 0);_defineProperty(this, "shopWorth", void 0);_defineProperty(this, "worthMultiplier", 1);
     this.name = name;
     this.tradeableItem = item;
     this.bound = bound;
@@ -1335,8 +1336,10 @@ var ItemResolver = /*#__PURE__*/function () {
     name,
     bound)
 
-    {var count = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+
+    {var count = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;var worthMultiplier = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;
       var v = new _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ValItem */ .oD(item, name, bound);
+      v.worthMultiplier = worthMultiplier;
 
       ownedItems.set(v, (ownedItems.get(v) | 0) + count);
     } }, { key: "resolveBoundToTradeables", value:
@@ -1372,7 +1375,8 @@ var ItemResolver = /*#__PURE__*/function () {
             s.actualItem,
             item.name,
             v.bound == null ? _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND : v.bound,
-            copy.get(v));
+            copy.get(v),
+            /\d+/.test(s.data2) ? (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(s.data2) : 1);
 
           } catch (e) {
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("You probably need to update mafia! Got an error! " + e, "red");
@@ -2198,8 +2202,10 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           continue;
         }
 
+        var worthEach = price.price * (1 / item.worthMultiplier);
+
         var count = this.logic.ownedItems.get(item);
-        var totalWorth = price.price * count;
+        var totalWorth = Math.round(worthEach * count);
         netvalue += totalWorth;
 
         if (lines.length >= this.settings.displayLimit) {
@@ -2209,7 +2215,12 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         var titleName = item.name;
 
         if (item.name != item.tradeableItem.name) {
-          titleName = item.name + " (" + item.tradeableItem.name + ")";
+          titleName =
+          item.name + (
+          item.worthMultiplier > 1 ? " x " + item.worthMultiplier : "") +
+          " (" +
+          item.tradeableItem.name +
+          ")";
         }
 
         var title =
@@ -2235,7 +2246,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           var color = "#db2525";
 
           if (item.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.SHOP_WORTH */ .Ms.SHOP_WORTH) {
-            var overpricedPerc = item.shopWorth / price.price;
+            var overpricedPerc = item.shopWorth / worthEach;
 
             if (item.shopWorth < 999999000) {
               shopPricedAt += item.shopWorth * count;
