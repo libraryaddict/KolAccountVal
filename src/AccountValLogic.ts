@@ -10,6 +10,7 @@ import {
   isCoinmasterItem,
   Item,
   itemAmount,
+  itemType,
   print,
   shopAmount,
   shopPrice,
@@ -17,7 +18,7 @@ import {
   storageAmount,
   toInt,
 } from "kolmafia";
-import { ItemResolver } from "./ItemResolver";
+import { ItemResolver, ItemType } from "./ItemResolver";
 import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
 import {
   AccountValSettings,
@@ -29,6 +30,8 @@ import { AccountValUtils } from "./AccountValUtils";
 
 export enum ItemStatus {
   BOUND,
+
+  NO_TRADE,
 
   FAMILIAR,
 
@@ -48,6 +51,10 @@ export class ValItem {
     this.name = name;
     this.tradeableItem = item;
     this.bound = bound;
+
+    if (this.bound == null && !item.tradeable) {
+      this.bound = ItemStatus.NO_TRADE;
+    }
   }
 
   getBound(): string {
@@ -57,6 +64,8 @@ export class ValItem {
       return "Familiar";
     } else if (this.bound == ItemStatus.IN_USE) {
       return "In Use";
+    } else if (this.bound == ItemStatus.NO_TRADE) {
+      return "Untradeable";
     }
 
     return null;
@@ -254,8 +263,11 @@ export class AccountValLogic {
       copy.set(k, v);
     });
 
-    if (this.settings.doBound) {
-      this.resolver.resolveBoundToTradeables(copy, this.ownedItems);
+    if (this.settings.doBound || this.settings.doNontradeables) {
+      this.resolver.resolveBoundToTradeables(copy, this.ownedItems, [
+        this.settings.doBound ? ItemType.UNTRADEABLE_ITEM : null,
+        this.settings.doNontradeables ? ItemType.NO_TRADE : null,
+      ]);
     }
 
     for (const item of this.ownedItems.keys()) {

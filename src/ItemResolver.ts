@@ -27,7 +27,7 @@ class AccValStuff {
   data2: string;
 }
 
-enum ItemType {
+export enum ItemType {
   UNTRADEABLE_ITEM,
 
   BOOK,
@@ -41,6 +41,8 @@ enum ItemType {
   VISIT_URL_CHECK,
 
   SKILL,
+
+  NO_TRADE,
 }
 
 export class ItemResolver {
@@ -197,10 +199,11 @@ export class ItemResolver {
 
   resolveBoundToTradeables(
     copy: Map<ValItem, number>,
-    ownedItems: Map<ValItem, number>
+    ownedItems: Map<ValItem, number>,
+    resolve: ItemType[]
   ) {
     for (const s of this.accValStuff) {
-      if (s.itemType != ItemType.UNTRADEABLE_ITEM) {
+      if (!resolve.includes(s.itemType)) {
         continue;
       }
 
@@ -225,7 +228,11 @@ export class ItemResolver {
           ownedItems,
           s.actualItem,
           item.name,
-          v.bound == null ? ItemStatus.BOUND : v.bound,
+          v.bound == null
+            ? s.itemType == ItemType.UNTRADEABLE_ITEM
+              ? ItemStatus.BOUND
+              : ItemStatus.NO_TRADE
+            : v.bound,
           copy.get(v),
           /\d+/.test(s.data2) ? toInt(s.data2) : 1
         );
@@ -329,6 +336,9 @@ export class ItemResolver {
         case "g":
           e = ItemType.GARDEN;
           break;
+        case "t":
+          e = ItemType.NO_TRADE;
+          break;
         default:
           print("Found line '" + line + "' which I can't handle!");
       }
@@ -355,7 +365,10 @@ export class ItemResolver {
       }
 
       for (const v1 of values) {
-        if (v1.itemType != ItemType.UNTRADEABLE_ITEM) {
+        if (
+          v1.itemType != ItemType.UNTRADEABLE_ITEM &&
+          v1.itemType != ItemType.NO_TRADE
+        ) {
           continue;
         }
 
