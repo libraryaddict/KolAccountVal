@@ -24,7 +24,9 @@ function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !
 
 
 
-var ItemStatus;(function (ItemStatus) {ItemStatus[ItemStatus["BOUND"] = 0] = "BOUND";ItemStatus[ItemStatus["FAMILIAR"] = 1] = "FAMILIAR";ItemStatus[ItemStatus["IN_USE"] = 2] = "IN_USE";ItemStatus[ItemStatus["SHOP_WORTH"] = 3] = "SHOP_WORTH";})(ItemStatus || (ItemStatus = {}));
+var ItemStatus;(function (ItemStatus) {ItemStatus[ItemStatus["BOUND"] = 0] = "BOUND";ItemStatus[ItemStatus["NO_TRADE"] = 1] = "NO_TRADE";ItemStatus[ItemStatus["FAMILIAR"] = 2] = "FAMILIAR";ItemStatus[ItemStatus["IN_USE"] = 3] = "IN_USE";ItemStatus[ItemStatus["SHOP_WORTH"] = 4] = "SHOP_WORTH";})(ItemStatus || (ItemStatus = {}));
+
+
 
 
 
@@ -45,6 +47,10 @@ var ValItem = /*#__PURE__*/function () {
     this.name = name;
     this.tradeableItem = item;
     this.bound = bound;
+
+    if (this.bound == null && !item.tradeable) {
+      this.bound = ItemStatus.NO_TRADE;
+    }
   }_createClass(ValItem, [{ key: "getBound", value:
 
     function getBound() {
@@ -54,6 +60,8 @@ var ValItem = /*#__PURE__*/function () {
         return "Familiar";
       } else if (this.bound == ItemStatus.IN_USE) {
         return "In Use";
+      } else if (this.bound == ItemStatus.NO_TRADE) {
+        return "Untradeable";
       }
 
       return null;
@@ -251,8 +259,11 @@ var AccountValLogic = /*#__PURE__*/function () {
         copy.set(k, v);
       });
 
-      if (this.settings.doBound) {
-        this.resolver.resolveBoundToTradeables(copy, this.ownedItems);
+      if (this.settings.doBound || this.settings.doNontradeables) {
+        this.resolver.resolveBoundToTradeables(copy, this.ownedItems, [
+        this.settings.doBound ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.UNTRADEABLE_ITEM */ .q.UNTRADEABLE_ITEM : null,
+        this.settings.doNontradeables ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.NO_TRADE */ .q.NO_TRADE : null]);
+
       }var _iterator3 = _createForOfIteratorHelper(
 
       this.ownedItems.keys()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _item3 = _step3.value;
@@ -1161,7 +1172,8 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "I": () => (/* binding */ ItemResolver)
+/* harmony export */   "I": () => (/* binding */ ItemResolver),
+/* harmony export */   "q": () => (/* binding */ ItemType)
 /* harmony export */ });
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
@@ -1169,14 +1181,16 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
 function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
 var
 
-AccValStuff = /*#__PURE__*/_createClass(function AccValStuff() {_classCallCheck(this, AccValStuff);_defineProperty(this, "itemType", void 0);_defineProperty(this, "actualItem", void 0);_defineProperty(this, "data1", void 0);_defineProperty(this, "data2", void 0);});var
+AccValStuff = /*#__PURE__*/_createClass(function AccValStuff() {_classCallCheck(this, AccValStuff);_defineProperty(this, "itemType", void 0);_defineProperty(this, "actualItem", void 0);_defineProperty(this, "data1", void 0);_defineProperty(this, "data2", void 0);});
 
 
 
 
 
 
-ItemType;(function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["GARDEN"] = 4] = "GARDEN";ItemType[ItemType["VISIT_URL_CHECK"] = 5] = "VISIT_URL_CHECK";ItemType[ItemType["SKILL"] = 6] = "SKILL";})(ItemType || (ItemType = {}));
+var ItemType;(function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["GARDEN"] = 4] = "GARDEN";ItemType[ItemType["VISIT_URL_CHECK"] = 5] = "VISIT_URL_CHECK";ItemType[ItemType["SKILL"] = 6] = "SKILL";ItemType[ItemType["NO_TRADE"] = 7] = "NO_TRADE";})(ItemType || (ItemType = {}));
+
+
 
 
 
@@ -1346,10 +1360,11 @@ var ItemResolver = /*#__PURE__*/function () {
 
     function resolveBoundToTradeables(
     copy,
-    ownedItems)
+    ownedItems,
+    resolve)
     {var _iterator4 = _createForOfIteratorHelper(
       this.accValStuff),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var s = _step4.value;
-          if (s.itemType != ItemType.UNTRADEABLE_ITEM) {
+          if (!resolve.includes(s.itemType)) {
             continue;
           }
 
@@ -1374,7 +1389,11 @@ var ItemResolver = /*#__PURE__*/function () {
             ownedItems,
             s.actualItem,
             item.name,
-            v.bound == null ? _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND : v.bound,
+            v.bound == null ?
+            s.itemType == ItemType.UNTRADEABLE_ITEM ?
+            _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND :
+            _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.NO_TRADE */ .Ms.NO_TRADE :
+            v.bound,
             copy.get(v),
             /\d+/.test(s.data2) ? (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(s.data2) : 1);
 
@@ -1478,6 +1497,9 @@ var ItemResolver = /*#__PURE__*/function () {
             case "g":
               e = ItemType.GARDEN;
               break;
+            case "t":
+              e = ItemType.NO_TRADE;
+              break;
             default:
               (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("Found line '" + line + "' which I can't handle!");}
 
@@ -1504,7 +1526,10 @@ var ItemResolver = /*#__PURE__*/function () {
         }var _iterator9 = _createForOfIteratorHelper(
 
         values),_step9;try {for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {var v1 = _step9.value;
-            if (v1.itemType != ItemType.UNTRADEABLE_ITEM) {
+            if (
+            v1.itemType != ItemType.UNTRADEABLE_ITEM &&
+            v1.itemType != ItemType.NO_TRADE)
+            {
               continue;
             }
 

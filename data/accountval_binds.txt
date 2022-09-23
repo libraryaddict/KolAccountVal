@@ -158,16 +158,16 @@ g	packet of mushroom spores	MUSHROOM
 
 # Items that are dependent on the value of another as they're no-trade
 # Item | Check Against | X of our item = 1 of that item
-i	Dreadsylvanian skeleton key	Freddy Kruegerand	25
-i	One-day ticket to Spring Break Beach	Beach Buck	100
-i	One-day ticket to That 70s Volcano	Volcoino	3
-i	One-day ticket to Dinseylandfill	FunFunds™	20
-i	One-day ticket to Conspiracy Island	Coinspiracy	100
-i	One-day ticket to The Glaciest	Wal-Mart gift certificate	50
-i	FantasyRealm guest pass	Rubee™	350
-i	Dense Meat Stack	Chroner	1
-i	Drippy khakis	Driplet	30
-i	Never Don't Stop Not Striving	Guzzlrbuck	1000
-i	Inflatable LT&T telegraph office	buffalo dime	10
-i	Portable Spacegate	Spacegate Research	1000
-i	Noir fedora	Cop dollar	200
+t	Dreadsylvanian skeleton key	Freddy Kruegerand	25
+t	One-day ticket to Spring Break Beach	Beach Buck	100
+t	One-day ticket to That 70s Volcano	Volcoino	3
+t	One-day ticket to Dinseylandfill	FunFunds™	20
+t	One-day ticket to Conspiracy Island	Coinspiracy	100
+t	One-day ticket to The Glaciest	Wal-Mart gift certificate	50
+t	FantasyRealm guest pass	Rubee™	350
+t	Dense Meat Stack	Chroner	1
+t	Drippy khakis	Driplet	30
+t	Never Don't Stop Not Striving	Guzzlrbuck	1000
+t	Inflatable LT&T telegraph office	buffalo dime	10
+t	Portable Spacegate	Spacegate Research	1000
+t	Noir fedora	Cop dollar	200
