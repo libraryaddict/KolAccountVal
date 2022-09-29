@@ -171,3 +171,4 @@ t	Never Don't Stop Not Striving	Guzzlrbuck	1000
 t	Inflatable LT&T telegraph office	buffalo dime	10
 t	Portable Spacegate	Spacegate Research	1000
 t	Noir fedora	Cop dollar	200
+t	Boris's ring	fat loot token	1
