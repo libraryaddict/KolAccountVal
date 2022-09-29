@@ -228,7 +228,7 @@ export class ItemResolver {
           ownedItems,
           s.actualItem,
           item.name,
-          v.bound == null
+          v.bound == null || v.bound == ItemStatus.NO_TRADE
             ? s.itemType == ItemType.UNTRADEABLE_ITEM
               ? ItemStatus.BOUND
               : ItemStatus.NO_TRADE
