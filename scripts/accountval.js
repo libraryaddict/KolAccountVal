@@ -1398,7 +1398,7 @@ var ItemResolver = /*#__PURE__*/function () {
             ownedItems,
             s.actualItem,
             item.name,
-            v.bound == null ?
+            v.bound == null || v.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.NO_TRADE */ .Ms.NO_TRADE ?
             s.itemType == ItemType.UNTRADEABLE_ITEM ?
             _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND :
             _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.NO_TRADE */ .Ms.NO_TRADE :
