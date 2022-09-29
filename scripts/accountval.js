@@ -340,7 +340,10 @@ var AccountValLogic = /*#__PURE__*/function () {
       var ownedItems = this.ownedItems;
 
       var addPrice = function addPrice(item, price) {
-        if (settings.minimumMeat > 0 && price.price < settings.minimumMeat) {
+        if (
+        settings.minimumMeat > 0 &&
+        price.price * item.worthMultiplier < settings.minimumMeat)
+        {
           ownedItems.delete(item);
           return;
         }
@@ -414,16 +417,22 @@ var AccountValLogic = /*#__PURE__*/function () {
       if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy.TOTAL_PRICE */ .hn.TOTAL_PRICE) {
         this.prices.sort(
         (v1, v2) =>
-        (v1[1].price <= 0 ? 999999999 : v1[1].price) *
+        (v1[1].price <= 0 ?
+        999999999 :
+        1 / v1[0].worthMultiplier * v1[1].price) *
         this.ownedItems.get(v1[0]) -
-        (v2[1].price <= 0 ? 999999999 : v2[1].price) *
+        (v2[1].price <= 0 ?
+        999999999 :
+        1 / v2[0].worthMultiplier * v2[1].price) *
         this.ownedItems.get(v2[0]));
 
       } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy.PRICE */ .hn.PRICE) {
         this.prices.sort(
         (v1, v2) =>
-        (v1[1].price <= 0 ? 999999999 : v1[1].price) - (
-        v2[1].price <= 0 ? 999999999 : v2[1].price));
+        (v1[1].price <= 0 ?
+        999999999 :
+        v1[0].worthMultiplier * v1[1].price) - (
+        v2[1].price <= 0 ? 999999999 : v2[0].worthMultiplier * v2[1].price));
 
       } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy.QUANTITY */ .hn.QUANTITY) {
         this.prices.sort(
