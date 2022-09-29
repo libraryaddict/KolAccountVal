@@ -344,7 +344,10 @@ export class AccountValLogic {
     const ownedItems = this.ownedItems;
 
     const addPrice = function (item: ValItem, price: ItemPrice) {
-      if (settings.minimumMeat > 0 && price.price < settings.minimumMeat) {
+      if (
+        settings.minimumMeat > 0 &&
+        price.price * item.worthMultiplier < settings.minimumMeat
+      ) {
         ownedItems.delete(item);
         return;
       }
@@ -418,16 +421,22 @@ export class AccountValLogic {
     if (this.settings.sortBy == SortBy.TOTAL_PRICE) {
       this.prices.sort(
         (v1, v2) =>
-          (v1[1].price <= 0 ? 999_999_999 : v1[1].price) *
+          (v1[1].price <= 0
+            ? 999_999_999
+            : (1 / v1[0].worthMultiplier) * v1[1].price) *
             this.ownedItems.get(v1[0]) -
-          (v2[1].price <= 0 ? 999_999_999 : v2[1].price) *
+          (v2[1].price <= 0
+            ? 999_999_999
+            : (1 / v2[0].worthMultiplier) * v2[1].price) *
             this.ownedItems.get(v2[0])
       );
     } else if (this.settings.sortBy == SortBy.PRICE) {
       this.prices.sort(
         (v1, v2) =>
-          (v1[1].price <= 0 ? 999_999_999 : v1[1].price) -
-          (v2[1].price <= 0 ? 999_999_999 : v2[1].price)
+          (v1[1].price <= 0
+            ? 999_999_999
+            : v1[0].worthMultiplier * v1[1].price) -
+          (v2[1].price <= 0 ? 999_999_999 : v2[0].worthMultiplier * v2[1].price)
       );
     } else if (this.settings.sortBy == SortBy.QUANTITY) {
       this.prices.sort(
