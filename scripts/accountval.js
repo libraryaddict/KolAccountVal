@@ -2303,7 +2303,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
         }
 
-        if (totalWorth <= 0) {
+        if (worthEach <= 0 || worthEach >= 999999999) {
           if (count > 1) {
             mallExtinct.push(count + " @ " + name);
           } else {
