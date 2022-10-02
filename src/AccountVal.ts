@@ -123,7 +123,7 @@ class AccountVal {
         )}</font>)`;
       }
 
-      if (totalWorth <= 0) {
+      if (worthEach <= 0 || worthEach >= 999_999_999) {
         if (count > 1) {
           mallExtinct.push(count + " @ " + name);
         } else {
