@@ -161,7 +161,7 @@ var AccountValLogic = /*#__PURE__*/function () {
       var famItems = this.resolver.resolveFamiliarItems();
       var sessionItems = this.resolver.resolveSessionItems();var _iterator = _createForOfIteratorHelper(
 
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item2 = _step.value;
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item2 = _step.value;
           var _amount = 0;
 
           if (this.settings.fetchSession && sessionItems.has(_item2)) {
@@ -235,7 +235,7 @@ var AccountValLogic = /*#__PURE__*/function () {
       }
 
       if (this.settings.doBound) {var _iterator2 = _createForOfIteratorHelper(
-        this.resolver.getUrledItems()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
+          this.resolver.getUrledItems()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
             if (
             _item[0].tradeable && (
             _item[1] == ItemStatus.FAMILIAR || _item[1] != ItemStatus.BOUND) ?
@@ -266,7 +266,7 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       }var _iterator3 = _createForOfIteratorHelper(
 
-      this.ownedItems.keys()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _item3 = _step3.value;
+        this.ownedItems.keys()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _item3 = _step3.value;
           if (
           this.jsFilter != null &&
           !this.jsFilter(_item3.tradeableItem, this.ownedItems.get(_item3)))
@@ -351,7 +351,7 @@ var AccountValLogic = /*#__PURE__*/function () {
         prices.push([item, price]);
       };var _iterator4 = _createForOfIteratorHelper(
 
-      this.ownedItems.keys()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _i3 = _step4.value;
+        this.ownedItems.keys()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _i3 = _step4.value;
           var _price = this.priceResolver.itemPrice(
           _i3.tradeableItem,
           this.ownedItems.get(_i3),
@@ -448,7 +448,7 @@ var AccountValLogic = /*#__PURE__*/function () {
         // Removed for now cos it does too many hits
         var toUpdate = [];var _iterator5 = _createForOfIteratorHelper(
 
-        this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i5 = _step5.value;
+          this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i5 = _step5.value;
             var _item4 = _i5[1].item;
 
             if (!_item4.tradeable || _item4.gift) {
@@ -820,7 +820,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     function getSetting(alias) {
       alias = alias.toLowerCase();var _iterator = _createForOfIteratorHelper(
 
-      AccountValSettings.getSettings()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var setting = _step.value;
+        AccountValSettings.getSettings()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var setting = _step.value;
           if (!setting.names.includes(alias)) {
             continue;
           }
@@ -838,11 +838,11 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
       var settings = AccountValSettings.getSettings();var _iterator2 = _createForOfIteratorHelper(
 
-      settings),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _setting = _step2.value;
+        settings),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _setting = _step2.value;
           defaultValues[_setting.field] = this[_setting.field];
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}var _iterator3 = _createForOfIteratorHelper(
 
-      args),_step3;try {var _loop = function _loop() {var arg = _step3.value;
+        args),_step3;try {var _loop = function _loop() {var arg = _step3.value;
           if (arg.length == 0) {
             return "continue";
           }
@@ -1026,7 +1026,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     function isArg(arg, args) {
       arg = arg.toLowerCase().split("=")[0];var _iterator4 = _createForOfIteratorHelper(
 
-      args),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var a = _step4.value;
+        args),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var a = _step4.value;
           if (arg != a) {
             continue;
           }
@@ -1154,7 +1154,7 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
       }
 
       if (tCommand.length > 0) {var _iterator = _createForOfIteratorHelper(
-        tCommand.split(" ")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var arg = _step.value;
+          tCommand.split(" ")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var arg = _step.value;
             debug("Found leftover parameter '".concat(arg));
             spl.push(arg);
           }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
@@ -1231,7 +1231,7 @@ var ItemResolver = /*#__PURE__*/function () {
       ",");var _iterator = _createForOfIteratorHelper(
 
 
-      prop),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var p = _step.value;
+        prop),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var p = _step.value;
           if (!p.includes(":")) {
             continue;
           }
@@ -1290,7 +1290,7 @@ var ItemResolver = /*#__PURE__*/function () {
       var items = [];
       var origSize = this.accountValCache.size;var _iterator2 = _createForOfIteratorHelper(
 
-      this.accValStuff),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
+        this.accValStuff),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
           if (s.itemType == ItemType.BOOK) {
             if (
             this.visitCheck(
@@ -1344,7 +1344,7 @@ var ItemResolver = /*#__PURE__*/function () {
     function testProperty(property) {
       var result = true;var _iterator3 = _createForOfIteratorHelper(
 
-      property.split("&")),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var prop = _step3.value;
+        property.split("&")),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var prop = _step3.value;
           result =
           result &&
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)(prop.replace("!", "")) == "true" == !prop.includes("!");
@@ -1372,7 +1372,7 @@ var ItemResolver = /*#__PURE__*/function () {
     ownedItems,
     resolve)
     {var _iterator4 = _createForOfIteratorHelper(
-      this.accValStuff),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var s = _step4.value;
+        this.accValStuff),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var s = _step4.value;
           if (!resolve.includes(s.itemType)) {
             continue;
           }
@@ -1381,7 +1381,7 @@ var ItemResolver = /*#__PURE__*/function () {
             var item = kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(s.data1);
             var v = void 0;var _iterator5 = _createForOfIteratorHelper(
 
-            copy.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var k = _step5.value;
+              copy.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var k = _step5.value;
                 if (k.tradeableItem != item) {
                   continue;
                 }
@@ -1413,7 +1413,7 @@ var ItemResolver = /*#__PURE__*/function () {
     } }, { key: "resolveFamiliars", value:
 
     function resolveFamiliars(familiars, ownedItems) {var _iterator6 = _createForOfIteratorHelper(
-      familiars),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var fam = _step6.value;
+        familiars),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var fam = _step6.value;
           if (!fam.hatchling.tradeable) {
             continue;
           }
@@ -1428,7 +1428,7 @@ var ItemResolver = /*#__PURE__*/function () {
     function resolveFamiliarItems() {
       var famEquipped = new Map();var _iterator7 = _createForOfIteratorHelper(
 
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all()),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var fam = _step7.value;
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all()),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var fam = _step7.value;
           if (!(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.haveFamiliar)(fam) || (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myFamiliar)() == fam) {
             continue;
           }
@@ -1478,7 +1478,7 @@ var ItemResolver = /*#__PURE__*/function () {
       var buffer = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.fileToBuffer)("accountval_binds.txt");
       var values = [];var _iterator8 = _createForOfIteratorHelper(
 
-      buffer.split("\n")),_step8;try {for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {var line = _step8.value;
+        buffer.split("\n")),_step8;try {for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {var line = _step8.value;
           if (line.startsWith("#") || line.length == 0) {
             continue;
           }
@@ -1534,7 +1534,7 @@ var ItemResolver = /*#__PURE__*/function () {
           continue;
         }var _iterator9 = _createForOfIteratorHelper(
 
-        values),_step9;try {for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {var v1 = _step9.value;
+          values),_step9;try {for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {var v1 = _step9.value;
             if (
             v1.itemType != ItemType.UNTRADEABLE_ITEM &&
             v1.itemType != ItemType.NO_TRADE)
@@ -1562,7 +1562,7 @@ var ItemResolver = /*#__PURE__*/function () {
       if (cache.split(",")[0] == (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getRevision)().toString()) {
         var spl = cache.substring(cache.indexOf(",") + 1).split(",");var _iterator10 = _createForOfIteratorHelper(
 
-        spl),_step10;try {for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {var s = _step10.value;
+          spl),_step10;try {for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {var s = _step10.value;
             var spl2 = s.split(/[:;]/);
 
             var v = new AccValStuff();
@@ -1615,7 +1615,7 @@ var ItemResolver = /*#__PURE__*/function () {
           propValues.push((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(i) + ":" + _v2.data1);
         }} catch (err) {_iterator11.e(err);} finally {_iterator11.f();}var _iterator12 = _createForOfIteratorHelper(
 
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step12;try {for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {var _i2 = _step12.value;
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step12;try {for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {var _i2 = _step12.value;
           if (
           _i2.tradeable ||
           _i2.quest ||
@@ -1628,7 +1628,7 @@ var ItemResolver = /*#__PURE__*/function () {
 
           var name = _i2.name.substring(0, _i2.name.lastIndexOf("(") - 1);var _iterator13 = _createForOfIteratorHelper(
 
-          kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step13;try {for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {var i2 = _step13.value;
+            kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step13;try {for (_iterator13.s(); !(_step13 = _iterator13.n()).done;) {var i2 = _step13.value;
               if (!i2.tradeable || i2.gift || i2.quest || !i2.name.includes(name)) {
                 continue;
               }
@@ -1687,7 +1687,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 
       var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)("mallstore.php?whichstore=" + userId);var _iterator = _createForOfIteratorHelper(
 
-      page.split("<tr>")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var s = _step.value;
+        page.split("<tr>")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var s = _step.value;
           var match = s.match(
           /selecteditem=(\d+).+?<b>.+?<\/b> \(([\d,]+)\) +(?:\(Limit ([\d,]+) \/ day\))?<\/td><td>((?:\d|,)+) Meat<\/td>/);
 
@@ -1713,7 +1713,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 
       var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)("displaycollection.php?who=" + userId);var _iterator2 = _createForOfIteratorHelper(
 
-      page.split("<tr>")),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
+        page.split("<tr>")),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
           var match = s.match(
           /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/);
 
@@ -1724,7 +1724,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 
           var item = null;var _iterator3 = _createForOfIteratorHelper(
 
-          kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var i = _step3.value;
+            kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var i = _step3.value;
               if (i.descid != match[1]) {
                 continue;
               }
@@ -2341,7 +2341,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
       }var _iterator = _createForOfIteratorHelper(
 
-      lines),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var line = _step.value;
+        lines),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var line = _step.value;
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(line);
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
@@ -2457,7 +2457,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
       var even = true;var _iterator2 = _createForOfIteratorHelper(
 
-      _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .AccountValSettings.getSettings */ .iX.getSettings()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var setting = _step2.value;
+        _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .AccountValSettings.getSettings */ .iX.getSettings()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var setting = _step2.value;
           var defaultOf = ".</font> <font>Default is: ";
 
           if (this.settings[setting.field] != null) {

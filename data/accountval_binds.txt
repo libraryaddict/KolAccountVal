@@ -125,6 +125,7 @@ p	PirateRealm membership packet	prAlways&!_prToday
 p	Distant Woods Getaway Brochure	getawayCampsiteUnlocked
 p	Undrilled cosmic bowling ball	hasCosmicBowlingBall
 p	MayDay™ contract	hasMaydayContract
+p	boxed autumn-aton	hasAutumnaton
 
 
 
