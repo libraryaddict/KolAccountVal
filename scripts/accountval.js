@@ -1863,6 +1863,22 @@ var PriceResolver = /*#__PURE__*/function () {
         viablePrices.sort((v1, v2) => v1.getAge() - v2.getAge());
 
         resolver = viablePrices.length > 0 ? viablePrices[0] : salesPricing;
+
+        // If we're not doing sales, and the price is apparently worth more than 50m
+        if (
+        !doSuperFast &&
+        resolver != salesPricing &&
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item) > 50000000)
+        {
+          // If we have no sale history on record, or the price diff is more than 50m
+          if (
+          salesPricing.getAge() == -1 ||
+          Math.abs(salesPricing.getPrice(true).price - (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item)) >
+          50000000)
+          {
+            resolver = salesPricing;
+          }
+        }
       }
 
       if (
@@ -1998,8 +2014,8 @@ MallHistoryPricing = /*#__PURE__*/function () {
       return histAge / (24 * 60 * 60);
     } }, { key: "getPrice", value:
 
-    function getPrice() {
-      if (this.isOutdated()) {
+    function getPrice() {var ignoreOutdated = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      if (!ignoreOutdated && this.isOutdated()) {
         this.records = this.history.getMallRecords(this.item, 0.1, true);
       }
 
