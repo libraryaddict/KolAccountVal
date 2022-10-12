@@ -114,6 +114,22 @@ export class PriceResolver {
       viablePrices.sort((v1, v2) => v1.getAge() - v2.getAge());
 
       resolver = viablePrices.length > 0 ? viablePrices[0] : salesPricing;
+
+      // If we're not doing sales, and the price is apparently worth more than 50m
+      if (
+        !doSuperFast &&
+        resolver != salesPricing &&
+        historicalPrice(item) > 50_000_000
+      ) {
+        // If we have no sale history on record, or the price diff is more than 50m
+        if (
+          salesPricing.getAge() == -1 ||
+          Math.abs(salesPricing.getPrice(true).price - historicalPrice(item)) >
+            50_000_000
+        ) {
+          resolver = salesPricing;
+        }
+      }
     }
 
     if (
@@ -249,8 +265,8 @@ class MallHistoryPricing implements PriceVolunteer {
     return histAge / (24 * 60 * 60);
   }
 
-  getPrice(): ItemPrice {
-    if (this.isOutdated()) {
+  getPrice(ignoreOutdated: boolean = false): ItemPrice {
+    if (!ignoreOutdated && this.isOutdated()) {
       this.records = this.history.getMallRecords(this.item, 0.1, true);
     }
 
