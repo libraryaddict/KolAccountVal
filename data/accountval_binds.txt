@@ -80,24 +80,24 @@ i	packaged Jurassic Parka	Jurassic Parka
 
 
 # Bookshelf stuff! Start with b
-b	Tome of Snowcone Summoning	Tome of Snowcone Summoning
-b	McPhee's Grimoire of Hilarious Object Summoning	McPhee
-b	Libram of Candy Heart Summoning	Libram of Candy Heart Summoning
-b	Libram of Divine Favors	Libram of Divine Favors
-b	Sp'n-Zor's Grimoire of &quot;Tasteful&quot; Gifts	Sp'n-Zor's Grimoire of &quot;Tasteful&quot; Gifts
-b	Scratch 'n' Sniff Sticker Tome	Tome of Sticker Summoning
-b	Libram of Love Songs	Libram of Love Songs
-b	Tome of Sugar Shummoning	Tome of Sugar Shummoning
-b	Libram of BRICKOs	Libram of BRICKOs
-b	Sorcerers of the Shore Grimoire	Sorcerers of the Shore Grimoire
-b	Tome of Clip Art	Tome of Clip Art
-b	Libram of Resolutions	Libram of Resolutions
-b	Thinknerd's Grimoire of Geeky Gifts	Thinknerd Grimoire
-b	Libram of Pulled Taffy	Libram of Pulled Taffy
-b	The Smith's Tome	copy of The Smith
-b	The Confiscator's Grimoire	Confiscator's Grimoire
-b	Gygaxian Libram	Gygaxian Libram
-b	Tome of Rad Libs	Tome of Rad Libs
+b	Tome of Snowcone Summoning	Summon Snowcones
+b	Scratch 'n' Sniff Sticker Tome	Summon Stickers
+b	Tome of Sugar Shummoning	Summon Sugar Sheets
+b	Tome of Clip Art	Summon Clip Art
+b	Tome of Rad Libs	Summon Rad Libs
+b	The Smith's Tome	Summon Smithsness
+b	McPhee's Grimoire of Hilarious Object Summoning	Summon Hilarious Objects
+b	Sp'n-Zor's Grimoire of &quot;Tasteful&quot; Gifts	Summon Tasteful Items
+b	Sorcerers of the Shore Grimoire	Summon Alice's Army Cards
+b	Thinknerd's Grimoire of Geeky Gifts	 Summon Geeky Gifts
+b	Libram of Candy Heart Summoning	Summon Candy Heart
+b	Libram of Divine Favors	Summon Party Favor
+b	Libram of Love Songs	Summon Love Song
+b	Libram of BRICKOs	Summon BRICKOs
+b	Gygaxian Libram	Summon Dice
+b	Libram of Resolutions	Summon Resolutions
+b	Libram of Pulled Taffy	Summon Taffy
+b	The Confiscator's Grimoire	Summon Confiscated Things
 
 
 
@@ -139,11 +139,20 @@ e	Our Daily Candles™ order form	Our Daily Candles
 
 
 # visit_url contains... Start with v
-v	Order of the Green Thumb Order Form	forestvillage.php	friarcottage.gif
-v	Haunted Doghouse	campground.php	campground.php?action=doghouse
-v	Witchess Set	campground.php	campground.php?action=witchess
-v	Source terminal	campground.php	campground.php?action=terminal
-v	potted tea tree	campground.php	campground.php?action=teatree
+
+
+
+# eval(function) => boolean! Starts with s for script
+s	Order of the Green Thumb Order Form	require("kolmafia").floristAvailable()
+
+
+
+# campground items! Starts with c
+c	Haunted Doghouse
+c	Witchess Set
+c	Source terminal
+c	potted tea tree
+
 
 
 # Gardens
