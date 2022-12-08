@@ -2,9 +2,11 @@ import {
   Familiar,
   familiarEquippedEquipment,
   fileToBuffer,
+  getCampground,
+  getPermedSkills,
   getProperty,
-  getRevision,
   haveFamiliar,
+  haveSkill,
   Item,
   myFamiliar,
   myGardenType,
@@ -15,7 +17,6 @@ import {
   skillModifier,
   toInt,
   toItem,
-  toSkill,
   visitUrl,
 } from "kolmafia";
 import { ItemStatus, ValItem } from "./AccountValLogic";
@@ -43,21 +44,24 @@ export enum ItemType {
   SKILL,
 
   NO_TRADE,
+
+  CAMPGROUND,
+
+  SCRIPT,
 }
 
 export class ItemResolver {
   private visitCache: Map<string, string> = new Map();
   private accValStuff: AccValStuff[];
   private accountValCache: Map<Item, boolean> = new Map();
-  private accountValUrlCachePropName = "_accountValUrlCache";
-  private accountValSkillCachePropName = "accountValSkillCache";
+  private accountValVisitCachePropName = "_accountValVisitCache";
 
   constructor() {
     this.accValStuff = this.loadAccountValStuff();
   }
 
   loadCache() {
-    const prop: string[] = getProperty(this.accountValUrlCachePropName).split(
+    const prop: string[] = getProperty(this.accountValVisitCachePropName).split(
       ","
     );
 
@@ -79,38 +83,15 @@ export class ItemResolver {
       values.push(toInt(key) + ":" + (val ? "t" : "f"));
     });
 
+    values.sort((v1, v2) => v1.localeCompare(v2));
+
     const val = values.join(",");
 
-    if (getProperty(this.accountValUrlCachePropName) == val) {
+    if (getProperty(this.accountValVisitCachePropName) == val) {
       return;
     }
 
-    setProperty(this.accountValUrlCachePropName, values.join(","));
-  }
-
-  hasSkill(item: Item, skill: Skill) {
-    if (this.accountValCache.has(item)) {
-      return this.accountValCache.get(item);
-    }
-
-    const url = "charsheet.php";
-    let page = this.visitCache.get(url);
-
-    if (page == null) {
-      page = visitUrl(url);
-      this.visitCache.set(url, page);
-    }
-
-    const result: string[] = page.match(
-      new RegExp(
-        "whichskill=(" + toInt(skill) + ")[^/]+</a> ((P|(?:<b>HP</b>)))",
-        "g"
-      )
-    );
-
-    this.accountValCache.set(item, result != null);
-
-    return result;
+    setProperty(this.accountValVisitCachePropName, values.join(","));
   }
 
   /**
@@ -121,15 +102,10 @@ export class ItemResolver {
     const origSize = this.accountValCache.size;
 
     for (const s of this.accValStuff) {
+      // Skills that are marked as no-perm but are permed, basically librams
       if (s.itemType == ItemType.BOOK) {
-        if (
-          this.visitCheck(
-            s.actualItem,
-            "campground.php?action=bookshelf",
-            s.data1
-          )
-        ) {
-          //      items.push([s.actualItem, ItemStatus.BOUND]);
+        if (haveSkill(Skill.get(s.data1))) {
+          items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.EUDORA) {
         if (
@@ -154,17 +130,24 @@ export class ItemResolver {
           items.push([s.actualItem, ItemStatus.IN_USE]);
         }
       } else if (s.itemType == ItemType.SKILL) {
-        if (this.hasSkill(s.actualItem, toSkill(s.data1))) {
+        if (getPermedSkills()[Skill.get(s.data1).name]) {
+          items.push([s.actualItem, ItemStatus.BOUND]);
+        }
+      } else if (s.itemType == ItemType.CAMPGROUND) {
+        if (getCampground()[s.actualItem.name] != null) {
+          items.push([s.actualItem, ItemStatus.BOUND]);
+        }
+      } else if (s.itemType == ItemType.SCRIPT) {
+        if (eval(s.data1) as boolean) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       }
     }
 
-    if (origSize == this.accountValCache.size) {
-      return items;
+    if (origSize != this.accountValCache.size) {
+      this.saveCache();
     }
 
-    this.saveCache();
     return items;
   }
 
@@ -339,6 +322,12 @@ export class ItemResolver {
         case "t":
           e = ItemType.NO_TRADE;
           break;
+        case "c":
+          e = ItemType.CAMPGROUND;
+          break;
+        case "s":
+          e = ItemType.SCRIPT;
+          break;
         default:
           print("Found line '" + line + "' which I can't handle!");
       }
@@ -387,51 +376,21 @@ export class ItemResolver {
   }
 
   loadSkills(values: AccValStuff[]) {
-    const cache: string = getProperty(this.accountValSkillCachePropName);
-
-    if (cache.split(",")[0] == getRevision().toString()) {
-      const spl = cache.substring(cache.indexOf(",") + 1).split(",");
-
-      for (const s of spl) {
-        const spl2 = s.split(/[:;]/);
-
-        const v: AccValStuff = new AccValStuff();
-
-        v.itemType = ItemType.SKILL;
-        v.actualItem = toItem(spl2[0]);
-
-        values.push(v);
-
-        // Skill
-        if (s.includes(":")) {
-          v.data1 = spl2[1];
-        } else {
-          // Item
-          v.data1 = toItem(toInt(spl2[1])).name;
-        }
-      }
-
-      return;
-    }
-
-    const propValues: string[] = [getRevision().toString()];
+    // Skip items that don't last across ascensions or can't be valued
+    const itemsSkills: Map<Item, Skill> = new Map(
+      Item.all()
+        .map((i) => [i, skillModifier(i, "Skill")] as [Item, Skill])
+        .filter(
+          ([i, skill]) =>
+            !i.reusable && !i.quest && !i.gift && skill != Skill.none
+        )
+    );
 
     // Now we load the skills we have
-    for (const i of Item.all()) {
-      // Skip items that don't last across ascensions
-      if (i.quest || i.gift) {
-        continue;
-      }
-
+    for (const [i, skill] of itemsSkills) {
       // Skip items that are not tradeable skills, because you either have a skill linked to an untradeable item, or a tradeable item.
       // If its linked to an untradeable, then we can check the untradeable item itself. Not bother with the skill.
       if (!i.tradeable) {
-        continue;
-      }
-
-      const skill = skillModifier(i, "Skill");
-
-      if (skill == Skill.get("None")) {
         continue;
       }
 
@@ -442,7 +401,6 @@ export class ItemResolver {
       v.data1 = toInt(skill).toString();
 
       values.push(v);
-      propValues.push(toInt(i) + ":" + v.data1);
     }
 
     for (const i of Item.all()) {
@@ -450,8 +408,8 @@ export class ItemResolver {
         i.tradeable ||
         i.quest ||
         i.gift ||
-        !i.name.match(/^.* \([a-zA-Z]+\)/) ||
-        skillModifier(i, "Skill") != Skill.get("None")
+        itemsSkills.has(i) ||
+        !i.name.match(/^.* \([a-zA-Z]+\)/)
       ) {
         continue;
       }
@@ -464,15 +422,12 @@ export class ItemResolver {
         }
 
         const v: AccValStuff = new AccValStuff();
-        v.itemType = ItemType.UNTRADEABLE_ITEM;
+        v.itemType = ItemType.NO_TRADE;
         v.actualItem = i2;
         v.data1 = i.name;
 
         values.push(v);
-        propValues.push(toInt(i2) + ";" + toInt(i));
       }
     }
-
-    setProperty(this.accountValSkillCachePropName, propValues.join(","));
   }
 }

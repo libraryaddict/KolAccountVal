@@ -133,12 +133,9 @@ class AccountVal {
         continue;
       }
 
-      const text =
-        AccountValUtils.getNumber(count) +
-        " " +
-        name +
-        " worth a total of " +
-        AccountValUtils.getNumber(totalWorth);
+      const text = `${AccountValUtils.getNumber(
+        count
+      )} ${name} worth a total of ${AccountValUtils.getNumber(totalWorth)}`;
 
       lines.push(
         "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>"
