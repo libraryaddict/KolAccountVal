@@ -1664,6 +1664,9 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 
     function getDisplaycase(userId) {
       var map = new Map();
+      var descs = new Map(
+      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().map((i) => [i.descid, i]));
+
 
       var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)("displaycollection.php?who=" + userId);var _iterator2 = _createForOfIteratorHelper(
 
@@ -1676,16 +1679,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
             continue;
           }
 
-          var item = null;var _iterator3 = _createForOfIteratorHelper(
-
-            kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var i = _step3.value;
-              if (i.descid != match[1]) {
-                continue;
-              }
-
-              item = i;
-              break;
-            }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
+          var item = descs.get(match[1]);
 
           if (item == null) {
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("Unknown item description: " + match[1] + ", update mafia?");

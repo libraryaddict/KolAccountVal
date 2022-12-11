@@ -76,6 +76,7 @@ i	packaged June cleaver	June cleaver
 i	designer sweatpants (new old stock)	Designer sweatpants
 i	unopened tiny stillsuit	tiny stillsuit
 i	packaged Jurassic Parka	Jurassic Parka
+i	packaged model train set	model train set
 
 
 
