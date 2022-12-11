@@ -59,6 +59,9 @@ export class FetchFromPage {
 
   getDisplaycase(userId: number): Map<Item, number> {
     const map: Map<Item, number> = new Map();
+    const descs: Map<string, Item> = new Map(
+      Item.all().map((i) => [i.descid, i])
+    );
 
     const page = visitUrl("displaycollection.php?who=" + userId);
 
@@ -71,16 +74,7 @@ export class FetchFromPage {
         continue;
       }
 
-      let item = null;
-
-      for (const i of Item.all()) {
-        if (i.descid != match[1]) {
-          continue;
-        }
-
-        item = i;
-        break;
-      }
+      const item = descs.get(match[1]);
 
       if (item == null) {
         print("Unknown item description: " + match[1] + ", update mafia?");
