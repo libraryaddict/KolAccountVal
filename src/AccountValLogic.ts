@@ -10,7 +10,6 @@ import {
   isCoinmasterItem,
   Item,
   itemAmount,
-  itemType,
   print,
   shopAmount,
   shopPrice,
@@ -228,7 +227,7 @@ export class AccountValLogic {
       if (this.settings.doBound || this.settings.doTradeables) {
         const i = getWorkshed();
 
-        if (i != null && i != Item.get("None")) {
+        if (i != null && i != Item.none) {
           if (
             i.tradeable ? this.settings.doTradeables : this.settings.doBound
           ) {
@@ -266,7 +265,7 @@ export class AccountValLogic {
     if (this.settings.doBound || this.settings.doNontradeables) {
       this.resolver.resolveBoundToTradeables(copy, this.ownedItems, [
         this.settings.doBound ? ItemType.UNTRADEABLE_ITEM : null,
-        this.settings.doNontradeables ? ItemType.NO_TRADE : null,
+        this.settings.doNontradeables ? ItemType.CURRENCY : null,
       ]);
     }
 

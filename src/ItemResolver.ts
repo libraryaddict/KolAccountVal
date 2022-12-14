@@ -43,7 +43,7 @@ export enum ItemType {
 
   SKILL,
 
-  NO_TRADE,
+  CURRENCY,
 
   CAMPGROUND,
 
@@ -248,7 +248,7 @@ export class ItemResolver {
 
       const item = familiarEquippedEquipment(fam);
 
-      if (item == null || item == Item.get("None")) {
+      if (item == null || item == Item.none) {
         continue;
       }
 
@@ -320,7 +320,7 @@ export class ItemResolver {
           e = ItemType.GARDEN;
           break;
         case "t":
-          e = ItemType.NO_TRADE;
+          e = ItemType.CURRENCY;
           break;
         case "c":
           e = ItemType.CAMPGROUND;
@@ -356,7 +356,7 @@ export class ItemResolver {
       for (const v1 of values) {
         if (
           v1.itemType != ItemType.UNTRADEABLE_ITEM &&
-          v1.itemType != ItemType.NO_TRADE
+          v1.itemType != ItemType.CURRENCY
         ) {
           continue;
         }
@@ -417,12 +417,18 @@ export class ItemResolver {
       const name = i.name.substring(0, i.name.lastIndexOf("(") - 1);
 
       for (const i2 of Item.all()) {
-        if (!i2.tradeable || i2.gift || i2.quest || !i2.name.includes(name)) {
+        if (
+          !i2.tradeable ||
+          i2.gift ||
+          i2.quest ||
+          itemsSkills.has(i2) ||
+          !i2.name.includes(name)
+        ) {
           continue;
         }
 
         const v: AccValStuff = new AccValStuff();
-        v.itemType = ItemType.NO_TRADE;
+        v.itemType = ItemType.UNTRADEABLE_ITEM;
         v.actualItem = i2;
         v.data1 = i.name;
 

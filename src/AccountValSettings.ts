@@ -236,7 +236,7 @@ export class AccountValSettings {
       FieldType.STRING,
       "javascriptFilter",
       ["jsfilter", "javascriptfilter", "javascript", "js"],
-      'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.get("None")". To shorthand the "require(kol)" just do $kol'
+      'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.none". To shorthand the "require(kol)" just do $kol'
     );
 
     makeSetting(

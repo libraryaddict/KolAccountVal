@@ -56,7 +56,11 @@ class AccountVal {
         continue;
       }
 
-      const worthEach = price.price * (1 / item.worthMultiplier);
+      // Mall extinct items should be 1b
+      const worthEach =
+        price.price <= 0 && item.worthMultiplier == 1
+          ? 999_999_999
+          : price.price * (1 / item.worthMultiplier);
 
       const count = this.logic.ownedItems.get(item);
       const totalWorth = Math.round(worthEach * count);
@@ -118,9 +122,9 @@ class AccountVal {
           boundInfo = item.getBound();
         }
 
-        name = `${name} (<font color='${color}' title='${title}'>${this.escapeHTML(
-          boundInfo
-        )}</font>)`;
+        name = `${name} (<font color='${color}' title='${this.escapeHTML(
+          title
+        )}'>${this.escapeHTML(boundInfo)}</font>)`;
       }
 
       if (worthEach <= 0 || worthEach >= 999_999_999) {
