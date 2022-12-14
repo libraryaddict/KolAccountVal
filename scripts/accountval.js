@@ -224,7 +224,7 @@ var AccountValLogic = /*#__PURE__*/function () {
         if (this.settings.doBound || this.settings.doTradeables) {
           var i = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getWorkshed)();
 
-          if (i != null && i != kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get("None")) {
+          if (i != null && i != kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.none) {
             if (
             i.tradeable ? this.settings.doTradeables : this.settings.doBound)
             {
@@ -262,7 +262,7 @@ var AccountValLogic = /*#__PURE__*/function () {
       if (this.settings.doBound || this.settings.doNontradeables) {
         this.resolver.resolveBoundToTradeables(copy, this.ownedItems, [
         this.settings.doBound ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.UNTRADEABLE_ITEM */ .q.UNTRADEABLE_ITEM : null,
-        this.settings.doNontradeables ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.NO_TRADE */ .q.NO_TRADE : null]);
+        this.settings.doNontradeables ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.CURRENCY */ .q.CURRENCY : null]);
 
       }var _iterator3 = _createForOfIteratorHelper(
 
@@ -1035,7 +1035,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
 
       return false;
-    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc) {var setting = new ValSetting();setting.type = type;setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.get("None")". To shorthand the "require(kol)" just do $kol');makeSetting(FieldType.NUMBER, "sales", ["sales"], "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");return settings;} }]);return AccountValSettings;}();
+    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc) {var setting = new ValSetting();setting.type = type;setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.none". To shorthand the "require(kol)" just do $kol');makeSetting(FieldType.NUMBER, "sales", ["sales"], "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");return settings;} }]);return AccountValSettings;}();
 
 
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_classCallCheck(this, PricingSettings);_defineProperty(this, "expensivePricesAt",
@@ -1197,7 +1197,7 @@ AccValStuff = /*#__PURE__*/_createClass(function AccValStuff() {_classCallCheck(
 
 
 
-var ItemType;(function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["GARDEN"] = 4] = "GARDEN";ItemType[ItemType["VISIT_URL_CHECK"] = 5] = "VISIT_URL_CHECK";ItemType[ItemType["SKILL"] = 6] = "SKILL";ItemType[ItemType["NO_TRADE"] = 7] = "NO_TRADE";ItemType[ItemType["CAMPGROUND"] = 8] = "CAMPGROUND";ItemType[ItemType["SCRIPT"] = 9] = "SCRIPT";})(ItemType || (ItemType = {}));
+var ItemType;(function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["GARDEN"] = 4] = "GARDEN";ItemType[ItemType["VISIT_URL_CHECK"] = 5] = "VISIT_URL_CHECK";ItemType[ItemType["SKILL"] = 6] = "SKILL";ItemType[ItemType["CURRENCY"] = 7] = "CURRENCY";ItemType[ItemType["CAMPGROUND"] = 8] = "CAMPGROUND";ItemType[ItemType["SCRIPT"] = 9] = "SCRIPT";})(ItemType || (ItemType = {}));
 
 
 
@@ -1417,7 +1417,7 @@ var ItemResolver = /*#__PURE__*/function () {
 
           var item = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.familiarEquippedEquipment)(fam);
 
-          if (item == null || item == kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get("None")) {
+          if (item == null || item == kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.none) {
             continue;
           }
 
@@ -1489,7 +1489,7 @@ var ItemResolver = /*#__PURE__*/function () {
               e = ItemType.GARDEN;
               break;
             case "t":
-              e = ItemType.NO_TRADE;
+              e = ItemType.CURRENCY;
               break;
             case "c":
               e = ItemType.CAMPGROUND;
@@ -1525,7 +1525,7 @@ var ItemResolver = /*#__PURE__*/function () {
           values),_step9;try {for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {var v1 = _step9.value;
             if (
             v1.itemType != ItemType.UNTRADEABLE_ITEM &&
-            v1.itemType != ItemType.NO_TRADE)
+            v1.itemType != ItemType.CURRENCY)
             {
               continue;
             }
@@ -1586,12 +1586,18 @@ var ItemResolver = /*#__PURE__*/function () {
           var name = _i2.name.substring(0, _i2.name.lastIndexOf("(") - 1);var _iterator12 = _createForOfIteratorHelper(
 
             kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step12;try {for (_iterator12.s(); !(_step12 = _iterator12.n()).done;) {var i2 = _step12.value;
-              if (!i2.tradeable || i2.gift || i2.quest || !i2.name.includes(name)) {
+              if (
+              !i2.tradeable ||
+              i2.gift ||
+              i2.quest ||
+              itemsSkills.has(i2) ||
+              !i2.name.includes(name))
+              {
                 continue;
               }
 
               var _v2 = new AccValStuff();
-              _v2.itemType = ItemType.NO_TRADE;
+              _v2.itemType = ItemType.UNTRADEABLE_ITEM;
               _v2.actualItem = i2;
               _v2.data1 = _i2.name;
 
@@ -2200,7 +2206,11 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           continue;
         }
 
-        var worthEach = price.price * (1 / item.worthMultiplier);
+        // Mall extinct items should be 1b
+        var worthEach =
+        price.price <= 0 && item.worthMultiplier == 1 ?
+        999999999 :
+        price.price * (1 / item.worthMultiplier);
 
         var count = this.logic.ownedItems.get(item);
         var totalWorth = Math.round(worthEach * count);
@@ -2262,9 +2272,9 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
             boundInfo = item.getBound();
           }
 
-          name = "".concat(name, " (<font color='").concat(color, "' title='").concat(title, "'>").concat(this.escapeHTML(
-          boundInfo), "</font>)");
-
+          name = "".concat(name, " (<font color='").concat(color, "' title='").concat(this.escapeHTML(
+          title), "'>").concat(
+          this.escapeHTML(boundInfo), "</font>)");
         }
 
         if (worthEach <= 0 || worthEach >= 999999999) {
