@@ -4,7 +4,6 @@ import {
   historicalAge,
   historicalPrice,
   mallPrice,
-  getRelated,
   print,
   printHtml,
   Item,

@@ -402,38 +402,5 @@ export class ItemResolver {
 
       values.push(v);
     }
-
-    for (const i of Item.all()) {
-      if (
-        i.tradeable ||
-        i.quest ||
-        i.gift ||
-        itemsSkills.has(i) ||
-        !i.name.match(/^.* \([a-zA-Z]+\)/)
-      ) {
-        continue;
-      }
-
-      const name = i.name.substring(0, i.name.lastIndexOf("(") - 1);
-
-      for (const i2 of Item.all()) {
-        if (
-          !i2.tradeable ||
-          i2.gift ||
-          i2.quest ||
-          itemsSkills.has(i2) ||
-          !i2.name.includes(name)
-        ) {
-          continue;
-        }
-
-        const v: AccValStuff = new AccValStuff();
-        v.itemType = ItemType.UNTRADEABLE_ITEM;
-        v.actualItem = i2;
-        v.data1 = i.name;
-
-        values.push(v);
-      }
-    }
   }
 }

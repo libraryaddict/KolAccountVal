@@ -77,7 +77,7 @@ export class ValItem {
 
 export class AccountValLogic {
   ownedItems: Map<ValItem, number> = new Map();
-  resolver: ItemResolver = new ItemResolver();
+  resolver: ItemResolver;
   priceResolver: PriceResolver;
   prices: [ValItem, ItemPrice][] = [];
   private settings: AccountValSettings;
@@ -85,6 +85,7 @@ export class AccountValLogic {
 
   constructor(settings: AccountValSettings, priceSettings: PricingSettings) {
     this.settings = settings;
+    this.resolver = new ItemResolver();
     this.priceResolver = new PriceResolver(priceSettings);
   }
 
