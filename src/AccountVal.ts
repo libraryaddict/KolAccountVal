@@ -320,8 +320,6 @@ class AccountVal {
 
   start(command: string) {
     this.settings = new AccountValSettings();
-    const priceSettings = new PricingSettings();
-    this.logic = new AccountValLogic(this.settings, priceSettings);
 
     try {
       if (command == null) {
@@ -347,6 +345,9 @@ class AccountVal {
         print("Unrecognized params! " + unknown.join(", "), "red");
         return;
       }
+
+      const priceSettings = new PricingSettings();
+      this.logic = new AccountValLogic(this.settings, priceSettings);
 
       this.logic.loadItems();
       this.doCheck();
