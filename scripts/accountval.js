@@ -2438,8 +2438,6 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
     function start(command) {
       this.settings = new _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .AccountValSettings */ .iX();
-      var priceSettings = new _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .PricingSettings */ .Iz();
-      this.logic = new _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .AccountValLogic */ .Mc(this.settings, priceSettings);
 
       try {
         if (command == null) {
@@ -2465,6 +2463,9 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("Unrecognized params! " + unknown.join(", "), "red");
           return;
         }
+
+        var priceSettings = new _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .PricingSettings */ .Iz();
+        this.logic = new _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .AccountValLogic */ .Mc(this.settings, priceSettings);
 
         this.logic.loadItems();
         this.doCheck();
