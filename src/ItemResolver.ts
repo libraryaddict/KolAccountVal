@@ -298,6 +298,10 @@ export class ItemResolver {
 
       const spl = line.split("\t");
 
+      if (spl.length < 2) {
+        continue;
+      }
+
       let e: ItemType;
 
       switch (spl[0]) {
