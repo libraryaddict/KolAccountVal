@@ -1468,6 +1468,10 @@ var ItemResolver = /*#__PURE__*/function () {
 
           var spl = line.split("\t");
 
+          if (spl.length < 2) {
+            continue;
+          }
+
           var e = void 0;
 
           switch (spl[0]) {
