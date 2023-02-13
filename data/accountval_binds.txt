@@ -78,7 +78,9 @@ i	unopened tiny stillsuit	tiny stillsuit
 i	packaged Jurassic Parka	Jurassic Parka
 i	packaged model train set	model train set
 i	ChibiBuddy™ (off)	ChibiBuddy™ (on)
+i	Rock Garden Guide	packet of rock seeds
 i	S.I.T. Course Voucher	S.I.T. Course Completion Certificate
+
 
 
 
@@ -167,6 +169,7 @@ g	packet of winter seeds	WINTER
 g	packet of thanksgarden seeds	THANKSGARDEN
 g	packet of tall grass seeds	GRASS
 g	packet of mushroom spores	MUSHROOM
+g	packet of rock seeds	ROCK
 
 
 # Items that are dependent on the value of another as they're no-trade
