@@ -309,7 +309,7 @@ class AccountVal {
     }
 
     printHtml(
-      "<font color='gray'>Disclaimer: The prices shown are not absolute, and are generally priced at higher than what it really is worth.</font>"
+      "<font color='gray'>Disclaimer: The prices shown are not absolute, and normally overstate what it really is worth.</font>"
     );
     // show - How many to show, defaults to 100
     // count - How many we must have of this item
