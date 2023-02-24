@@ -608,8 +608,8 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
     false);_defineProperty(this, "fetchClan",
     false);_defineProperty(this, "fetchingEverywhereish",
-    true);_defineProperty(this, "doSuperFast",
-    false);_defineProperty(this, "doTradeables", void 0);_defineProperty(this, "doNontradeables", void 0);_defineProperty(this, "doBound", void 0);_defineProperty(this, "fetchFamiliars", void 0);_defineProperty(this, "playerId",
+    true); // If we're fetching from everywhere but maybe some areas
+    _defineProperty(this, "doSuperFast", false);_defineProperty(this, "doTradeables", void 0);_defineProperty(this, "doNontradeables", void 0);_defineProperty(this, "doBound", void 0);_defineProperty(this, "fetchFamiliars", void 0);_defineProperty(this, "playerId",
 
 
 
@@ -942,12 +942,12 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
               }
             }
 
-            if (!_v2.match(/^[0-9,]+$/)) {
+            if (!_v2.match(/^[0-9,]+(\.\d+)?$/)) {
               unknown.push(arg);return "continue";
 
             }
 
-            _this[setting.field] = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(_v2);
+            _this[setting.field] = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toFloat)(_v2);
           } else if (setting.type == FieldType.STRING) {
             if (!arg.includes("=")) {
               unknown.push(arg);return "continue";
@@ -1044,12 +1044,17 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_classCallCheck(this, PricingSettings);_defineProperty(this, "expensivePricesAt",
     40000000);_defineProperty(this, "cheapTotalsLessThan",
     20000000);_defineProperty(this, "cheapPricesLessThan",
-    2000000);}_createClass(PricingSettings, [{ key: "getMaxPriceAge", value:
+    2000000);_defineProperty(this, "maxPriceAge", void 0);}_createClass(PricingSettings, [{ key: "getMaxPriceAge", value:
+
 
     /**
      * A scaler on where we want stuff that's lower priced, to be updated less often. Returns day count.
      */
     function getMaxPriceAge(price, amount) {
+      return Math.min(this.maxPriceAge, this.internalMaxPriceAge(price, amount));
+    } }, { key: "internalMaxPriceAge", value:
+
+    function internalMaxPriceAge(price, amount) {
       if (price > this.expensivePricesAt) {
         return 30;
       }
@@ -2471,6 +2476,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         }
 
         var priceSettings = new _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .PricingSettings */ .Iz();
+        priceSettings.maxPriceAge = this.settings.maxAge;
         this.logic = new _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .AccountValLogic */ .Mc(this.settings, priceSettings);
 
         this.logic.loadItems();
