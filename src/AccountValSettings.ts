@@ -1,4 +1,4 @@
-import { getPlayerId, print, toBoolean, toInt } from "kolmafia";
+import { getPlayerId, print, toBoolean, toFloat } from "kolmafia";
 
 export enum FieldType {
   NUMBER,
@@ -378,12 +378,12 @@ export class AccountValSettings {
           }
         }
 
-        if (!v.match(/^[0-9,]+$/)) {
+        if (!v.match(/^[0-9,]+(\.\d+)?$/)) {
           unknown.push(arg);
           continue;
         }
 
-        this[setting.field] = toInt(v);
+        this[setting.field] = toFloat(v);
       } else if (setting.type == FieldType.STRING) {
         if (!arg.includes("=")) {
           unknown.push(arg);
@@ -481,11 +481,16 @@ export class PricingSettings {
   public expensivePricesAt: number = 40_000_000;
   public cheapTotalsLessThan: number = 20_000_000;
   public cheapPricesLessThan: number = 2_000_000;
+  public maxPriceAge: number;
 
   /**
    * A scaler on where we want stuff that's lower priced, to be updated less often. Returns day count.
    */
   getMaxPriceAge(price: number, amount: number): number {
+    return Math.min(this.maxPriceAge, this.internalMaxPriceAge(price, amount));
+  }
+
+  internalMaxPriceAge(price: number, amount: number): number {
     if (price > this.expensivePricesAt) {
       return 30;
     }

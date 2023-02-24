@@ -347,6 +347,7 @@ class AccountVal {
       }
 
       const priceSettings = new PricingSettings();
+      priceSettings.maxPriceAge = this.settings.maxAge;
       this.logic = new AccountValLogic(this.settings, priceSettings);
 
       this.logic.loadItems();
