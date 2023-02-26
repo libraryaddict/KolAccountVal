@@ -109,8 +109,16 @@ export class PriceResolver {
         mallPricing,
       ].filter((p) => p.isViable() && !p.isOutdated());
 
-      // Ideally we should be sorting this by lowest price, not age
-      viablePrices.sort((v1, v2) => v1.getAge() - v2.getAge());
+      viablePrices.sort((v1, v2) => {
+        const p1 = v1.getPrice(true);
+        const p2 = v2.getPrice(true);
+
+        if (p1 == null || p2 == null || p1.price == p2.price) {
+          return v1.getAge() - v2.getAge();
+        }
+
+        return p1.price - p2.price;
+      });
 
       resolver = viablePrices.length > 0 ? viablePrices[0] : salesPricing;
 
@@ -194,7 +202,7 @@ interface PriceVolunteer {
 
   getAge(): number;
 
-  getPrice(): ItemPrice;
+  getPrice(dontUpdate?: boolean): ItemPrice;
 
   getPriceType(): PriceType;
 }

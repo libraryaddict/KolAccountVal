@@ -324,7 +324,7 @@ class AccountVal {
     try {
       if (command == null) {
         print(
-          "To fine tune what we check, including to tradeables only.. Provide the parameter 'help'",
+          "To fine tune what we check, including to tradeables only.. Provide the parameter 'help' for more info",
           "blue"
         );
         command = "";
