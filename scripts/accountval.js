@@ -1792,8 +1792,16 @@ var PriceResolver = /*#__PURE__*/function () {
         mallPricing].
         filter((p) => p.isViable() && !p.isOutdated());
 
-        // Ideally we should be sorting this by lowest price, not age
-        viablePrices.sort((v1, v2) => v1.getAge() - v2.getAge());
+        viablePrices.sort((v1, v2) => {
+          var p1 = v1.getPrice(true);
+          var p2 = v2.getPrice(true);
+
+          if (p1 == null || p2 == null || p1.price == p2.price) {
+            return v1.getAge() - v2.getAge();
+          }
+
+          return p1.price - p2.price;
+        });
 
         resolver = viablePrices.length > 0 ? viablePrices[0] : salesPricing;
 
@@ -2453,7 +2461,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
       try {
         if (command == null) {
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-          "To fine tune what we check, including to tradeables only.. Provide the parameter 'help'",
+          "To fine tune what we check, including to tradeables only.. Provide the parameter 'help' for more info",
           "blue");
 
           command = "";
