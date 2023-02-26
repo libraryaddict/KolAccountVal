@@ -264,12 +264,7 @@ class MallHistoryPricing implements PriceVolunteer {
 
     const dateNow = Date.now() / 1000;
 
-    const histAge = Math.min(
-      dateNow - last.date,
-      dateNow - this.records.lastUpdated
-    );
-
-    return histAge / (24 * 60 * 60);
+    return (dateNow - last.date) / (24 * 60 * 60);
   }
 
   getPrice(ignoreOutdated: boolean = false): ItemPrice {
