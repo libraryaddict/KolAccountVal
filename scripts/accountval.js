@@ -1947,12 +1947,7 @@ MallHistoryPricing = /*#__PURE__*/function () {
 
       var dateNow = Date.now() / 1000;
 
-      var histAge = Math.min(
-      dateNow - last.date,
-      dateNow - this.records.lastUpdated);
-
-
-      return histAge / (24 * 60 * 60);
+      return (dateNow - last.date) / (24 * 60 * 60);
     } }, { key: "getPrice", value:
 
     function getPrice() {var ignoreOutdated = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
