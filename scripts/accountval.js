@@ -24,7 +24,7 @@ function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !
 
 
 
-var ItemStatus;(function (ItemStatus) {ItemStatus[ItemStatus["BOUND"] = 0] = "BOUND";ItemStatus[ItemStatus["NO_TRADE"] = 1] = "NO_TRADE";ItemStatus[ItemStatus["FAMILIAR"] = 2] = "FAMILIAR";ItemStatus[ItemStatus["IN_USE"] = 3] = "IN_USE";ItemStatus[ItemStatus["SHOP_WORTH"] = 4] = "SHOP_WORTH";})(ItemStatus || (ItemStatus = {}));
+var ItemStatus = /*#__PURE__*/function (ItemStatus) {ItemStatus[ItemStatus["BOUND"] = 0] = "BOUND";ItemStatus[ItemStatus["NO_TRADE"] = 1] = "NO_TRADE";ItemStatus[ItemStatus["FAMILIAR"] = 2] = "FAMILIAR";ItemStatus[ItemStatus["IN_USE"] = 3] = "IN_USE";ItemStatus[ItemStatus["SHOP_WORTH"] = 4] = "SHOP_WORTH";return ItemStatus;}({});
 
 
 
@@ -564,7 +564,7 @@ var AccountValLogic = /*#__PURE__*/function () {
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
 function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(arg) {var key = _toPrimitive(arg, "string");return typeof key === "symbol" ? key : String(key);}function _toPrimitive(input, hint) {if (typeof input !== "object" || input === null) return input;var prim = input[Symbol.toPrimitive];if (prim !== undefined) {var res = prim.call(input, hint || "default");if (typeof res !== "object") return res;throw new TypeError("@@toPrimitive must return a primitive value.");}return (hint === "string" ? String : Number)(input);}
 
-var FieldType;(function (FieldType) {FieldType[FieldType["NUMBER"] = 0] = "NUMBER";FieldType[FieldType["SORTBY"] = 1] = "SORTBY";FieldType[FieldType["BOOLEAN"] = 2] = "BOOLEAN";FieldType[FieldType["NAME"] = 3] = "NAME";FieldType[FieldType["STRING"] = 4] = "STRING";})(FieldType || (FieldType = {}));
+var FieldType = /*#__PURE__*/function (FieldType) {FieldType[FieldType["NUMBER"] = 0] = "NUMBER";FieldType[FieldType["SORTBY"] = 1] = "SORTBY";FieldType[FieldType["BOOLEAN"] = 2] = "BOOLEAN";FieldType[FieldType["NAME"] = 3] = "NAME";FieldType[FieldType["STRING"] = 4] = "STRING";return FieldType;}({});
 
 
 
@@ -579,7 +579,7 @@ var ValSetting = /*#__PURE__*/_createClass(function ValSetting() {_classCallChec
 
 
 
-var SortBy;(function (SortBy) {SortBy[SortBy["NAME"] = 0] = "NAME";SortBy[SortBy["QUANTITY"] = 1] = "QUANTITY";SortBy[SortBy["PRICE"] = 2] = "PRICE";SortBy[SortBy["TOTAL_PRICE"] = 3] = "TOTAL_PRICE";SortBy[SortBy["ITEM_ID"] = 4] = "ITEM_ID";})(SortBy || (SortBy = {}));
+var SortBy = /*#__PURE__*/function (SortBy) {SortBy[SortBy["NAME"] = 0] = "NAME";SortBy[SortBy["QUANTITY"] = 1] = "QUANTITY";SortBy[SortBy["PRICE"] = 2] = "PRICE";SortBy[SortBy["TOTAL_PRICE"] = 3] = "TOTAL_PRICE";SortBy[SortBy["ITEM_ID"] = 4] = "ITEM_ID";return SortBy;}({});
 
 
 
@@ -625,7 +625,15 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     false);_defineProperty(this, "javascriptFilter",
     "");_defineProperty(this, "useLastSold",
     false);_defineProperty(this, "settingsDebug",
+    false);_defineProperty(this, "brief",
     false);}_createClass(AccountValSettings, [{ key: "getSetting", value:
+
+
+
+
+
+
+
 
 
 
@@ -1038,7 +1046,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
 
       return false;
-    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc) {var setting = new ValSetting();setting.type = type;setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.none". To shorthand the "require(kol)" just do $kol');makeSetting(FieldType.NUMBER, "sales", ["sales"], "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");return settings;} }]);return AccountValSettings;}();
+    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc) {var setting = new ValSetting();setting.type = type;setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.none". To shorthand the "require(kol)" just do $kol');makeSetting(FieldType.NUMBER, "sales", ["sales"], "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");makeSetting(FieldType.BOOLEAN, "brief", ["brief"], "Prints out a single line as the final result, the total meat.");return settings;} }]);return AccountValSettings;}();
 
 
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_classCallCheck(this, PricingSettings);_defineProperty(this, "expensivePricesAt",
@@ -1205,7 +1213,7 @@ AccValStuff = /*#__PURE__*/_createClass(function AccValStuff() {_classCallCheck(
 
 
 
-var ItemType;(function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["GARDEN"] = 4] = "GARDEN";ItemType[ItemType["VISIT_URL_CHECK"] = 5] = "VISIT_URL_CHECK";ItemType[ItemType["SKILL"] = 6] = "SKILL";ItemType[ItemType["CURRENCY"] = 7] = "CURRENCY";ItemType[ItemType["CAMPGROUND"] = 8] = "CAMPGROUND";ItemType[ItemType["SCRIPT"] = 9] = "SCRIPT";})(ItemType || (ItemType = {}));
+var ItemType = /*#__PURE__*/function (ItemType) {ItemType[ItemType["UNTRADEABLE_ITEM"] = 0] = "UNTRADEABLE_ITEM";ItemType[ItemType["BOOK"] = 1] = "BOOK";ItemType[ItemType["PROPERTY"] = 2] = "PROPERTY";ItemType[ItemType["EUDORA"] = 3] = "EUDORA";ItemType[ItemType["GARDEN"] = 4] = "GARDEN";ItemType[ItemType["VISIT_URL_CHECK"] = 5] = "VISIT_URL_CHECK";ItemType[ItemType["SKILL"] = 6] = "SKILL";ItemType[ItemType["CURRENCY"] = 7] = "CURRENCY";ItemType[ItemType["CAMPGROUND"] = 8] = "CAMPGROUND";ItemType[ItemType["SCRIPT"] = 9] = "SCRIPT";return ItemType;}({});
 
 
 
@@ -1693,7 +1701,7 @@ function _defineProperties(target, props) {for (var i = 0; i < props.length; i++
 
 
 
-var PriceType;(function (PriceType) {PriceType[PriceType["HISTORICAL"] = 0] = "HISTORICAL";PriceType[PriceType["MALL"] = 1] = "MALL";PriceType[PriceType["MALL_SALES"] = 2] = "MALL_SALES";})(PriceType || (PriceType = {}));
+var PriceType = /*#__PURE__*/function (PriceType) {PriceType[PriceType["HISTORICAL"] = 0] = "HISTORICAL";PriceType[PriceType["MALL"] = 1] = "MALL";PriceType[PriceType["MALL_SALES"] = 2] = "MALL_SALES";return PriceType;}({});
 
 
 
@@ -1916,18 +1924,24 @@ MallHistoryPricing = /*#__PURE__*/function () {
     } }, { key: "isOutdated", value:
 
     function isOutdated() {
-      if (this.records == null || this.records.records.length == 0) {
+      if (this.records == null) {
         return true;
       }
 
-      var last = this.records.records[this.records.records.length - 1];
-      var histPrice = last.meat;
-      var histAge =
-      Math.min(
-      Date.now() / 1000 - last.date,
-      Date.now() / 1000 - this.records.lastUpdated) / (
+      var lastUpdated =
+      (Date.now() / 1000 - this.records.lastUpdated) / (24 * 60 * 60);
 
-      24 * 60 * 60);
+      if (this.records.records.length == 0) {
+        return lastUpdated > 30;
+      }
+
+      var last = this.records.records[this.records.records.length - 1];
+      var histAge = Math.min(
+      (Date.now() / 1000 - last.date) / (24 * 60 * 60),
+      lastUpdated);
+
+
+      var histPrice = last.meat;
 
       var days = this.settings.getMaxPriceAge(histPrice, this.amount);
 
@@ -2278,45 +2292,51 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
       }
 
-      lines = lines.reverse();
-      var skipping = Math.max(
-      0,
-      this.logic.prices.length - this.settings.displayLimit);
+      if (!this.settings.brief) {
+        lines = lines.reverse();
+        var skipping = Math.max(
+        0,
+        this.logic.prices.length - this.settings.displayLimit);
 
 
-      if (skipping > 0) {
-        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-        "<font color='gray'>Skipping " +
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(skipping) +
-        " lines and displaying the last " +
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(this.settings.displayLimit) +
-        " lines..</font>");
+        if (skipping > 0) {
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
+          "<font color='gray'>Skipping " +
+          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(skipping) +
+          " lines and displaying the last " +
+          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(this.settings.displayLimit) +
+          " lines..</font>");
 
-      }var _iterator = _createForOfIteratorHelper(
+        }var _iterator = _createForOfIteratorHelper(
 
-        lines),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var line = _step.value;
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(line);
-        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
+          lines),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var line = _step.value;
+            (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(line);
+          }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
-      if (mallExtinct.length > 0) {
-        var colors = ["#4f5893", "#934f4f"];
+        if (mallExtinct.length > 0) {
+          var colors = ["#4f5893", "#934f4f"];
 
-        mallExtinct = mallExtinct.map(
-        (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>");
+          mallExtinct = mallExtinct.map(
+          (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>");
 
 
-        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-        "There were " +
-        mallExtinct.length +
-        " mall extinct items! Items: " +
-        mallExtinct.join(", "));
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
+          "There were " +
+          mallExtinct.length +
+          " mall extinct items! Items: " +
+          mallExtinct.join(", "));
 
+        }
       }
 
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
       pronoun + " worth " + _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(netvalue) + " meat!",
       "blue");
 
+
+      if (this.settings.brief) {
+        return;
+      }
 
       var mrAWorth = (0.0 + netvalue) / aWorth;
 
