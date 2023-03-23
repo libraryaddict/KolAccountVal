@@ -146,45 +146,51 @@ class AccountVal {
       );
     }
 
-    lines = lines.reverse();
-    const skipping = Math.max(
-      0,
-      this.logic.prices.length - this.settings.displayLimit
-    );
-
-    if (skipping > 0) {
-      printHtml(
-        "<font color='gray'>Skipping " +
-          AccountValUtils.getNumber(skipping) +
-          " lines and displaying the last " +
-          AccountValUtils.getNumber(this.settings.displayLimit) +
-          " lines..</font>"
-      );
-    }
-
-    for (const line of lines) {
-      printHtml(line);
-    }
-
-    if (mallExtinct.length > 0) {
-      const colors: string[] = ["#4f5893", "#934f4f"];
-
-      mallExtinct = mallExtinct.map(
-        (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>"
+    if (!this.settings.brief) {
+      lines = lines.reverse();
+      const skipping = Math.max(
+        0,
+        this.logic.prices.length - this.settings.displayLimit
       );
 
-      printHtml(
-        "There were " +
-          mallExtinct.length +
-          " mall extinct items! Items: " +
-          mallExtinct.join(", ")
-      );
+      if (skipping > 0) {
+        printHtml(
+          "<font color='gray'>Skipping " +
+            AccountValUtils.getNumber(skipping) +
+            " lines and displaying the last " +
+            AccountValUtils.getNumber(this.settings.displayLimit) +
+            " lines..</font>"
+        );
+      }
+
+      for (const line of lines) {
+        printHtml(line);
+      }
+
+      if (mallExtinct.length > 0) {
+        const colors: string[] = ["#4f5893", "#934f4f"];
+
+        mallExtinct = mallExtinct.map(
+          (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>"
+        );
+
+        printHtml(
+          "There were " +
+            mallExtinct.length +
+            " mall extinct items! Items: " +
+            mallExtinct.join(", ")
+        );
+      }
     }
 
     print(
       pronoun + " worth " + AccountValUtils.getNumber(netvalue) + " meat!",
       "blue"
     );
+
+    if (this.settings.brief) {
+      return;
+    }
 
     const mrAWorth = (0.0 + netvalue) / aWorth;
 

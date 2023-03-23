@@ -62,6 +62,7 @@ export class AccountValSettings {
   javascriptFilter: string = "";
   useLastSold: boolean = false;
   settingsDebug: boolean = false;
+  brief: boolean = false;
 
   static getSettings(): ValSetting[] {
     const settings = [];
@@ -251,6 +252,13 @@ export class AccountValSettings {
       "useLastSold",
       ["useLastSold", "lastsold", "soldprice"],
       "Resolve prices by their last sold, initial runs with this parameter can be quite slow"
+    );
+
+    makeSetting(
+      FieldType.BOOLEAN,
+      "brief",
+      ["brief"],
+      "Prints out a single line as the final result, the total meat."
     );
 
     return settings;

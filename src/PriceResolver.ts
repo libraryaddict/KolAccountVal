@@ -233,18 +233,24 @@ class MallHistoryPricing implements PriceVolunteer {
   }
 
   isOutdated(): boolean {
-    if (this.records == null || this.records.records.length == 0) {
+    if (this.records == null) {
       return true;
     }
 
+    const lastUpdated =
+      (Date.now() / 1000 - this.records.lastUpdated) / (24 * 60 * 60);
+
+    if (this.records.records.length == 0) {
+      return lastUpdated > 30;
+    }
+
     const last = this.records.records[this.records.records.length - 1];
+    const histAge = Math.min(
+      (Date.now() / 1000 - last.date) / (24 * 60 * 60),
+      lastUpdated
+    );
+
     const histPrice = last.meat;
-    const histAge =
-      Math.min(
-        Date.now() / 1000 - last.date,
-        Date.now() / 1000 - this.records.lastUpdated
-      ) /
-      (24 * 60 * 60);
 
     const days = this.settings.getMaxPriceAge(histPrice, this.amount);
 
