@@ -693,12 +693,12 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     false);_defineProperty(this, "fetchClan",
     false);_defineProperty(this, "fetchingEverywhereish",
     true); // If we're fetching from everywhere but maybe some areas
-    _defineProperty(this, "doSuperFast", false);_defineProperty(this, "doTradeables", void 0);_defineProperty(this, "doNontradeables", void 0);_defineProperty(this, "doBound", void 0);_defineProperty(this, "fetchFamiliars", void 0);_defineProperty(this, "fetchSnapshot",
+    _defineProperty(this, "doSuperFast", false);_defineProperty(this, "doTradeables", void 0);_defineProperty(this, "doNontradeables", void 0);_defineProperty(this, "doBound", void 0);_defineProperty(this, "fetchFamiliars", void 0);_defineProperty(this, "fetchSnapshot", void 0);_defineProperty(this, "playerId",
 
 
 
 
-    true);_defineProperty(this, "playerId",
+
     0);_defineProperty(this, "displayLimit",
     100);_defineProperty(this, "minimumMeat",
     0);_defineProperty(this, "minimumAmount",
@@ -1075,7 +1075,8 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
       "fetchDisplaycase",
       "fetchClan",
       "fetchSession",
-      "fetchFamiliars"];
+      "fetchFamiliars",
+      "fetchSnapshot"];
 
 
       // We can do fams if bound isn't false
