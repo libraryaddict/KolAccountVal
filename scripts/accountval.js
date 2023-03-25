@@ -195,6 +195,11 @@ var AccountValLogic = /*#__PURE__*/function () {
             }
 
             name = untradeable.name;
+          } else if (
+          boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.SKILL */ .q.SKILL ||
+          boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.BOOK */ .q.BOOK)
+          {
+            return;
           }
 
           this.addItem(new ValItem(k, name, ItemStatus.BOUND), v);
@@ -1770,7 +1775,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
           continue;
         }
 
-        if (name.match(/: level \d$/)) {
+        if (name.match(/: level \d+$/)) {
           name = name.substring(0, name.lastIndexOf(":"));
         } else if (name.match(/ \(\d+\/\d+\)$/)) {
           name = name.substring(0, name.lastIndexOf(" "));
