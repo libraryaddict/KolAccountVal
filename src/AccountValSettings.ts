@@ -50,7 +50,7 @@ export class AccountValSettings {
   doNontradeables: boolean;
   doBound: boolean;
   fetchFamiliars: boolean;
-  fetchSnapshot: boolean;
+  fetchSnapshot: boolean = true;
   playerId: number = 0;
   displayLimit = 100;
   minimumMeat = 0;
