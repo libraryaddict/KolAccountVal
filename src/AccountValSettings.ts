@@ -50,7 +50,7 @@ export class AccountValSettings {
   doNontradeables: boolean;
   doBound: boolean;
   fetchFamiliars: boolean;
-  fetchSnapshot: boolean = true;
+  fetchSnapshot: boolean;
   playerId: number = 0;
   displayLimit = 100;
   minimumMeat = 0;
@@ -428,6 +428,7 @@ export class AccountValSettings {
       "fetchClan",
       "fetchSession",
       "fetchFamiliars",
+      "fetchSnapshot",
     ];
 
     // We can do fams if bound isn't false
