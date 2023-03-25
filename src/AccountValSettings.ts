@@ -50,6 +50,7 @@ export class AccountValSettings {
   doNontradeables: boolean;
   doBound: boolean;
   fetchFamiliars: boolean;
+  fetchSnapshot: boolean;
   playerId: number = 0;
   displayLimit = 100;
   minimumMeat = 0;
@@ -153,6 +154,12 @@ export class AccountValSettings {
       "fetchFamiliars",
       ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"],
       "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set"
+    );
+    makeSetting(
+      FieldType.BOOLEAN,
+      "fetchSnapshot",
+      ["snapshot"],
+      "Should it attempt to use av-snapshot?"
     );
     makeSetting(
       FieldType.BOOLEAN,

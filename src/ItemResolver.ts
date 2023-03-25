@@ -52,7 +52,7 @@ export enum ItemType {
 
 export class ItemResolver {
   private visitCache: Map<string, string> = new Map();
-  private accValStuff: AccValStuff[];
+  accValStuff: AccValStuff[];
   private accountValCache: Map<Item, boolean> = new Map();
   private accountValVisitCachePropName = "_accountValVisitCache";
 

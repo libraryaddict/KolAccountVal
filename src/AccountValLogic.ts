@@ -5,6 +5,7 @@ import {
   displayAmount,
   equippedAmount,
   Familiar,
+  getPlayerName,
   getWorkshed,
   haveFamiliar,
   isCoinmasterItem,
@@ -13,6 +14,7 @@ import {
   print,
   shopAmount,
   shopPrice,
+  Skill,
   stashAmount,
   storageAmount,
   toInt,
@@ -119,10 +121,89 @@ export class AccountValLogic {
       });
     }
 
+    let resolvedFamiliars = false;
+
     if (this.settings.fetchFamiliars != false) {
       const familiars = pager.getFamiliars(this.settings.playerId);
 
+      resolvedFamiliars = familiars.length > 0;
+
       this.resolver.resolveFamiliars(familiars, this.ownedItems);
+    }
+
+    if (this.settings.fetchSnapshot == true) {
+      const snapshot = pager.getSnapshot(getPlayerName(this.settings.playerId));
+      const familiars: Familiar[] = [];
+      const skills: Skill[] = [];
+      const items: Map<Item, number> = new Map();
+
+      for (const item of snapshot) {
+        if (item instanceof Familiar) {
+          familiars.push(item);
+        } else if (item instanceof Skill) {
+          skills.push(item);
+        } else if (item instanceof Item) {
+          items.set(item, 1);
+        } else {
+          items.set(item[0], item[1]);
+        }
+      }
+
+      if (!resolvedFamiliars && this.settings.fetchFamiliars) {
+        this.resolver.resolveFamiliars(familiars, this.ownedItems);
+      }
+
+      if (this.settings.doBound) {
+        for (const item of this.resolver.accValStuff.filter(
+          (s) => s.itemType == ItemType.SKILL
+        )) {
+          if (!skills.includes(Skill.get(item.data1))) {
+            continue;
+          }
+
+          this.addItem(
+            new ValItem(item.actualItem, item.actualItem.name, ItemStatus.BOUND)
+          );
+        }
+      }
+
+      const owned: Map<Item, number> = new Map(
+        [...this.ownedItems].map(([k, v]) => [k.tradeableItem, v])
+      );
+
+      items.forEach((v, k) => {
+        const boundItem = this.resolver.accValStuff.find(
+          (i) => i.actualItem == k
+        );
+
+        if (boundItem == null) {
+          v -= owned.get(k) ?? 0;
+
+          if (v <= 0) {
+            return;
+          }
+
+          this.addItem(new ValItem(k), v);
+
+          return;
+        }
+
+        let name = k.name;
+
+        if (boundItem.itemType == ItemType.UNTRADEABLE_ITEM) {
+          const untradeable = Item.get(boundItem.data1);
+
+          v -= owned.get(k) ?? 0;
+
+          if (v <= 0) {
+            return;
+          }
+
+          name = untradeable.name;
+        }
+
+        this.addItem(new ValItem(k, name, ItemStatus.BOUND), v);
+      });
     }
 
     this.resolveNoTrades();
