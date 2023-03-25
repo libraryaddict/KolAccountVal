@@ -17,7 +17,7 @@
 /* harmony import */ var _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(280);
 /* harmony import */ var _PageResolver__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23);
 /* harmony import */ var _AccountValUtils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(25);
-function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(arg) {var key = _toPrimitive(arg, "string");return typeof key === "symbol" ? key : String(key);}function _toPrimitive(input, hint) {if (typeof input !== "object" || input === null) return input;var prim = input[Symbol.toPrimitive];if (prim !== undefined) {var res = prim.call(input, hint || "default");if (typeof res !== "object") return res;throw new TypeError("@@toPrimitive must return a primitive value.");}return (hint === "string" ? String : Number)(input);}
+function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(arr, i) {var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];if (null != _i) {var _s,_e,_x,_r,_arr = [],_n = !0,_d = !1;try {if (_x = (_i = _i.call(arr)).next, 0 === i) {if (Object(_i) !== _i) return;_n = !1;} else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);} catch (err) {_d = !0, _e = err;} finally {try {if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return;} finally {if (_d) throw _e;}}return _arr;}}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e2) {throw _e2;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e3) {didErr = true;err = _e3;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(arg) {var key = _toPrimitive(arg, "string");return typeof key === "symbol" ? key : String(key);}function _toPrimitive(input, hint) {if (typeof input !== "object" || input === null) return input;var prim = input[Symbol.toPrimitive];if (prim !== undefined) {var res = prim.call(input, hint || "default");if (typeof res !== "object") return res;throw new TypeError("@@toPrimitive must return a primitive value.");}return (hint === "string" ? String : Number)(input);}
 
 
 
@@ -116,10 +116,89 @@ var AccountValLogic = /*#__PURE__*/function () {
         });
       }
 
+      var resolvedFamiliars = false;
+
       if (this.settings.fetchFamiliars != false) {
         var familiars = pager.getFamiliars(this.settings.playerId);
 
+        resolvedFamiliars = familiars.length > 0;
+
         this.resolver.resolveFamiliars(familiars, this.ownedItems);
+      }
+
+      if (this.settings.fetchSnapshot == true) {
+        var snapshot = pager.getSnapshot((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getPlayerName)(this.settings.playerId));
+        var _familiars = [];
+        var skills = [];
+        var _items2 = new Map();var _iterator = _createForOfIteratorHelper(
+
+          snapshot),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item2 = _step.value;
+            if (_item2 instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar) {
+              _familiars.push(_item2);
+            } else if (_item2 instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill) {
+              skills.push(_item2);
+            } else if (_item2 instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item) {
+              _items2.set(_item2, 1);
+            } else {
+              _items2.set(_item2[0], _item2[1]);
+            }
+          }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
+
+        if (!resolvedFamiliars && this.settings.fetchFamiliars) {
+          this.resolver.resolveFamiliars(_familiars, this.ownedItems);
+        }
+
+        if (this.settings.doBound) {var _iterator2 = _createForOfIteratorHelper(
+            this.resolver.accValStuff.filter(
+            (s) => s.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.SKILL */ .q.SKILL)),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;)
+            {var _item = _step2.value;
+              if (!skills.includes(kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill.get(_item.data1))) {
+                continue;
+              }
+
+              this.addItem(
+              new ValItem(_item.actualItem, _item.actualItem.name, ItemStatus.BOUND));
+
+            }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+        }
+
+        var owned = new Map(
+        _toConsumableArray(this.ownedItems).map((_ref) => {var _ref2 = _slicedToArray(_ref, 2),k = _ref2[0],v = _ref2[1];return [k.tradeableItem, v];}));
+
+
+        _items2.forEach((v, k) => {
+          var boundItem = this.resolver.accValStuff.find(
+          (i) => i.actualItem == k);
+
+
+          if (boundItem == null) {var _owned$get;
+            v -= (_owned$get = owned.get(k)) !== null && _owned$get !== void 0 ? _owned$get : 0;
+
+            if (v <= 0) {
+              return;
+            }
+
+            this.addItem(new ValItem(k), v);
+
+            return;
+          }
+
+          var name = k.name;
+
+          if (boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.UNTRADEABLE_ITEM */ .q.UNTRADEABLE_ITEM) {var _owned$get2;
+            var untradeable = kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(boundItem.data1);
+
+            v -= (_owned$get2 = owned.get(k)) !== null && _owned$get2 !== void 0 ? _owned$get2 : 0;
+
+            if (v <= 0) {
+              return;
+            }
+
+            name = untradeable.name;
+          }
+
+          this.addItem(new ValItem(k, name, ItemStatus.BOUND), v);
+        });
       }
 
       this.resolveNoTrades();
@@ -160,49 +239,49 @@ var AccountValLogic = /*#__PURE__*/function () {
       }
 
       var famItems = this.resolver.resolveFamiliarItems();
-      var sessionItems = this.resolver.resolveSessionItems();var _iterator = _createForOfIteratorHelper(
+      var sessionItems = this.resolver.resolveSessionItems();var _iterator3 = _createForOfIteratorHelper(
 
-        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item2 = _step.value;
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _item4 = _step3.value;
           var _amount = 0;
 
-          if (this.settings.fetchSession && sessionItems.has(_item2)) {
-            _amount += sessionItems.get(_item2);
+          if (this.settings.fetchSession && sessionItems.has(_item4)) {
+            _amount += sessionItems.get(_item4);
           }
 
           if (this.settings.fetchCloset) {
-            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.closetAmount)(_item2);
+            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.closetAmount)(_item4);
           }
 
           if (this.settings.fetchInventory) {
-            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.equippedAmount)(_item2) + (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.itemAmount)(_item2);
+            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.equippedAmount)(_item4) + (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.itemAmount)(_item4);
 
-            if (famItems.has(_item2)) {
-              _amount += famItems.get(_item2);
+            if (famItems.has(_item4)) {
+              _amount += famItems.get(_item4);
             }
           }
 
           if (this.settings.fetchStorage) {
-            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.storageAmount)(_item2);
+            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.storageAmount)(_item4);
           }
 
           if (this.settings.fetchDisplaycase) {
-            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.displayAmount)(_item2);
+            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.displayAmount)(_item4);
           }
 
           if (this.settings.fetchClan) {
-            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.stashAmount)(_item2);
+            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.stashAmount)(_item4);
           }
 
           if (this.settings.fetchShop) {
-            if (this.settings.shopWorth && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item2) > 0) {
-              var _i = new ValItem(_item2);
-              _i.bound = ItemStatus.SHOP_WORTH;
-              _i.shopWorth = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopPrice)(_item2);
+            if (this.settings.shopWorth && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item4) > 0) {
+              var _i2 = new ValItem(_item4);
+              _i2.bound = ItemStatus.SHOP_WORTH;
+              _i2.shopWorth = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopPrice)(_item4);
 
-              this.ownedItems.set(_i, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item2));
+              this.ownedItems.set(_i2, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item4));
               continue;
             } else {
-              _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item2);
+              _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item4);
             }
           }
 
@@ -210,8 +289,8 @@ var AccountValLogic = /*#__PURE__*/function () {
             continue;
           }
 
-          this.ownedItems.set(new ValItem(_item2), _amount);
-        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
+          this.ownedItems.set(new ValItem(_item4), _amount);
+        }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       if (this.settings.fetchFamiliars != false) {
         this.resolver.resolveFamiliars(
@@ -235,19 +314,19 @@ var AccountValLogic = /*#__PURE__*/function () {
         }
       }
 
-      if (this.settings.doBound) {var _iterator2 = _createForOfIteratorHelper(
-          this.resolver.getUrledItems()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
+      if (this.settings.doBound) {var _iterator4 = _createForOfIteratorHelper(
+          this.resolver.getUrledItems()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _item3 = _step4.value;
             if (
-            _item[0].tradeable && (
-            _item[1] == ItemStatus.FAMILIAR || _item[1] != ItemStatus.BOUND) ?
+            _item3[0].tradeable && (
+            _item3[1] == ItemStatus.FAMILIAR || _item3[1] != ItemStatus.BOUND) ?
             !this.settings.doTradeables :
             !this.settings.doBound)
             {
               continue;
             }
 
-            this.addItem(new ValItem(_item[0], _item[0].name, _item[1]));
-          }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+            this.addItem(new ValItem(_item3[0], _item3[0].name, _item3[1]));
+          }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
       }
 
       this.resolveNoTrades();
@@ -265,72 +344,72 @@ var AccountValLogic = /*#__PURE__*/function () {
         this.settings.doBound ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.UNTRADEABLE_ITEM */ .q.UNTRADEABLE_ITEM : null,
         this.settings.doNontradeables ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.CURRENCY */ .q.CURRENCY : null]);
 
-      }var _iterator3 = _createForOfIteratorHelper(
+      }var _iterator5 = _createForOfIteratorHelper(
 
-        this.ownedItems.keys()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _item3 = _step3.value;
+        this.ownedItems.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _item5 = _step5.value;
           if (
           this.jsFilter != null &&
-          !this.jsFilter(_item3.tradeableItem, this.ownedItems.get(_item3)))
+          !this.jsFilter(_item5.tradeableItem, this.ownedItems.get(_item5)))
           {
-            this.ownedItems.delete(_item3);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If item can't be resolved to a price at all
           if (
-          !_item3.isBound() && (
-          !_item3.tradeableItem.tradeable || _item3.tradeableItem.gift) &&
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(_item3.tradeableItem) == 0)
+          !_item5.isBound() && (
+          !_item5.tradeableItem.tradeable || _item5.tradeableItem.gift) &&
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(_item5.tradeableItem) == 0)
           {
-            this.ownedItems.delete(_item3);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
-          if (this.ownedItems.get(_item3) < this.settings.minimumAmount) {
-            this.ownedItems.delete(_item3);
+          if (this.ownedItems.get(_item5) < this.settings.minimumAmount) {
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If we're not doing bound items, and this is a bound item..
           if (
           !this.settings.doBound &&
-          _item3.isBound() &&
-          _item3.bound != ItemStatus.FAMILIAR)
+          _item5.isBound() &&
+          _item5.bound != ItemStatus.FAMILIAR)
           {
-            this.ownedItems.delete(_item3);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If we're not doing familiars and this is a familiar
           if (
-          _item3.bound == ItemStatus.FAMILIAR && (
+          _item5.bound == ItemStatus.FAMILIAR && (
           this.settings.fetchFamiliars == false ||
           this.settings.fetchFamiliars == null && !this.settings.doBound))
           {
-            this.ownedItems.delete(_item3);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If we're not doing tradeables, and this isn't a bound item, and is tradeable
           if (
           !this.settings.doTradeables &&
-          _item3.tradeableItem.tradeable &&
-          !_item3.isBound())
+          _item5.tradeableItem.tradeable &&
+          !_item5.isBound())
           {
-            this.ownedItems.delete(_item3);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If we're not doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
           if (
           !this.settings.doNontradeables &&
-          !_item3.tradeableItem.tradeable &&
-          !_item3.isBound())
+          !_item5.tradeableItem.tradeable &&
+          !_item5.isBound())
           {
-            this.ownedItems.delete(_item3);
+            this.ownedItems.delete(_item5);
             continue;
           }
-        }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
+        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
     } }, { key: "doPricing", value:
 
     function doPricing() {
@@ -350,12 +429,12 @@ var AccountValLogic = /*#__PURE__*/function () {
         }
 
         prices.push([item, price]);
-      };var _iterator4 = _createForOfIteratorHelper(
+      };var _iterator6 = _createForOfIteratorHelper(
 
-        this.ownedItems.keys()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _i3 = _step4.value;
+        this.ownedItems.keys()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var _i4 = _step6.value;
           var _price = this.priceResolver.itemPrice(
-          _i3.tradeableItem,
-          this.ownedItems.get(_i3),
+          _i4.tradeableItem,
+          this.ownedItems.get(_i4),
           false,
           this.settings.doSuperFast ?
           _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceType.HISTORICAL */ .FT.HISTORICAL :
@@ -367,14 +446,14 @@ var AccountValLogic = /*#__PURE__*/function () {
 
 
           if (_price.price > 0) {
-            addPrice(_i3, _price);
+            addPrice(_i4, _price);
           } else {
-            toCheck.push([_i3, _price]);
+            toCheck.push([_i4, _price]);
           }
         }
 
         // TODO Sort tocheck
-      } catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
+      } catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
       var checked = -1;
 
       if (toCheck.length > 200) {
@@ -384,7 +463,7 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       }
 
-      for (var _i2 = 0, _toCheck = toCheck; _i2 < _toCheck.length; _i2++) {var check = _toCheck[_i2];
+      for (var _i3 = 0, _toCheck = toCheck; _i3 < _toCheck.length; _i3++) {var check = _toCheck[_i3];
         var i = check[0];
 
         if (++checked % 20 == 0 && lastPrinted + 1000 < Date.now()) {
@@ -449,37 +528,37 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       } else if (this.settings.sortBy == "SortBy.SALES_VOLUME") {
         // Removed for now cos it does too many hits
-        var toUpdate = [];var _iterator5 = _createForOfIteratorHelper(
+        var toUpdate = [];var _iterator7 = _createForOfIteratorHelper(
 
-          this.prices),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _i5 = _step5.value;
-            var _item4 = _i5[1].item;
+          this.prices),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var _i6 = _step7.value;
+            var _item6 = _i6[1].item;
 
-            if (!_item4.tradeable || _item4.gift) {
+            if (!_item6.tradeable || _item6.gift) {
               continue;
             }
 
             // If its an item we buy from NPCs
             if (
-            (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(_item4) > 0 &&
-            _i5[1].price < 1000 &&
-            (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.isCoinmasterItem)(_item4))
+            (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(_item6) > 0 &&
+            _i6[1].price < 1000 &&
+            (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.isCoinmasterItem)(_item6))
             {
               continue;
             }
 
-            var v = this.priceResolver.history.getMallRecords(_item4, 7, false);
+            var v = this.priceResolver.history.getMallRecords(_item6, 7, false);
 
             if (v == null) {
-              toUpdate.push(_item4);
+              toUpdate.push(_item6);
               continue;
             }
 
-            var priceTotal = _i5[1].price * this.ownedItems.get(_i5[0]);
+            var priceTotal = _i6[1].price * this.ownedItems.get(_i6[0]);
             // If our expected price is different from mall price by a bigger margin than expected.. Aka 50% more expensive/cheap
             var priceDiff =
-            _i5[1].price > v.getPriceSold(30) ?
-            v.getPriceSold(30) / _i5[1].price :
-            _i5[1].price / v.getPriceSold(30);
+            _i6[1].price > v.getPriceSold(30) ?
+            v.getPriceSold(30) / _i6[1].price :
+            _i6[1].price / v.getPriceSold(30);
 
             var days = priceDiff < 0.5 ? 7 : priceTotal > 5000000 ? 30 : 100;
             var daysOld = (Date.now() / 1000 - v.lastUpdated) / (24 * 60 * 60);
@@ -488,8 +567,8 @@ var AccountValLogic = /*#__PURE__*/function () {
               continue;
             }
 
-            toUpdate.push(_item4);
-          }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
+            toUpdate.push(_item6);
+          }} catch (err) {_iterator7.e(err);} finally {_iterator7.f();}
 
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
         "Need to update " +
@@ -501,7 +580,7 @@ var AccountValLogic = /*#__PURE__*/function () {
         var last = Date.now();
         var progress = 0;
 
-        for (var _i4 = 0, _toUpdate = toUpdate; _i4 < _toUpdate.length; _i4++) {var i = _toUpdate[_i4];
+        for (var _i5 = 0, _toUpdate = toUpdate; _i5 < _toUpdate.length; _i5++) {var i = _toUpdate[_i5];
           if (last + 5000 < Date.now()) {
             last = Date.now();
 
@@ -609,7 +688,8 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     false);_defineProperty(this, "fetchClan",
     false);_defineProperty(this, "fetchingEverywhereish",
     true); // If we're fetching from everywhere but maybe some areas
-    _defineProperty(this, "doSuperFast", false);_defineProperty(this, "doTradeables", void 0);_defineProperty(this, "doNontradeables", void 0);_defineProperty(this, "doBound", void 0);_defineProperty(this, "fetchFamiliars", void 0);_defineProperty(this, "playerId",
+    _defineProperty(this, "doSuperFast", false);_defineProperty(this, "doTradeables", void 0);_defineProperty(this, "doNontradeables", void 0);_defineProperty(this, "doBound", void 0);_defineProperty(this, "fetchFamiliars", void 0);_defineProperty(this, "fetchSnapshot", void 0);_defineProperty(this, "playerId",
+
 
 
 
@@ -627,6 +707,12 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     false);_defineProperty(this, "settingsDebug",
     false);_defineProperty(this, "brief",
     false);}_createClass(AccountValSettings, [{ key: "getSetting", value:
+
+
+
+
+
+
 
 
 
@@ -1046,7 +1132,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
 
       return false;
-    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc) {var setting = new ValSetting();setting.type = type;setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.none". To shorthand the "require(kol)" just do $kol');makeSetting(FieldType.NUMBER, "sales", ["sales"], "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");makeSetting(FieldType.BOOLEAN, "brief", ["brief"], "Prints out a single line as the final result, the total meat.");return settings;} }]);return AccountValSettings;}();
+    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc) {var setting = new ValSetting();setting.type = type;setting.field = name;setting.names = aliases;setting.desc = desc;settings.push(setting);}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "fetchSnapshot", ["snapshot"], "Should it attempt to use av-snapshot?");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.none". To shorthand the "require(kol)" just do $kol');makeSetting(FieldType.NUMBER, "sales", ["sales"], "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");makeSetting(FieldType.BOOLEAN, "brief", ["brief"], "Prints out a single line as the final result, the total meat.");return settings;} }]);return AccountValSettings;}();
 
 
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_classCallCheck(this, PricingSettings);_defineProperty(this, "expensivePricesAt",
@@ -1604,7 +1690,7 @@ var ItemResolver = /*#__PURE__*/function () {
 /* unused harmony export StoreItem */
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
-function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(arg) {var key = _toPrimitive(arg, "string");return typeof key === "symbol" ? key : String(key);}function _toPrimitive(input, hint) {if (typeof input !== "object" || input === null) return input;var prim = input[Symbol.toPrimitive];if (prim !== undefined) {var res = prim.call(input, hint || "default");if (typeof res !== "object") return res;throw new TypeError("@@toPrimitive must return a primitive value.");}return (hint === "string" ? String : Number)(input);}
+function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(arg) {var key = _toPrimitive(arg, "string");return typeof key === "symbol" ? key : String(key);}function _toPrimitive(input, hint) {if (typeof input !== "object" || input === null) return input;var prim = input[Symbol.toPrimitive];if (prim !== undefined) {var res = prim.call(input, hint || "default");if (typeof res !== "object") return res;throw new TypeError("@@toPrimitive must return a primitive value.");}return (hint === "string" ? String : Number)(input);}
 
 var StoreItem = /*#__PURE__*/_createClass(function StoreItem() {_classCallCheck(this, StoreItem);_defineProperty(this, "item", void 0);_defineProperty(this, "amount", void 0);_defineProperty(this, "limit", void 0);_defineProperty(this, "price", void 0);});
 
@@ -1613,7 +1699,116 @@ var StoreItem = /*#__PURE__*/_createClass(function StoreItem() {_classCallCheck(
 
 
 
-var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCallCheck(this, FetchFromPage);}_createClass(FetchFromPage, [{ key: "getFamiliars", value:
+var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCallCheck(this, FetchFromPage);}_createClass(FetchFromPage, [{ key: "getSnapshot", value:
+    function getSnapshot(username) {
+      var items = new Map(
+      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().map((i) => {
+        var name = i.name;
+
+        while (name.match(/<\/?i>/)) {
+          name = name.replace(/<\/?i>/, "");
+        }
+
+        return [(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.entityDecode)(name).toLowerCase(), i];
+      }));
+
+      var skills = new Map(
+      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill.all().map((s) => [(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.entityDecode)(s.name).toLowerCase(), s]));
+
+      var fams = new Map(
+      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all().map((f) => [f.toString().toLowerCase(), f]));
+
+      // The hatching item is also listed alongside the familiar, so delete any items.
+      var ignore = _toConsumableArray(fams.values()).map((f) =>
+      f.hatchling.toString().toLowerCase());
+
+
+      var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)(
+      "https://api.aventuristo.net/av-snapshot?u=" + username);
+
+
+      if (!page.includes("<p>Snapshot for <b>")) {
+        return [];
+      }
+
+      page = page.substring(0, page.indexOf("id='a7'>Discoveries</h1>"));
+
+      var tdRegex = /<td(.*?)<\/td>/m;
+      var linkRegex =
+      /class='(perm|hcperm|fam_run_90|fam_have|fam_run_100)'.*<a href="[^"]+">(?:.*?>)?([^>]*?)<\/a>/;
+      var match;
+      var has = [];
+
+      while ((match = page.match(tdRegex)) != null) {
+        page = page.substring(page.indexOf(match[0]) + match[0].length);
+
+        var link = match[1].match(linkRegex);
+
+        if (link == null) {
+          continue;
+        }
+
+        var name = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.entityDecode)(link[2]).toLowerCase();
+
+        if (ignore.includes(name)) {
+          continue;
+        }
+
+        var type = link[1];
+        var isFam = !type.includes("perm");
+
+        if (isFam) {
+          if (fams.has(name)) {
+            has.push(fams.get(name));
+          } else {
+            (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
+            "Unable to resolve the familiar '" + name + "' from av-snapshot",
+            "red");
+
+          }
+
+          continue;
+        }
+
+        if (name.match(/: level \d$/)) {
+          name = name.substring(0, name.lastIndexOf(":"));
+        } else if (name.match(/ \(\d+\/\d+\)$/)) {
+          name = name.substring(0, name.lastIndexOf(" "));
+        } else if (name.match(/ \d+\/\d+$/)) {
+          continue;
+        }
+
+        if (skills.has(name)) {
+          has.push(skills.get(name));
+          continue;
+        }
+
+        if (items.has(name)) {
+          has.push(items.get(name));
+          continue;
+        }
+
+        var count = 1;
+
+        if (name.match(/ x\d+$/)) {
+          count = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(name.substring(name.lastIndexOf("x") + 1));
+          name = name.substring(0, name.lastIndexOf(" "));
+        }
+
+        if (!items.has(name)) {
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
+          "Unable to resolve the item '" + name + "' from av-snapshot",
+          "red");
+
+          continue;
+        }
+
+        has.push([items.get(name), count]);
+      }
+
+      return has;
+    } }, { key: "getFamiliars", value:
+
     function getFamiliars(userId) {
       var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)("showfamiliars.php?who=" + userId);
       var regex = /onClick='fam\((\d+)\)'/;
