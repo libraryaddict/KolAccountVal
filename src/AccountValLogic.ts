@@ -200,6 +200,11 @@ export class AccountValLogic {
           }
 
           name = untradeable.name;
+        } else if (
+          boundItem.itemType == ItemType.SKILL ||
+          boundItem.itemType == ItemType.BOOK
+        ) {
+          return;
         }
 
         this.addItem(new ValItem(k, name, ItemStatus.BOUND), v);

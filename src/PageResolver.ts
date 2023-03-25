@@ -88,7 +88,7 @@ export class FetchFromPage {
         continue;
       }
 
-      if (name.match(/: level \d$/)) {
+      if (name.match(/: level \d+$/)) {
         name = name.substring(0, name.lastIndexOf(":"));
       } else if (name.match(/ \(\d+\/\d+\)$/)) {
         name = name.substring(0, name.lastIndexOf(" "));
