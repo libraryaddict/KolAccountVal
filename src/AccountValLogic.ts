@@ -232,7 +232,9 @@ export class AccountValLogic {
     );
 
     try {
-      this.jsFilter = eval(this.settings.javascriptFilter);
+      this.jsFilter = eval(
+        `with (require("kolmafia")) ` + this.settings.javascriptFilter
+      );
     } catch (e) {
       print("Invalid jsfilter provided! Error as follows:", "red");
       print();

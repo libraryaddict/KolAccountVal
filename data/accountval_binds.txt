@@ -82,6 +82,7 @@ i	Rock Garden Guide	packet of rock seeds
 i	S.I.T. Course Voucher	S.I.T. Course Completion Certificate
 i	Closed-circuit phone system	Closed-circuit pay phone
 i	Cursed monkey glove	cursed monkey's paw
+i	shrink-wrapped Cincho de Mayo	Cincho de Mayo
 
 
 
@@ -133,6 +134,7 @@ p	Distant Woods Getaway Brochure	getawayCampsiteUnlocked
 p	Undrilled cosmic bowling ball	hasCosmicBowlingBall
 p	MayDay™ contract	hasMaydayContract
 p	boxed autumn-aton	hasAutumnaton
+p	deed to Oliver's Place	ownsSpeakeasy
 
 
 

@@ -244,7 +244,7 @@ export class AccountValSettings {
       FieldType.STRING,
       "javascriptFilter",
       ["jsfilter", "javascriptfilter", "javascript", "js"],
-      'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && require("kolmafia").toSlot(item) != Slot.none". To shorthand the "require(kol)" just do $kol'
+      'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && toSlot(item) != Slot.none"'
     );
 
     makeSetting(
@@ -393,12 +393,14 @@ export class AccountValSettings {
           }
         }
 
-        if (!v.match(/^[0-9,]+(\.\d+)?$/)) {
+        const num = this.toNumber(v);
+
+        if (v == null) {
           unknown.push(arg);
           continue;
         }
 
-        this[setting.field] = toFloat(v);
+        this[setting.field] = num;
       } else if (setting.type == FieldType.STRING) {
         if (!arg.includes("=")) {
           unknown.push(arg);
@@ -490,6 +492,30 @@ export class AccountValSettings {
     }
 
     return false;
+  }
+
+  toNumber(arg: string): number {
+    while (arg.includes(",")) {
+      arg = arg.replace(",", "");
+    }
+
+    const match = arg.match(/^((?:\d+)|(?:\d*\.\d+))([mkb]?)$/);
+
+    if (match == null) {
+      return null;
+    }
+
+    let num = toFloat(match[1]);
+
+    if (match[2] == "b") {
+      num *= 1_000_000_000;
+    } else if (match[2] == "m") {
+      num *= 1_000_000;
+    } else if (match[2] == "k") {
+      num *= 1_000;
+    }
+
+    return num;
   }
 }
 
