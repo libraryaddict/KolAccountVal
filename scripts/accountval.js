@@ -6,9 +6,9 @@
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Mc": () => (/* binding */ AccountValLogic),
-/* harmony export */   "Ms": () => (/* binding */ ItemStatus),
-/* harmony export */   "oD": () => (/* binding */ ValItem)
+/* harmony export */   Mc: () => (/* binding */ AccountValLogic),
+/* harmony export */   Ms: () => (/* binding */ ItemStatus),
+/* harmony export */   oD: () => (/* binding */ ValItem)
 /* harmony export */ });
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
@@ -132,7 +132,7 @@ var AccountValLogic = /*#__PURE__*/function () {
         var skills = [];
         var _items2 = new Map();var _iterator = _createForOfIteratorHelper(
 
-          snapshot),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item2 = _step.value;
+            snapshot),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item2 = _step.value;
             if (_item2 instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar) {
               _familiars.push(_item2);
             } else if (_item2 instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill) {
@@ -149,26 +149,26 @@ var AccountValLogic = /*#__PURE__*/function () {
         }
 
         if (this.settings.doBound) {var _iterator2 = _createForOfIteratorHelper(
-            this.resolver.accValStuff.filter(
-            (s) => s.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.SKILL */ .q.SKILL
-            )),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
+              this.resolver.accValStuff.filter(
+                (s) => s.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.SKILL
+              )),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
               if (!skills.includes(kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill.get(_item.data1))) {
                 continue;
               }
 
               this.addItem(
-              new ValItem(_item.actualItem, _item.actualItem.name, ItemStatus.BOUND)
+                new ValItem(_item.actualItem, _item.actualItem.name, ItemStatus.BOUND)
               );
             }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
         }
 
         var owned = new Map(
-        _toConsumableArray(this.ownedItems).map((_ref) => {var _ref2 = _slicedToArray(_ref, 2),k = _ref2[0],v = _ref2[1];return [k.tradeableItem, v];})
+          _toConsumableArray(this.ownedItems).map((_ref) => {var _ref2 = _slicedToArray(_ref, 2),k = _ref2[0],v = _ref2[1];return [k.tradeableItem, v];})
         );
 
         _items2.forEach((v, k) => {
           var boundItem = this.resolver.accValStuff.find(
-          (i) => i.actualItem == k
+            (i) => i.actualItem == k
           );
 
           if (boundItem == null) {var _owned$get;
@@ -185,7 +185,7 @@ var AccountValLogic = /*#__PURE__*/function () {
 
           var name = k.name;
 
-          if (boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.UNTRADEABLE_ITEM */ .q.UNTRADEABLE_ITEM) {var _owned$get2;
+          if (boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.UNTRADEABLE_ITEM) {var _owned$get2;
             var untradeable = kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(boundItem.data1);
 
             v -= (_owned$get2 = owned.get(k)) !== null && _owned$get2 !== void 0 ? _owned$get2 : 0;
@@ -196,8 +196,8 @@ var AccountValLogic = /*#__PURE__*/function () {
 
             name = untradeable.name;
           } else if (
-          boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.SKILL */ .q.SKILL ||
-          boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.BOOK */ .q.BOOK)
+          boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.SKILL ||
+          boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.BOOK)
           {
             return;
           }
@@ -216,19 +216,19 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       while (this.settings.javascriptFilter.includes("$kol")) {
         this.settings.javascriptFilter = this.settings.javascriptFilter.replace(
-        "$kol",
-        'require("kolmafia")'
+          "$kol",
+          'require("kolmafia")'
         );
       }
 
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-      "JS Filter has been set to: " + this.settings.javascriptFilter,
-      "gray"
+        "JS Filter has been set to: " + this.settings.javascriptFilter,
+        "gray"
       );
 
       try {
         this.jsFilter = eval(
-        "with (require(\"kolmafia\")) " + this.settings.javascriptFilter
+          "with (require(\"kolmafia\")) " + this.settings.javascriptFilter
         );
       } catch (e) {
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("Invalid jsfilter provided! Error as follows:", "red");
@@ -248,7 +248,7 @@ var AccountValLogic = /*#__PURE__*/function () {
       var famItems = this.resolver.resolveFamiliarItems();
       var sessionItems = this.resolver.resolveSessionItems();var _iterator3 = _createForOfIteratorHelper(
 
-        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _item4 = _step3.value;
+          kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _item4 = _step3.value;
           var _amount = 0;
 
           if (this.settings.fetchSession && sessionItems.has(_item4)) {
@@ -301,8 +301,8 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       if (this.settings.fetchFamiliars != false) {
         this.resolver.resolveFamiliars(
-        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all().filter((f) => (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.haveFamiliar)(f)),
-        this.ownedItems
+          kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all().filter((f) => (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.haveFamiliar)(f)),
+          this.ownedItems
         );
       }
 
@@ -322,7 +322,7 @@ var AccountValLogic = /*#__PURE__*/function () {
       }
 
       if (this.settings.doBound) {var _iterator4 = _createForOfIteratorHelper(
-          this.resolver.getUrledItems()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _item3 = _step4.value;
+            this.resolver.getUrledItems()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _item3 = _step4.value;
             if (
             _item3[0].tradeable && (
             _item3[1] == ItemStatus.FAMILIAR || _item3[1] != ItemStatus.BOUND) ?
@@ -348,12 +348,12 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       if (this.settings.doBound || this.settings.doNontradeables) {
         this.resolver.resolveBoundToTradeables(copy, this.ownedItems, [
-        this.settings.doBound ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.UNTRADEABLE_ITEM */ .q.UNTRADEABLE_ITEM : null,
-        this.settings.doNontradeables ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType.CURRENCY */ .q.CURRENCY : null]
+        this.settings.doBound ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.UNTRADEABLE_ITEM : null,
+        this.settings.doNontradeables ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.CURRENCY : null]
         );
       }var _iterator5 = _createForOfIteratorHelper(
 
-        this.ownedItems.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _item5 = _step5.value;
+          this.ownedItems.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _item5 = _step5.value;
           if (
           this.jsFilter != null &&
           !this.jsFilter(_item5.tradeableItem, this.ownedItems.get(_item5)))
@@ -438,18 +438,18 @@ var AccountValLogic = /*#__PURE__*/function () {
         prices.push([item, price]);
       };var _iterator6 = _createForOfIteratorHelper(
 
-        this.ownedItems.keys()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var _i4 = _step6.value;
+          this.ownedItems.keys()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var _i4 = _step6.value;
           var _price = this.priceResolver.itemPrice(
-          _i4.tradeableItem,
-          this.ownedItems.get(_i4),
-          false,
-          this.settings.doSuperFast ?
-          _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceType.HISTORICAL */ .FT.HISTORICAL :
-          this.settings.useLastSold ?
-          _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceType.MALL_SALES */ .FT.MALL_SALES :
-          null,
-          this.settings.doSuperFast,
-          true
+            _i4.tradeableItem,
+            this.ownedItems.get(_i4),
+            false,
+            this.settings.doSuperFast ?
+            _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceType */ .FT.HISTORICAL :
+            this.settings.useLastSold ?
+            _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceType */ .FT.MALL_SALES :
+            null,
+            this.settings.doSuperFast,
+            true
           );
 
           if (_price.price > 0) {
@@ -465,8 +465,8 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       if (toCheck.length > 200) {
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-        "Think this will take too long? Use the parameter 'fast', it's less accurate!",
-        "blue"
+          "Think this will take too long? Use the parameter 'fast', it's less accurate!",
+          "blue"
         );
       }
 
@@ -476,22 +476,22 @@ var AccountValLogic = /*#__PURE__*/function () {
         if (++checked % 20 == 0 && lastPrinted + 1000 < Date.now()) {
           lastPrinted = Date.now();
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-          "Checking value of " +
-          i.name +
-          " (" +
-          checked +
-          " / " +
-          toCheck.length +
-          ")",
-          "blue"
+            "Checking value of " +
+            i.name +
+            " (" +
+            checked +
+            " / " +
+            toCheck.length +
+            ")",
+            "blue"
           );
         }
 
         var price = this.priceResolver.itemPrice(
-        i.tradeableItem,
-        this.ownedItems.get(i),
-        false,
-        check[1].accuracy
+          i.tradeableItem,
+          this.ownedItems.get(i),
+          false,
+          check[1].accuracy
         );
 
         addPrice(i, price);
@@ -501,43 +501,43 @@ var AccountValLogic = /*#__PURE__*/function () {
     } }, { key: "doSort", value:
 
     function doSort() {
-      if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy.TOTAL_PRICE */ .hn.TOTAL_PRICE) {
+      if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .hn.TOTAL_PRICE) {
         this.prices.sort(
-        (v1, v2) =>
-        (v1[1].price <= 0 ?
-        999999999 :
-        1 / v1[0].worthMultiplier * v1[1].price) *
-        this.ownedItems.get(v1[0]) -
-        (v2[1].price <= 0 ?
-        999999999 :
-        1 / v2[0].worthMultiplier * v2[1].price) *
-        this.ownedItems.get(v2[0])
+          (v1, v2) =>
+          (v1[1].price <= 0 ?
+          999999999 :
+          1 / v1[0].worthMultiplier * v1[1].price) *
+          this.ownedItems.get(v1[0]) -
+          (v2[1].price <= 0 ?
+          999999999 :
+          1 / v2[0].worthMultiplier * v2[1].price) *
+          this.ownedItems.get(v2[0])
         );
-      } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy.PRICE */ .hn.PRICE) {
+      } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .hn.PRICE) {
         this.prices.sort(
-        (v1, v2) =>
-        (v1[1].price <= 0 ?
-        999999999 :
-        1 / v1[0].worthMultiplier * v1[1].price) - (
-        v2[1].price <= 0 ?
-        999999999 :
-        1 / v2[0].worthMultiplier * v2[1].price)
+          (v1, v2) =>
+          (v1[1].price <= 0 ?
+          999999999 :
+          1 / v1[0].worthMultiplier * v1[1].price) - (
+          v2[1].price <= 0 ?
+          999999999 :
+          1 / v2[0].worthMultiplier * v2[1].price)
         );
-      } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy.QUANTITY */ .hn.QUANTITY) {
+      } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .hn.QUANTITY) {
         this.prices.sort(
-        (v1, v2) => this.ownedItems.get(v1[0]) - this.ownedItems.get(v2[0])
+          (v1, v2) => this.ownedItems.get(v1[0]) - this.ownedItems.get(v2[0])
         );
-      } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy.NAME */ .hn.NAME) {
+      } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .hn.NAME) {
         this.prices.sort((v1, v2) => v1[0].name.localeCompare(v2[0].name));
-      } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy.ITEM_ID */ .hn.ITEM_ID) {
+      } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .hn.ITEM_ID) {
         this.prices.sort(
-        (v1, v2) => (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(v1[0].tradeableItem) - (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(v2[0].tradeableItem)
+          (v1, v2) => (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(v1[0].tradeableItem) - (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(v2[0].tradeableItem)
         );
       } else if (this.settings.sortBy == "SortBy.SALES_VOLUME") {
         // Removed for now cos it does too many hits
         var toUpdate = [];var _iterator7 = _createForOfIteratorHelper(
 
-          this.prices),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var _i6 = _step7.value;
+            this.prices),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var _i6 = _step7.value;
             var _item6 = _i6[1].item;
 
             if (!_item6.tradeable || _item6.gift) {
@@ -578,10 +578,10 @@ var AccountValLogic = /*#__PURE__*/function () {
           }} catch (err) {_iterator7.e(err);} finally {_iterator7.f();}
 
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-        "Need to update " +
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_5__/* .AccountValUtils.getNumber */ .Q.getNumber(toUpdate.length) +
-        " items mall histories",
-        "blue"
+          "Need to update " +
+          _AccountValUtils__WEBPACK_IMPORTED_MODULE_5__/* .AccountValUtils */ .Q.getNumber(toUpdate.length) +
+          " items mall histories",
+          "blue"
         );
 
         var last = Date.now();
@@ -592,14 +592,14 @@ var AccountValLogic = /*#__PURE__*/function () {
             last = Date.now();
 
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-            "Checking sales volume of " +
-            i.name +
-            " (" +
-            progress +
-            " / " +
-            toUpdate.length +
-            ")",
-            "blue"
+              "Checking sales volume of " +
+              i.name +
+              " (" +
+              progress +
+              " / " +
+              toUpdate.length +
+              ")",
+              "blue"
             );
           }
 
@@ -609,14 +609,14 @@ var AccountValLogic = /*#__PURE__*/function () {
 
         this.prices.sort((v1, v2) => {
           var s1 = this.priceResolver.history.getMallRecords(
-          v1[1].item,
-          1,
-          false
+            v1[1].item,
+            1,
+            false
           );
           var s2 = this.priceResolver.history.getMallRecords(
-          v2[1].item,
-          1,
-          false
+            v2[1].item,
+            1,
+            false
           );
 
           return (
@@ -640,10 +640,10 @@ var AccountValLogic = /*#__PURE__*/function () {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Iz": () => (/* binding */ PricingSettings),
-/* harmony export */   "fS": () => (/* binding */ FieldType),
-/* harmony export */   "hn": () => (/* binding */ SortBy),
-/* harmony export */   "iX": () => (/* binding */ AccountValSettings)
+/* harmony export */   Iz: () => (/* binding */ PricingSettings),
+/* harmony export */   fS: () => (/* binding */ FieldType),
+/* harmony export */   hn: () => (/* binding */ SortBy),
+/* harmony export */   iX: () => (/* binding */ AccountValSettings)
 /* harmony export */ });
 /* unused harmony export ValSetting */
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
@@ -924,7 +924,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     function getSetting(alias) {
       alias = alias.toLowerCase();var _iterator = _createForOfIteratorHelper(
 
-        AccountValSettings.getSettings()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var setting = _step.value;
+          AccountValSettings.getSettings()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var setting = _step.value;
           if (!setting.names.includes(alias)) {
             continue;
           }
@@ -942,11 +942,11 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
       var settings = AccountValSettings.getSettings();var _iterator2 = _createForOfIteratorHelper(
 
-        settings),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _setting = _step2.value;
+          settings),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _setting = _step2.value;
           defaultValues[_setting.field] = this[_setting.field];
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}var _iterator3 = _createForOfIteratorHelper(
 
-        args),_step3;try {var _loop = function _loop() {var arg = _step3.value;
+          args),_step3;try {var _loop = function _loop() {var arg = _step3.value;
           if (arg.length == 0) {return "continue";
 
           }
@@ -1133,7 +1133,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     function isArg(arg, args) {
       arg = arg.toLowerCase().split("=")[0];var _iterator4 = _createForOfIteratorHelper(
 
-        args),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var a = _step4.value;
+          args),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var a = _step4.value;
           if (arg != a) {
             continue;
           }
@@ -1210,7 +1210,7 @@ var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_cla
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Q": () => (/* binding */ AccountValUtils)
+/* harmony export */   Q: () => (/* binding */ AccountValUtils)
 /* harmony export */ });
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
@@ -1242,12 +1242,12 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
 
         var v2 = (match[3] || "").replace("!", "").split("=")[0].trim();
         var setting2 = settings.getSetting(
-        v2.toLowerCase() == "true" ? "" : v2
+          v2.toLowerCase() == "true" ? "" : v2
         );
 
         if (
         setting == null ||
-        setting.type == _AccountValSettings__WEBPACK_IMPORTED_MODULE_1__/* .FieldType.BOOLEAN */ .fS.BOOLEAN && setting2 != null)
+        setting.type == _AccountValSettings__WEBPACK_IMPORTED_MODULE_1__/* .FieldType */ .fS.BOOLEAN && setting2 != null)
         {
           debug("'".concat(match[2], "' is not a key parameter"));
           continue;
@@ -1256,7 +1256,7 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
         command = command.replace(match[2], match[2].trim() + "=");
         tCommand = tCommand.replace(match[3], "");
         debug("Replacing '".concat(
-        match[2], "' as a key parameter, matched using '").concat(match[0], "'")
+          match[2], "' as a key parameter, matched using '").concat(match[0], "'")
         );
       }
 
@@ -1290,7 +1290,7 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
       }
 
       if (tCommand.length > 0) {var _iterator = _createForOfIteratorHelper(
-          tCommand.split(" ")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var arg = _step.value;
+            tCommand.split(" ")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var arg = _step.value;
             debug("Found leftover parameter '".concat(arg));
             spl.push(arg);
           }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
@@ -1317,8 +1317,8 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "I": () => (/* binding */ ItemResolver),
-/* harmony export */   "q": () => (/* binding */ ItemType)
+/* harmony export */   I: () => (/* binding */ ItemResolver),
+/* harmony export */   q: () => (/* binding */ ItemType)
 /* harmony export */ });
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
@@ -1367,10 +1367,10 @@ var ItemResolver = /*#__PURE__*/function () {
 
     function loadCache() {
       var prop = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)(this.accountValVisitCachePropName).split(
-      ","
+        ","
       );var _iterator = _createForOfIteratorHelper(
 
-        prop),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var p = _step.value;
+          prop),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var p = _step.value;
           if (!p.includes(":")) {
             continue;
           }
@@ -1406,45 +1406,45 @@ var ItemResolver = /*#__PURE__*/function () {
       var items = [];
       var origSize = this.accountValCache.size;var _iterator2 = _createForOfIteratorHelper(
 
-        this.accValStuff),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
+          this.accValStuff),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
           // Skills that are marked as no-perm but are permed, basically librams
           if (s.itemType == ItemType.BOOK) {
             if ((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.haveSkill)(kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill.get(s.data1))) {
-              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND]);
+              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.BOUND]);
             }
           } else if (s.itemType == ItemType.EUDORA) {
             if (
             this.visitCheck(
-            s.actualItem,
-            "account.php?tab=correspondence",
-            s.data1
+              s.actualItem,
+              "account.php?tab=correspondence",
+              s.data1
             ))
             {
-              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND]);
+              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.BOUND]);
             }
           } else if (s.itemType == ItemType.PROPERTY) {
             if (this.testProperty(s.data1)) {
-              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND]);
+              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.BOUND]);
             }
           } else if (s.itemType == ItemType.VISIT_URL_CHECK) {
             if (this.visitCheck(s.actualItem, s.data1, s.data2)) {
-              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND]);
+              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.BOUND]);
             }
           } else if (s.itemType == ItemType.GARDEN) {
             if ((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myGardenType)() == s.data1) {
-              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.IN_USE */ .Ms.IN_USE]);
+              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.IN_USE]);
             }
           } else if (s.itemType == ItemType.SKILL) {
             if ((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getPermedSkills)()[kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill.get(s.data1).name]) {
-              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND]);
+              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.BOUND]);
             }
           } else if (s.itemType == ItemType.CAMPGROUND) {
             if ((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getCampground)()[s.actualItem.name] != null) {
-              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND]);
+              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.BOUND]);
             }
           } else if (s.itemType == ItemType.SCRIPT) {
             if (eval(s.data1)) {
-              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND]);
+              items.push([s.actualItem, _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.BOUND]);
             }
           }
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
@@ -1462,7 +1462,7 @@ var ItemResolver = /*#__PURE__*/function () {
     function testProperty(property) {
       var result = true;var _iterator3 = _createForOfIteratorHelper(
 
-        property.split("&")),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var prop = _step3.value;
+          property.split("&")),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var prop = _step3.value;
           result =
           result &&
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)(prop.replace("!", "")) == "true" == !prop.includes("!");
@@ -1490,7 +1490,7 @@ var ItemResolver = /*#__PURE__*/function () {
     ownedItems,
     resolve)
     {var _iterator4 = _createForOfIteratorHelper(
-        this.accValStuff),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var s = _step4.value;
+          this.accValStuff),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var s = _step4.value;
           if (!resolve.includes(s.itemType)) {
             continue;
           }
@@ -1499,7 +1499,7 @@ var ItemResolver = /*#__PURE__*/function () {
             var item = kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(s.data1);
             var v = void 0;var _iterator5 = _createForOfIteratorHelper(
 
-              copy.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var k = _step5.value;
+                copy.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var k = _step5.value;
                 if (k.tradeableItem != item) {
                   continue;
                 }
@@ -1513,16 +1513,16 @@ var ItemResolver = /*#__PURE__*/function () {
             }
 
             this.addItem(
-            ownedItems,
-            s.actualItem,
-            item.name,
-            v.bound == null || v.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.NO_TRADE */ .Ms.NO_TRADE ?
-            s.itemType == ItemType.UNTRADEABLE_ITEM ?
-            _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.BOUND */ .Ms.BOUND :
-            _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.NO_TRADE */ .Ms.NO_TRADE :
-            v.bound,
-            copy.get(v),
-            /\d+/.test(s.data2) ? (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(s.data2) : 1
+              ownedItems,
+              s.actualItem,
+              item.name,
+              v.bound == null || v.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.NO_TRADE ?
+              s.itemType == ItemType.UNTRADEABLE_ITEM ?
+              _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.BOUND :
+              _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.NO_TRADE :
+              v.bound,
+              copy.get(v),
+              /\d+/.test(s.data2) ? (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(s.data2) : 1
             );
           } catch (e) {
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("You probably need to update mafia! Got an error! " + e, "red");
@@ -1531,12 +1531,12 @@ var ItemResolver = /*#__PURE__*/function () {
     } }, { key: "resolveFamiliars", value:
 
     function resolveFamiliars(familiars, ownedItems) {var _iterator6 = _createForOfIteratorHelper(
-        familiars),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var fam = _step6.value;
+          familiars),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var fam = _step6.value;
           if (!fam.hatchling.tradeable) {
             continue;
           }
 
-          this.addItem(ownedItems, fam.hatchling, fam + "", _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.FAMILIAR */ .Ms.FAMILIAR);
+          this.addItem(ownedItems, fam.hatchling, fam + "", _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.FAMILIAR);
         }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
     }
 
@@ -1546,7 +1546,7 @@ var ItemResolver = /*#__PURE__*/function () {
     function resolveFamiliarItems() {
       var famEquipped = new Map();var _iterator7 = _createForOfIteratorHelper(
 
-        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all()),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var fam = _step7.value;
+          kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all()),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var fam = _step7.value;
           if (!(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.haveFamiliar)(fam) || (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myFamiliar)() == fam) {
             continue;
           }
@@ -1596,7 +1596,7 @@ var ItemResolver = /*#__PURE__*/function () {
       var buffer = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.fileToBuffer)("accountval_binds.txt");
       var values = [];var _iterator8 = _createForOfIteratorHelper(
 
-        buffer.split("\n")),_step8;try {for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {var line = _step8.value;
+          buffer.split("\n")),_step8;try {for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {var line = _step8.value;
           if (line.startsWith("#") || line.length == 0) {
             continue;
           }
@@ -1662,7 +1662,7 @@ var ItemResolver = /*#__PURE__*/function () {
           continue;
         }var _iterator9 = _createForOfIteratorHelper(
 
-          values),_step9;try {for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {var v1 = _step9.value;
+            values),_step9;try {for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {var v1 = _step9.value;
             if (
             v1.itemType != ItemType.UNTRADEABLE_ITEM &&
             v1.itemType != ItemType.CURRENCY)
@@ -1687,12 +1687,12 @@ var ItemResolver = /*#__PURE__*/function () {
     function loadSkills(values) {
       // Skip items that don't last across ascensions or can't be valued
       var itemsSkills = new Map(
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().
-      map((i) => [i, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.skillModifier)(i, "Skill")]).
-      filter(
-      (_ref) => {var _ref2 = _slicedToArray(_ref, 2),i = _ref2[0],skill = _ref2[1];return (
-          !i.reusable && !i.quest && !i.gift && skill != kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill.none);}
-      )
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().
+        map((i) => [i, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.skillModifier)(i, "Skill")]).
+        filter(
+          (_ref) => {var _ref2 = _slicedToArray(_ref, 2),i = _ref2[0],skill = _ref2[1];return (
+              !i.reusable && !i.quest && !i.gift && skill != kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill.none);}
+        )
       );
 
       // Now we load the skills we have
@@ -1719,7 +1719,7 @@ var ItemResolver = /*#__PURE__*/function () {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "l": () => (/* binding */ FetchFromPage)
+/* harmony export */   l: () => (/* binding */ FetchFromPage)
 /* harmony export */ });
 /* unused harmony export StoreItem */
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
@@ -1736,21 +1736,21 @@ var StoreItem = /*#__PURE__*/_createClass(function StoreItem() {_classCallCheck(
 var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCallCheck(this, FetchFromPage);}_createClass(FetchFromPage, [{ key: "getSnapshot", value:
     function getSnapshot(username) {
       var items = new Map(
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().map((i) => {
-        var name = i.name;
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().map((i) => {
+          var name = i.name;
 
-        while (name.match(/<\/?i>/)) {
-          name = name.replace(/<\/?i>/, "");
-        }
+          while (name.match(/<\/?i>/)) {
+            name = name.replace(/<\/?i>/, "");
+          }
 
-        return [(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.entityDecode)(name).toLowerCase(), i];
-      })
+          return [(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.entityDecode)(name).toLowerCase(), i];
+        })
       );
       var skills = new Map(
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill.all().map((s) => [(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.entityDecode)(s.name).toLowerCase(), s])
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill.all().map((s) => [(0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.entityDecode)(s.name).toLowerCase(), s])
       );
       var fams = new Map(
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all().map((f) => [f.toString().toLowerCase(), f])
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar.all().map((f) => [f.toString().toLowerCase(), f])
       );
       // The hatching item is also listed alongside the familiar, so delete any items.
       var ignore = _toConsumableArray(fams.values()).map((f) =>
@@ -1758,7 +1758,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
       );
 
       var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)(
-      "https://api.aventuristo.net/av-snapshot?u=" + username
+        "https://api.aventuristo.net/av-snapshot?u=" + username
       );
 
       if (!page.includes("<p>Snapshot for <b>")) {
@@ -1796,8 +1796,8 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
             has.push(fams.get(name));
           } else {
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-            "Unable to resolve the familiar '" + name + "' from av-snapshot",
-            "red"
+              "Unable to resolve the familiar '" + name + "' from av-snapshot",
+              "red"
             );
           }
 
@@ -1831,8 +1831,8 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 
         if (!items.has(name)) {
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-          "Unable to resolve the item '" + name + "' from av-snapshot",
-          "red"
+            "Unable to resolve the item '" + name + "' from av-snapshot",
+            "red"
           );
           continue;
         }
@@ -1863,9 +1863,9 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 
       var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)("mallstore.php?whichstore=" + userId);var _iterator = _createForOfIteratorHelper(
 
-        page.split("<tr>")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var s = _step.value;
+          page.split("<tr>")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var s = _step.value;
           var match = s.match(
-          /selecteditem=(\d+).+?<b>.+?<\/b> \(([\d,]+)\) +(?:\(Limit ([\d,]+) \/ day\))?<\/td><td>((?:\d|,)+) Meat<\/td>/
+            /selecteditem=(\d+).+?<b>.+?<\/b> \(([\d,]+)\) +(?:\(Limit ([\d,]+) \/ day\))?<\/td><td>((?:\d|,)+) Meat<\/td>/
           );
 
           if (match == null) {
@@ -1887,14 +1887,14 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
     function getDisplaycase(userId) {
       var map = new Map();
       var descs = new Map(
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().map((i) => [i.descid, i])
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().map((i) => [i.descid, i])
       );
 
       var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)("displaycollection.php?who=" + userId);var _iterator2 = _createForOfIteratorHelper(
 
-        page.split("<tr>")),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
+          page.split("<tr>")),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
           var match = s.match(
-          /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/
+            /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/
           );
 
           if (match == null) {
@@ -1920,8 +1920,8 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FT": () => (/* binding */ PriceType),
-/* harmony export */   "Zi": () => (/* binding */ PriceResolver)
+/* harmony export */   FT: () => (/* binding */ PriceType),
+/* harmony export */   Zi: () => (/* binding */ PriceResolver)
 /* harmony export */ });
 /* unused harmony export ItemPrice */
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
@@ -1942,17 +1942,17 @@ var ItemPrice = /*#__PURE__*/_createClass(
 
 
 
-function ItemPrice(
-item,
-price,
-accuracy,
-daysOutdated)
-{_classCallCheck(this, ItemPrice);_defineProperty(this, "item", void 0);_defineProperty(this, "price", void 0);_defineProperty(this, "accuracy", void 0);_defineProperty(this, "daysOutdated", void 0);
-  this.item = item;
-  this.price = price;
-  this.accuracy = accuracy;
-  this.daysOutdated = daysOutdated;
-});
+  function ItemPrice(
+  item,
+  price,
+  accuracy,
+  daysOutdated)
+  {_classCallCheck(this, ItemPrice);_defineProperty(this, "item", void 0);_defineProperty(this, "price", void 0);_defineProperty(this, "accuracy", void 0);_defineProperty(this, "daysOutdated", void 0);
+    this.item = item;
+    this.price = price;
+    this.accuracy = accuracy;
+    this.daysOutdated = daysOutdated;
+  });
 
 
 var PriceResolver = /*#__PURE__*/function () {
@@ -1963,16 +1963,16 @@ var PriceResolver = /*#__PURE__*/function () {
   function PriceResolver(settings) {_classCallCheck(this, PriceResolver);_defineProperty(this, "history", void 0);_defineProperty(this, "specialCase", new Map());_defineProperty(this, "settings", void 0);
     try {
       this.history = new (eval("require")(
-      "scripts/utils/mallhistory.js"
+        "scripts/utils/mallhistory.js"
       ).MallHistory)();
     } catch (e) {
       if (e != null && e.message != null && e.message.includes(" not found.")) {
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-        "A required library seems to be missing! This should've been installed automatically, try running in CLI:",
-        "red"
+          "A required library seems to be missing! This should've been installed automatically, try running in CLI:",
+          "red"
         );
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-        "<u color='gray'>svn checkout https://github.com/libraryaddict/KolMallHistory/branches/release/</u>"
+          "<u color='gray'>svn checkout https://github.com/libraryaddict/KolMallHistory/branches/release/</u>"
         );
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("");
       }
@@ -2007,10 +2007,10 @@ var PriceResolver = /*#__PURE__*/function () {
       }
 
       var salesPricing = new MallHistoryPricing(
-      this.settings,
-      this.history,
-      item,
-      amount
+        this.settings,
+        this.history,
+        item,
+        amount
       );
       var historyPricing = new HistoricalPricing(this.settings, item, amount);
       var mallPricing = new MallSalesPricing(this.settings, item, amount);
@@ -2067,10 +2067,10 @@ var PriceResolver = /*#__PURE__*/function () {
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item) <= Math.max((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(item) * 3, 500))
       {
         return new ItemPrice(
-        item,
-        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item),
-        PriceType.HISTORICAL,
-        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalAge)(item)
+          item,
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item),
+          PriceType.HISTORICAL,
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalAge)(item)
         );
       }
 
@@ -2166,8 +2166,8 @@ MallHistoryPricing = /*#__PURE__*/function () {
 
       var last = this.records.records[this.records.records.length - 1];
       var histAge = Math.min(
-      (Date.now() / 1000 - last.date) / (24 * 60 * 60),
-      lastUpdated
+        (Date.now() / 1000 - last.date) / (24 * 60 * 60),
+        lastUpdated
       );
 
       var histPrice = last.meat;
@@ -2205,10 +2205,10 @@ MallHistoryPricing = /*#__PURE__*/function () {
       }
 
       return new ItemPrice(
-      this.item,
-      last.meat,
-      PriceType.MALL_SALES,
-      this.getAge()
+        this.item,
+        last.meat,
+        PriceType.MALL_SALES,
+        this.getAge()
       );
     } }, { key: "getPriceType", value:
 
@@ -2282,17 +2282,17 @@ HistoricalPricing = /*#__PURE__*/function () {
 
       if (histPrice <= 0) {
         return new MallSalesPricing(
-        this.settings,
-        this.item,
-        this.amount
+          this.settings,
+          this.item,
+          this.amount
         ).getPrice();
       }
 
       return new ItemPrice(
-      this.item,
-      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(this.item),
-      PriceType.HISTORICAL,
-      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalAge)(this.item)
+        this.item,
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(this.item),
+        PriceType.HISTORICAL,
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalAge)(this.item)
       );
     } }, { key: "getPriceType", value:
 
@@ -2382,7 +2382,7 @@ var __webpack_exports__ = {};
 (() => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "main": () => (/* binding */ main)
+/* harmony export */   main: () => (/* binding */ main)
 /* harmony export */ });
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
@@ -2410,8 +2410,8 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
       this.logic.doPricing();
 
       var aWorth = this.logic.priceResolver.itemPrice(
-      kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get("Mr. Accessory"),
-      1
+        kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get("Mr. Accessory"),
+        1
       ).price;
 
       var lines = [];
@@ -2459,17 +2459,17 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         var title =
         titleName +
         " @ " + (
-        price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType.MALL_SALES */ .FT.MALL_SALES ?
+        price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .FT.MALL_SALES ?
         "last sold " :
         "last malled ") +
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(price.price) +
+        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(price.price) +
         " meat each. Price valid as of " +
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(price.daysOutdated, 1) +
+        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(price.daysOutdated, 1) +
         " days ago";
 
         if (item.shopWorth > 0) {
           title +=
-          ". Shop selling at: " + _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(item.shopWorth);
+          ". Shop selling at: " + _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(item.shopWorth);
         }
 
         var name = this.escapeHTML(item.name);
@@ -2478,7 +2478,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           var boundInfo = void 0;
           var color = "#db2525";
 
-          if (item.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.SHOP_WORTH */ .Ms.SHOP_WORTH) {
+          if (item.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.SHOP_WORTH) {
             var overpricedPerc = item.shopWorth / worthEach;
 
             if (item.shopWorth < 999999000) {
@@ -2490,15 +2490,15 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
               color = "#196f3d";
             }
 
-            boundInfo = "Price: ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(
-            Math.round(overpricedPerc * 100)
+            boundInfo = "Price: ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(
+              Math.round(overpricedPerc * 100)
             ), "%");
           } else {
             boundInfo = item.getBound();
           }
 
           name = "".concat(name, " (<font color='").concat(color, "' title='").concat(this.escapeHTML(
-          title
+            title
           ), "'>").concat(this.escapeHTML(boundInfo), "</font>)");
         }
 
@@ -2512,33 +2512,33 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           continue;
         }
 
-        var text = "".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(
-        count
-        ), " ").concat(name, " worth a total of ").concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(totalWorth));
+        var text = "".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(
+          count
+        ), " ").concat(name, " worth a total of ").concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(totalWorth));
 
         lines.push(
-        "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>"
+          "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>"
         );
       }
 
       if (!this.settings.brief) {
         lines = lines.reverse();
         var skipping = Math.max(
-        0,
-        this.logic.prices.length - this.settings.displayLimit
+          0,
+          this.logic.prices.length - this.settings.displayLimit
         );
 
         if (skipping > 0) {
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-          "<font color='gray'>Skipping " +
-          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(skipping) +
-          " lines and displaying the last " +
-          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(this.settings.displayLimit) +
-          " lines..</font>"
+            "<font color='gray'>Skipping " +
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(skipping) +
+            " lines and displaying the last " +
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(this.settings.displayLimit) +
+            " lines..</font>"
           );
         }var _iterator = _createForOfIteratorHelper(
 
-          lines),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var line = _step.value;
+            lines),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var line = _step.value;
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(line);
           }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
@@ -2546,21 +2546,21 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           var colors = ["#4f5893", "#934f4f"];
 
           mallExtinct = mallExtinct.map(
-          (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>"
+            (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>"
           );
 
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-          "There were " +
-          mallExtinct.length +
-          " mall extinct items! Items: " +
-          mallExtinct.join(", ")
+            "There were " +
+            mallExtinct.length +
+            " mall extinct items! Items: " +
+            mallExtinct.join(", ")
           );
         }
       }
 
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-      pronoun + " worth " + _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(netvalue) + " meat!",
-      "blue"
+        pronoun + " worth " + _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(netvalue) + " meat!",
+        "blue"
       );
 
       if (this.settings.brief) {
@@ -2570,27 +2570,27 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
       var mrAWorth = (0.0 + netvalue) / aWorth;
 
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)("<font title='With Mr. Accessory worth being ".concat(
-      _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(
-      aWorth
-      ), " meat'>Going by the value of a Mr. Accessory, that's $").concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(
-      mrAWorth * 10
+        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(
+          aWorth
+        ), " meat'>Going by the value of a Mr. Accessory, that's $").concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(
+        mrAWorth * 10
       ), "</font>")
       );
 
       if (
       shopPricedAt > 0 &&
-      this.logic.prices.filter((v) => v[0].bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus.SHOP_WORTH */ .Ms.SHOP_WORTH).
+      this.logic.prices.filter((v) => v[0].bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.SHOP_WORTH).
       length == this.logic.prices.length)
       {
         shopPricedAt /= shopNetValue;
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("Overall, the shop is ".concat(
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(
-        Math.round(shopPricedAt * 100)
-        ), "% of mall")
+          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(
+            Math.round(shopPricedAt * 100)
+          ), "% of mall")
         );
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-        "Disclaimer: Cheapest price being 100% can mean we're comparing prices against.. this shop.",
-        "gray"
+          "Disclaimer: Cheapest price being 100% can mean we're comparing prices against.. this shop.",
+          "gray"
         );
       }
 
@@ -2607,30 +2607,30 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
       if (this.settings.fetchInventory && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myMeat)() != 0) {
         meat += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myMeat)();
-        meatSources.push(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myMeat)()) + " in inventory");
+        meatSources.push(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myMeat)()) + " in inventory");
       }
 
       if (this.settings.fetchCloset && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myClosetMeat)() != 0) {
         meat += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myClosetMeat)();
         meatSources.push(
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myClosetMeat)()) + " in closet"
+          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myClosetMeat)()) + " in closet"
         );
       }
 
       if (this.settings.fetchStorage && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myStorageMeat)() != 0) {
         meat += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myStorageMeat)();
         meatSources.push(
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myStorageMeat)()) + " in storage"
+          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myStorageMeat)()) + " in storage"
         );
       }
 
       if (meat > 0 && this.settings.playerId == 0) {
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-        "<font title='" +
-        meatSources.join(", ") +
-        "'>This doesn't include your " +
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.getNumber */ .Q.getNumber(meat) +
-        " meat!</font>"
+          "<font title='" +
+          meatSources.join(", ") +
+          "'>This doesn't include your " +
+          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(meat) +
+          " meat!</font>"
         );
       }
     } }, { key: "escapeHTML", value:
@@ -2646,28 +2646,28 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
     function doHelp() {
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-      "AccountVal is a script to check what your account is worth, and find the good stuff fast.",
-      "blue"
+        "AccountVal is a script to check what your account is worth, and find the good stuff fast.",
+        "blue"
       );
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-      "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases.",
-      "blue"
+        "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases.",
+        "blue"
       );
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-      "<font color='blue'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>"
+        "<font color='blue'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>"
       );
 
       var even = true;var _iterator2 = _createForOfIteratorHelper(
 
-        _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .AccountValSettings.getSettings */ .iX.getSettings()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var setting = _step2.value;
+          _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .AccountValSettings */ .iX.getSettings()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var setting = _step2.value;
           var defaultOf = ".</font> <font>Default is: ";
 
           if (this.settings[setting.field] != null) {
             var val = this.settings[setting.field];
 
-            if (setting.type == _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .FieldType.NUMBER */ .fS.NUMBER) {
+            if (setting.type == _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .FieldType */ .fS.NUMBER) {
               val = setting.names[0] + "=" + val;
-            } else if (setting.type == _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .FieldType.SORTBY */ .fS.SORTBY) {
+            } else if (setting.type == _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .FieldType */ .fS.SORTBY) {
               val = setting.names[0] + "=" + _AccountValSettings__WEBPACK_IMPORTED_MODULE_2__/* .SortBy */ .hn[val];
             }
 
@@ -2681,16 +2681,16 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           }
 
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)("<font color='gray' title='Aliases: ".concat(
-          setting.names.join(", "), "'><b>").concat(
-          setting.names[0], "</b> - ").concat(
-          setting.desc).concat(defaultOf, "</font>")
+            setting.names.join(", "), "'><b>").concat(
+            setting.names[0], "</b> - ").concat(
+            setting.desc).concat(defaultOf, "</font>")
           );
 
           even = !even;
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
 
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-      "<font color='gray'>Disclaimer: The prices shown are not absolute, and normally overstate what it really is worth.</font>"
+        "<font color='gray'>Disclaimer: The prices shown are not absolute, and normally overstate what it really is worth.</font>"
       );
       // show - How many to show, defaults to 100
       // count - How many we must have of this item
@@ -2705,8 +2705,8 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
       try {
         if (command == null) {
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-          "To fine tune what we check, including to tradeables only.. Provide the parameter 'help' for more info",
-          "blue"
+            "To fine tune what we check, including to tradeables only.. Provide the parameter 'help' for more info",
+            "blue"
           );
           command = "";
         } else if (command.toLowerCase().match(/([^a-z]|^)help([^a-z]|$)/)) {
@@ -2715,9 +2715,9 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           return;
         }
 
-        var spl = _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils.splitArguments */ .Q.splitArguments(
-        this.settings,
-        command
+        var spl = _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.splitArguments(
+          this.settings,
+          command
         );
 
         var unknown = this.settings.doSettings(spl);
@@ -2738,10 +2738,10 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
         if (revision != null && revision > 0 && revision < 26000) {
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-          "<font color='red'>Warning! You are using an outdated version of KoLmafia! You're likely missing some items, and may not have the ability to render the 'title' attribute! You could even be missing wrapped text!</font>"
+            "<font color='red'>Warning! You are using an outdated version of KoLmafia! You're likely missing some items, and may not have the ability to render the 'title' attribute! You could even be missing wrapped text!</font>"
           );
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-          "Downloads: <a color='blue' href='https://github.com/kolmafia/kolmafia/releases'>[Github]</a> or <a color='blue' href='https://ci.kolmafia.us/'>[Jenkins]</a> <a color='gray' href='https://ci.kolmafia.us/job/Kolmafia/lastSuccessfulBuild/artifact/dist/'>[Link to Jar]</a>"
+            "Downloads: <a color='blue' href='https://github.com/kolmafia/kolmafia/releases'>[Github]</a> or <a color='blue' href='https://ci.kolmafia.us/'>[Jenkins]</a> <a color='gray' href='https://ci.kolmafia.us/job/Kolmafia/lastSuccessfulBuild/artifact/dist/'>[Link to Jar]</a>"
           );
         }
       }
