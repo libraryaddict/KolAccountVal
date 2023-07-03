@@ -292,7 +292,7 @@ export class ItemResolver {
     const buffer = fileToBuffer("accountval_binds.txt");
     const values: AccValStuff[] = [];
 
-    for (const line of buffer.split("\n")) {
+    for (const line of buffer.split(/(\n|\r)+/)) {
       if (line.startsWith("#") || line.length == 0) {
         continue;
       }
