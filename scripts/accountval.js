@@ -1596,7 +1596,7 @@ var ItemResolver = /*#__PURE__*/function () {
       var buffer = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.fileToBuffer)("accountval_binds.txt");
       var values = [];var _iterator8 = _createForOfIteratorHelper(
 
-          buffer.split("\n")),_step8;try {for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {var line = _step8.value;
+          buffer.split(/(\n|\r)+/)),_step8;try {for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {var line = _step8.value;
           if (line.startsWith("#") || line.length == 0) {
             continue;
           }
