@@ -15,6 +15,7 @@ import {
   setProperty,
   Skill,
   skillModifier,
+  toBoolean,
   toInt,
   toItem,
   visitUrl,
@@ -158,9 +159,9 @@ export class ItemResolver {
     let result: boolean = true;
 
     for (const prop of property.split("&")) {
-      result =
-        result &&
-        (getProperty(prop.replace("!", "")) == "true") == !prop.includes("!");
+      const isTrue = toBoolean(getProperty(prop.replace("!", "")));
+      const isNotNegated = !prop.includes("!");
+      result = result && isTrue == isNotNegated;
     }
 
     return result;
