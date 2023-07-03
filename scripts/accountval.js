@@ -1463,9 +1463,9 @@ var ItemResolver = /*#__PURE__*/function () {
       var result = true;var _iterator3 = _createForOfIteratorHelper(
 
           property.split("&")),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var prop = _step3.value;
-          result =
-          result &&
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)(prop.replace("!", "")) == "true" == !prop.includes("!");
+          var isTrue = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toBoolean)((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)(prop.replace("!", "")));
+          var isNotNegated = !prop.includes("!");
+          result = result && isTrue == isNotNegated;
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       return result;
