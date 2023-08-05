@@ -936,7 +936,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     } }, { key: "doSettings", value:
 
     function doSettings(args) {var _this = this;
-      var unknown = [];
+      var errors = [];
       var defaultValues = [];
       var wasSet = [];
 
@@ -944,7 +944,13 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
           settings),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _setting = _step2.value;
           defaultValues[_setting.field] = this[_setting.field];
-        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}var _iterator3 = _createForOfIteratorHelper(
+        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+
+      var addUnknown = (arg) => {
+        errors.push("Failed to handle parameter: <font color=purple>".concat(
+          arg, "</font>")
+        );
+      };var _iterator3 = _createForOfIteratorHelper(
 
           args),_step3;try {var _loop = function _loop() {var arg = _step3.value;
           if (arg.length == 0) {return "continue";
@@ -973,7 +979,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
           });
 
           if (setting == null) {
-            unknown.push(arg);return "continue";
+            addUnknown(arg);return "continue";
 
           }
 
@@ -985,7 +991,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
             var v = arg.substring(arg.indexOf("=") + 1);
 
             if (!v.toLowerCase().match("^(0|1|(true)|(false)|(yes)|(no))$")) {
-              unknown.push(arg);return "continue";
+              addUnknown(arg);return "continue";
 
             }
 
@@ -994,14 +1000,14 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
           if (setting.type == FieldType.SORTBY) {
             if (!arg.includes("=")) {
-              unknown.push(arg);return "continue";
+              addUnknown(arg);return "continue";
 
             }
 
             var _v = arg.substring(arg.indexOf("=") + 1);
 
             if (_v.length == 0) {
-              unknown.push(arg);return "continue";
+              addUnknown(arg);return "continue";
 
             }
 
@@ -1015,7 +1021,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
             }
 
             if (sortBy == null) {
-              unknown.push(arg);return "continue";
+              addUnknown(arg);return "continue";
 
             }
 
@@ -1026,41 +1032,48 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
           setting.type == FieldType.NAME)
           {
             if (!arg.includes("=")) {
-              unknown.push(arg);return "continue";
+              addUnknown(arg);return "continue";
 
             }
 
             var _v2 = arg.substring(arg.indexOf("=") + 1);
 
             if (_v2.length == 0) {
-              unknown.push(arg);return "continue";
+              addUnknown(arg);return "continue";
 
             }
 
             if (setting.type == FieldType.NAME) {
               if (!_v2.match(/^[0-9]+$/)) {
                 _v2 = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getPlayerId)(_v2);
+
+                if (!_v2.match(/^[0-9]+$/)) {
+                  errors.push("Failed to convert <font color=purple>".concat(
+                    _v2, "</font> into a player ID")
+                  );return "continue";
+
+                }
               }
             }
 
             var num = _this.toNumber(_v2);
 
             if (_v2 == null) {
-              unknown.push(arg);return "continue";
+              addUnknown(arg);return "continue";
 
             }
 
             _this[setting.field] = num;
           } else if (setting.type == FieldType.STRING) {
             if (!arg.includes("=")) {
-              unknown.push(arg);return "continue";
+              addUnknown(arg);return "continue";
 
             }
 
             var _v3 = arg.substring(arg.indexOf("=") + 1);
 
             if (_v3.length == 0) {
-              unknown.push(arg);return "continue";
+              addUnknown(arg);return "continue";
 
             }
 
@@ -1127,7 +1140,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         }
       }
 
-      return unknown;
+      return errors;
     } }, { key: "isArg", value:
 
     function isArg(arg, args) {
@@ -2723,7 +2736,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         var unknown = this.settings.doSettings(spl);
 
         if (unknown.length > 0) {
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("Unrecognized params! " + unknown.join(", "), "red");
+          unknown.forEach((s) => (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)("<font color='red'>".concat(s, "</font>")));
           return;
         }
 
