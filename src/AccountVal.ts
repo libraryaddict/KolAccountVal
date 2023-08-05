@@ -348,7 +348,7 @@ class AccountVal {
       const unknown = this.settings.doSettings(spl);
 
       if (unknown.length > 0) {
-        print("Unrecognized params! " + unknown.join(", "), "red");
+        unknown.forEach((s) => printHtml(`<font color='red'>${s}</font>`));
         return;
       }
 

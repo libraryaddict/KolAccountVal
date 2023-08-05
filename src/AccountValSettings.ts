@@ -286,7 +286,7 @@ export class AccountValSettings {
   }
 
   doSettings(args: string[]): string[] {
-    const unknown: string[] = [];
+    const errors: string[] = [];
     const defaultValues: unknown[] = [];
     const wasSet: string[] = [];
 
@@ -295,6 +295,12 @@ export class AccountValSettings {
     for (const setting of settings) {
       defaultValues[setting.field] = this[setting.field];
     }
+
+    const addUnknown = (arg) => {
+      errors.push(
+        `Failed to handle parameter: <font color=purple>${arg}</font>`
+      );
+    };
 
     for (let arg of args) {
       if (arg.length == 0) {
@@ -323,7 +329,7 @@ export class AccountValSettings {
       });
 
       if (setting == null) {
-        unknown.push(arg);
+        addUnknown(arg);
         continue;
       }
 
@@ -335,7 +341,7 @@ export class AccountValSettings {
         const v = arg.substring(arg.indexOf("=") + 1);
 
         if (!v.toLowerCase().match("^(0|1|(true)|(false)|(yes)|(no))$")) {
-          unknown.push(arg);
+          addUnknown(arg);
           continue;
         }
 
@@ -344,14 +350,14 @@ export class AccountValSettings {
 
       if (setting.type == FieldType.SORTBY) {
         if (!arg.includes("=")) {
-          unknown.push(arg);
+          addUnknown(arg);
           continue;
         }
 
         const v = arg.substring(arg.indexOf("=") + 1);
 
         if (v.length == 0) {
-          unknown.push(arg);
+          addUnknown(arg);
           continue;
         }
 
@@ -365,7 +371,7 @@ export class AccountValSettings {
         }
 
         if (sortBy == null) {
-          unknown.push(arg);
+          addUnknown(arg);
           continue;
         }
 
@@ -376,41 +382,48 @@ export class AccountValSettings {
         setting.type == FieldType.NAME
       ) {
         if (!arg.includes("=")) {
-          unknown.push(arg);
+          addUnknown(arg);
           continue;
         }
 
         let v = arg.substring(arg.indexOf("=") + 1);
 
         if (v.length == 0) {
-          unknown.push(arg);
+          addUnknown(arg);
           continue;
         }
 
         if (setting.type == FieldType.NAME) {
           if (!v.match(/^[0-9]+$/)) {
             v = getPlayerId(v);
+
+            if (!v.match(/^[0-9]+$/)) {
+              errors.push(
+                `Failed to convert <font color=purple>${v}</font> into a player ID`
+              );
+              continue;
+            }
           }
         }
 
         const num = this.toNumber(v);
 
         if (v == null) {
-          unknown.push(arg);
+          addUnknown(arg);
           continue;
         }
 
         this[setting.field] = num;
       } else if (setting.type == FieldType.STRING) {
         if (!arg.includes("=")) {
-          unknown.push(arg);
+          addUnknown(arg);
           continue;
         }
 
         const v = arg.substring(arg.indexOf("=") + 1);
 
         if (v.length == 0) {
-          unknown.push(arg);
+          addUnknown(arg);
           continue;
         }
 
@@ -477,7 +490,7 @@ export class AccountValSettings {
       }
     }
 
-    return unknown;
+    return errors;
   }
 
   isArg(arg: string, args: string[]): boolean {
