@@ -75,6 +75,14 @@ export class ValItem {
   isBound(): boolean {
     return this.bound == ItemStatus.BOUND || this.bound == ItemStatus.FAMILIAR;
   }
+
+  isTradeable(): boolean {
+    return (
+      this.bound == null ||
+      this.bound == ItemStatus.IN_USE ||
+      this.bound == ItemStatus.SHOP_WORTH
+    );
+  }
 }
 
 export class AccountValLogic {
@@ -406,7 +414,7 @@ export class AccountValLogic {
       if (
         !this.settings.doTradeables &&
         item.tradeableItem.tradeable &&
-        !item.isBound()
+        item.isTradeable()
       ) {
         this.ownedItems.delete(item);
         continue;
