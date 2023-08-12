@@ -69,6 +69,14 @@ var ValItem = /*#__PURE__*/function () {
 
     function isBound() {
       return this.bound == ItemStatus.BOUND || this.bound == ItemStatus.FAMILIAR;
+    } }, { key: "isTradeable", value:
+
+    function isTradeable() {
+      return (
+        this.bound == null ||
+        this.bound == ItemStatus.IN_USE ||
+        this.bound == ItemStatus.SHOP_WORTH);
+
     } }]);return ValItem;}();
 
 
@@ -401,7 +409,7 @@ var AccountValLogic = /*#__PURE__*/function () {
           if (
           !this.settings.doTradeables &&
           _item5.tradeableItem.tradeable &&
-          !_item5.isBound())
+          _item5.isTradeable())
           {
             this.ownedItems.delete(_item5);
             continue;
@@ -953,136 +961,136 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
       };var _iterator3 = _createForOfIteratorHelper(
 
           args),_step3;try {var _loop = function _loop() {var arg = _step3.value;
-          if (arg.length == 0) {return "continue";
-
-          }
-
-          if (arg == "debug") {
-            _this.settingsDebug = true;return "continue";
-
-          }
-
-          var setting;
-          var name = arg.
-          split("=")[0].
-          toLowerCase().
-          replace("-", "").
-          replace("+", "").
-          replace("!", "");
-
-          settings.forEach((s) => {
-            if (!s.names.includes(name)) {
-              return;
-            }
-
-            setting = s;
-          });
-
-          if (setting == null) {
-            addUnknown(arg);return "continue";
-
-          }
-
-          var isTrue = !arg.startsWith("-") && !arg.startsWith("!");
-
-          if (arg.startsWith("-") || arg.startsWith("+") || arg.startsWith("!")) {
-            arg = arg.substring(1);
-          } else if (arg.includes("=") && setting.type == FieldType.BOOLEAN) {
-            var v = arg.substring(arg.indexOf("=") + 1);
-
-            if (!v.toLowerCase().match("^(0|1|(true)|(false)|(yes)|(no))$")) {
-              addUnknown(arg);return "continue";
+            if (arg.length == 0) {return 0; // continue
 
             }
 
-            isTrue = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toBoolean)(v);
-          }
-
-          if (setting.type == FieldType.SORTBY) {
-            if (!arg.includes("=")) {
-              addUnknown(arg);return "continue";
+            if (arg == "debug") {
+              _this.settingsDebug = true;return 0; // continue
 
             }
 
-            var _v = arg.substring(arg.indexOf("=") + 1);
+            var setting;
+            var name = arg.
+            split("=")[0].
+            toLowerCase().
+            replace("-", "").
+            replace("+", "").
+            replace("!", "");
 
-            if (_v.length == 0) {
-              addUnknown(arg);return "continue";
+            settings.forEach((s) => {
+              if (!s.names.includes(name)) {
+                return;
+              }
 
-            }
+              setting = s;
+            });
 
-            var sortBy =
-            SortBy[
-            Object.keys(SortBy).find((k) => k.toLowerCase() == _v.toLowerCase())];
-
-
-            if (sortBy == null) {
-              sortBy = sortByAliases.get(_v.toLowerCase());
-            }
-
-            if (sortBy == null) {
-              addUnknown(arg);return "continue";
-
-            }
-
-            _this.sortBy = sortBy;
-            _this.reverseSort = !isTrue;
-          } else if (
-          setting.type == FieldType.NUMBER ||
-          setting.type == FieldType.NAME)
-          {
-            if (!arg.includes("=")) {
-              addUnknown(arg);return "continue";
+            if (setting == null) {
+              addUnknown(arg);return 0; // continue
 
             }
 
-            var _v2 = arg.substring(arg.indexOf("=") + 1);
+            var isTrue = !arg.startsWith("-") && !arg.startsWith("!");
 
-            if (_v2.length == 0) {
-              addUnknown(arg);return "continue";
+            if (arg.startsWith("-") || arg.startsWith("+") || arg.startsWith("!")) {
+              arg = arg.substring(1);
+            } else if (arg.includes("=") && setting.type == FieldType.BOOLEAN) {
+              var v = arg.substring(arg.indexOf("=") + 1);
 
+              if (!v.toLowerCase().match("^(0|1|(true)|(false)|(yes)|(no))$")) {
+                addUnknown(arg);return 0; // continue
+
+              }
+
+              isTrue = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toBoolean)(v);
             }
 
-            if (setting.type == FieldType.NAME) {
-              if (!_v2.match(/^[0-9]+$/)) {
-                _v2 = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getPlayerId)(_v2);
+            if (setting.type == FieldType.SORTBY) {
+              if (!arg.includes("=")) {
+                addUnknown(arg);return 0; // continue
 
+              }
+
+              var _v = arg.substring(arg.indexOf("=") + 1);
+
+              if (_v.length == 0) {
+                addUnknown(arg);return 0; // continue
+
+              }
+
+              var sortBy =
+              SortBy[
+              Object.keys(SortBy).find((k) => k.toLowerCase() == _v.toLowerCase())];
+
+
+              if (sortBy == null) {
+                sortBy = sortByAliases.get(_v.toLowerCase());
+              }
+
+              if (sortBy == null) {
+                addUnknown(arg);return 0; // continue
+
+              }
+
+              _this.sortBy = sortBy;
+              _this.reverseSort = !isTrue;
+            } else if (
+            setting.type == FieldType.NUMBER ||
+            setting.type == FieldType.NAME)
+            {
+              if (!arg.includes("=")) {
+                addUnknown(arg);return 0; // continue
+
+              }
+
+              var _v2 = arg.substring(arg.indexOf("=") + 1);
+
+              if (_v2.length == 0) {
+                addUnknown(arg);return 0; // continue
+
+              }
+
+              if (setting.type == FieldType.NAME) {
                 if (!_v2.match(/^[0-9]+$/)) {
-                  errors.push("Failed to convert <font color=purple>".concat(
-                    _v2, "</font> into a player ID")
-                  );return "continue";
+                  _v2 = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getPlayerId)(_v2);
 
+                  if (!_v2.match(/^[0-9]+$/)) {
+                    errors.push("Failed to convert <font color=purple>".concat(
+                      _v2, "</font> into a player ID")
+                    );return 0; // continue
+
+                  }
                 }
               }
+
+              var num = _this.toNumber(_v2);
+
+              if (_v2 == null) {
+                addUnknown(arg);return 0; // continue
+
+              }
+
+              _this[setting.field] = num;
+            } else if (setting.type == FieldType.STRING) {
+              if (!arg.includes("=")) {
+                addUnknown(arg);return 0; // continue
+
+              }
+
+              var _v3 = arg.substring(arg.indexOf("=") + 1);
+
+              if (_v3.length == 0) {
+                addUnknown(arg);return 0; // continue
+
+              }
+
+              _this[setting.field] = _v3;
+            } else {
+              _this[setting.field] = isTrue;
+              wasSet.push(setting.field);
             }
-
-            var num = _this.toNumber(_v2);
-
-            if (_v2 == null) {
-              addUnknown(arg);return "continue";
-
-            }
-
-            _this[setting.field] = num;
-          } else if (setting.type == FieldType.STRING) {
-            if (!arg.includes("=")) {
-              addUnknown(arg);return "continue";
-
-            }
-
-            var _v3 = arg.substring(arg.indexOf("=") + 1);
-
-            if (_v3.length == 0) {
-              addUnknown(arg);return "continue";
-
-            }
-
-            _this[setting.field] = _v3;
-          } else {
-            _this[setting.field] = isTrue;
-            wasSet.push(setting.field);
-          }
-        };for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _ret = _loop();if (_ret === "continue") continue;}} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
+          },_ret;for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {_ret = _loop();if (_ret === 0) continue;}} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       var fetchSources = [
       "fetchCloset",
