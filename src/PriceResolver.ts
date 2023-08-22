@@ -7,13 +7,16 @@ import {
   print,
   printHtml,
   Item,
+  fileToBuffer,
+  toInt
 } from "kolmafia";
 import { PricingSettings } from "./AccountValSettings";
 
 export enum PriceType {
+  NEW_PRICES,
   HISTORICAL,
   MALL,
-  MALL_SALES,
+  MALL_SALES
 }
 
 export class ItemPrice {
@@ -35,10 +38,60 @@ export class ItemPrice {
   }
 }
 
+class NewPrices {
+  priceMap: Map<number, [number, number]> = new Map();
+  lastUpdated: number;
+
+  isValid() {
+    if (this.lastUpdated == null) {
+      return false;
+    }
+
+    if (this.priceMap.size <= 0) {
+      return false;
+    }
+
+    // If it hasn't been updated in a week, then Irrat is ded
+    if (this.lastUpdated + 7 * 24 * 60 * 60 < Date.now() / 1000) {
+      return false;
+    }
+
+    return true;
+  }
+
+  load() {
+    const buffer = fileToBuffer("irrats_item_prices.txt");
+
+    if (buffer.length <= 10) {
+      return;
+    }
+
+    for (const spl of buffer.split(/[\n\r]+/)) {
+      const spl2 = spl.split("\t");
+
+      if (spl2.length == 2 && spl2[0] == "Last Updated:") {
+        this.lastUpdated = parseInt(spl2[1]);
+        continue;
+      }
+
+      if (spl2.length != 3) {
+        continue;
+      }
+
+      const itemId = parseInt(spl2[0]);
+      const price = parseInt(spl2[1]);
+      const age = parseInt(spl2[2]);
+
+      this.priceMap.set(itemId, [price, age]);
+    }
+  }
+}
+
 export class PriceResolver {
   history: MallHistory;
   private specialCase: Map<Item, number> = new Map();
   private settings: PricingSettings;
+  private newPrices: NewPrices;
 
   constructor(settings: PricingSettings) {
     try {
@@ -62,6 +115,9 @@ export class PriceResolver {
 
     this.settings = settings;
     this.fillSpecialCase();
+
+    this.newPrices = new NewPrices();
+    this.newPrices.load();
   }
 
   private fillSpecialCase() {
@@ -86,6 +142,18 @@ export class PriceResolver {
       return new ItemPrice(item, autosellPrice(item), PriceType.MALL, 0);
     }
 
+    if (this.newPrices.isValid()) {
+      const price = this.newPrices.priceMap.get(toInt(item));
+
+      if (price != null) {
+        const daysAge = Math.round(
+          (Date.now() / 1000 - price[1]) / (60 * 60 * 24)
+        );
+
+        return new ItemPrice(item, price[0], PriceType.NEW_PRICES, daysAge);
+      }
+    }
+
     const salesPricing = new MallHistoryPricing(
       this.settings,
       this.history,
@@ -106,7 +174,7 @@ export class PriceResolver {
       const viablePrices: PriceVolunteer[] = [
         salesPricing,
         historyPricing,
-        mallPricing,
+        mallPricing
       ].filter((p) => p.isViable() && !p.isOutdated());
 
       viablePrices.sort((v1, v2) => {

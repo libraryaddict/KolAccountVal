@@ -17,14 +17,14 @@ import {
   Skill,
   stashAmount,
   storageAmount,
-  toInt,
+  toInt
 } from "kolmafia";
 import { ItemResolver, ItemType } from "./ItemResolver";
 import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
 import {
   AccountValSettings,
   PricingSettings,
-  SortBy,
+  SortBy
 } from "./AccountValSettings";
 import { FetchFromPage } from "./PageResolver";
 import { AccountValUtils } from "./AccountValUtils";
@@ -38,7 +38,7 @@ export enum ItemStatus {
 
   IN_USE,
 
-  SHOP_WORTH,
+  SHOP_WORTH
 }
 
 export class ValItem {
@@ -362,7 +362,7 @@ export class AccountValLogic {
     if (this.settings.doBound || this.settings.doNontradeables) {
       this.resolver.resolveBoundToTradeables(copy, this.ownedItems, [
         this.settings.doBound ? ItemType.UNTRADEABLE_ITEM : null,
-        this.settings.doNontradeables ? ItemType.CURRENCY : null,
+        this.settings.doNontradeables ? ItemType.CURRENCY : null
       ]);
     }
 
@@ -465,7 +465,7 @@ export class AccountValLogic {
         true
       );
 
-      if (price.price > 0) {
+      if (price.price > 0 || price.accuracy == PriceType.NEW_PRICES) {
         addPrice(i, price);
       } else {
         toCheck.push([i, price]);

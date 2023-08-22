@@ -9,14 +9,14 @@ import {
   myStorageMeat,
   print,
   printHtml,
-  toInt,
+  toInt
 } from "kolmafia";
 import { AccountValLogic, ItemStatus } from "./AccountValLogic";
 import {
   AccountValSettings,
   FieldType,
   PricingSettings,
-  SortBy,
+  SortBy
 } from "./AccountValSettings";
 import { AccountValUtils } from "./AccountValUtils";
 import { PriceType } from "./PriceResolver";
@@ -59,7 +59,7 @@ class AccountVal {
       // Mall extinct items should be 1b
       const worthEach =
         price.price <= 0 && item.worthMultiplier == 1
-          ? 999_999_999
+          ? -1
           : price.price * (1 / item.worthMultiplier);
 
       const count = this.logic.ownedItems.get(item);
@@ -84,13 +84,17 @@ class AccountVal {
       let title =
         titleName +
         " @ " +
-        (price.accuracy == PriceType.MALL_SALES
+        (price.accuracy == PriceType.NEW_PRICES
+          ? "last recorded "
+          : price.accuracy == PriceType.MALL_SALES
           ? "last sold "
           : "last malled ") +
         AccountValUtils.getNumber(price.price) +
         " meat each. Price valid as of " +
         AccountValUtils.getNumber(price.daysOutdated, 1) +
-        " days ago";
+        " day" +
+        (price.daysOutdated != 1 ? "s" : "") +
+        " ago";
 
       if (item.shopWorth > 0) {
         title +=
@@ -127,7 +131,7 @@ class AccountVal {
         )}'>${this.escapeHTML(boundInfo)}</font>)`;
       }
 
-      if (worthEach <= 0 || worthEach >= 999_999_999) {
+      if (worthEach <= 0 || worthEach > 999_999_999) {
         if (count > 1) {
           mallExtinct.push(count + " @ " + name);
         } else {
