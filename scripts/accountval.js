@@ -460,7 +460,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             true
           );
 
-          if (_price.price > 0) {
+          if (_price.price > 0 || _price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceType */ .FT.NEW_PRICES) {
             addPrice(_i4, _price);
           } else {
             toCheck.push([_i4, _price]);
@@ -1947,11 +1947,12 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 /* unused harmony export ItemPrice */
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
-function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(arg) {var key = _toPrimitive(arg, "string");return typeof key === "symbol" ? key : String(key);}function _toPrimitive(input, hint) {if (typeof input !== "object" || input === null) return input;var prim = input[Symbol.toPrimitive];if (prim !== undefined) {var res = prim.call(input, hint || "default");if (typeof res !== "object") return res;throw new TypeError("@@toPrimitive must return a primitive value.");}return (hint === "string" ? String : Number)(input);}
+function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(arg) {var key = _toPrimitive(arg, "string");return typeof key === "symbol" ? key : String(key);}function _toPrimitive(input, hint) {if (typeof input !== "object" || input === null) return input;var prim = input[Symbol.toPrimitive];if (prim !== undefined) {var res = prim.call(input, hint || "default");if (typeof res !== "object") return res;throw new TypeError("@@toPrimitive must return a primitive value.");}return (hint === "string" ? String : Number)(input);}
 
 
 
-var PriceType = /*#__PURE__*/function (PriceType) {PriceType[PriceType["HISTORICAL"] = 0] = "HISTORICAL";PriceType[PriceType["MALL"] = 1] = "MALL";PriceType[PriceType["MALL_SALES"] = 2] = "MALL_SALES";return PriceType;}({});
+var PriceType = /*#__PURE__*/function (PriceType) {PriceType[PriceType["NEW_PRICES"] = 0] = "NEW_PRICES";PriceType[PriceType["HISTORICAL"] = 1] = "HISTORICAL";PriceType[PriceType["MALL"] = 2] = "MALL";PriceType[PriceType["MALL_SALES"] = 3] = "MALL_SALES";return PriceType;}({});
+
 
 
 
@@ -1973,7 +1974,56 @@ var ItemPrice = /*#__PURE__*/_createClass(
     this.price = price;
     this.accuracy = accuracy;
     this.daysOutdated = daysOutdated;
-  });
+  });var
+
+
+NewPrices = /*#__PURE__*/function () {function NewPrices() {_classCallCheck(this, NewPrices);_defineProperty(this, "priceMap",
+    new Map());_defineProperty(this, "lastUpdated", void 0);}_createClass(NewPrices, [{ key: "isValid", value:
+
+
+    function isValid() {
+      if (this.lastUpdated == null) {
+        return false;
+      }
+
+      if (this.priceMap.size <= 0) {
+        return false;
+      }
+
+      // If it hasn't been updated in a week, then Irrat is ded
+      if (this.lastUpdated + 7 * 24 * 60 * 60 < Date.now() / 1000) {
+        return false;
+      }
+
+      return true;
+    } }, { key: "load", value:
+
+    function load() {
+      var buffer = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.fileToBuffer)("irrats_item_prices.txt");
+
+      if (buffer.length <= 10) {
+        return;
+      }var _iterator = _createForOfIteratorHelper(
+
+          buffer.split(/[\n\r]+/)),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var spl = _step.value;
+          var spl2 = spl.split("\t");
+
+          if (spl2.length == 2 && spl2[0] == "Last Updated:") {
+            this.lastUpdated = parseInt(spl2[1]);
+            continue;
+          }
+
+          if (spl2.length != 3) {
+            continue;
+          }
+
+          var itemId = parseInt(spl2[0]);
+          var price = parseInt(spl2[1]);
+          var age = parseInt(spl2[2]);
+
+          this.priceMap.set(itemId, [price, age]);
+        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
+    } }]);return NewPrices;}();
 
 
 var PriceResolver = /*#__PURE__*/function () {
@@ -1981,7 +2031,8 @@ var PriceResolver = /*#__PURE__*/function () {
 
 
 
-  function PriceResolver(settings) {_classCallCheck(this, PriceResolver);_defineProperty(this, "history", void 0);_defineProperty(this, "specialCase", new Map());_defineProperty(this, "settings", void 0);
+
+  function PriceResolver(settings) {_classCallCheck(this, PriceResolver);_defineProperty(this, "history", void 0);_defineProperty(this, "specialCase", new Map());_defineProperty(this, "settings", void 0);_defineProperty(this, "newPrices", void 0);
     try {
       this.history = new (eval("require")(
         "scripts/utils/mallhistory.js"
@@ -2003,6 +2054,9 @@ var PriceResolver = /*#__PURE__*/function () {
 
     this.settings = settings;
     this.fillSpecialCase();
+
+    this.newPrices = new NewPrices();
+    this.newPrices.load();
   }_createClass(PriceResolver, [{ key: "fillSpecialCase", value:
 
     function fillSpecialCase() {
@@ -2025,6 +2079,18 @@ var PriceResolver = /*#__PURE__*/function () {
 
       if (!item.tradeable) {
         return new ItemPrice(item, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(item), PriceType.MALL, 0);
+      }
+
+      if (this.newPrices.isValid()) {
+        var _price = this.newPrices.priceMap.get((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(item));
+
+        if (_price != null) {
+          var daysAge = Math.round(
+            (Date.now() / 1000 - _price[1]) / (60 * 60 * 24)
+          );
+
+          return new ItemPrice(item, _price[0], PriceType.NEW_PRICES, daysAge);
+        }
       }
 
       var salesPricing = new MallHistoryPricing(
@@ -2455,7 +2521,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         // Mall extinct items should be 1b
         var worthEach =
         price.price <= 0 && item.worthMultiplier == 1 ?
-        999999999 :
+        -1 :
         price.price * (1 / item.worthMultiplier);
 
         var count = this.logic.ownedItems.get(item);
@@ -2480,13 +2546,17 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         var title =
         titleName +
         " @ " + (
+        price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .FT.NEW_PRICES ?
+        "last recorded " :
         price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .FT.MALL_SALES ?
         "last sold " :
         "last malled ") +
         _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(price.price) +
         " meat each. Price valid as of " +
         _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .Q.getNumber(price.daysOutdated, 1) +
-        " days ago";
+        " day" + (
+        price.daysOutdated != 1 ? "s" : "") +
+        " ago";
 
         if (item.shopWorth > 0) {
           title +=
@@ -2523,7 +2593,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           ), "'>").concat(this.escapeHTML(boundInfo), "</font>)");
         }
 
-        if (worthEach <= 0 || worthEach >= 999999999) {
+        if (worthEach <= 0 || worthEach > 999999999) {
           if (count > 1) {
             mallExtinct.push(count + " @ " + name);
           } else {
