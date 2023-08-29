@@ -250,6 +250,7 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       if (this.settings.playerId > 0) {
         this.loadPageItems();
+
         return;
       }
 
@@ -275,7 +276,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             }
           }
 
-          if (this.settings.fetchStorage) {
+          if (this.settings.fetchStorage && (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myAscensions)() > 0) {
             _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.storageAmount)(_item4);
           }
 
@@ -440,6 +441,7 @@ var AccountValLogic = /*#__PURE__*/function () {
         price.price * item.worthMultiplier < settings.minimumMeat)
         {
           ownedItems.delete(item);
+
           return;
         }
 
