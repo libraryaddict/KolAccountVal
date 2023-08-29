@@ -5,7 +5,7 @@ export enum FieldType {
   SORTBY,
   BOOLEAN,
   NAME,
-  STRING,
+  STRING
 }
 
 export class ValSetting {
@@ -24,7 +24,7 @@ export enum SortBy {
 
   // SALES_VOLUME,
 
-  ITEM_ID,
+  ITEM_ID
 }
 
 const sortByAliases: Map<string, SortBy> = new Map([
@@ -33,7 +33,7 @@ const sortByAliases: Map<string, SortBy> = new Map([
   ["meat", SortBy.PRICE],
   ["totalmeat", SortBy.TOTAL_PRICE],
   ["totalprice", SortBy.TOTAL_PRICE],
-  ["id", SortBy.ITEM_ID],
+  ["id", SortBy.ITEM_ID]
 ]);
 
 export class AccountValSettings {
@@ -64,6 +64,7 @@ export class AccountValSettings {
   useLastSold: boolean = false;
   settingsDebug: boolean = false;
   brief: boolean = false;
+  oldPricing: boolean = false;
 
   static getSettings(): ValSetting[] {
     const settings = [];
@@ -78,7 +79,7 @@ export class AccountValSettings {
 
       setting.type = type;
       setting.field = name;
-      setting.names = aliases;
+      setting.names = aliases.map((s) => s.toLowerCase());
       setting.desc = desc;
 
       settings.push(setting);
@@ -145,7 +146,7 @@ export class AccountValSettings {
         "nontradeables",
         "untrade",
         "untradeable",
-        "untradeables",
+        "untradeables"
       ],
       "Should it do non-tradeables (Resolves to tradeables if it can)"
     );
@@ -178,7 +179,7 @@ export class AccountValSettings {
         "minmeat",
         "min-meat",
         "minprice",
-        "price",
+        "price"
       ],
       "Each item total worth, at least this amount."
     );
@@ -205,7 +206,7 @@ export class AccountValSettings {
         "who",
         "target",
         "name",
-        "username",
+        "username"
       ],
       'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces'
     );
@@ -266,6 +267,13 @@ export class AccountValSettings {
       "brief",
       ["brief"],
       "Prints out a single line as the final result, the total meat."
+    );
+
+    makeSetting(
+      FieldType.BOOLEAN,
+      "oldPricing",
+      ["oldpricing"],
+      "Has accountval calculate prices from the old slower and more inaccurate method"
     );
 
     return settings;
@@ -443,7 +451,7 @@ export class AccountValSettings {
       "fetchClan",
       "fetchSession",
       "fetchFamiliars",
-      "fetchSnapshot",
+      "fetchSnapshot"
     ];
 
     // We can do fams if bound isn't false
@@ -537,6 +545,7 @@ export class PricingSettings {
   public cheapTotalsLessThan: number = 20_000_000;
   public cheapPricesLessThan: number = 2_000_000;
   public maxPriceAge: number;
+  public oldPricing: boolean;
 
   /**
    * A scaler on where we want stuff that's lower priced, to be updated less often. Returns day count.

@@ -117,7 +117,10 @@ export class PriceResolver {
     this.fillSpecialCase();
 
     this.newPrices = new NewPrices();
-    this.newPrices.load();
+
+    if (!settings.oldPricing) {
+      this.newPrices.load();
+    }
   }
 
   private fillSpecialCase() {

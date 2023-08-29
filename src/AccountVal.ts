@@ -341,6 +341,7 @@ class AccountVal {
       } else if (command.toLowerCase().match(/([^a-z]|^)help([^a-z]|$)/)) {
         this.settings.doSettings([]);
         this.doHelp();
+
         return;
       }
 
@@ -353,11 +354,13 @@ class AccountVal {
 
       if (unknown.length > 0) {
         unknown.forEach((s) => printHtml(`<font color='red'>${s}</font>`));
+
         return;
       }
 
       const priceSettings = new PricingSettings();
       priceSettings.maxPriceAge = this.settings.maxAge;
+      priceSettings.oldPricing = this.settings.oldPricing;
       this.logic = new AccountValLogic(this.settings, priceSettings);
 
       this.logic.loadItems();
