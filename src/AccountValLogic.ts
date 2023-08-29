@@ -11,6 +11,7 @@ import {
   isCoinmasterItem,
   Item,
   itemAmount,
+  myAscensions,
   print,
   shopAmount,
   shopPrice,
@@ -255,6 +256,7 @@ export class AccountValLogic {
 
     if (this.settings.playerId > 0) {
       this.loadPageItems();
+
       return;
     }
 
@@ -280,7 +282,7 @@ export class AccountValLogic {
         }
       }
 
-      if (this.settings.fetchStorage) {
+      if (this.settings.fetchStorage && myAscensions() > 0) {
         amount += storageAmount(item);
       }
 
@@ -445,6 +447,7 @@ export class AccountValLogic {
         price.price * item.worthMultiplier < settings.minimumMeat
       ) {
         ownedItems.delete(item);
+
         return;
       }
 
