@@ -48,11 +48,7 @@ class AccountVal {
       const item = this.logic.prices[no][0];
       const price = this.logic.prices[no][1];
 
-      if (
-        this.settings.sales > 0 &&
-        this.logic.priceResolver.history.getAmountSold(item.tradeableItem, 14) <
-          this.settings.sales
-      ) {
+      if (this.settings.sales > 0 && price.volume < this.settings.sales) {
         continue;
       }
 
