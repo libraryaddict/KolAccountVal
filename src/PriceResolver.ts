@@ -24,30 +24,35 @@ export class ItemPrice {
   price: number;
   accuracy: PriceType;
   daysOutdated: number;
+  volume: number;
 
   constructor(
     item: Item,
     price: number,
     accuracy: PriceType,
-    daysOutdated: number
+    daysOutdated: number,
+    volume: number = -1
   ) {
     this.item = item;
     this.price = price;
     this.accuracy = accuracy;
     this.daysOutdated = daysOutdated;
+    this.volume = volume;
   }
 }
 
+interface ItemPriceMap {
+  updated: number;
+  price: number;
+  volume: number;
+}
+
 class NewPrices {
-  priceMap: Map<number, [number, number]> = new Map();
+  prices: ItemPriceMap[];
   lastUpdated: number;
 
   isValid() {
-    if (this.lastUpdated == null) {
-      return false;
-    }
-
-    if (this.priceMap.size <= 0) {
+    if (this.lastUpdated == null || this.prices == null) {
       return false;
     }
 
@@ -66,6 +71,8 @@ class NewPrices {
       return;
     }
 
+    this.prices = [];
+
     for (const spl of buffer.split(/[\n\r]+/)) {
       const spl2 = spl.split("\t");
 
@@ -81,8 +88,9 @@ class NewPrices {
       const itemId = parseInt(spl2[0]);
       const price = parseInt(spl2[1]);
       const age = parseInt(spl2[2]);
+      const volume = parseInt(spl2[3]);
 
-      this.priceMap.set(itemId, [price, age]);
+      this.prices[itemId] = { price: price, updated: age, volume: volume };
     }
   }
 }
@@ -94,6 +102,21 @@ export class PriceResolver {
   private newPrices: NewPrices;
 
   constructor(settings: PricingSettings) {
+    this.settings = settings;
+    this.newPrices = new NewPrices();
+
+    if (!settings.oldPricing) {
+      this.newPrices.load();
+    }
+
+    if (!this.newPrices.isValid()) {
+      this.loadMallHistory();
+    }
+
+    this.fillSpecialCase();
+  }
+
+  loadMallHistory() {
     try {
       this.history = new (eval("require")(
         "scripts/utils/mallhistory.js"
@@ -105,21 +128,12 @@ export class PriceResolver {
           "red"
         );
         printHtml(
-          "<u color='gray'>svn checkout https://github.com/libraryaddict/KolMallHistory/branches/release/</u>"
+          "<u color='gray'>git checkout libraryaddict/KolMallHistory release</u>"
         );
         print("");
       }
 
       throw e;
-    }
-
-    this.settings = settings;
-    this.fillSpecialCase();
-
-    this.newPrices = new NewPrices();
-
-    if (!settings.oldPricing) {
-      this.newPrices.load();
     }
   }
 
@@ -146,15 +160,25 @@ export class PriceResolver {
     }
 
     if (this.newPrices.isValid()) {
-      const price = this.newPrices.priceMap.get(toInt(item));
+      const price = this.newPrices.prices[toInt(item)];
 
       if (price != null) {
         const daysAge = Math.round(
-          (Date.now() / 1000 - price[1]) / (60 * 60 * 24)
+          (Date.now() / 1000 - price.updated) / (60 * 60 * 24)
         );
 
-        return new ItemPrice(item, price[0], PriceType.NEW_PRICES, daysAge);
+        return new ItemPrice(
+          item,
+          price.price,
+          PriceType.NEW_PRICES,
+          daysAge,
+          price.volume
+        );
       }
+    }
+
+    if (this.history == null) {
+      this.loadMallHistory();
     }
 
     const salesPricing = new MallHistoryPricing(

@@ -19,11 +19,8 @@ export enum SortBy {
   NAME,
   QUANTITY,
   PRICE,
-
   TOTAL_PRICE,
-
-  // SALES_VOLUME,
-
+  SALES_VOLUME,
   ITEM_ID
 }
 
@@ -33,7 +30,9 @@ const sortByAliases: Map<string, SortBy> = new Map([
   ["meat", SortBy.PRICE],
   ["totalmeat", SortBy.TOTAL_PRICE],
   ["totalprice", SortBy.TOTAL_PRICE],
-  ["id", SortBy.ITEM_ID]
+  ["id", SortBy.ITEM_ID],
+  ["sales", SortBy.SALES_VOLUME],
+  ["sold", SortBy.SALES_VOLUME]
 ]);
 
 export class AccountValSettings {

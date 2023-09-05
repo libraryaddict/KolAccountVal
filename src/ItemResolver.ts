@@ -18,7 +18,7 @@ import {
   toBoolean,
   toInt,
   toItem,
-  visitUrl,
+  visitUrl
 } from "kolmafia";
 import { ItemStatus, ValItem } from "./AccountValLogic";
 
@@ -48,7 +48,7 @@ export enum ItemType {
 
   CAMPGROUND,
 
-  SCRIPT,
+  SCRIPT
 }
 
 export class ItemResolver {
@@ -182,7 +182,7 @@ export class ItemResolver {
   }
 
   resolveBoundToTradeables(
-    copy: Map<ValItem, number>,
+    copy: { [item: string]: [ValItem, number] },
     ownedItems: Map<ValItem, number>,
     resolve: ItemType[]
   ) {
@@ -193,20 +193,13 @@ export class ItemResolver {
 
       try {
         const item = Item.get(s.data1);
-        let v: ValItem;
+        const pair: [ValItem, number] = copy[item.name];
 
-        for (const k of copy.keys()) {
-          if (k.tradeableItem != item) {
-            continue;
-          }
-
-          v = k;
-          break;
-        }
-
-        if (v == null) {
+        if (pair == null) {
           continue;
         }
+
+        const v = pair[0];
 
         this.addItem(
           ownedItems,
@@ -217,7 +210,7 @@ export class ItemResolver {
               ? ItemStatus.BOUND
               : ItemStatus.NO_TRADE
             : v.bound,
-          copy.get(v),
+          pair[1],
           /\d+/.test(s.data2) ? toInt(s.data2) : 1
         );
       } catch (e) {
@@ -377,6 +370,7 @@ export class ItemResolver {
     }
 
     this.loadCache();
+
     return values;
   }
 

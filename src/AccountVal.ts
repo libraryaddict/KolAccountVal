@@ -96,6 +96,12 @@ class AccountVal {
         (price.daysOutdated != 1 ? "s" : "") +
         " ago";
 
+      if (price.volume >= 0) {
+        title += `. ${AccountValUtils.getNumber(
+          price.volume
+        )} sold in the last week.`;
+      }
+
       if (item.shopWorth > 0) {
         title +=
           ". Shop selling at: " + AccountValUtils.getNumber(item.shopWorth);

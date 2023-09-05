@@ -1,23 +1,22 @@
 import {
   abort,
   autosellPrice,
-  closetAmount,
-  displayAmount,
   equippedAmount,
   Familiar,
+  getCloset,
+  getDisplay,
+  getInventory,
   getPlayerName,
+  getShop,
+  getStash,
+  getStorage,
   getWorkshed,
   haveFamiliar,
-  isCoinmasterItem,
   Item,
-  itemAmount,
-  myAscensions,
   print,
   shopAmount,
   shopPrice,
   Skill,
-  stashAmount,
-  storageAmount,
   toInt
 } from "kolmafia";
 import { ItemResolver, ItemType } from "./ItemResolver";
@@ -28,7 +27,6 @@ import {
   SortBy
 } from "./AccountValSettings";
 import { FetchFromPage } from "./PageResolver";
-import { AccountValUtils } from "./AccountValUtils";
 
 export enum ItemStatus {
   BOUND,
@@ -262,49 +260,58 @@ export class AccountValLogic {
 
     const famItems: Map<Item, number> = this.resolver.resolveFamiliarItems();
     const sessionItems: Map<Item, number> = this.resolver.resolveSessionItems();
+    const mega: { [item: string]: number } = this.settings.fetchInventory
+      ? getInventory()
+      : {};
+
+    const add = (stuff: { [item: string]: number }) => {
+      Object.keys(stuff).forEach((k) => {
+        mega[k] = (mega[k] ?? 0) + stuff[k];
+      });
+    };
+
+    if (this.settings.fetchCloset) {
+      add(getCloset());
+    }
+
+    if (this.settings.fetchStorage) {
+      add(getStorage());
+    }
+
+    if (this.settings.fetchClan) {
+      add(getStash());
+    }
+
+    if (this.settings.fetchDisplaycase) {
+      add(getDisplay());
+    }
+
+    if (this.settings.fetchShop && this.settings.shopWorth) {
+      add(getShop());
+    }
 
     for (const item of Item.all()) {
-      let amount = 0;
+      let amount = mega[item.name] ?? 0;
 
-      if (this.settings.fetchSession && sessionItems.has(item)) {
-        amount += sessionItems.get(item);
-      }
-
-      if (this.settings.fetchCloset) {
-        amount += closetAmount(item);
+      if (this.settings.fetchSession) {
+        amount += sessionItems.get(item) ?? 0;
       }
 
       if (this.settings.fetchInventory) {
-        amount += equippedAmount(item) + itemAmount(item);
-
-        if (famItems.has(item)) {
-          amount += famItems.get(item);
-        }
+        amount += equippedAmount(item) + (famItems.get(item) ?? 0);
       }
 
-      if (this.settings.fetchStorage && myAscensions() > 0) {
-        amount += storageAmount(item);
-      }
+      if (
+        this.settings.fetchShop &&
+        this.settings.shopWorth &&
+        shopAmount(item) > 0
+      ) {
+        const i = new ValItem(item);
+        i.bound = ItemStatus.SHOP_WORTH;
+        i.shopWorth = shopPrice(item);
 
-      if (this.settings.fetchDisplaycase) {
-        amount += displayAmount(item);
-      }
-
-      if (this.settings.fetchClan) {
-        amount += stashAmount(item);
-      }
-
-      if (this.settings.fetchShop) {
-        if (this.settings.shopWorth && shopAmount(item) > 0) {
-          const i = new ValItem(item);
-          i.bound = ItemStatus.SHOP_WORTH;
-          i.shopWorth = shopPrice(item);
-
-          this.ownedItems.set(i, shopAmount(item));
-          continue;
-        } else {
-          amount += shopAmount(item);
-        }
+        this.ownedItems.set(i, shopAmount(item));
+        continue;
       }
 
       if (amount == 0) {
@@ -355,10 +362,10 @@ export class AccountValLogic {
   }
 
   private resolveNoTrades() {
-    const copy: Map<ValItem, number> = new Map();
+    const copy: { [item: string]: [ValItem, number] } = {};
 
     this.ownedItems.forEach((v, k) => {
-      copy.set(k, v);
+      copy[k.tradeableItem.name] = [k, v];
     });
 
     if (this.settings.doBound || this.settings.doNontradeables) {
@@ -549,97 +556,8 @@ export class AccountValLogic {
       this.prices.sort(
         (v1, v2) => toInt(v1[0].tradeableItem) - toInt(v2[0].tradeableItem)
       );
-    } else if (this.settings.sortBy == "SortBy.SALES_VOLUME") {
-      // Removed for now cos it does too many hits
-      const toUpdate: Item[] = [];
-
-      for (const i of this.prices) {
-        const item = i[1].item;
-
-        if (!item.tradeable || item.gift) {
-          continue;
-        }
-
-        // If its an item we buy from NPCs
-        if (
-          autosellPrice(item) > 0 &&
-          i[1].price < 1000 &&
-          isCoinmasterItem(item)
-        ) {
-          continue;
-        }
-
-        const v = this.priceResolver.history.getMallRecords(item, 7, false);
-
-        if (v == null) {
-          toUpdate.push(item);
-          continue;
-        }
-
-        const priceTotal = i[1].price * this.ownedItems.get(i[0]);
-        // If our expected price is different from mall price by a bigger margin than expected.. Aka 50% more expensive/cheap
-        const priceDiff =
-          i[1].price > v.getPriceSold(30)
-            ? v.getPriceSold(30) / i[1].price
-            : i[1].price / v.getPriceSold(30);
-
-        const days = priceDiff < 0.5 ? 7 : priceTotal > 5_000_000 ? 30 : 100;
-        const daysOld = (Date.now() / 1000 - v.lastUpdated) / (24 * 60 * 60);
-
-        if (daysOld < days) {
-          continue;
-        }
-
-        toUpdate.push(item);
-      }
-
-      print(
-        "Need to update " +
-          AccountValUtils.getNumber(toUpdate.length) +
-          " items mall histories",
-        "blue"
-      );
-
-      let last = Date.now();
-      let progress: number = 0;
-
-      for (const i of toUpdate) {
-        if (last + 5000 < Date.now()) {
-          last = Date.now();
-
-          print(
-            "Checking sales volume of " +
-              i.name +
-              " (" +
-              progress +
-              " / " +
-              toUpdate.length +
-              ")",
-            "blue"
-          );
-        }
-
-        progress++;
-        this.priceResolver.history.getAmountSold(i, 30);
-      }
-
-      this.prices.sort((v1, v2) => {
-        const s1 = this.priceResolver.history.getMallRecords(
-          v1[1].item,
-          1,
-          false
-        );
-        const s2 = this.priceResolver.history.getMallRecords(
-          v2[1].item,
-          1,
-          false
-        );
-
-        return (
-          (s1 == null ? 0 : s1.getAmountSold(30)) -
-          (s2 == null ? 0 : s2.getAmountSold(30))
-        );
-      });
+    } else if (this.settings.sortBy == SortBy.SALES_VOLUME) {
+      this.prices.sort((v1, v2) => v1[1].volume - v2[1].volume);
     } else {
       abort("Unknown sort option " + this.settings.sortBy);
     }

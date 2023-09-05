@@ -80,6 +80,7 @@ export class AccountValUtils {
     }
 
     debug("Final parameters are: " + spl.map((s) => `{${s}}`).join(" "));
+
     return spl;
   }
 
@@ -91,6 +92,7 @@ export class AccountValUtils {
     }
 
     str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
     return str.join(".");
   }
 }
