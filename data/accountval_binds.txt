@@ -85,6 +85,7 @@ i	Cursed monkey glove	cursed monkey's paw
 i	shrink-wrapped Cincho de Mayo	Cincho de Mayo
 i	shrink-wrapped 2002 Mr. Store Catalog	2002 Mr. Store Catalog
 i	boxed august scepter	august scepter
+i	book of facts	book of facts (dog-eared)
 
 
 

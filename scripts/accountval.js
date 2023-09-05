@@ -2024,7 +2024,7 @@ NewPrices = /*#__PURE__*/function () {function NewPrices() {_classCallCheck(this
             continue;
           }
 
-          if (spl2.length != 3) {
+          if (spl2.length < 3) {
             continue;
           }
 
