@@ -2481,13 +2481,11 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
 
         if (item.name != item.tradeableItem.name) {
           titleName =
+          item.worthMultiplier +
+          " " +
           item.name +
-          " (" + (
-          item.worthMultiplier > 1 ?
-          item.worthMultiplier + " " + item.name + " = 1 " :
-          "") +
-          item.tradeableItem.name +
-          ")";
+          " = 1 " +
+          item.tradeableItem.name;
         }
 
         var title =
