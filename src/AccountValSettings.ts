@@ -251,7 +251,7 @@ export class AccountValSettings {
       FieldType.NUMBER,
       "sales",
       ["sales"],
-      "Hides items that have less than this amount of sales. As this would be incredibly slow otherwise, it will only take effect on what would be the last X items showed"
+      "Hides items that have less than this amount of sales"
     );
 
     makeSetting(

@@ -48,10 +48,6 @@ class AccountVal {
       const item = this.logic.prices[no][0];
       const price = this.logic.prices[no][1];
 
-      if (this.settings.sales > 0 && price.volume < this.settings.sales) {
-        continue;
-      }
-
       // Mall extinct items should be 1b
       const worthEach =
         price.price <= 0 && item.worthMultiplier == 1

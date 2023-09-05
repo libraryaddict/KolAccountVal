@@ -458,6 +458,12 @@ export class AccountValLogic {
         return;
       }
 
+      if (settings.sales > 0 && price.volume < settings.sales) {
+        ownedItems.delete(item);
+
+        return;
+      }
+
       prices.push([item, price]);
     };
 
