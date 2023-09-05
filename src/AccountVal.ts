@@ -75,8 +75,10 @@ class AccountVal {
       if (item.name != item.tradeableItem.name) {
         titleName =
           item.name +
-          (item.worthMultiplier > 1 ? " x " + item.worthMultiplier : "") +
           " (" +
+          (item.worthMultiplier > 1
+            ? item.worthMultiplier + " " + item.name + " = 1 "
+            : "") +
           item.tradeableItem.name +
           ")";
       }
