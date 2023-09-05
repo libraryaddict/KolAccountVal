@@ -74,7 +74,7 @@ class NewPrices {
         continue;
       }
 
-      if (spl2.length != 3) {
+      if (spl2.length < 3) {
         continue;
       }
 
