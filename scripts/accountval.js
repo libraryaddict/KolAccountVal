@@ -2457,11 +2457,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         var item = this.logic.prices[no][0];
         var price = this.logic.prices[no][1];
 
-        if (
-        this.settings.sales > 0 &&
-        this.logic.priceResolver.history.getAmountSold(item.tradeableItem, 14) <
-        this.settings.sales)
-        {
+        if (this.settings.sales > 0 && price.volume < this.settings.sales) {
           continue;
         }
 
@@ -2483,9 +2479,11 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
 
         if (item.name != item.tradeableItem.name) {
           titleName =
-          item.name + (
-          item.worthMultiplier > 1 ? " x " + item.worthMultiplier : "") +
-          " (" +
+          item.name +
+          " (" + (
+          item.worthMultiplier > 1 ?
+          item.worthMultiplier + " " + item.name + " = 1 " :
+          "") +
           item.tradeableItem.name +
           ")";
         }
