@@ -20,7 +20,7 @@ import {
 } from "./AccountValSettings";
 import { AccountValUtils } from "./AccountValUtils";
 import { PriceType } from "./PriceResolver";
-import { AccountValColors } from "./AccountValColors";
+import { AccountValColors, showAccountvalColors } from "./AccountValColors";
 
 class AccountVal {
   private logic: AccountValLogic;
@@ -104,7 +104,7 @@ class AccountVal {
 
       if (item.bound != null) {
         let boundInfo: string;
-        let color = AccountValColors.shopPrice;
+        let color = AccountValColors.shopPricesOverpriced;
 
         if (item.bound == ItemStatus.SHOP_WORTH) {
           const overpricedPerc = item.shopWorth / worthEach;
@@ -115,12 +115,20 @@ class AccountVal {
           }
 
           if (overpricedPerc <= 1.05) {
-            color = AccountValColors.shopPriceOverpriced;
+            color = AccountValColors.shopPricedOk;
           }
 
-          boundInfo = `Price: ${AccountValUtils.getNumber(
-            Math.round(overpricedPerc * 100)
-          )}%`;
+          boundInfo = AccountValUtils.getNumberOrClamp(
+            Math.round(overpricedPerc * 100),
+            -999,
+            999,
+            "Very underpriced",
+            "Very overpriced"
+          );
+
+          if (boundInfo.match(/\d$/)) {
+            boundInfo = `Price: ${boundInfo}%`;
+          }
         } else {
           boundInfo = item.getBound();
         }
@@ -158,8 +166,8 @@ class AccountVal {
 
       if (skipping > 0) {
         printHtml(`
-          "<font color='${
-            AccountValColors.helpfulNote
+          <font color='${
+            AccountValColors.minorNote
           }'>Skipping ${AccountValUtils.getNumber(
           skipping
         )} lines and displaying the last ${AccountValUtils.getNumber(
@@ -192,7 +200,7 @@ class AccountVal {
 
     print(
       pronoun + " worth " + AccountValUtils.getNumber(netvalue) + " meat!",
-      AccountValColors.helpfulInfo
+      AccountValColors.helpfulStateInfo
     );
 
     if (this.settings.brief) {
@@ -215,14 +223,21 @@ class AccountVal {
         .length == this.logic.prices.length
     ) {
       shopPricedAt /= shopNetValue;
-      print(
-        `Overall, the shop is ${AccountValUtils.getNumber(
-          Math.round(shopPricedAt * 100)
-        )}% of mall`
+      let perc = AccountValUtils.getNumberOrClamp(
+        Math.round(shopPricedAt * 100),
+        -999,
+        999,
+        "Very underpriced",
+        "Very overpriced"
       );
+
+      if (perc.match(/\d$/)) {
+        perc += "%";
+      }
+      print(`Overall, the shop is ${perc} of mall`);
       print(
         "Disclaimer: Cheapest price being 100% can mean we're comparing prices against.. this shop.",
-        AccountValColors.helpfulNote
+        AccountValColors.minorNote
       );
     }
 
@@ -281,14 +296,14 @@ class AccountVal {
   doHelp() {
     print(
       "AccountVal is a script to check what your account is worth, and find the good stuff fast.",
-      AccountValColors.helpfulInfo
+      AccountValColors.helpfulStateInfo
     );
     print(
       "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases.",
-      AccountValColors.helpfulInfo
+      AccountValColors.helpfulStateInfo
     );
     printHtml(
-      `<font color='${AccountValColors.helpfulInfo}'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>`
+      `<font color='${AccountValColors.helpfulStateInfo}'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>`
     );
 
     let even = true;
@@ -316,7 +331,7 @@ class AccountVal {
 
       printHtml(
         `<font color='${
-          AccountValColors.helpfulNote
+          AccountValColors.minorNote
         }' title='Aliases: ${setting.names.join(", ")}'><b>${
           setting.names[0]
         }</b> - ${setting.desc}${defaultOf}</font>`
@@ -326,7 +341,7 @@ class AccountVal {
     }
 
     printHtml(
-      `<font color='${AccountValColors.helpfulNote}'>Disclaimer: The prices shown are not absolute, and can overstate what it really is worth.</font>`
+      `<font color='${AccountValColors.minorNote}'>Disclaimer: The prices shown are not absolute, and can overstate what it really is worth.</font>`
     );
     // show - How many to show, defaults to 100
     // count - How many we must have of this item
@@ -342,12 +357,17 @@ class AccountVal {
       if (command == null) {
         print(
           "To fine tune what we check, including to tradeables only.. Provide the parameter 'help' for more info",
-          AccountValColors.helpfulInfo
+          AccountValColors.helpfulStateInfo
         );
         command = "";
       } else if (command.toLowerCase().match(/([^a-z]|^)help([^a-z]|$)/)) {
         this.settings.doSettings([]);
         this.doHelp();
+
+        return;
+      } else if (command.toLowerCase().match(/^debugcolors=[^ ]+$/)) {
+        const scheme = command.split("=")[1];
+        showAccountvalColors(scheme);
 
         return;
       }
@@ -361,7 +381,9 @@ class AccountVal {
 
       if (unknown.length > 0) {
         unknown.forEach((s) =>
-          printHtml(`<font color='${AccountValColors.warning}'>${s}</font>`)
+          printHtml(
+            `<font color='${AccountValColors.attentionGrabbingWarning}'>${s}</font>`
+          )
         );
 
         return;

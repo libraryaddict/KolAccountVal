@@ -13,7 +13,7 @@ export class AccountValUtils {
         return;
       }
 
-      print("DEBUG: " + message, AccountValColors.helpfulNote);
+      print("DEBUG: " + message, AccountValColors.minorNote);
     };
 
     let tCommand = command;
@@ -95,5 +95,23 @@ export class AccountValUtils {
     str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
     return str.join(".");
+  }
+
+  static getNumberOrClamp(
+    number: number,
+    min: number,
+    max: number,
+    minStr: string,
+    maxStr: string
+  ): string {
+    if (number > max) {
+      return maxStr;
+    }
+
+    if (number < min) {
+      return minStr;
+    }
+
+    return this.getNumber(number);
   }
 }

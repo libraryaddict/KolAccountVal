@@ -217,7 +217,7 @@ export class ItemResolver {
       } catch (e) {
         print(
           "You probably need to update mafia! Got an error! " + e,
-          AccountValColors.warning
+          AccountValColors.attentionGrabbingWarning
         );
       }
     }
@@ -333,7 +333,7 @@ export class ItemResolver {
         default:
           print(
             "Found line '" + line + "' which I can't handle!",
-            AccountValColors.warning
+            AccountValColors.attentionGrabbingWarning
           );
       }
 
@@ -349,7 +349,7 @@ export class ItemResolver {
       } catch (e) {
         print(
           "You probably need to update mafia! Got an error! " + e,
-          AccountValColors.warning
+          AccountValColors.attentionGrabbingWarning
         );
       }
     }
@@ -378,7 +378,7 @@ export class ItemResolver {
 
       print(
         "Missing a tradeable item for " + v.actualItem,
-        AccountValColors.warning
+        AccountValColors.attentionGrabbingWarning
       );
     }
 

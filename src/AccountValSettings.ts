@@ -1,4 +1,4 @@
-import { getPlayerId, print, toBoolean, toFloat } from "kolmafia";
+import { getPlayerId, isDarkMode, print, toBoolean, toFloat } from "kolmafia";
 import {
   AccountValColors,
   getAccountvalColors,
@@ -70,7 +70,7 @@ export class AccountValSettings {
   settingsDebug: boolean = false;
   brief: boolean = false;
   oldPricing: boolean = false;
-  colorScheme: string = "default";
+  colorScheme: string = isDarkMode() ? "dark" : "default";
 
   static getSettings(): ValSetting[] {
     const settings = [];
@@ -327,7 +327,7 @@ export class AccountValSettings {
 
     const addUnknown = (arg) => {
       errors.push(
-        `Failed to handle parameter: <font color='${AccountValColors.failedParameter}'>${arg}</font>`
+        `Failed to handle parameter: <font color='${AccountValColors.failedToParseSettings}'>${arg}</font>`
       );
     };
 
@@ -448,7 +448,7 @@ export class AccountValSettings {
 
             if (!v.match(/^[0-9]+$/)) {
               errors.push(
-                `Failed to convert <font color='${AccountValColors.failedParameter}'>${v}</font> into a player ID`
+                `Failed to convert <font color='${AccountValColors.failedToParseSettings}'>${v}</font> into a player ID`
               );
               continue;
             }

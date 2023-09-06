@@ -1,15 +1,15 @@
-import { getProperty } from "kolmafia";
+import { getProperty, isDarkMode, print, printHtml } from "kolmafia";
 
 export interface ColorsInterface {
-  failedParameter: string;
-  helpfulNote: string;
-  warning: string;
-  untradeable: string;
-  helpfulInfo: string;
+  attentionGrabbingWarning: string;
+  failedToParseSettings: string;
+  minorNote: string;
+  helpfulStateInfo: string;
   mallExtinctColor1: string;
   mallExtinctColor2: string;
-  shopPrice: string;
-  shopPriceOverpriced: string;
+  shopPricedOk: string;
+  shopPricesOverpriced: string;
+  noteUntradeable: string;
 }
 
 export let AccountValColors: ColorsInterface;
@@ -17,15 +17,27 @@ export let AccountValColors: ColorsInterface;
 const map: Map<string, ColorsInterface> = new Map();
 
 map.set("default", {
-  failedParameter: "purple",
-  helpfulNote: "gray",
-  warning: "red",
-  untradeable: "red",
-  helpfulInfo: "blue",
+  attentionGrabbingWarning: "red",
+  failedToParseSettings: "purple",
+  minorNote: "gray",
+  helpfulStateInfo: "blue",
   mallExtinctColor1: "#4f5893",
   mallExtinctColor2: "#934f4f",
-  shopPrice: "#db2525",
-  shopPriceOverpriced: "#196f3d"
+  shopPricedOk: "#196f3d",
+  shopPricesOverpriced: "#db2525",
+  noteUntradeable: "red"
+});
+
+map.set("dark", {
+  attentionGrabbingWarning: "red",
+  failedToParseSettings: "purple",
+  minorNote: "gray",
+  helpfulStateInfo: "#3ccabb",
+  mallExtinctColor1: "#6b7ade",
+  mallExtinctColor2: "#d76d6d",
+  shopPricedOk: "#269f59",
+  shopPricesOverpriced: "#dd4040",
+  noteUntradeable: "red"
 });
 
 export function loadAccountvalColors(name: string): boolean {
@@ -42,8 +54,24 @@ export function getAccountvalColors(): string[] {
   return [...map.keys()];
 }
 
+export function showAccountvalColors(name: string) {
+  if (!map.has(name)) {
+    print("Can't find any colors by that name", "red");
+
+    return;
+  }
+
+  const colors = map.get(name);
+
+  for (const [k, v] of Object.entries(colors)) {
+    printHtml(`<font color='${v}'>${k}</font>`);
+  }
+}
+
+const def = isDarkMode() ? "dark" : "default";
+
 loadAccountvalColors(
   map.has(getProperty("accountvalColorScheme"))
     ? getProperty("accountvalColorScheme")
-    : "default"
+    : def
 );

@@ -82,7 +82,7 @@ export class FetchFromPage {
         } else {
           print(
             "Unable to resolve the familiar '" + name + "' from av-snapshot",
-            AccountValColors.warning
+            AccountValColors.attentionGrabbingWarning
           );
         }
 
@@ -117,7 +117,7 @@ export class FetchFromPage {
       if (!items.has(name)) {
         print(
           "Unable to resolve the item '" + name + "' from av-snapshot",
-          AccountValColors.warning
+          AccountValColors.attentionGrabbingWarning
         );
         continue;
       }
@@ -191,7 +191,7 @@ export class FetchFromPage {
       if (item == null) {
         print(
           "Unknown item description: " + match[1] + ", update mafia?",
-          AccountValColors.warning
+          AccountValColors.attentionGrabbingWarning
         );
         continue;
       }

@@ -236,7 +236,7 @@ export class AccountValLogic {
 
     print(
       "JS Filter has been set to: " + this.settings.javascriptFilter,
-      AccountValColors.helpfulNote
+      AccountValColors.minorNote
     );
 
     try {
@@ -246,7 +246,7 @@ export class AccountValLogic {
     } catch (e) {
       print(
         "Invalid jsfilter provided! Error as follows:",
-        AccountValColors.warning
+        AccountValColors.attentionGrabbingWarning
       );
       print();
       throw e;
@@ -499,7 +499,7 @@ export class AccountValLogic {
     if (toCheck.length > 200) {
       print(
         "Think this will take too long? Use the parameter 'fast', it's less accurate!",
-        AccountValColors.helpfulInfo
+        AccountValColors.helpfulStateInfo
       );
     }
 
@@ -516,7 +516,7 @@ export class AccountValLogic {
             " / " +
             toCheck.length +
             ")",
-          AccountValColors.helpfulInfo
+          AccountValColors.helpfulStateInfo
         );
       }
 
