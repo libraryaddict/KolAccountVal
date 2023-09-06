@@ -7,12 +7,13 @@
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Og: () => (/* binding */ getAccountvalColors),
+/* harmony export */   WY: () => (/* binding */ showAccountvalColors),
 /* harmony export */   Zp: () => (/* binding */ AccountValColors),
 /* harmony export */   qH: () => (/* binding */ loadAccountvalColors)
 /* harmony export */ });
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(530);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
-function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}
+function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}
 
 
 
@@ -31,15 +32,27 @@ var AccountValColors;
 var map = new Map();
 
 map.set("default", {
-  failedParameter: "purple",
-  helpfulNote: "gray",
-  warning: "red",
-  untradeable: "red",
-  helpfulInfo: "blue",
+  attentionGrabbingWarning: "red",
+  failedToParseSettings: "purple",
+  minorNote: "gray",
+  helpfulStateInfo: "blue",
   mallExtinctColor1: "#4f5893",
   mallExtinctColor2: "#934f4f",
-  shopPrice: "#db2525",
-  shopPriceOverpriced: "#196f3d"
+  shopPricedOk: "#196f3d",
+  shopPricesOverpriced: "#db2525",
+  noteUntradeable: "red"
+});
+
+map.set("dark", {
+  attentionGrabbingWarning: "red",
+  failedToParseSettings: "purple",
+  minorNote: "gray",
+  helpfulStateInfo: "#3ccabb",
+  mallExtinctColor1: "#6b7ade",
+  mallExtinctColor2: "#d76d6d",
+  shopPricedOk: "#269f59",
+  shopPricesOverpriced: "#dd4040",
+  noteUntradeable: "red"
 });
 
 function loadAccountvalColors(name) {
@@ -56,10 +69,26 @@ function getAccountvalColors() {
   return _toConsumableArray(map.keys());
 }
 
+function showAccountvalColors(name) {
+  if (!map.has(name)) {
+    (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("Can't find any colors by that name", "red");
+
+    return;
+  }
+
+  var colors = map.get(name);
+
+  for (var _i = 0, _Object$entries = Object.entries(colors); _i < _Object$entries.length; _i++) {var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),k = _Object$entries$_i[0],v = _Object$entries$_i[1];
+    (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)("<font color='".concat(v, "'>").concat(k, "</font>"));
+  }
+}
+
+var def = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.isDarkMode)() ? "dark" : "default";
+
 loadAccountvalColors(
   map.has((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)("accountvalColorScheme")) ?
   (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)("accountvalColorScheme") :
-  "default"
+  def
 );
 
 /***/ }),
@@ -293,7 +322,7 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
         "JS Filter has been set to: " + this.settings.javascriptFilter,
-        _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .Zp.helpfulNote
+        _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .Zp.minorNote
       );
 
       try {
@@ -303,7 +332,7 @@ var AccountValLogic = /*#__PURE__*/function () {
       } catch (e) {
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
           "Invalid jsfilter provided! Error as follows:",
-          _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .Zp.warning
+          _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .Zp.attentionGrabbingWarning
         );
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)();
         throw e;
@@ -556,7 +585,7 @@ var AccountValLogic = /*#__PURE__*/function () {
       if (toCheck.length > 200) {
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
           "Think this will take too long? Use the parameter 'fast', it's less accurate!",
-          _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .Zp.helpfulInfo
+          _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .Zp.helpfulStateInfo
         );
       }
 
@@ -573,7 +602,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             " / " +
             toCheck.length +
             ")",
-            _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .Zp.helpfulInfo
+            _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .Zp.helpfulStateInfo
           );
         }
 
@@ -717,7 +746,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     false);_defineProperty(this, "brief",
     false);_defineProperty(this, "oldPricing",
     false);_defineProperty(this, "colorScheme",
-    "default");}_createClass(AccountValSettings, [{ key: "getSetting", value:
+    (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.isDarkMode)() ? "dark" : "default");}_createClass(AccountValSettings, [{ key: "getSetting", value:
 
 
 
@@ -974,7 +1003,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
       var addUnknown = (arg) => {
         errors.push("Failed to handle parameter: <font color='".concat(
-          _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.failedParameter, "'>").concat(arg, "</font>")
+          _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.failedToParseSettings, "'>").concat(arg, "</font>")
         );
       };var _iterator3 = _createForOfIteratorHelper(
 
@@ -1095,7 +1124,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
                   if (!_v3.match(/^[0-9]+$/)) {
                     errors.push("Failed to convert <font color='".concat(
-                      _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.failedParameter, "'>").concat(_v3, "</font> into a player ID")
+                      _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.failedToParseSettings, "'>").concat(_v3, "</font> into a player ID")
                     );return 0; // continue
 
                   }
@@ -1475,7 +1504,7 @@ var ItemResolver = /*#__PURE__*/function () {
           } catch (e) {
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
               "You probably need to update mafia! Got an error! " + e,
-              _AccountValColors__WEBPACK_IMPORTED_MODULE_2__/* .AccountValColors */ .Zp.warning
+              _AccountValColors__WEBPACK_IMPORTED_MODULE_2__/* .AccountValColors */ .Zp.attentionGrabbingWarning
             );
           }
         }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
@@ -1591,7 +1620,7 @@ var ItemResolver = /*#__PURE__*/function () {
             default:
               (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
                 "Found line '" + line + "' which I can't handle!",
-                _AccountValColors__WEBPACK_IMPORTED_MODULE_2__/* .AccountValColors */ .Zp.warning
+                _AccountValColors__WEBPACK_IMPORTED_MODULE_2__/* .AccountValColors */ .Zp.attentionGrabbingWarning
               );
           }
 
@@ -1607,7 +1636,7 @@ var ItemResolver = /*#__PURE__*/function () {
           } catch (e) {
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
               "You probably need to update mafia! Got an error! " + e,
-              _AccountValColors__WEBPACK_IMPORTED_MODULE_2__/* .AccountValColors */ .Zp.warning
+              _AccountValColors__WEBPACK_IMPORTED_MODULE_2__/* .AccountValColors */ .Zp.attentionGrabbingWarning
             );
           }
         }} catch (err) {_iterator7.e(err);} finally {_iterator7.f();}
@@ -1636,7 +1665,7 @@ var ItemResolver = /*#__PURE__*/function () {
 
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
           "Missing a tradeable item for " + v.actualItem,
-          _AccountValColors__WEBPACK_IMPORTED_MODULE_2__/* .AccountValColors */ .Zp.warning
+          _AccountValColors__WEBPACK_IMPORTED_MODULE_2__/* .AccountValColors */ .Zp.attentionGrabbingWarning
         );
       }
 
@@ -1760,7 +1789,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
           } else {
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
               "Unable to resolve the familiar '" + name + "' from av-snapshot",
-              _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.warning
+              _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.attentionGrabbingWarning
             );
           }
 
@@ -1795,7 +1824,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
         if (!items.has(name)) {
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
             "Unable to resolve the item '" + name + "' from av-snapshot",
-            _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.warning
+            _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.attentionGrabbingWarning
           );
           continue;
         }
@@ -1869,7 +1898,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
           if (item == null) {
             (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
               "Unknown item description: " + match[1] + ", update mafia?",
-              _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.warning
+              _AccountValColors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .Zp.attentionGrabbingWarning
             );
             continue;
           }
@@ -2471,7 +2500,7 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
           return;
         }
 
-        (0,external_kolmafia_.print)("DEBUG: " + message, AccountValColors/* AccountValColors */.Zp.helpfulNote);
+        (0,external_kolmafia_.print)("DEBUG: " + message, AccountValColors/* AccountValColors */.Zp.minorNote);
       };
 
       var tCommand = command;
@@ -2553,6 +2582,24 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
       str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
       return str.join(".");
+    } }, { key: "getNumberOrClamp", value:
+
+    function getNumberOrClamp(
+    number,
+    min,
+    max,
+    minStr,
+    maxStr)
+    {
+      if (number > max) {
+        return maxStr;
+      }
+
+      if (number < min) {
+        return minStr;
+      }
+
+      return this.getNumber(number);
     } }]);return AccountValUtils;}();
 // EXTERNAL MODULE: ./src/PriceResolver.ts
 var PriceResolver = __webpack_require__(238);
@@ -2646,7 +2693,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
 
         if (item.bound != null) {
           var boundInfo = void 0;
-          var color = AccountValColors/* AccountValColors */.Zp.shopPrice;
+          var color = AccountValColors/* AccountValColors */.Zp.shopPricesOverpriced;
 
           if (item.bound == AccountValLogic/* ItemStatus */.Ms.SHOP_WORTH) {
             var overpricedPerc = item.shopWorth / worthEach;
@@ -2657,12 +2704,20 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
             }
 
             if (overpricedPerc <= 1.05) {
-              color = AccountValColors/* AccountValColors */.Zp.shopPriceOverpriced;
+              color = AccountValColors/* AccountValColors */.Zp.shopPricedOk;
             }
 
-            boundInfo = "Price: ".concat(AccountValUtils.getNumber(
-              Math.round(overpricedPerc * 100)
-            ), "%");
+            boundInfo = AccountValUtils.getNumberOrClamp(
+              Math.round(overpricedPerc * 100),
+              -999,
+              999,
+              "Very underpriced",
+              "Very overpriced"
+            );
+
+            if (boundInfo.match(/\d$/)) {
+              boundInfo = "Price: ".concat(boundInfo, "%");
+            }
           } else {
             boundInfo = item.getBound();
           }
@@ -2699,9 +2754,9 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         );
 
         if (skipping > 0) {
-          (0,external_kolmafia_.printHtml)("\n          \"<font color='".concat(
+          (0,external_kolmafia_.printHtml)("\n          <font color='".concat(
 
-            AccountValColors/* AccountValColors */.Zp.helpfulNote, "'>Skipping ").concat(
+            AccountValColors/* AccountValColors */.Zp.minorNote, "'>Skipping ").concat(
             AccountValUtils.getNumber(
               skipping
             ), " lines and displaying the last ").concat(AccountValUtils.getNumber(
@@ -2734,7 +2789,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
 
       (0,external_kolmafia_.print)(
         pronoun + " worth " + AccountValUtils.getNumber(netvalue) + " meat!",
-        AccountValColors/* AccountValColors */.Zp.helpfulInfo
+        AccountValColors/* AccountValColors */.Zp.helpfulStateInfo
       );
 
       if (this.settings.brief) {
@@ -2757,14 +2812,21 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
       length == this.logic.prices.length)
       {
         shopPricedAt /= shopNetValue;
-        (0,external_kolmafia_.print)("Overall, the shop is ".concat(
-          AccountValUtils.getNumber(
-            Math.round(shopPricedAt * 100)
-          ), "% of mall")
+        var perc = AccountValUtils.getNumberOrClamp(
+          Math.round(shopPricedAt * 100),
+          -999,
+          999,
+          "Very underpriced",
+          "Very overpriced"
         );
+
+        if (perc.match(/\d$/)) {
+          perc += "%";
+        }
+        (0,external_kolmafia_.print)("Overall, the shop is ".concat(perc, " of mall"));
         (0,external_kolmafia_.print)(
           "Disclaimer: Cheapest price being 100% can mean we're comparing prices against.. this shop.",
-          AccountValColors/* AccountValColors */.Zp.helpfulNote
+          AccountValColors/* AccountValColors */.Zp.minorNote
         );
       }
 
@@ -2823,14 +2885,14 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
     function doHelp() {
       (0,external_kolmafia_.print)(
         "AccountVal is a script to check what your account is worth, and find the good stuff fast.",
-        AccountValColors/* AccountValColors */.Zp.helpfulInfo
+        AccountValColors/* AccountValColors */.Zp.helpfulStateInfo
       );
       (0,external_kolmafia_.print)(
         "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases.",
-        AccountValColors/* AccountValColors */.Zp.helpfulInfo
+        AccountValColors/* AccountValColors */.Zp.helpfulStateInfo
       );
       (0,external_kolmafia_.printHtml)("<font color='".concat(
-        AccountValColors/* AccountValColors */.Zp.helpfulInfo, "'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>")
+        AccountValColors/* AccountValColors */.Zp.helpfulStateInfo, "'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>")
       );
 
       var even = true;var _iterator2 = AccountVal_createForOfIteratorHelper(
@@ -2858,7 +2920,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
 
           (0,external_kolmafia_.printHtml)("<font color='".concat(
 
-            AccountValColors/* AccountValColors */.Zp.helpfulNote, "' title='Aliases: ").concat(
+            AccountValColors/* AccountValColors */.Zp.minorNote, "' title='Aliases: ").concat(
             setting.names.join(", "), "'><b>").concat(
             setting.names[0], "</b> - ").concat(
             setting.desc).concat(defaultOf, "</font>")
@@ -2868,7 +2930,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
 
       (0,external_kolmafia_.printHtml)("<font color='".concat(
-        AccountValColors/* AccountValColors */.Zp.helpfulNote, "'>Disclaimer: The prices shown are not absolute, and can overstate what it really is worth.</font>")
+        AccountValColors/* AccountValColors */.Zp.minorNote, "'>Disclaimer: The prices shown are not absolute, and can overstate what it really is worth.</font>")
       );
       // show - How many to show, defaults to 100
       // count - How many we must have of this item
@@ -2884,12 +2946,17 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         if (command == null) {
           (0,external_kolmafia_.print)(
             "To fine tune what we check, including to tradeables only.. Provide the parameter 'help' for more info",
-            AccountValColors/* AccountValColors */.Zp.helpfulInfo
+            AccountValColors/* AccountValColors */.Zp.helpfulStateInfo
           );
           command = "";
         } else if (command.toLowerCase().match(/([^a-z]|^)help([^a-z]|$)/)) {
           this.settings.doSettings([]);
           this.doHelp();
+
+          return;
+        } else if (command.toLowerCase().match(/^debugcolors=[^ ]+$/)) {
+          var scheme = command.split("=")[1];
+          (0,AccountValColors/* showAccountvalColors */.WY)(scheme);
 
           return;
         }
@@ -2903,7 +2970,9 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
 
         if (unknown.length > 0) {
           unknown.forEach((s) =>
-          (0,external_kolmafia_.printHtml)("<font color='".concat(AccountValColors/* AccountValColors */.Zp.warning, "'>").concat(s, "</font>"))
+          (0,external_kolmafia_.printHtml)("<font color='".concat(
+            AccountValColors/* AccountValColors */.Zp.attentionGrabbingWarning, "'>").concat(s, "</font>")
+          )
           );
 
           return;
