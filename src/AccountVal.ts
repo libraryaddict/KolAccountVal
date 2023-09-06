@@ -234,20 +234,22 @@ class AccountVal {
 
     if (this.settings.fetchInventory && myMeat() != 0) {
       meat += myMeat();
-      meatSources.push(AccountValUtils.getNumber(myMeat()) + " in inventory");
+      meatSources.push(
+        AccountValUtils.getNumber(myMeat()) + " meat in inventory"
+      );
     }
 
     if (this.settings.fetchCloset && myClosetMeat() != 0) {
       meat += myClosetMeat();
       meatSources.push(
-        AccountValUtils.getNumber(myClosetMeat()) + " in closet"
+        AccountValUtils.getNumber(myClosetMeat()) + " meat in closet"
       );
     }
 
     if (this.settings.fetchStorage && myStorageMeat() != 0) {
       meat += myStorageMeat();
       meatSources.push(
-        AccountValUtils.getNumber(myStorageMeat()) + " in storage"
+        AccountValUtils.getNumber(myStorageMeat()) + " meat in storage"
       );
     }
 
