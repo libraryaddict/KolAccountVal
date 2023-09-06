@@ -27,6 +27,7 @@ import {
   SortBy
 } from "./AccountValSettings";
 import { FetchFromPage } from "./PageResolver";
+import { AccountValColors } from "./AccountValColors";
 
 export enum ItemStatus {
   BOUND,
@@ -235,7 +236,7 @@ export class AccountValLogic {
 
     print(
       "JS Filter has been set to: " + this.settings.javascriptFilter,
-      "gray"
+      AccountValColors.helpfulNote
     );
 
     try {
@@ -243,7 +244,10 @@ export class AccountValLogic {
         `with (require("kolmafia")) ` + this.settings.javascriptFilter
       );
     } catch (e) {
-      print("Invalid jsfilter provided! Error as follows:", "red");
+      print(
+        "Invalid jsfilter provided! Error as follows:",
+        AccountValColors.warning
+      );
       print();
       throw e;
     }
@@ -286,7 +290,7 @@ export class AccountValLogic {
       add(getDisplay());
     }
 
-    if (this.settings.fetchShop && this.settings.shopWorth) {
+    if (this.settings.fetchShop && !this.settings.shopWorth) {
       add(getShop());
     }
 
@@ -495,7 +499,7 @@ export class AccountValLogic {
     if (toCheck.length > 200) {
       print(
         "Think this will take too long? Use the parameter 'fast', it's less accurate!",
-        "blue"
+        AccountValColors.helpfulInfo
       );
     }
 
@@ -512,7 +516,7 @@ export class AccountValLogic {
             " / " +
             toCheck.length +
             ")",
-          "blue"
+          AccountValColors.helpfulInfo
         );
       }
 
@@ -569,7 +573,6 @@ export class AccountValLogic {
     }
 
     if (this.settings.reverseSort) {
-      print("Reverse");
       this.prices.reverse();
     }
   }

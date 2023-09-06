@@ -21,6 +21,7 @@ import {
   visitUrl
 } from "kolmafia";
 import { ItemStatus, ValItem } from "./AccountValLogic";
+import { AccountValColors } from "./AccountValColors";
 
 class AccValStuff {
   itemType: ItemType;
@@ -214,7 +215,10 @@ export class ItemResolver {
           /\d+/.test(s.data2) ? toInt(s.data2) : 1
         );
       } catch (e) {
-        print("You probably need to update mafia! Got an error! " + e, "red");
+        print(
+          "You probably need to update mafia! Got an error! " + e,
+          AccountValColors.warning
+        );
       }
     }
   }
@@ -327,7 +331,10 @@ export class ItemResolver {
           e = ItemType.SCRIPT;
           break;
         default:
-          print("Found line '" + line + "' which I can't handle!");
+          print(
+            "Found line '" + line + "' which I can't handle!",
+            AccountValColors.warning
+          );
       }
 
       try {
@@ -340,7 +347,10 @@ export class ItemResolver {
 
         values.push(v);
       } catch (e) {
-        print("You probably need to update mafia! Got an error! " + e, "red");
+        print(
+          "You probably need to update mafia! Got an error! " + e,
+          AccountValColors.warning
+        );
       }
     }
 
@@ -366,7 +376,10 @@ export class ItemResolver {
         continue loop;
       }
 
-      print("Missing a tradeable item for " + v.actualItem, "red");
+      print(
+        "Missing a tradeable item for " + v.actualItem,
+        AccountValColors.warning
+      );
     }
 
     this.loadCache();

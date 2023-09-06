@@ -7,8 +7,9 @@ import {
   toFamiliar,
   toInt,
   toItem,
-  visitUrl,
+  visitUrl
 } from "kolmafia";
+import { AccountValColors } from "./AccountValColors";
 
 export class StoreItem {
   item: Item;
@@ -81,7 +82,7 @@ export class FetchFromPage {
         } else {
           print(
             "Unable to resolve the familiar '" + name + "' from av-snapshot",
-            "red"
+            AccountValColors.warning
           );
         }
 
@@ -116,7 +117,7 @@ export class FetchFromPage {
       if (!items.has(name)) {
         print(
           "Unable to resolve the item '" + name + "' from av-snapshot",
-          "red"
+          AccountValColors.warning
         );
         continue;
       }
@@ -188,7 +189,10 @@ export class FetchFromPage {
       const item = descs.get(match[1]);
 
       if (item == null) {
-        print("Unknown item description: " + match[1] + ", update mafia?");
+        print(
+          "Unknown item description: " + match[1] + ", update mafia?",
+          AccountValColors.warning
+        );
         continue;
       }
 

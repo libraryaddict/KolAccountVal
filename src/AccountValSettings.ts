@@ -1,8 +1,14 @@
 import { getPlayerId, print, toBoolean, toFloat } from "kolmafia";
+import {
+  AccountValColors,
+  getAccountvalColors,
+  loadAccountvalColors
+} from "./AccountValColors";
 
 export enum FieldType {
   NUMBER,
   SORTBY,
+  COLOR_SCHEME,
   BOOLEAN,
   NAME,
   STRING
@@ -64,6 +70,7 @@ export class AccountValSettings {
   settingsDebug: boolean = false;
   brief: boolean = false;
   oldPricing: boolean = false;
+  colorScheme: string = "default";
 
   static getSettings(): ValSetting[] {
     const settings = [];
@@ -275,6 +282,21 @@ export class AccountValSettings {
       "Has accountval calculate prices from the old slower and more inaccurate method"
     );
 
+    makeSetting(
+      FieldType.BOOLEAN,
+      "oldPricing",
+      ["oldpricing"],
+      "Has accountval calculate prices from the old slower and more inaccurate method"
+    );
+
+    makeSetting(
+      FieldType.COLOR_SCHEME,
+      "colorScheme",
+      ["color", "colors", "colorscheme", "scheme"],
+      "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " +
+        getAccountvalColors().join(", ")
+    );
+
     return settings;
   }
 
@@ -305,7 +327,7 @@ export class AccountValSettings {
 
     const addUnknown = (arg) => {
       errors.push(
-        `Failed to handle parameter: <font color=purple>${arg}</font>`
+        `Failed to handle parameter: <font color='${AccountValColors.failedParameter}'>${arg}</font>`
       );
     };
 
@@ -384,6 +406,26 @@ export class AccountValSettings {
 
         this.sortBy = sortBy;
         this.reverseSort = !isTrue;
+      } else if (setting.type == FieldType.COLOR_SCHEME) {
+        if (!arg.includes("=")) {
+          addUnknown(arg);
+          continue;
+        }
+
+        const v = arg.substring(arg.indexOf("=") + 1);
+
+        if (v.length == 0) {
+          addUnknown(arg);
+          continue;
+        }
+
+        if (!getAccountvalColors().includes(v)) {
+          addUnknown(arg);
+          continue;
+        }
+
+        this.colorScheme = v;
+        loadAccountvalColors(v);
       } else if (
         setting.type == FieldType.NUMBER ||
         setting.type == FieldType.NAME
@@ -406,7 +448,7 @@ export class AccountValSettings {
 
             if (!v.match(/^[0-9]+$/)) {
               errors.push(
-                `Failed to convert <font color=purple>${v}</font> into a player ID`
+                `Failed to convert <font color='${AccountValColors.failedParameter}'>${v}</font> into a player ID`
               );
               continue;
             }

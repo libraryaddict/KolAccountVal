@@ -1,5 +1,6 @@
 import { print } from "kolmafia";
 import { AccountValSettings, FieldType } from "./AccountValSettings";
+import { AccountValColors } from "./AccountValColors";
 
 export class AccountValUtils {
   static splitArguments(
@@ -12,7 +13,7 @@ export class AccountValUtils {
         return;
       }
 
-      print("DEBUG: " + message, "gray");
+      print("DEBUG: " + message, AccountValColors.helpfulNote);
     };
 
     let tCommand = command;
