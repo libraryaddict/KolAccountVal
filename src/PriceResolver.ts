@@ -74,6 +74,10 @@ class NewPrices {
     this.prices = [];
 
     for (const spl of buffer.split(/[\n\r]+/)) {
+      if (spl.startsWith("#")) {
+        continue;
+      }
+
       const spl2 = spl.split("\t");
 
       if (spl2.length == 2 && spl2[0] == "Last Updated:") {
