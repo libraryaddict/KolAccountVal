@@ -1987,6 +1987,10 @@ NewPrices = /*#__PURE__*/function () {function NewPrices() {_classCallCheck(this
       this.prices = [];var _iterator = _createForOfIteratorHelper(
 
           buffer.split(/[\n\r]+/)),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var spl = _step.value;
+          if (spl.startsWith("#")) {
+            continue;
+          }
+
           var spl2 = spl.split("\t");
 
           if (spl2.length == 2 && spl2[0] == "Last Updated:") {
