@@ -1999,8 +1999,8 @@ NewPrices = /*#__PURE__*/function () {function NewPrices() {_classCallCheck(this
           }
 
           var itemId = parseInt(spl2[0]);
-          var price = parseInt(spl2[1]);
-          var age = parseInt(spl2[2]);
+          var age = parseInt(spl2[1]);
+          var price = parseInt(spl2[2]);
           var volume = parseInt(spl2[3]);
 
           this.prices[itemId] = { price: price, updated: age, volume: volume };
