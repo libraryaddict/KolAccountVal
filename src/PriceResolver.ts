@@ -86,8 +86,8 @@ class NewPrices {
       }
 
       const itemId = parseInt(spl2[0]);
-      const price = parseInt(spl2[1]);
-      const age = parseInt(spl2[2]);
+      const age = parseInt(spl2[1]);
+      const price = parseInt(spl2[2]);
       const volume = parseInt(spl2[3]);
 
       this.prices[itemId] = { price: price, updated: age, volume: volume };
