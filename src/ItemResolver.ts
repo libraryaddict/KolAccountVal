@@ -398,11 +398,18 @@ export class ItemResolver {
         )
     );
 
+    const alreadyNoted = values.map((v) => v.actualItem);
+
     // Now we load the skills we have
     for (const [i, skill] of itemsSkills) {
       // Skip items that are not tradeable skills, because you either have a skill linked to an untradeable item, or a tradeable item.
       // If its linked to an untradeable, then we can check the untradeable item itself. Not bother with the skill.
       if (!i.tradeable) {
+        continue;
+      }
+
+      // Skip items we already have stored
+      if (alreadyNoted.includes(i)) {
         continue;
       }
 

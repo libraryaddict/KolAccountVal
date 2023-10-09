@@ -63,9 +63,9 @@ class AccountVal {
         continue;
       }
 
-      let titleName = item.name;
+      let titleName = item.tradeableItem.name;
 
-      if (item.name != item.tradeableItem.name) {
+      if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
         titleName =
           item.worthMultiplier +
           " " +
@@ -234,6 +234,7 @@ class AccountVal {
       if (perc.match(/\d$/)) {
         perc += "%";
       }
+
       print(`Overall, the shop is ${perc} of mall`);
       print(
         "Disclaimer: Cheapest price being 100% can mean we're comparing prices against.. this shop.",
