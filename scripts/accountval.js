@@ -1685,11 +1685,18 @@ var ItemResolver = /*#__PURE__*/function () {
         )
       );
 
+      var alreadyNoted = values.map((v) => v.actualItem);
+
       // Now we load the skills we have
       var _iterator9 = _createForOfIteratorHelper(itemsSkills),_step9;try {for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {var _step9$value = _slicedToArray(_step9.value, 2),i = _step9$value[0],skill = _step9$value[1];
           // Skip items that are not tradeable skills, because you either have a skill linked to an untradeable item, or a tradeable item.
           // If its linked to an untradeable, then we can check the untradeable item itself. Not bother with the skill.
           if (!i.tradeable) {
+            continue;
+          }
+
+          // Skip items we already have stored
+          if (alreadyNoted.includes(i)) {
             continue;
           }
 
@@ -2656,9 +2663,9 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
           continue;
         }
 
-        var titleName = item.name;
+        var titleName = item.tradeableItem.name;
 
-        if (item.name != item.tradeableItem.name) {
+        if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
           titleName =
           item.worthMultiplier +
           " " +
@@ -2827,6 +2834,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         if (perc.match(/\d$/)) {
           perc += "%";
         }
+
         (0,external_kolmafia_.print)("Overall, the shop is ".concat(perc, " of mall"));
         (0,external_kolmafia_.print)(
           "Disclaimer: Cheapest price being 100% can mean we're comparing prices against.. this shop.",
