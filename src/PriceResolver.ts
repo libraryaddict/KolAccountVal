@@ -16,7 +16,8 @@ export enum PriceType {
   NEW_PRICES,
   HISTORICAL,
   MALL,
-  MALL_SALES
+  MALL_SALES,
+  AUTOSELL
 }
 
 export class ItemPrice {
@@ -160,7 +161,7 @@ export class PriceResolver {
     }
 
     if (!item.tradeable) {
-      return new ItemPrice(item, autosellPrice(item), PriceType.MALL, 0);
+      return new ItemPrice(item, autosellPrice(item), PriceType.AUTOSELL, 0);
     }
 
     if (this.newPrices.isValid()) {

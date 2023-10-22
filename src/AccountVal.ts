@@ -81,6 +81,8 @@ class AccountVal {
           ? "last recorded "
           : price.accuracy == PriceType.MALL_SALES
           ? "last sold "
+          : price.accuracy == PriceType.AUTOSELL
+          ? "autosell "
           : "last malled ") +
         AccountValUtils.getNumber(price.price) +
         " meat each. Price valid as of " +
