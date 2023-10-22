@@ -1932,7 +1932,8 @@ function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !
 
 
 
-var PriceType = /*#__PURE__*/function (PriceType) {PriceType[PriceType["NEW_PRICES"] = 0] = "NEW_PRICES";PriceType[PriceType["HISTORICAL"] = 1] = "HISTORICAL";PriceType[PriceType["MALL"] = 2] = "MALL";PriceType[PriceType["MALL_SALES"] = 3] = "MALL_SALES";return PriceType;}({});
+var PriceType = /*#__PURE__*/function (PriceType) {PriceType[PriceType["NEW_PRICES"] = 0] = "NEW_PRICES";PriceType[PriceType["HISTORICAL"] = 1] = "HISTORICAL";PriceType[PriceType["MALL"] = 2] = "MALL";PriceType[PriceType["MALL_SALES"] = 3] = "MALL_SALES";PriceType[PriceType["AUTOSELL"] = 4] = "AUTOSELL";return PriceType;}({});
+
 
 
 
@@ -2080,7 +2081,7 @@ var PriceResolver = /*#__PURE__*/function () {
       }
 
       if (!item.tradeable) {
-        return new ItemPrice(item, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(item), PriceType.MALL, 0);
+        return new ItemPrice(item, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(item), PriceType.AUTOSELL, 0);
       }
 
       if (this.newPrices.isValid()) {
@@ -2681,6 +2682,8 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         "last recorded " :
         price.accuracy == PriceResolver/* PriceType */.FT.MALL_SALES ?
         "last sold " :
+        price.accuracy == PriceResolver/* PriceType */.FT.AUTOSELL ?
+        "autosell " :
         "last malled ") +
         AccountValUtils.getNumber(price.price) +
         " meat each. Price valid as of " +
