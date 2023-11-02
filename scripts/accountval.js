@@ -134,8 +134,15 @@ var ValItem = /*#__PURE__*/function () {
 
 
 
-  function ValItem(item) {var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : item.name;var bound = arguments.length > 2 ? arguments[2] : undefined;_classCallCheck(this, ValItem);_defineProperty(this, "name", void 0);_defineProperty(this, "tradeableItem", void 0);_defineProperty(this, "bound", void 0);_defineProperty(this, "shopWorth", void 0);_defineProperty(this, "worthMultiplier", 1);
+
+  function ValItem(
+  item)
+
+
+
+  {var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : item.name;var pluralName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : item.plural;var bound = arguments.length > 3 ? arguments[3] : undefined;_classCallCheck(this, ValItem);_defineProperty(this, "name", void 0);_defineProperty(this, "pluralName", void 0);_defineProperty(this, "tradeableItem", void 0);_defineProperty(this, "bound", void 0);_defineProperty(this, "shopWorth", void 0);_defineProperty(this, "worthMultiplier", 1);
     this.name = name;
+    this.pluralName = pluralName;
     this.tradeableItem = item;
     this.bound = bound;
 
@@ -256,7 +263,12 @@ var AccountValLogic = /*#__PURE__*/function () {
               }
 
               this.addItem(
-                new ValItem(_item.actualItem, _item.actualItem.name, ItemStatus.BOUND)
+                new ValItem(
+                  _item.actualItem,
+                  _item.actualItem.name,
+                  _item.actualItem.plural,
+                  ItemStatus.BOUND
+                )
               );
             }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
         }
@@ -283,6 +295,7 @@ var AccountValLogic = /*#__PURE__*/function () {
           }
 
           var name = k.name;
+          var plural = k.plural;
 
           if (boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.UNTRADEABLE_ITEM) {var _owned$get2;
             var untradeable = kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(boundItem.data1);
@@ -294,6 +307,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             }
 
             name = untradeable.name;
+            plural = untradeable.plural;
           } else if (
           boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.SKILL ||
           boundItem.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.BOOK)
@@ -301,7 +315,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             return;
           }
 
-          this.addItem(new ValItem(k, name, ItemStatus.BOUND), v);
+          this.addItem(new ValItem(k, name, plural, ItemStatus.BOUND), v);
         });
       }
 
@@ -427,7 +441,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             if (
             i.tradeable ? this.settings.doTradeables : this.settings.doBound)
             {
-              this.addItem(new ValItem(i, i.name, ItemStatus.IN_USE));
+              this.addItem(new ValItem(i, i.name, i.plural, ItemStatus.IN_USE));
             }
           }
         }
@@ -444,7 +458,9 @@ var AccountValLogic = /*#__PURE__*/function () {
               continue;
             }
 
-            this.addItem(new ValItem(_item3[0], _item3[0].name, _item3[1]));
+            this.addItem(
+              new ValItem(_item3[0], _item3[0].name, _item3[0].plural, _item3[1])
+            );
           }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
       }
 
@@ -1459,11 +1475,12 @@ var ItemResolver = /*#__PURE__*/function () {
     ownedItems,
     item,
     name,
+    plural,
     bound)
 
 
-    {var count = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;var worthMultiplier = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;
-      var v = new _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ValItem */ .oD(item, name, bound);
+    {var count = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;var worthMultiplier = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 1;
+      var v = new _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ValItem */ .oD(item, name, plural, bound);
       v.worthMultiplier = worthMultiplier;
 
       ownedItems.set(v, (ownedItems.get(v) | 0) + count);
@@ -1493,6 +1510,7 @@ var ItemResolver = /*#__PURE__*/function () {
               ownedItems,
               s.actualItem,
               _item.name,
+              _item.plural,
               v.bound == null || v.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.NO_TRADE ?
               s.itemType == ItemType.UNTRADEABLE_ITEM ?
               _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.BOUND :
@@ -1516,7 +1534,13 @@ var ItemResolver = /*#__PURE__*/function () {
             continue;
           }
 
-          this.addItem(ownedItems, fam.hatchling, fam + "", _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.FAMILIAR);
+          this.addItem(
+            ownedItems,
+            fam.hatchling,
+            fam + "",
+            fam + "",
+            _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Ms.FAMILIAR
+          );
         }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
     }
 
@@ -2665,32 +2689,41 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         }
 
         var titleName = item.tradeableItem.name;
-
-        if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
-          titleName =
-          item.worthMultiplier +
-          " " +
-          item.name +
-          " = 1 " +
-          item.tradeableItem.name;
-        }
-
-        var title =
-        titleName +
-        " @ " + (
+        var priceType =
         price.accuracy == PriceResolver/* PriceType */.FT.NEW_PRICES ?
-        "last recorded " :
+        "last recorded" :
         price.accuracy == PriceResolver/* PriceType */.FT.MALL_SALES ?
-        "last sold " :
+        "last sold" :
         price.accuracy == PriceResolver/* PriceType */.FT.AUTOSELL ?
-        "autosell " :
-        "last malled ") +
-        AccountValUtils.getNumber(price.price) +
-        " meat each. Price valid as of " +
+        "autosell" :
+        "last malled";
+        var validAsOf =
+        "Price valid as of " +
         AccountValUtils.getNumber(price.daysOutdated, 1) +
         " day" + (
         price.daysOutdated != 1 ? "s" : "") +
         " ago";
+        var tradeableWorth =
+        AccountValUtils.getNumber(price.price) + " meat each.";
+        var title =
+        titleName + " @ " + priceType + " " + tradeableWorth + " " + validAsOf;
+
+        if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
+          titleName = "1 ".concat(item.tradeableItem.name, " / ").concat(item.worthMultiplier, " ").concat(
+            item.pluralName, " = ").concat(
+            AccountValUtils.getNumber(worthEach), " each.");
+
+          title =
+          titleName +
+          " " +
+          item.tradeableItem.name +
+          " " +
+          priceType +
+          " " +
+          tradeableWorth +
+          " " +
+          validAsOf;
+        }
 
         if (price.volume >= 0) {
           title += ". ".concat(AccountValUtils.getNumber(
