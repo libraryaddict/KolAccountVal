@@ -172,11 +172,12 @@ export class ItemResolver {
     ownedItems: Map<ValItem, number>,
     item: Item,
     name: string,
+    plural: string,
     bound?: ItemStatus,
     count: number = 1,
     worthMultiplier: number = 1
   ) {
-    const v = new ValItem(item, name, bound);
+    const v = new ValItem(item, name, plural, bound);
     v.worthMultiplier = worthMultiplier;
 
     ownedItems.set(v, (ownedItems.get(v) | 0) + count);
@@ -206,6 +207,7 @@ export class ItemResolver {
           ownedItems,
           s.actualItem,
           item.name,
+          item.plural,
           v.bound == null || v.bound == ItemStatus.NO_TRADE
             ? s.itemType == ItemType.UNTRADEABLE_ITEM
               ? ItemStatus.BOUND
@@ -229,7 +231,13 @@ export class ItemResolver {
         continue;
       }
 
-      this.addItem(ownedItems, fam.hatchling, fam + "", ItemStatus.FAMILIAR);
+      this.addItem(
+        ownedItems,
+        fam.hatchling,
+        fam + "",
+        fam + "",
+        ItemStatus.FAMILIAR
+      );
     }
   }
 

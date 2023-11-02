@@ -164,6 +164,7 @@ c	Haunted Doghouse
 c	Witchess Set
 c	Source terminal
 c	potted tea tree
+c	A Guide to Burning Leaves
 
 
 
@@ -196,3 +197,4 @@ t	Portable Spacegate	Spacegate Research	1000
 t	Noir fedora	Cop dollar	200
 t	Boris's ring	fat loot token	1
 t	ChibiBuddy™ (on)	ChibiBuddy™ (off)	1
+t	distilled resin	inflammable leaf	50

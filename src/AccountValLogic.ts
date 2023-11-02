@@ -43,13 +43,20 @@ export enum ItemStatus {
 
 export class ValItem {
   name: string;
+  pluralName: string;
   tradeableItem: Item;
   bound: ItemStatus;
   shopWorth: number;
   worthMultiplier: number = 1;
 
-  constructor(item: Item, name: string = item.name, bound?: ItemStatus) {
+  constructor(
+    item: Item,
+    name: string = item.name,
+    pluralName: string = item.plural,
+    bound?: ItemStatus
+  ) {
     this.name = name;
+    this.pluralName = pluralName;
     this.tradeableItem = item;
     this.bound = bound;
 
@@ -170,7 +177,12 @@ export class AccountValLogic {
           }
 
           this.addItem(
-            new ValItem(item.actualItem, item.actualItem.name, ItemStatus.BOUND)
+            new ValItem(
+              item.actualItem,
+              item.actualItem.name,
+              item.actualItem.plural,
+              ItemStatus.BOUND
+            )
           );
         }
       }
@@ -197,6 +209,7 @@ export class AccountValLogic {
         }
 
         let name = k.name;
+        let plural = k.plural;
 
         if (boundItem.itemType == ItemType.UNTRADEABLE_ITEM) {
           const untradeable = Item.get(boundItem.data1);
@@ -208,6 +221,7 @@ export class AccountValLogic {
           }
 
           name = untradeable.name;
+          plural = untradeable.plural;
         } else if (
           boundItem.itemType == ItemType.SKILL ||
           boundItem.itemType == ItemType.BOOK
@@ -215,7 +229,7 @@ export class AccountValLogic {
           return;
         }
 
-        this.addItem(new ValItem(k, name, ItemStatus.BOUND), v);
+        this.addItem(new ValItem(k, name, plural, ItemStatus.BOUND), v);
       });
     }
 
@@ -341,7 +355,7 @@ export class AccountValLogic {
           if (
             i.tradeable ? this.settings.doTradeables : this.settings.doBound
           ) {
-            this.addItem(new ValItem(i, i.name, ItemStatus.IN_USE));
+            this.addItem(new ValItem(i, i.name, i.plural, ItemStatus.IN_USE));
           }
         }
       }
@@ -358,7 +372,9 @@ export class AccountValLogic {
           continue;
         }
 
-        this.addItem(new ValItem(item[0], item[0].name, item[1]));
+        this.addItem(
+          new ValItem(item[0], item[0].name, item[0].plural, item[1])
+        );
       }
     }
 

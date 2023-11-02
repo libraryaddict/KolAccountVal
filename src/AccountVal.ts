@@ -64,32 +64,41 @@ class AccountVal {
       }
 
       let titleName = item.tradeableItem.name;
-
-      if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
-        titleName =
-          item.worthMultiplier +
-          " " +
-          item.name +
-          " = 1 " +
-          item.tradeableItem.name;
-      }
-
-      let title =
-        titleName +
-        " @ " +
-        (price.accuracy == PriceType.NEW_PRICES
-          ? "last recorded "
+      const priceType =
+        price.accuracy == PriceType.NEW_PRICES
+          ? "last recorded"
           : price.accuracy == PriceType.MALL_SALES
-          ? "last sold "
+          ? "last sold"
           : price.accuracy == PriceType.AUTOSELL
-          ? "autosell "
-          : "last malled ") +
-        AccountValUtils.getNumber(price.price) +
-        " meat each. Price valid as of " +
+          ? "autosell"
+          : "last malled";
+      const validAsOf =
+        "Price valid as of " +
         AccountValUtils.getNumber(price.daysOutdated, 1) +
         " day" +
         (price.daysOutdated != 1 ? "s" : "") +
         " ago";
+      const tradeableWorth =
+        AccountValUtils.getNumber(price.price) + " meat each.";
+      let title =
+        titleName + " @ " + priceType + " " + tradeableWorth + " " + validAsOf;
+
+      if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
+        titleName = `1 ${item.tradeableItem.name} / ${item.worthMultiplier} ${
+          item.pluralName
+        } = ${AccountValUtils.getNumber(worthEach)} each.`;
+
+        title =
+          titleName +
+          " " +
+          item.tradeableItem.name +
+          " " +
+          priceType +
+          " " +
+          tradeableWorth +
+          " " +
+          validAsOf;
+      }
 
       if (price.volume >= 0) {
         title += `. ${AccountValUtils.getNumber(
