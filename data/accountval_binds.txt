@@ -169,15 +169,15 @@ c	A Guide to Burning Leaves
 
 
 # Gardens
-g	packet of pumpkin seeds	PUMPKIN	
-g	Peppermint Pip Packet	PEPPERMINT
-g	packet of dragon's teeth	SKELETON
-g	Packet of beer seeds	BEER
-g	packet of winter seeds	WINTER
-g	packet of thanksgarden seeds	THANKSGARDEN
-g	packet of tall grass seeds	GRASS
-g	packet of mushroom spores	MUSHROOM
-g	packet of rock seeds	ROCK
+g	packet of pumpkin seeds	pumpkin	
+g	Peppermint Pip Packet	peppermint
+g	packet of dragon's teeth	skeleton
+g	Packet of beer seeds	beer
+g	packet of winter seeds	winter
+g	packet of thanksgarden seeds	thanksgarden
+g	packet of tall grass seeds	grass
+g	packet of mushroom spores	mushroom
+g	packet of rock seeds	rock
 
 
 # Items that are dependent on the value of another as they're no-trade
