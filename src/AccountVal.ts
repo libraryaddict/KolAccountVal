@@ -41,7 +41,7 @@ class AccountVal {
     ).price;
 
     let lines: string[] = [];
-    let mallExtinct: string[] = [];
+    const mallExtinct: [string, string][] = [];
     let shopNetValue: number = 0;
     let shopPricedAt: number = 0;
 
@@ -111,6 +111,10 @@ class AccountVal {
           ". Shop selling at: " + AccountValUtils.getNumber(item.shopWorth);
       }
 
+      if (item.snapshotSource != null) {
+        title = `Owns in ${item.snapshotSource}. ${title}`;
+      }
+
       let name = this.escapeHTML(item.name);
 
       if (item.bound != null) {
@@ -151,9 +155,9 @@ class AccountVal {
 
       if (worthEach <= 0 || worthEach > 999_999_999) {
         if (count > 1) {
-          mallExtinct.push(count + " @ " + name);
+          mallExtinct.push([count + " @ " + name, title]);
         } else {
-          mallExtinct.push(name);
+          mallExtinct.push([name, title]);
         }
 
         continue;
@@ -196,15 +200,22 @@ class AccountVal {
           AccountValColors.mallExtinctColor2
         ];
 
-        mallExtinct = mallExtinct.map(
-          (s, i) => "<font color='" + colors[i % 2] + "'>" + s + "</font>"
+        const extinct = mallExtinct.map(
+          ([name, title], i) =>
+            "<font color='" +
+            colors[i % 2] +
+            "' title='" +
+            this.escapeHTML(title) +
+            "'>" +
+            name +
+            "</font>"
         );
 
         printHtml(
           "There were " +
-            mallExtinct.length +
+            extinct.length +
             " mall extinct items! Items: " +
-            mallExtinct.join(", ")
+            extinct.join(", ")
         );
       }
     }

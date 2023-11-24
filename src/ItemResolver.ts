@@ -26,8 +26,15 @@ import { AccountValColors } from "./AccountValColors";
 class AccValStuff {
   itemType: ItemType;
   actualItem: Item;
-  data1: string;
-  data2: string;
+  skill?: Skill;
+  untradeableItem?: Item;
+  garden?: string;
+  script?: string;
+  userSetting?: string;
+  visitUrlLink?: string;
+  visitUrlIncludes?: string;
+  correspondence?: string;
+  currencyAmount?: number;
 }
 
 export enum ItemType {
@@ -106,7 +113,7 @@ export class ItemResolver {
     for (const s of this.accValStuff) {
       // Skills that are marked as no-perm but are permed, basically librams
       if (s.itemType == ItemType.BOOK) {
-        if (haveSkill(Skill.get(s.data1))) {
+        if (haveSkill(s.skill)) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.EUDORA) {
@@ -114,25 +121,25 @@ export class ItemResolver {
           this.visitCheck(
             s.actualItem,
             "account.php?tab=correspondence",
-            s.data1
+            s.correspondence
           )
         ) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.PROPERTY) {
-        if (this.testProperty(s.data1)) {
+        if (this.testProperty(s.userSetting)) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.VISIT_URL_CHECK) {
-        if (this.visitCheck(s.actualItem, s.data1, s.data2)) {
+        if (this.visitCheck(s.actualItem, s.visitUrlLink, s.visitUrlIncludes)) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.GARDEN) {
-        if (myGardenType() == s.data1) {
+        if (myGardenType() == s.garden) {
           items.push([s.actualItem, ItemStatus.IN_USE]);
         }
       } else if (s.itemType == ItemType.SKILL) {
-        if (getPermedSkills()[Skill.get(s.data1).name]) {
+        if (getPermedSkills()[s.skill.name]) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.CAMPGROUND) {
@@ -140,7 +147,7 @@ export class ItemResolver {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.SCRIPT) {
-        if (eval(s.data1) as boolean) {
+        if (eval(s.script) as boolean) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       }
@@ -194,7 +201,7 @@ export class ItemResolver {
       }
 
       try {
-        const item = Item.get(s.data1);
+        const item = s.untradeableItem;
         const pair: [ValItem, number] = copy[item.name];
 
         if (pair == null) {
@@ -214,7 +221,7 @@ export class ItemResolver {
               : ItemStatus.NO_TRADE
             : v.bound,
           pair[1],
-          /\d+/.test(s.data2) ? toInt(s.data2) : 1
+          s.currencyAmount ?? 1
         );
       } catch (e) {
         print(
@@ -308,58 +315,68 @@ export class ItemResolver {
         continue;
       }
 
+      const v: AccValStuff = new AccValStuff();
+
+      try {
+        v.actualItem = Item.get(spl[1]);
+      } catch (e) {
+        print(
+          "You probably need to update mafia! Got an error! " + e,
+          AccountValColors.attentionGrabbingWarning
+        );
+        continue;
+      }
+
       let e: ItemType;
 
       switch (spl[0]) {
         case "i":
           e = ItemType.UNTRADEABLE_ITEM;
+          v.untradeableItem = Item.get(spl[2]);
           break;
         case "b":
           e = ItemType.BOOK;
+          v.skill = Skill.get(spl[2]);
           break;
         case "p":
           e = ItemType.PROPERTY;
+          v.userSetting = spl[2];
           break;
         case "e":
           e = ItemType.EUDORA;
+          v.correspondence = spl[2];
           break;
         case "v":
           e = ItemType.VISIT_URL_CHECK;
+          v.visitUrlLink = spl[2];
+          v.visitUrlIncludes = spl[3];
           break;
         case "g":
           e = ItemType.GARDEN;
+          v.garden = spl[2];
           break;
         case "t":
           e = ItemType.CURRENCY;
+          v.untradeableItem = Item.get(spl[2]);
+          v.currencyAmount = parseInt(spl[3]);
           break;
         case "c":
           e = ItemType.CAMPGROUND;
           break;
         case "s":
           e = ItemType.SCRIPT;
+          v.script = spl[2];
           break;
         default:
           print(
             "Found line '" + line + "' which I can't handle!",
             AccountValColors.attentionGrabbingWarning
           );
+          continue;
       }
 
-      try {
-        const v: AccValStuff = new AccValStuff();
-
-        v.itemType = e;
-        v.actualItem = Item.get(spl[1]);
-        v.data1 = spl[2];
-        v.data2 = spl[3];
-
-        values.push(v);
-      } catch (e) {
-        print(
-          "You probably need to update mafia! Got an error! " + e,
-          AccountValColors.attentionGrabbingWarning
-        );
-      }
+      v.itemType = e;
+      values.push(v);
     }
 
     this.loadSkills(values);
@@ -377,7 +394,7 @@ export class ItemResolver {
           continue;
         }
 
-        if (Item.get(v1.data1) != v.actualItem) {
+        if (v1.untradeableItem != v.actualItem) {
           continue;
         }
 
@@ -425,7 +442,7 @@ export class ItemResolver {
 
       v.itemType = ItemType.SKILL;
       v.actualItem = i;
-      v.data1 = toInt(skill).toString();
+      v.skill = skill;
 
       values.push(v);
     }

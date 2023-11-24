@@ -48,17 +48,20 @@ export class ValItem {
   bound: ItemStatus;
   shopWorth: number;
   worthMultiplier: number = 1;
+  snapshotSource: string;
 
   constructor(
     item: Item,
     name: string = item.name,
     pluralName: string = item.plural,
-    bound?: ItemStatus
+    bound?: ItemStatus,
+    snapshotSource?: string
   ) {
     this.name = name;
     this.pluralName = pluralName;
     this.tradeableItem = item;
     this.bound = bound;
+    this.snapshotSource = snapshotSource;
 
     if (this.bound == null && !item.tradeable) {
       this.bound = ItemStatus.NO_TRADE;
@@ -108,6 +111,12 @@ export class AccountValLogic {
 
   addItem(item: ValItem, count: number = 1) {
     this.ownedItems.set(item, (this.ownedItems.get(item) | 0) + count);
+  }
+
+  bindsIntoAccountFlag(itemType: ItemType) {
+    return (
+      itemType != ItemType.CURRENCY && itemType != ItemType.UNTRADEABLE_ITEM
+    );
   }
 
   loadPageItems() {
@@ -170,12 +179,8 @@ export class AccountValLogic {
 
       if (this.settings.doBound) {
         for (const item of this.resolver.accValStuff.filter(
-          (s) => s.itemType == ItemType.SKILL
+          (s) => s.itemType == ItemType.SKILL && skills.includes(s.skill)
         )) {
-          if (!skills.includes(Skill.get(item.data1))) {
-            continue;
-          }
-
           this.addItem(
             new ValItem(
               item.actualItem,
@@ -187,8 +192,8 @@ export class AccountValLogic {
         }
       }
 
-      const owned: Map<Item, number> = new Map(
-        [...this.ownedItems].map(([k, v]) => [k.tradeableItem, v])
+      const owned: Map<Item, [ValItem, number]> = new Map(
+        [...this.ownedItems].map(([k, v]) => [k.tradeableItem, [k, v]])
       );
 
       items.forEach((v, k) => {
@@ -197,7 +202,7 @@ export class AccountValLogic {
         );
 
         if (boundItem == null) {
-          v -= owned.get(k) ?? 0;
+          v -= owned.has(k) ? owned.get(k)[1] : 0;
 
           if (v <= 0) {
             return;
@@ -206,15 +211,17 @@ export class AccountValLogic {
           this.addItem(new ValItem(k), v);
 
           return;
+        } else if (owned.has(k) && owned.get(k)[0].isBound()) {
+          return;
         }
 
         let name = k.name;
         let plural = k.plural;
 
         if (boundItem.itemType == ItemType.UNTRADEABLE_ITEM) {
-          const untradeable = Item.get(boundItem.data1);
+          const untradeable = boundItem.untradeableItem;
 
-          v -= owned.get(k) ?? 0;
+          v -= owned.has(k) ? owned.get(k)[1] : 0;
 
           if (v <= 0) {
             return;
@@ -222,14 +229,12 @@ export class AccountValLogic {
 
           name = untradeable.name;
           plural = untradeable.plural;
-        } else if (
-          boundItem.itemType == ItemType.SKILL ||
-          boundItem.itemType == ItemType.BOOK
-        ) {
-          return;
         }
 
-        this.addItem(new ValItem(k, name, plural, ItemStatus.BOUND), v);
+        this.addItem(
+          new ValItem(k, name, plural, ItemStatus.BOUND, "av-snapshot"),
+          v
+        );
       });
     }
 
