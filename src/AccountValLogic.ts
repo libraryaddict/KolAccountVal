@@ -213,6 +213,11 @@ export class AccountValLogic {
           return;
         } else if (owned.has(k) && owned.get(k)[0].isBound()) {
           return;
+        } else if (
+          boundItem.untradeableItem != null &&
+          owned.has(boundItem.untradeableItem)
+        ) {
+          return;
         }
 
         let name = k.name;
