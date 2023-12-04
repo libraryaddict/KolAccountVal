@@ -522,11 +522,13 @@ export class AccountValSettings {
     }
 
     if (!wasSet.includes("doBound")) {
-      this.doBound = this.fetchingEverywhereish && this.doNontradeables;
+      this.doBound =
+        (this.doTradeables || this.fetchingEverywhereish) &&
+        this.doNontradeables;
     }
 
     for (const fetchSource of fetchSources) {
-      if (this[fetchSource] != null || fetchSource == "fetchFamiliars") {
+      if (this[fetchSource] != null) {
         continue;
       }
 

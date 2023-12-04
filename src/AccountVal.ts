@@ -78,8 +78,13 @@ class AccountVal {
         " day" +
         (price.daysOutdated != 1 ? "s" : "") +
         " ago";
-      const tradeableWorth =
+      let tradeableWorth =
         AccountValUtils.getNumber(price.price) + " meat each.";
+
+      if (price.price < 0) {
+        tradeableWorth = "as mall extinct.";
+      }
+
       let title =
         titleName + " @ " + priceType + " " + tradeableWorth + " " + validAsOf;
 
