@@ -1224,11 +1224,13 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
       }
 
       if (!wasSet.includes("doBound")) {
-        this.doBound = this.fetchingEverywhereish && this.doNontradeables;
+        this.doBound =
+        (this.doTradeables || this.fetchingEverywhereish) &&
+        this.doNontradeables;
       }
 
       for (var _i = 0, _fetchSources = fetchSources; _i < _fetchSources.length; _i++) {var fetchSource = _fetchSources[_i];
-        if (this[fetchSource] != null || fetchSource == "fetchFamiliars") {
+        if (this[fetchSource] != null) {
           continue;
         }
 
@@ -2732,6 +2734,11 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         " ago";
         var tradeableWorth =
         AccountValUtils.getNumber(price.price) + " meat each.";
+
+        if (price.price < 0) {
+          tradeableWorth = "as mall extinct.";
+        }
+
         var title =
         titleName + " @ " + priceType + " " + tradeableWorth + " " + validAsOf;
 
