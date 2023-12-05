@@ -1229,6 +1229,10 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         this.doNontradeables;
       }
 
+      if (!wasSet.includes("fetchFamiliars")) {
+        this.fetchFamiliars = this.doBound;
+      }
+
       for (var _i = 0, _fetchSources = fetchSources; _i < _fetchSources.length; _i++) {var fetchSource = _fetchSources[_i];
         if (this[fetchSource] != null) {
           continue;
