@@ -527,6 +527,10 @@ export class AccountValSettings {
         this.doNontradeables;
     }
 
+    if (!wasSet.includes("fetchFamiliars")) {
+      this.fetchFamiliars = this.doBound;
+    }
+
     for (const fetchSource of fetchSources) {
       if (this[fetchSource] != null) {
         continue;
