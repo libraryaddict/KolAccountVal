@@ -86,6 +86,7 @@ i	shrink-wrapped Cincho de Mayo	Cincho de Mayo
 i	shrink-wrapped 2002 Mr. Store Catalog	2002 Mr. Store Catalog
 i	boxed august scepter	august scepter
 i	book of facts	book of facts (dog-eared)
+i	crated wardrobe-o-matic	wardrobe-o-matic
 i	wrapped candy cane sword cane	candy cane sword cane
 
 
