@@ -50,6 +50,7 @@ export class AccountValSettings {
   fetchSession: boolean = false;
   fetchClan: boolean = false;
   fetchingEverywhereish: boolean = true; // If we're fetching from everywhere but maybe some areas
+  fetchingNonItems: boolean = true;
   doSuperFast: boolean = false;
   doTradeables: boolean;
   doNontradeables: boolean;
@@ -527,7 +528,7 @@ export class AccountValSettings {
         this.doNontradeables;
     }
 
-    if (!wasSet.includes("fetchFamiliars")) {
+    if (!wasSet.includes("fetchFamiliars") && this.fetchingEverywhereish) {
       this.fetchFamiliars = this.doBound;
     }
 
@@ -538,6 +539,8 @@ export class AccountValSettings {
 
       this[fetchSource] = this.fetchingEverywhereish;
     }
+
+    this.fetchingNonItems = this.fetchingEverywhereish;
 
     if (this.settingsDebug) {
       for (const setting of Object.keys(this)) {

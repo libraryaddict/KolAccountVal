@@ -177,7 +177,7 @@ export class AccountValLogic {
         this.resolver.resolveFamiliars(familiars, this.ownedItems);
       }
 
-      if (this.settings.doBound) {
+      if (this.settings.doBound && this.settings.fetchingNonItems) {
         for (const item of this.resolver.accValStuff.filter(
           (s) => s.itemType == ItemType.SKILL && skills.includes(s.skill)
         )) {
@@ -357,7 +357,7 @@ export class AccountValLogic {
     }
 
     // Check our current workshed
-    if (this.settings.fetchingEverywhereish) {
+    if (this.settings.fetchingEverywhereish && this.settings.fetchingNonItems) {
       if (this.settings.doBound || this.settings.doTradeables) {
         const i = getWorkshed();
 
@@ -371,7 +371,7 @@ export class AccountValLogic {
       }
     }
 
-    if (this.settings.doBound) {
+    if (this.settings.doBound && this.settings.fetchingNonItems) {
       for (const item of this.resolver.getUrledItems()) {
         if (
           item[0].tradeable &&
