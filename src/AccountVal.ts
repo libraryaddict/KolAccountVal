@@ -1,7 +1,6 @@
 import {
   entityDecode,
   getPlayerName,
-  getRevision,
   Item,
   myClosetMeat,
   myId,
@@ -9,14 +8,14 @@ import {
   myStorageMeat,
   print,
   printHtml,
-  toInt
+  toInt,
 } from "kolmafia";
 import { AccountValLogic, ItemStatus } from "./AccountValLogic";
 import {
   AccountValSettings,
   FieldType,
   PricingSettings,
-  SortBy
+  SortBy,
 } from "./AccountValSettings";
 import { AccountValUtils } from "./AccountValUtils";
 import { PriceType } from "./PriceResolver";
@@ -202,7 +201,7 @@ class AccountVal {
       if (mallExtinct.length > 0) {
         const colors: string[] = [
           AccountValColors.mallExtinctColor1,
-          AccountValColors.mallExtinctColor2
+          AccountValColors.mallExtinctColor2,
         ];
 
         const extinct = mallExtinct.map(
@@ -378,67 +377,95 @@ class AccountVal {
     // accountval price>3000 iprice>3000 show
   }
 
-  start(command: string) {
+  load(command: string): boolean {
     this.settings = new AccountValSettings();
 
-    try {
-      if (command == null) {
-        print(
-          "To fine tune what we check, including to tradeables only.. Provide the parameter 'help' for more info",
-          AccountValColors.helpfulStateInfo
-        );
-        command = "";
-      } else if (command.toLowerCase().match(/([^a-z]|^)help([^a-z]|$)/)) {
-        this.settings.doSettings([]);
-        this.doHelp();
+    if (command == "test") {
+      this.runTests();
 
-        return;
-      } else if (command.toLowerCase().match(/^debugcolors=[^ ]+$/)) {
-        const scheme = command.split("=")[1];
-        showAccountvalColors(scheme);
+      return false;
+    }
 
-        return;
-      }
+    if (command == null) {
+      print(
+        "To fine tune what we check, including to tradeables only.. Provide the parameter 'help' for more info",
+        AccountValColors.helpfulStateInfo
+      );
+      command = "";
+    } else if (command.toLowerCase().match(/([^a-z]|^)help([^a-z]|$)/)) {
+      this.settings.doSettings([]);
+      this.doHelp();
 
-      const spl: string[] = AccountValUtils.splitArguments(
-        this.settings,
-        command
+      return false;
+    } else if (command.toLowerCase().match(/^debugcolors=[^ ]+$/)) {
+      const scheme = command.split("=")[1];
+      showAccountvalColors(scheme);
+
+      return false;
+    }
+
+    const spl: string[] = AccountValUtils.splitArguments(
+      this.settings,
+      command
+    );
+
+    const unknown = this.settings.doSettings(spl);
+
+    if (unknown.length > 0) {
+      unknown.forEach((s) =>
+        printHtml(
+          `<font color='${AccountValColors.attentionGrabbingWarning}'>${s}</font>`
+        )
       );
 
-      const unknown = this.settings.doSettings(spl);
+      return false;
+    }
 
-      if (unknown.length > 0) {
-        unknown.forEach((s) =>
-          printHtml(
-            `<font color='${AccountValColors.attentionGrabbingWarning}'>${s}</font>`
-          )
-        );
+    return true;
+  }
 
-        return;
+  start() {
+    const priceSettings = new PricingSettings();
+    priceSettings.maxPriceAge = this.settings.maxAge;
+    priceSettings.oldPricing = this.settings.oldPricing;
+    this.logic = new AccountValLogic(this.settings, priceSettings);
+
+    this.logic.loadItems();
+    this.doCheck();
+  }
+
+  runTests() {
+    this.runTest("", {
+      doBound: true,
+      sortBy: SortBy.TOTAL_PRICE,
+      fetchInventory: true,
+    });
+    this.runTest("sort meat!bound", { doBound: false, sortBy: SortBy.PRICE });
+    print("Tests Finished", "green");
+  }
+
+  runTest(args: string, verify: { [key: string]: any }) {
+    this.load(args);
+
+    for (const [key, value] of Object.entries(verify)) {
+      const setTo = this.settings[key];
+
+      if (setTo == value) {
+        continue;
       }
 
-      const priceSettings = new PricingSettings();
-      priceSettings.maxPriceAge = this.settings.maxAge;
-      priceSettings.oldPricing = this.settings.oldPricing;
-      this.logic = new AccountValLogic(this.settings, priceSettings);
-
-      this.logic.loadItems();
-      this.doCheck();
-    } finally {
-      const revision = getRevision();
-
-      if (revision != null && revision > 0 && revision < 26000) {
-        printHtml(
-          "<font color='red'>Warning! You are using an outdated version of KoLmafia! You're likely missing some items, and may not have the ability to render the 'title' attribute! You could even be missing wrapped text!</font>"
-        );
-        printHtml(
-          "Downloads: <a color='blue' href='https://github.com/kolmafia/kolmafia/releases'>[Github]</a> or <a color='blue' href='https://ci.kolmafia.us/'>[Jenkins]</a> <a color='gray' href='https://ci.kolmafia.us/job/Kolmafia/lastSuccessfulBuild/artifact/dist/'>[Link to Jar]</a>"
-        );
-      }
+      print(
+        `On '${args}', ${key} was not set to ${value} but instead ${setTo}`,
+        "red"
+      );
     }
   }
 }
 
 export function main(command: string) {
-  new AccountVal().start(command);
+  const val = new AccountVal();
+
+  if (val.load(command)) {
+    val.start();
+  }
 }

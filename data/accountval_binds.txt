@@ -12,7 +12,7 @@ i	DIY protonic accelerator kit	protonic accelerator pack
 i	Dear Past Self Package	Time-Spinner
 i	Granny Tood's Thanksgarden Catalog	packet of thanksgarden seeds
 i	suspicious package	Kremlin's Greatest Briefcase
-i	LI-11 Motor Pool voucher	Asdon Martin keyfob
+i	LI-11 Motor Pool voucher	Asdon Martin keyfob (on ring)
 i	Grumpy Bumpkin's Pumpkin Seed Catalog	packet of pumpkin seeds
 i	Mint Salton Pepper's Peppermint Seed Catalog	Peppermint Pip Packet
 i	Pete & Jackie's Dragon Tooth Emporium Catalog	packet of dragon's teeth
