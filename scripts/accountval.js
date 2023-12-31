@@ -901,18 +901,22 @@ presets.push({
     return ["autosell", "junk"];
   },
 
-  isProcessed: function isProcessed(item, worth) {
-    if (!(0,external_kolmafia_.isTradeable)(item) || !(0,external_kolmafia_.isDiscardable)(item)) {
+  isShown: function isShown(item, worth) {
+    if (item.isBound() || !(0,external_kolmafia_.isDiscardable)(item.actualItem)) {
       return false;
     }
 
-    var price = (0,external_kolmafia_.autosellPrice)(item) * 2;
+    var price = (0,external_kolmafia_.autosellPrice)(item.actualItem) * 2;
 
     return price >= worth;
   },
 
   desc: function desc() {
     return "Show only items that sell at mall min";
+  },
+
+  isProcessed: function isProcessed(item, worth) {
+    throw new Error("Function not implemented.");
   }
 });
 
