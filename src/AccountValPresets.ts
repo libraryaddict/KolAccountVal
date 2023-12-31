@@ -5,7 +5,6 @@ import {
   fullnessLimit,
   inebrietyLimit,
   isDiscardable,
-  isTradeable,
   itemType,
   myFullness,
   myInebriety,
@@ -181,18 +180,22 @@ presets.push({
     return ["autosell", "junk"];
   },
 
-  isProcessed: function (item: Item, worth: number): boolean {
-    if (!isTradeable(item) || !isDiscardable(item)) {
+  isShown(item: ValItem, worth: number): boolean {
+    if (item.isBound() || !isDiscardable(item.actualItem)) {
       return false;
     }
 
-    const price = autosellPrice(item) * 2;
+    const price = autosellPrice(item.actualItem) * 2;
 
     return price >= worth;
   },
 
   desc: function (): string {
     return "Show only items that sell at mall min";
+  },
+
+  isProcessed: function (item: Item, worth: number): boolean {
+    throw new Error("Function not implemented.");
   },
 });
 
