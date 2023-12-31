@@ -257,7 +257,6 @@ export class AccountValLogic {
     }
 
     this.resolveNoTrades();
-    this.handlePresets();
   }
 
   loadJsFilter() {
@@ -403,17 +402,6 @@ export class AccountValLogic {
     }
 
     this.resolveNoTrades();
-    this.handlePresets();
-  }
-
-  private handlePresets() {
-    for (const item of this.ownedItems.keys()) {
-      if (this.settings.isShown(item, this.ownedItems.get(item))) {
-        continue;
-      }
-
-      this.ownedItems.delete(item);
-    }
   }
 
   private resolveNoTrades() {
@@ -514,6 +502,12 @@ export class AccountValLogic {
       }
 
       if (settings.sales > 0 && price.volume < settings.sales) {
+        ownedItems.delete(item);
+
+        return;
+      }
+
+      if (!settings.isShown(item, price.price)) {
         ownedItems.delete(item);
 
         return;
