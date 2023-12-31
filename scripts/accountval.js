@@ -599,6 +599,14 @@ var AccountValLogic = /*#__PURE__*/function () {
           return;
         }
 
+        if (
+        settings.presets.some(
+          (p) => !p.negated && p.preset.name().includes("autosell")
+        ))
+        {
+          price.price = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(item.actualItem);
+        }
+
         prices.push([item, price]);
       };var _iterator6 = _createForOfIteratorHelper(
 
