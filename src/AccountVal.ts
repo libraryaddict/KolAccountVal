@@ -5,6 +5,7 @@ import {
   myClosetMeat,
   myId,
   myMeat,
+  mySessionMeat,
   myStorageMeat,
   print,
   printHtml,
@@ -26,11 +27,6 @@ class AccountVal {
   private settings: AccountValSettings;
 
   doCheck() {
-    const pronoun = this.settings.fetchClan
-      ? "The clan stash is"
-      : !this.settings.playerId || this.settings.playerId == toInt(myId())
-      ? "You are"
-      : getPlayerName(this.settings.playerId) + " is";
     let netvalue: number = 0;
     this.logic.doPricing();
 
@@ -224,16 +220,36 @@ class AccountVal {
       }
     }
 
+    const pronoun = this.settings.fetchClan
+      ? "The clan stash is"
+      : !this.settings.playerId || this.settings.playerId == toInt(myId())
+      ? this.settings.fetchSession
+        ? "Your session is"
+        : "You are"
+      : getPlayerName(this.settings.playerId) + " is";
+
+    let mrAMeat = netvalue;
+
     print(
       pronoun + " worth " + AccountValUtils.getNumber(netvalue) + " meat!",
       AccountValColors.helpfulStateInfo
     );
 
+    if (this.settings.fetchSession && mySessionMeat() != 0) {
+      mrAMeat = netvalue + mySessionMeat();
+      print(
+        `Add meat from session, that's ${AccountValUtils.getNumber(
+          mrAMeat
+        )} meat!`,
+        AccountValColors.helpfulStateInfo
+      );
+    }
+
     if (this.settings.brief) {
       return;
     }
 
-    const mrAWorth = (0.0 + netvalue) / aWorth;
+    const mrAWorth = (0.0 + mrAMeat) / aWorth;
 
     printHtml(
       `<font title='With Mr. Accessory worth being ${AccountValUtils.getNumber(

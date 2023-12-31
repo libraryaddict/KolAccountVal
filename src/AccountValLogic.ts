@@ -17,14 +17,14 @@ import {
   shopAmount,
   shopPrice,
   Skill,
-  toInt
+  toInt,
 } from "kolmafia";
 import { ItemResolver, ItemType } from "./ItemResolver";
 import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
 import {
   AccountValSettings,
   PricingSettings,
-  SortBy
+  SortBy,
 } from "./AccountValSettings";
 import { FetchFromPage } from "./PageResolver";
 import { AccountValColors } from "./AccountValColors";
@@ -38,12 +38,13 @@ export enum ItemStatus {
 
   IN_USE,
 
-  SHOP_WORTH
+  SHOP_WORTH,
 }
 
 export class ValItem {
   name: string;
   pluralName: string;
+  actualItem: Item;
   tradeableItem: Item;
   bound: ItemStatus;
   shopWorth: number;
@@ -51,12 +52,14 @@ export class ValItem {
   snapshotSource: string;
 
   constructor(
-    item: Item,
+    actualItem: Item,
+    item: Item = actualItem,
     name: string = item.name,
     pluralName: string = item.plural,
     bound?: ItemStatus,
     snapshotSource?: string
   ) {
+    this.actualItem = actualItem;
     this.name = name;
     this.pluralName = pluralName;
     this.tradeableItem = item;
@@ -184,6 +187,7 @@ export class AccountValLogic {
           this.addItem(
             new ValItem(
               item.actualItem,
+              item.actualItem,
               item.actualItem.name,
               item.actualItem.plural,
               ItemStatus.BOUND
@@ -220,6 +224,7 @@ export class AccountValLogic {
           return;
         }
 
+        let actualItem = k;
         let name = k.name;
         let plural = k.plural;
 
@@ -232,18 +237,27 @@ export class AccountValLogic {
             return;
           }
 
+          actualItem = untradeable;
           name = untradeable.name;
           plural = untradeable.plural;
         }
 
         this.addItem(
-          new ValItem(k, name, plural, ItemStatus.BOUND, "av-snapshot"),
+          new ValItem(
+            actualItem,
+            k,
+            name,
+            plural,
+            ItemStatus.BOUND,
+            "av-snapshot"
+          ),
           v
         );
       });
     }
 
     this.resolveNoTrades();
+    this.handlePresets();
   }
 
   loadJsFilter() {
@@ -365,30 +379,41 @@ export class AccountValLogic {
           if (
             i.tradeable ? this.settings.doTradeables : this.settings.doBound
           ) {
-            this.addItem(new ValItem(i, i.name, i.plural, ItemStatus.IN_USE));
+            this.addItem(
+              new ValItem(i, i, i.name, i.plural, ItemStatus.IN_USE)
+            );
           }
         }
       }
     }
 
     if (this.settings.doBound && this.settings.fetchingNonItems) {
-      for (const item of this.resolver.getUrledItems()) {
+      for (const [item, status] of this.resolver.getUrledItems()) {
         if (
-          item[0].tradeable &&
-          (item[1] == ItemStatus.FAMILIAR || item[1] != ItemStatus.BOUND)
+          item.tradeable &&
+          (status == ItemStatus.FAMILIAR || status != ItemStatus.BOUND)
             ? !this.settings.doTradeables
             : !this.settings.doBound
         ) {
           continue;
         }
 
-        this.addItem(
-          new ValItem(item[0], item[0].name, item[0].plural, item[1])
-        );
+        this.addItem(new ValItem(item, item, item.name, item.plural, status));
       }
     }
 
     this.resolveNoTrades();
+    this.handlePresets();
+  }
+
+  private handlePresets() {
+    for (const item of this.ownedItems.keys()) {
+      if (this.settings.isShown(item, this.ownedItems.get(item))) {
+        continue;
+      }
+
+      this.ownedItems.delete(item);
+    }
   }
 
   private resolveNoTrades() {
@@ -401,7 +426,7 @@ export class AccountValLogic {
     if (this.settings.doBound || this.settings.doNontradeables) {
       this.resolver.resolveBoundToTradeables(copy, this.ownedItems, [
         this.settings.doBound ? ItemType.UNTRADEABLE_ITEM : null,
-        this.settings.doNontradeables ? ItemType.CURRENCY : null
+        this.settings.doNontradeables ? ItemType.CURRENCY : null,
       ]);
     }
 

@@ -2,8 +2,10 @@ import { getPlayerId, isDarkMode, print, toBoolean, toFloat } from "kolmafia";
 import {
   AccountValColors,
   getAccountvalColors,
-  loadAccountvalColors
+  loadAccountvalColors,
 } from "./AccountValColors";
+import { AccountValPreset, getPresets } from "./AccountValPresets";
+import { ValItem } from "./AccountValLogic";
 
 export enum FieldType {
   NUMBER,
@@ -11,14 +13,15 @@ export enum FieldType {
   COLOR_SCHEME,
   BOOLEAN,
   NAME,
-  STRING
+  STRING,
 }
 
-export class ValSetting {
+export interface ValSetting {
   type: FieldType;
   field: string;
   names: string[];
   desc: string;
+  preset?: AccountValPreset;
 }
 
 export enum SortBy {
@@ -27,7 +30,7 @@ export enum SortBy {
   PRICE,
   TOTAL_PRICE,
   SALES_VOLUME,
-  ITEM_ID
+  ITEM_ID,
 }
 
 const sortByAliases: Map<string, SortBy> = new Map([
@@ -38,8 +41,13 @@ const sortByAliases: Map<string, SortBy> = new Map([
   ["totalprice", SortBy.TOTAL_PRICE],
   ["id", SortBy.ITEM_ID],
   ["sales", SortBy.SALES_VOLUME],
-  ["sold", SortBy.SALES_VOLUME]
+  ["sold", SortBy.SALES_VOLUME],
 ]);
+
+type PresetSetting = {
+  preset: AccountValPreset;
+  negated: boolean;
+};
 
 export class AccountValSettings {
   fetchCloset: boolean;
@@ -72,24 +80,25 @@ export class AccountValSettings {
   brief: boolean = false;
   oldPricing: boolean = false;
   colorScheme: string = isDarkMode() ? "dark" : "default";
+  presets: PresetSetting[] = [];
 
   static getSettings(): ValSetting[] {
-    const settings = [];
+    const settings: ValSetting[] = [];
 
     function makeSetting(
       type: FieldType,
       name: string,
       aliases: string[],
-      desc: string
+      desc: string,
+      preset?: AccountValPreset
     ) {
-      const setting = new ValSetting();
-
-      setting.type = type;
-      setting.field = name;
-      setting.names = aliases.map((s) => s.toLowerCase());
-      setting.desc = desc;
-
-      settings.push(setting);
+      settings.push({
+        type,
+        field: name,
+        names: aliases.map((s) => s.toLowerCase()),
+        desc,
+        preset: preset,
+      });
     }
 
     makeSetting(
@@ -153,14 +162,14 @@ export class AccountValSettings {
         "nontradeables",
         "untrade",
         "untradeable",
-        "untradeables"
+        "untradeables",
       ],
       "Should it do non-tradeables (Resolves to tradeables if it can)"
     );
     makeSetting(
       FieldType.BOOLEAN,
       "fetchFamiliars",
-      ["familiar", "familiars", "fam", "fams", "hatchling", "hatchlings"],
+      ["familiar", "familiars", "fam", "fams"],
       "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set"
     );
     makeSetting(
@@ -186,7 +195,7 @@ export class AccountValSettings {
         "minmeat",
         "min-meat",
         "minprice",
-        "price"
+        "price",
       ],
       "Each item total worth, at least this amount."
     );
@@ -213,7 +222,7 @@ export class AccountValSettings {
         "who",
         "target",
         "name",
-        "username"
+        "username",
       ],
       'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces'
     );
@@ -284,19 +293,22 @@ export class AccountValSettings {
     );
 
     makeSetting(
-      FieldType.BOOLEAN,
-      "oldPricing",
-      ["oldpricing"],
-      "Has accountval calculate prices from the old slower and more inaccurate method"
-    );
-
-    makeSetting(
       FieldType.COLOR_SCHEME,
       "colorScheme",
       ["color", "colors", "colorscheme", "scheme"],
       "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " +
         getAccountvalColors().join(", ")
     );
+
+    for (const preset of getPresets()) {
+      makeSetting(
+        FieldType.BOOLEAN,
+        preset.name()[0],
+        preset.name(),
+        preset.desc(),
+        preset
+      );
+    }
 
     return settings;
   }
@@ -323,6 +335,10 @@ export class AccountValSettings {
     const settings = AccountValSettings.getSettings();
 
     for (const setting of settings) {
+      if (setting.preset != null) {
+        continue;
+      }
+
       defaultValues[setting.field] = this[setting.field];
     }
 
@@ -479,7 +495,15 @@ export class AccountValSettings {
 
         this[setting.field] = v;
       } else {
-        this[setting.field] = isTrue;
+        if (setting.preset != null) {
+          this.presets.push({
+            preset: setting.preset,
+            negated: !isTrue,
+          });
+        } else {
+          this[setting.field] = isTrue;
+        }
+
         wasSet.push(setting.field);
       }
     }
@@ -493,7 +517,7 @@ export class AccountValSettings {
       "fetchClan",
       "fetchSession",
       "fetchFamiliars",
-      "fetchSnapshot"
+      "fetchSnapshot",
     ];
 
     // We can do fams if bound isn't false
@@ -528,7 +552,12 @@ export class AccountValSettings {
         this.doNontradeables;
     }
 
-    if (!wasSet.includes("fetchFamiliars") && this.fetchingEverywhereish) {
+    if (!wasSet.includes("fetchFamiliars") && wasSet.includes("hatchling")) {
+      this.fetchFamiliars = false;
+    } else if (
+      !wasSet.includes("fetchFamiliars") &&
+      this.fetchingEverywhereish
+    ) {
       this.fetchFamiliars = this.doBound;
     }
 
@@ -549,6 +578,15 @@ export class AccountValSettings {
     }
 
     return errors;
+  }
+
+  isShown(item: ValItem, worth: number): boolean {
+    return this.presets.every(
+      (pre) =>
+        (pre.preset.isShown != null
+          ? pre.preset.isShown(item, worth)
+          : pre.preset.isProcessed(item.actualItem, worth)) != pre.negated
+    );
   }
 
   isArg(arg: string, args: string[]): boolean {

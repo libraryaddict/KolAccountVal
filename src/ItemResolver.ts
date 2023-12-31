@@ -18,7 +18,7 @@ import {
   toBoolean,
   toInt,
   toItem,
-  visitUrl
+  visitUrl,
 } from "kolmafia";
 import { ItemStatus, ValItem } from "./AccountValLogic";
 import { AccountValColors } from "./AccountValColors";
@@ -56,7 +56,7 @@ export enum ItemType {
 
   CAMPGROUND,
 
-  SCRIPT
+  SCRIPT,
 }
 
 export class ItemResolver {
@@ -177,6 +177,7 @@ export class ItemResolver {
 
   private addItem(
     ownedItems: Map<ValItem, number>,
+    actualItem: Item,
     item: Item,
     name: string,
     plural: string,
@@ -184,7 +185,7 @@ export class ItemResolver {
     count: number = 1,
     worthMultiplier: number = 1
   ) {
-    const v = new ValItem(item, name, plural, bound);
+    const v = new ValItem(actualItem, item, name, plural, bound);
     v.worthMultiplier = worthMultiplier;
 
     ownedItems.set(v, (ownedItems.get(v) | 0) + count);
@@ -212,6 +213,7 @@ export class ItemResolver {
 
         this.addItem(
           ownedItems,
+          item,
           s.actualItem,
           item.name,
           item.plural,
@@ -240,6 +242,7 @@ export class ItemResolver {
 
       this.addItem(
         ownedItems,
+        fam.hatchling,
         fam.hatchling,
         fam + "",
         fam + "",
