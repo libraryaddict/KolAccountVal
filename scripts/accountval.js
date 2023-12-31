@@ -343,7 +343,6 @@ var AccountValLogic = /*#__PURE__*/function () {
       }
 
       this.resolveNoTrades();
-      this.handlePresets();
     } }, { key: "loadJsFilter", value:
 
     function loadJsFilter() {
@@ -489,17 +488,6 @@ var AccountValLogic = /*#__PURE__*/function () {
       }
 
       this.resolveNoTrades();
-      this.handlePresets();
-    } }, { key: "handlePresets", value:
-
-    function handlePresets() {var _iterator5 = _createForOfIteratorHelper(
-          this.ownedItems.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _item5 = _step5.value;
-          if (this.settings.isShown(_item5, this.ownedItems.get(_item5))) {
-            continue;
-          }
-
-          this.ownedItems.delete(_item5);
-        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
     } }, { key: "resolveNoTrades", value:
 
     function resolveNoTrades() {
@@ -514,72 +502,72 @@ var AccountValLogic = /*#__PURE__*/function () {
         this.settings.doBound ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.UNTRADEABLE_ITEM : null,
         this.settings.doNontradeables ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .q.CURRENCY : null]
         );
-      }var _iterator6 = _createForOfIteratorHelper(
+      }var _iterator5 = _createForOfIteratorHelper(
 
-          this.ownedItems.keys()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var _item6 = _step6.value;
+          this.ownedItems.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _item5 = _step5.value;
           if (
           this.jsFilter != null &&
-          !this.jsFilter(_item6.tradeableItem, this.ownedItems.get(_item6)))
+          !this.jsFilter(_item5.tradeableItem, this.ownedItems.get(_item5)))
           {
-            this.ownedItems.delete(_item6);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If item can't be resolved to a price at all
           if (
-          !_item6.isBound() && (
-          !_item6.tradeableItem.tradeable || _item6.tradeableItem.gift) &&
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(_item6.tradeableItem) == 0)
+          !_item5.isBound() && (
+          !_item5.tradeableItem.tradeable || _item5.tradeableItem.gift) &&
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(_item5.tradeableItem) == 0)
           {
-            this.ownedItems.delete(_item6);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
-          if (this.ownedItems.get(_item6) < this.settings.minimumAmount) {
-            this.ownedItems.delete(_item6);
+          if (this.ownedItems.get(_item5) < this.settings.minimumAmount) {
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If we're not doing bound items, and this is a bound item..
           if (
           !this.settings.doBound &&
-          _item6.isBound() &&
-          _item6.bound != ItemStatus.FAMILIAR)
+          _item5.isBound() &&
+          _item5.bound != ItemStatus.FAMILIAR)
           {
-            this.ownedItems.delete(_item6);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If we're not doing familiars and this is a familiar
           if (
-          _item6.bound == ItemStatus.FAMILIAR && (
+          _item5.bound == ItemStatus.FAMILIAR && (
           this.settings.fetchFamiliars == false ||
           this.settings.fetchFamiliars == null && !this.settings.doBound))
           {
-            this.ownedItems.delete(_item6);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If we're not doing tradeables, and this isn't a bound item, and is tradeable
           if (
           !this.settings.doTradeables &&
-          _item6.tradeableItem.tradeable &&
-          _item6.isTradeable())
+          _item5.tradeableItem.tradeable &&
+          _item5.isTradeable())
           {
-            this.ownedItems.delete(_item6);
+            this.ownedItems.delete(_item5);
             continue;
           }
 
           // If we're not doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
           if (
           !this.settings.doNontradeables &&
-          !_item6.tradeableItem.tradeable &&
-          !_item6.isBound())
+          !_item5.tradeableItem.tradeable &&
+          !_item5.isBound())
           {
-            this.ownedItems.delete(_item6);
+            this.ownedItems.delete(_item5);
             continue;
           }
-        }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
+        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
     } }, { key: "doPricing", value:
 
     function doPricing() {
@@ -605,10 +593,16 @@ var AccountValLogic = /*#__PURE__*/function () {
           return;
         }
 
-        prices.push([item, price]);
-      };var _iterator7 = _createForOfIteratorHelper(
+        if (!settings.isShown(item, price.price)) {
+          ownedItems.delete(item);
 
-          this.ownedItems.keys()),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var _i3 = _step7.value;
+          return;
+        }
+
+        prices.push([item, price]);
+      };var _iterator6 = _createForOfIteratorHelper(
+
+          this.ownedItems.keys()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var _i3 = _step6.value;
           var _price = this.priceResolver.itemPrice(
             _i3.tradeableItem,
             this.ownedItems.get(_i3),
@@ -630,7 +624,7 @@ var AccountValLogic = /*#__PURE__*/function () {
         }
 
         // TODO Sort tocheck
-      } catch (err) {_iterator7.e(err);} finally {_iterator7.f();}
+      } catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
       var checked = -1;
 
       if (toCheck.length > 200) {
