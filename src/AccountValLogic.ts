@@ -513,6 +513,14 @@ export class AccountValLogic {
         return;
       }
 
+      if (
+        settings.presets.some(
+          (p) => !p.negated && p.preset.name().includes("autosell")
+        )
+      ) {
+        price.price = autosellPrice(item.actualItem);
+      }
+
       prices.push([item, price]);
     };
 
