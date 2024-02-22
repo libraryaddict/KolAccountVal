@@ -267,7 +267,7 @@ export class AccountValSettings {
     makeSetting(
       FieldType.NUMBER,
       "sales",
-      ["sales"],
+      ["sales", "sold"],
       "Hides items that have less than this amount of sales"
     );
 

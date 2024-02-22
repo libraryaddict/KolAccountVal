@@ -199,6 +199,44 @@ presets.push({
   },
 });
 
+const autoselluseItems: Item[] = [
+  "Bag of park garbage",
+  "ancient vinyl coin purse",
+  "Black pension check",
+  "Briefcase",
+  "Collection of tiny spooky objects",
+  "CSA discount card",
+  "Duct tape wallet",
+  "Fat Wallet",
+  "Gathered Meat-Clip",
+  "LOLmec statuette",
+  "Orcish meat locker",
+  "Old coin purse",
+  "Old leather wallet",
+  "Penultimate Fantasy chest",
+  "Roll of meat",
+  "Shiny stones",
+  "SMOOCH bottlecap",
+  "Solid gold jewel",
+  "Stolen meatpouch",
+  "Warm Subject gift certificate",
+  "Envelope full of Meat",
+].map((s) => Item.get(s));
+
+presets.push({
+  name: function (): string[] {
+    return ["autouse"];
+  },
+
+  isProcessed: function (item: Item): boolean {
+    return autoselluseItems.includes(item);
+  },
+
+  desc: function (): string {
+    return "Show only (some) usable items that could make you some meat";
+  },
+});
+
 export function getPreset(name: string) {
   return presets.find((p) => {
     return p.name().includes(name.toLowerCase());
