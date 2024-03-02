@@ -194,8 +194,8 @@ var AccountValLogic = /*#__PURE__*/function () {
 
   function AccountValLogic(settings, priceSettings) {_classCallCheck(this, AccountValLogic);_defineProperty(this, "ownedItems", new Map());_defineProperty(this, "resolver", void 0);_defineProperty(this, "priceResolver", void 0);_defineProperty(this, "prices", []);_defineProperty(this, "settings", void 0);_defineProperty(this, "jsFilter", void 0);
     this.settings = settings;
-    this.resolver = new _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemResolver */ .O();
     this.priceResolver = new _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceResolver */ .cb(priceSettings);
+    this.resolver = new _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemResolver */ .O(this.priceResolver);
   }_createClass(AccountValLogic, [{ key: "addItem", value:
 
     function addItem(item) {var count = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
@@ -1634,6 +1634,86 @@ var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_cla
 
 /***/ }),
 
+/***/ 66:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   w: () => (/* binding */ CoinmasterResolver)
+/* harmony export */ });
+/* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(128);
+/* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
+function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+
+
+
+
+
+
+
+
+
+
+
+var CoinmasterResolver = /*#__PURE__*/function () {
+
+
+
+  function CoinmasterResolver(prices) {_classCallCheck(this, CoinmasterResolver);_defineProperty(this, "items", []);_defineProperty(this, "prices", void 0);
+    this.prices = prices;
+  }_createClass(CoinmasterResolver, [{ key: "load", value:
+
+    function load() {var _iterator = _createForOfIteratorHelper(
+          kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var item = _step.value;
+          if (!item.tradeable || item.gift || item.quest || item.seller == null) {
+            continue;
+          }
+
+          var token = item.seller.item;
+
+          if (token == kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.none) {
+            continue;
+          }
+
+          var price = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.sellPrice)(item.seller, item);
+
+          if (price <= 0) {
+            continue;
+          }
+
+          this.items.push({
+            item: item,
+            coinmaster: item.seller,
+            currencyCost: price,
+            currency: token
+          });
+        }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
+    } }, { key: "getHighestCoinmaster", value:
+
+    function getHighestCoinmaster(currency) {
+      var highest = null;var _iterator2 = _createForOfIteratorHelper(
+
+          this.items),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var item = _step2.value;
+          if (item.currency != currency) {
+            continue;
+          }
+
+          if (item.price == null) {
+            item.price = this.prices.itemPrice(item.item, 1).price;
+            item.priceEach = item.price / item.currencyCost;
+          }
+
+          if (highest != null && highest.priceEach > item.priceEach) {
+            continue;
+          }
+
+          highest = item;
+        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+
+      return highest;
+    } }]);return CoinmasterResolver;}();
+
+/***/ }),
+
 /***/ 578:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -1645,9 +1725,12 @@ var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_cla
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(519);
 /* harmony import */ var _AccountValColors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(477);
+/* harmony import */ var _CoinmasterResolver__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(66);
 function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
+
 var
+
 
 AccValStuff = /*#__PURE__*/_createClass(function AccValStuff() {_classCallCheck(this, AccValStuff);_defineProperty(this, "itemType", void 0);_defineProperty(this, "actualItem", void 0);_defineProperty(this, "skill", void 0);_defineProperty(this, "untradeableItem", void 0);_defineProperty(this, "garden", void 0);_defineProperty(this, "script", void 0);_defineProperty(this, "userSetting", void 0);_defineProperty(this, "visitUrlLink", void 0);_defineProperty(this, "visitUrlIncludes", void 0);_defineProperty(this, "correspondence", void 0);_defineProperty(this, "currencyAmount", void 0);});
 
@@ -1691,8 +1774,10 @@ var ItemResolver = /*#__PURE__*/function () {
 
 
 
-  function ItemResolver() {_classCallCheck(this, ItemResolver);_defineProperty(this, "visitCache", new Map());_defineProperty(this, "accValStuff", void 0);_defineProperty(this, "accountValCache", new Map());_defineProperty(this, "accountValVisitCachePropName", "_accountValVisitCache");
+
+  function ItemResolver(prices) {_classCallCheck(this, ItemResolver);_defineProperty(this, "visitCache", new Map());_defineProperty(this, "accValStuff", void 0);_defineProperty(this, "accountValCache", new Map());_defineProperty(this, "accountValVisitCachePropName", "_accountValVisitCache");_defineProperty(this, "prices", void 0);
     this.accValStuff = this.loadAccountValStuff();
+    this.prices = prices;
   }_createClass(ItemResolver, [{ key: "loadCache", value:
 
     function loadCache() {
@@ -1821,15 +1906,30 @@ var ItemResolver = /*#__PURE__*/function () {
     copy,
     ownedItems,
     resolve)
-    {var _iterator4 = _createForOfIteratorHelper(
+    {
+      var coinmaster;var _iterator4 = _createForOfIteratorHelper(
+
           this.accValStuff),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var s = _step4.value;
           if (!resolve.includes(s.itemType)) {
             continue;
           }
 
           try {var _s$currencyAmount;
-            var _item = s.untradeableItem;
-            var pair = copy[_item.name];
+            if (s.itemType == ItemType.CURRENCY && s.untradeableItem == null) {
+              if (coinmaster == null) {
+                coinmaster = new _CoinmasterResolver__WEBPACK_IMPORTED_MODULE_3__/* .CoinmasterResolver */ .w(this.prices);
+                coinmaster.load();
+              }
+
+              var _item = coinmaster.getHighestCoinmaster(s.actualItem);
+
+              s.currencyAmount = _item.currencyCost;
+              s.untradeableItem = _item.currency;
+              s.actualItem = _item.item;
+            }
+
+            var _item2 = s.untradeableItem;
+            var pair = copy[_item2.name];
 
             if (pair == null) {
               continue;
@@ -1839,10 +1939,10 @@ var ItemResolver = /*#__PURE__*/function () {
 
             this.addItem(
               ownedItems,
-              _item,
+              _item2,
               s.actualItem,
-              _item.name,
-              _item.plural,
+              _item2.name,
+              _item2.plural,
               v.bound == null || v.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Kw.NO_TRADE ?
               s.itemType == ItemType.UNTRADEABLE_ITEM ?
               _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Kw.BOUND :
@@ -1888,13 +1988,13 @@ var ItemResolver = /*#__PURE__*/function () {
             continue;
           }
 
-          var _item2 = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.familiarEquippedEquipment)(fam);
+          var _item3 = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.familiarEquippedEquipment)(fam);
 
-          if (_item2 == null || _item2 == kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.none) {
+          if (_item3 == null || _item3 == kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.none) {
             continue;
           }
 
-          famEquipped.set(_item2, (famEquipped.get(_item2) | 0) + 1);
+          famEquipped.set(_item3, (famEquipped.get(_item3) | 0) + 1);
         }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
 
       return famEquipped;
@@ -1986,8 +2086,13 @@ var ItemResolver = /*#__PURE__*/function () {
               break;
             case "t":
               e = ItemType.CURRENCY;
-              _v.untradeableItem = kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(spl[2]);
-              _v.currencyAmount = parseInt(spl[3]);
+
+              // Some currencies are resolved later
+              if (spl.length > 2) {
+                _v.untradeableItem = kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(spl[2]);
+                _v.currencyAmount = parseInt(spl[3]);
+              }
+
               break;
             case "c":
               e = ItemType.CAMPGROUND;
@@ -2011,7 +2116,10 @@ var ItemResolver = /*#__PURE__*/function () {
       this.loadSkills(values);
 
       loop: for (var _i = 0, _values = values; _i < _values.length; _i++) {var v = _values[_i];
-        if (v.actualItem.tradeable) {
+        if (
+        v.actualItem.tradeable ||
+        v.itemType == ItemType.CURRENCY && v.untradeableItem == null)
+        {
           continue;
         }var _iterator8 = _createForOfIteratorHelper(
 
