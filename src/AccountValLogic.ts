@@ -108,8 +108,8 @@ export class AccountValLogic {
 
   constructor(settings: AccountValSettings, priceSettings: PricingSettings) {
     this.settings = settings;
-    this.resolver = new ItemResolver();
     this.priceResolver = new PriceResolver(priceSettings);
+    this.resolver = new ItemResolver(this.priceResolver);
   }
 
   addItem(item: ValItem, count: number = 1) {

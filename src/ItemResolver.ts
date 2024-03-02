@@ -22,6 +22,8 @@ import {
 } from "kolmafia";
 import { ItemStatus, ValItem } from "./AccountValLogic";
 import { AccountValColors } from "./AccountValColors";
+import { CoinmasterResolver } from "./CoinmasterResolver";
+import { PriceResolver } from "./PriceResolver";
 
 class AccValStuff {
   itemType: ItemType;
@@ -64,9 +66,11 @@ export class ItemResolver {
   accValStuff: AccValStuff[];
   private accountValCache: Map<Item, boolean> = new Map();
   private accountValVisitCachePropName = "_accountValVisitCache";
+  prices: PriceResolver;
 
-  constructor() {
+  constructor(prices: PriceResolver) {
     this.accValStuff = this.loadAccountValStuff();
+    this.prices = prices;
   }
 
   loadCache() {
@@ -196,12 +200,27 @@ export class ItemResolver {
     ownedItems: Map<ValItem, number>,
     resolve: ItemType[]
   ) {
+    let coinmaster: CoinmasterResolver;
+
     for (const s of this.accValStuff) {
       if (!resolve.includes(s.itemType)) {
         continue;
       }
 
       try {
+        if (s.itemType == ItemType.CURRENCY && s.untradeableItem == null) {
+          if (coinmaster == null) {
+            coinmaster = new CoinmasterResolver(this.prices);
+            coinmaster.load();
+          }
+
+          const item = coinmaster.getHighestCoinmaster(s.actualItem);
+
+          s.currencyAmount = item.currencyCost;
+          s.untradeableItem = item.currency;
+          s.actualItem = item.item;
+        }
+
         const item = s.untradeableItem;
         const pair: [ValItem, number] = copy[item.name];
 
@@ -360,8 +379,13 @@ export class ItemResolver {
           break;
         case "t":
           e = ItemType.CURRENCY;
-          v.untradeableItem = Item.get(spl[2]);
-          v.currencyAmount = parseInt(spl[3]);
+
+          // Some currencies are resolved later
+          if (spl.length > 2) {
+            v.untradeableItem = Item.get(spl[2]);
+            v.currencyAmount = parseInt(spl[3]);
+          }
+
           break;
         case "c":
           e = ItemType.CAMPGROUND;
@@ -385,7 +409,10 @@ export class ItemResolver {
     this.loadSkills(values);
 
     loop: for (const v of values) {
-      if (v.actualItem.tradeable) {
+      if (
+        v.actualItem.tradeable ||
+        (v.itemType == ItemType.CURRENCY && v.untradeableItem == null)
+      ) {
         continue;
       }
 
