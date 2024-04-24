@@ -108,7 +108,7 @@ loadAccountvalColors(
 /* harmony import */ var _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(351);
 /* harmony import */ var _PageResolver__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(746);
 /* harmony import */ var _AccountValColors__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(477);
-function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 
@@ -137,6 +137,7 @@ var ValItem = /*#__PURE__*/function () {
 
 
 
+
   function ValItem(
   actualItem)
 
@@ -144,7 +145,7 @@ var ValItem = /*#__PURE__*/function () {
 
 
 
-  {var item = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : actualItem;var name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : item.name;var pluralName = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : item.plural;var bound = arguments.length > 4 ? arguments[4] : undefined;var snapshotSource = arguments.length > 5 ? arguments[5] : undefined;_classCallCheck(this, ValItem);_defineProperty(this, "name", void 0);_defineProperty(this, "pluralName", void 0);_defineProperty(this, "actualItem", void 0);_defineProperty(this, "tradeableItem", void 0);_defineProperty(this, "bound", void 0);_defineProperty(this, "shopWorth", void 0);_defineProperty(this, "worthMultiplier", 1);_defineProperty(this, "snapshotSource", void 0);
+  {var item = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : actualItem;var name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : item.name;var pluralName = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : item.plural;var bound = arguments.length > 4 ? arguments[4] : undefined;var snapshotSource = arguments.length > 5 ? arguments[5] : undefined;_classCallCheck(this, ValItem);_defineProperty(this, "name", void 0);_defineProperty(this, "pluralName", void 0);_defineProperty(this, "category", void 0);_defineProperty(this, "actualItem", void 0);_defineProperty(this, "tradeableItem", void 0);_defineProperty(this, "bound", void 0);_defineProperty(this, "shopWorth", void 0);_defineProperty(this, "worthMultiplier", 1);_defineProperty(this, "snapshotSource", void 0);
     this.actualItem = actualItem;
     this.name = name;
     this.pluralName = pluralName;
@@ -155,7 +156,13 @@ var ValItem = /*#__PURE__*/function () {
     if (this.bound == null && !item.tradeable) {
       this.bound = ItemStatus.NO_TRADE;
     }
-  }_createClass(ValItem, [{ key: "getBound", value:
+  }return _createClass(ValItem, [{ key: "withCategory", value:
+
+    function withCategory(category) {
+      this.category = category;
+
+      return this;
+    } }, { key: "getBound", value:
 
     function getBound() {
       if (this.bound == ItemStatus.BOUND) {
@@ -181,7 +188,7 @@ var ValItem = /*#__PURE__*/function () {
         this.bound == ItemStatus.IN_USE ||
         this.bound == ItemStatus.SHOP_WORTH);
 
-    } }]);return ValItem;}();
+    } }]);}();
 
 
 var AccountValLogic = /*#__PURE__*/function () {
@@ -192,11 +199,12 @@ var AccountValLogic = /*#__PURE__*/function () {
 
 
 
-  function AccountValLogic(settings, priceSettings) {_classCallCheck(this, AccountValLogic);_defineProperty(this, "ownedItems", new Map());_defineProperty(this, "resolver", void 0);_defineProperty(this, "priceResolver", void 0);_defineProperty(this, "prices", []);_defineProperty(this, "settings", void 0);_defineProperty(this, "jsFilter", void 0);
+
+  function AccountValLogic(settings, priceSettings) {_classCallCheck(this, AccountValLogic);_defineProperty(this, "ownedItems", new Map());_defineProperty(this, "resolver", void 0);_defineProperty(this, "priceResolver", void 0);_defineProperty(this, "prices", []);_defineProperty(this, "categoryOrder", []);_defineProperty(this, "settings", void 0);_defineProperty(this, "jsFilter", void 0);
     this.settings = settings;
     this.priceResolver = new _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceResolver */ .cb(priceSettings);
     this.resolver = new _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemResolver */ .O(this.priceResolver);
-  }_createClass(AccountValLogic, [{ key: "addItem", value:
+  }return _createClass(AccountValLogic, [{ key: "addItem", value:
 
     function addItem(item) {var count = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
       this.ownedItems.set(item, (this.ownedItems.get(item) | 0) + count);
@@ -230,7 +238,11 @@ var AccountValLogic = /*#__PURE__*/function () {
         var _items = pager.getDisplaycase(this.settings.playerId);
 
         _items.forEach((v, k) => {
-          this.addItem(new ValItem(k), v);
+          if (!this.categoryOrder.includes(k.shelf)) {
+            this.categoryOrder.push(k.shelf);
+          }
+
+          this.addItem(new ValItem(k.item).withCategory(k.shelf), v);
         });
       }
 
@@ -390,6 +402,7 @@ var AccountValLogic = /*#__PURE__*/function () {
       var mega = this.settings.fetchInventory ?
       (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getInventory)() :
       {};
+      var megaExtra = new Map();
 
       var add = (stuff) => {
         Object.keys(stuff).forEach((k) => {var _mega$k;
@@ -410,7 +423,23 @@ var AccountValLogic = /*#__PURE__*/function () {
       }
 
       if (this.settings.fetchDisplaycase) {
-        add((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getDisplay)());
+        if (this.settings.doCategories) {
+          var pager = new _PageResolver__WEBPACK_IMPORTED_MODULE_4__/* .FetchFromPage */ .S();
+          var items = pager.getDisplaycase((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myId)()));
+
+          items.forEach((v, k) => {
+            if (!this.categoryOrder.includes(k.shelf)) {
+              this.categoryOrder.push(k.shelf);
+            }
+
+            megaExtra.set(k.item, {
+              shelf: k.shelf,
+              count: v
+            });
+          });
+        } else {
+          add((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getDisplay)());
+        }
       }
 
       if (this.settings.fetchShop && !this.settings.shopWorth) {
@@ -428,12 +457,19 @@ var AccountValLogic = /*#__PURE__*/function () {
             _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.equippedAmount)(_item4) + ((_famItems$get = famItems.get(_item4)) !== null && _famItems$get !== void 0 ? _famItems$get : 0);
           }
 
+          var category = void 0;
+
+          if (megaExtra.has(_item4)) {
+            _amount += megaExtra.get(_item4).count;
+            category = megaExtra.get(_item4).shelf;
+          }
+
           if (
           this.settings.fetchShop &&
           this.settings.shopWorth &&
           (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item4) > 0)
           {
-            var _i = new ValItem(_item4);
+            var _i = new ValItem(_item4).withCategory(category);
             _i.bound = ItemStatus.SHOP_WORTH;
             _i.shopWorth = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopPrice)(_item4);
 
@@ -445,7 +481,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             continue;
           }
 
-          this.ownedItems.set(new ValItem(_item4), _amount);
+          this.ownedItems.set(new ValItem(_item4).withCategory(category), _amount);
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       if (this.settings.fetchFamiliars != false) {
@@ -673,48 +709,66 @@ var AccountValLogic = /*#__PURE__*/function () {
     } }, { key: "doSort", value:
 
     function doSort() {
+      var sorter = (v1, v2) => 0;
+
       if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .gx.TOTAL_PRICE) {
-        this.prices.sort(
-          (v1, v2) =>
-          (v1[1].price <= 0 ?
-          999999999 :
-          1 / v1[0].worthMultiplier * v1[1].price) *
-          this.ownedItems.get(v1[0]) -
-          (v2[1].price <= 0 ?
-          999999999 :
-          1 / v2[0].worthMultiplier * v2[1].price) *
-          this.ownedItems.get(v2[0])
-        );
+        sorter = (v1, v2) =>
+        (v1[1].price <= 0 ?
+        999999999 :
+        1 / v1[0].worthMultiplier * v1[1].price) *
+        this.ownedItems.get(v1[0]) -
+        (v2[1].price <= 0 ?
+        999999999 :
+        1 / v2[0].worthMultiplier * v2[1].price) *
+        this.ownedItems.get(v2[0]);
       } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .gx.PRICE) {
-        this.prices.sort(
-          (v1, v2) =>
-          (v1[1].price <= 0 ?
-          999999999 :
-          1 / v1[0].worthMultiplier * v1[1].price) - (
-          v2[1].price <= 0 ?
-          999999999 :
-          1 / v2[0].worthMultiplier * v2[1].price)
-        );
+        sorter = (v1, v2) =>
+        (v1[1].price <= 0 ?
+        999999999 :
+        1 / v1[0].worthMultiplier * v1[1].price) - (
+        v2[1].price <= 0 ?
+        999999999 :
+        1 / v2[0].worthMultiplier * v2[1].price);
       } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .gx.QUANTITY) {
-        this.prices.sort(
-          (v1, v2) => this.ownedItems.get(v1[0]) - this.ownedItems.get(v2[0])
-        );
+        sorter = (v1, v2) =>
+        this.ownedItems.get(v1[0]) - this.ownedItems.get(v2[0]);
       } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .gx.NAME) {
-        this.prices.sort((v1, v2) => v1[0].name.localeCompare(v2[0].name));
+        sorter = (v1, v2) => v1[0].name.localeCompare(v2[0].name);
       } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .gx.ITEM_ID) {
-        this.prices.sort(
-          (v1, v2) => (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(v1[0].tradeableItem) - (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(v2[0].tradeableItem)
-        );
+        sorter = (v1, v2) =>
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(v1[0].tradeableItem) - (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(v2[0].tradeableItem);
       } else if (this.settings.sortBy == _AccountValSettings__WEBPACK_IMPORTED_MODULE_3__/* .SortBy */ .gx.SALES_VOLUME) {
-        this.prices.sort((v1, v2) => v1[1].volume - v2[1].volume);
+        sorter = (v1, v2) => v1[1].volume - v2[1].volume;
       } else {
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.abort)("Unknown sort option " + this.settings.sortBy);
+      }
+
+      if (this.settings.doCategories && this.categoryOrder != null) {
+        this.prices.sort((v1, v2) => {var _v1$0$category, _v2$0$category;
+          var c1 = (_v1$0$category = v1[0].category) !== null && _v1$0$category !== void 0 ? _v1$0$category : "";
+          var c2 = (_v2$0$category = v2[0].category) !== null && _v2$0$category !== void 0 ? _v2$0$category : "";
+
+          if (c1 == c2) {
+            return sorter(v1, v2);
+          }
+
+          var i1 = this.categoryOrder.indexOf(c1);
+          var i2 = this.categoryOrder.indexOf(c2);
+
+          if (i1 == i2) {
+            return sorter(v1, v2);
+          }
+
+          return i1 - i2;
+        });
+      } else {
+        this.prices.sort(sorter);
       }
 
       if (this.settings.reverseSort) {
         this.prices.reverse();
       }
-    } }]);return AccountValLogic;}();
+    } }]);}();
 
 /***/ }),
 
@@ -752,7 +806,7 @@ var presets = [];
 
 presets.push({
   name: function name() {
-    return ["consumables", "diet"];
+    return ["consumables", "diet", "consume", "consumeable"];
   },
 
   isProcessed: function isProcessed(item, worth) {
@@ -761,6 +815,36 @@ presets.push({
 
   desc: function desc() {
     return "Show only consumables";
+  }
+});var _loop = function _loop()
+
+{var type = _arr[_i];
+  presets.push({
+    name: function name() {
+      return [type];
+    },
+
+    isProcessed: function isProcessed(item) {
+      return (0,external_kolmafia_.itemType)(item).replace(" item", "") == type;
+    },
+
+    desc: function desc() {
+      return "Show only " + type;
+    }
+  });
+};for (var _i = 0, _arr = ["food", "booze", "spleen"]; _i < _arr.length; _i++) {_loop();}
+
+presets.push({
+  name: function name() {
+    return ["beverage"];
+  },
+
+  isProcessed: function isProcessed(item, worth) {
+    return item.notes.includes("BEVERAGE");
+  },
+
+  desc: function desc() {
+    return "Show only beverage";
   }
 });
 
@@ -800,6 +884,7 @@ presets.push({
 
     return (0,external_kolmafia_.itemType)(item) == "booze";
   },
+
   desc: function desc() {
     return "Show only booze you can fit in liver";
   }
@@ -820,37 +905,9 @@ presets.push({
 
     return (0,external_kolmafia_.itemType)(item) == "spleen item";
   },
+
   desc: function desc() {
     return "Show only spleen items you can fit in spleen";
-  }
-});var _loop = function _loop()
-
-{var type = _arr[_i];
-  presets.push({
-    name: function name() {
-      return [type];
-    },
-
-    isProcessed: function isProcessed(item) {
-      return (0,external_kolmafia_.itemType)(item).replace(" item", "") == type;
-    },
-
-    desc: function desc() {
-      return "Show only " + type;
-    }
-  });
-};for (var _i = 0, _arr = ["food", "booze", "spleen"]; _i < _arr.length; _i++) {_loop();}
-
-presets.push({
-  name: function name() {
-    return ["beverage"];
-  },
-
-  isProcessed: function isProcessed(item, worth) {
-    return item.notes.includes("BEVERAGE");
-  },
-  desc: function desc() {
-    return "Show only beverage";
   }
 });
 
@@ -862,6 +919,7 @@ presets.push({
   isProcessed: function isProcessed(item) {
     return (0,external_kolmafia_.toSlot)(item) != external_kolmafia_.Slot.none;
   },
+
   desc: function desc() {
     return "Show only items that can be equipped";
   }
@@ -878,9 +936,6 @@ presets.push({
 
   desc: function desc() {
     return "Show only items that can be stolen";
-  },
-  isProcessed: function isProcessed(item, worth) {
-    throw new Error("Function not implemented.");
   }
 });
 
@@ -915,10 +970,6 @@ presets.push({
 
   desc: function desc() {
     return "Show only items that sell at mall min";
-  },
-
-  isProcessed: function isProcessed(item, worth) {
-    throw new Error("Function not implemented.");
   }
 });
 
@@ -960,6 +1011,24 @@ presets.push({
   }
 });
 
+presets.forEach((preset) => {
+  if (preset.isProcessed == null && preset.isShown == null) {
+    throw (
+      "The preset " +
+      preset.name()[0] +
+      " must have one of isProcessed or isShown defined!");
+
+  }
+
+  if (preset.isProcessed != null && preset.isShown != null) {
+    throw (
+      "The preset " +
+      preset.name()[0] +
+      " can only have one of isProcessed and isShown defined!");
+
+  }
+});
+
 function getPreset(name) {
   return presets.find((p) => {
     return p.name().includes(name.toLowerCase());
@@ -970,7 +1039,7 @@ function getPresets() {
   return presets;
 }
 ;// CONCATENATED MODULE: ./src/AccountValSettings.ts
-function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 
@@ -1048,7 +1117,15 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     false);_defineProperty(this, "oldPricing",
     false);_defineProperty(this, "colorScheme",
     (0,external_kolmafia_.isDarkMode)() ? "dark" : "default");_defineProperty(this, "presets",
-    []);}_createClass(AccountValSettings, [{ key: "getSetting", value:
+    []);_defineProperty(this, "doCategories",
+    false);}return _createClass(AccountValSettings, [{ key: "getSetting", value:
+
+
+
+
+
+
+
 
 
 
@@ -1593,13 +1670,13 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
       }
 
       return num;
-    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc, preset) {settings.push({ type: type, field: name, names: aliases.map((s) => s.toLowerCase()), desc: desc, preset: preset });}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "fetchSnapshot", ["snapshot"], "Should it attempt to use av-snapshot?");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && toSlot(item) != Slot.none"');makeSetting(FieldType.NUMBER, "sales", ["sales", "sold"], "Hides items that have less than this amount of sales");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");makeSetting(FieldType.BOOLEAN, "brief", ["brief"], "Prints out a single line as the final result, the total meat.");makeSetting(FieldType.BOOLEAN, "oldPricing", ["oldpricing"], "Has accountval calculate prices from the old slower and more inaccurate method");makeSetting(FieldType.COLOR_SCHEME, "colorScheme", ["color", "colors", "colorscheme", "scheme"], "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " + (0,AccountValColors/* getAccountvalColors */.Xf)().join(", "));var _iterator5 = _createForOfIteratorHelper(getPresets()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var preset = _step5.value;makeSetting(FieldType.BOOLEAN, preset.name()[0], preset.name(), preset.desc(), preset);}} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}return settings;} }]);return AccountValSettings;}();
+    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc, preset) {settings.push({ type: type, field: name, names: aliases.map((s) => s.toLowerCase()), desc: desc, preset: preset });}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "fetchSnapshot", ["snapshot"], "Should it attempt to use av-snapshot?");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && toSlot(item) != Slot.none"');makeSetting(FieldType.NUMBER, "sales", ["sales", "sold"], "Hides items that have less than this amount of sales");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");makeSetting(FieldType.BOOLEAN, "brief", ["brief"], "Prints out a single line as the final result, the total meat.");makeSetting(FieldType.BOOLEAN, "oldPricing", ["oldpricing"], "Has accountval calculate prices from the old slower and more inaccurate method");makeSetting(FieldType.COLOR_SCHEME, "colorScheme", ["color", "colors", "colorscheme", "scheme"], "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " + (0,AccountValColors/* getAccountvalColors */.Xf)().join(", "));makeSetting(FieldType.BOOLEAN, "doCategories", ["category", "categories", "shelf", "shelves"], "Used only for Display Cases at this point, seperates the items into categories");var _iterator5 = _createForOfIteratorHelper(getPresets()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var preset = _step5.value;makeSetting(FieldType.BOOLEAN, preset.name()[0], preset.name(), preset.desc(), preset);}} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}return settings;} }]);}();
 
 
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_classCallCheck(this, PricingSettings);_defineProperty(this, "expensivePricesAt",
     40000000);_defineProperty(this, "cheapTotalsLessThan",
     20000000);_defineProperty(this, "cheapPricesLessThan",
-    2000000);_defineProperty(this, "maxPriceAge", void 0);_defineProperty(this, "oldPricing", void 0);}_createClass(PricingSettings, [{ key: "getMaxPriceAge", value:
+    2000000);_defineProperty(this, "maxPriceAge", void 0);_defineProperty(this, "oldPricing", void 0);}return _createClass(PricingSettings, [{ key: "getMaxPriceAge", value:
 
 
 
@@ -1630,7 +1707,7 @@ var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_cla
       }
 
       return 900;
-    } }]);return PricingSettings;}();
+    } }]);}();
 
 /***/ }),
 
@@ -1642,7 +1719,7 @@ var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_cla
 /* harmony export */ });
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(128);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
-function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 
@@ -1660,7 +1737,7 @@ var CoinmasterResolver = /*#__PURE__*/function () {
 
   function CoinmasterResolver(prices) {_classCallCheck(this, CoinmasterResolver);_defineProperty(this, "items", []);_defineProperty(this, "prices", void 0);
     this.prices = prices;
-  }_createClass(CoinmasterResolver, [{ key: "load", value:
+  }return _createClass(CoinmasterResolver, [{ key: "load", value:
 
     function load() {var _iterator = _createForOfIteratorHelper(
           kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var item = _step.value;
@@ -1710,7 +1787,7 @@ var CoinmasterResolver = /*#__PURE__*/function () {
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
 
       return highest;
-    } }]);return CoinmasterResolver;}();
+    } }]);}();
 
 /***/ }),
 
@@ -1726,7 +1803,7 @@ var CoinmasterResolver = /*#__PURE__*/function () {
 /* harmony import */ var _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(519);
 /* harmony import */ var _AccountValColors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(477);
 /* harmony import */ var _CoinmasterResolver__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(66);
-function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 var
@@ -1778,7 +1855,7 @@ var ItemResolver = /*#__PURE__*/function () {
   function ItemResolver(prices) {_classCallCheck(this, ItemResolver);_defineProperty(this, "visitCache", new Map());_defineProperty(this, "accValStuff", void 0);_defineProperty(this, "accountValCache", new Map());_defineProperty(this, "accountValVisitCachePropName", "_accountValVisitCache");_defineProperty(this, "prices", void 0);
     this.accValStuff = this.loadAccountValStuff();
     this.prices = prices;
-  }_createClass(ItemResolver, [{ key: "loadCache", value:
+  }return _createClass(ItemResolver, [{ key: "loadCache", value:
 
     function loadCache() {
       var prop = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getProperty)(this.accountValVisitCachePropName).split(
@@ -2183,7 +2260,7 @@ var ItemResolver = /*#__PURE__*/function () {
 
           values.push(v);
         }} catch (err) {_iterator9.e(err);} finally {_iterator9.f();}
-    } }]);return ItemResolver;}();
+    } }]);}();
 
 /***/ }),
 
@@ -2197,7 +2274,7 @@ var ItemResolver = /*#__PURE__*/function () {
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(128);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _AccountValColors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(477);
-function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 var StoreItem = /*#__PURE__*/_createClass(function StoreItem() {_classCallCheck(this, StoreItem);_defineProperty(this, "item", void 0);_defineProperty(this, "amount", void 0);_defineProperty(this, "limit", void 0);_defineProperty(this, "price", void 0);});
@@ -2207,7 +2284,12 @@ var StoreItem = /*#__PURE__*/_createClass(function StoreItem() {_classCallCheck(
 
 
 
-var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCallCheck(this, FetchFromPage);}_createClass(FetchFromPage, [{ key: "getSnapshot", value:
+
+
+
+
+
+var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCallCheck(this, FetchFromPage);}return _createClass(FetchFromPage, [{ key: "getSnapshot", value:
     function getSnapshot(username) {
       var items = new Map(
         kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().map((i) => {
@@ -2364,12 +2446,20 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
         kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all().map((i) => [i.descid, i])
       );
 
-      var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)("displaycollection.php?who=" + userId);var _iterator2 = _createForOfIteratorHelper(
+      var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)("displaycollection.php?who=" + userId);
+      var lastShelf;
+      var itemRegex =
+      /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/;
+      var shelfRegex = /<font color=white>([^<]+)<\/font>/;var _iterator2 = _createForOfIteratorHelper(
 
           page.split("<tr>")),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
-          var match = s.match(
-            /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/
-          );
+          var shelfMatch = s.match(shelfRegex);
+
+          if (shelfMatch != null) {
+            lastShelf = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.entityDecode)(shelfMatch[1]);
+          }
+
+          var match = s.match(itemRegex);
 
           if (match == null) {
             continue;
@@ -2385,11 +2475,17 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
             continue;
           }
 
-          map.set(item, match[3] == null ? 1 : (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(match[3]));
+          map.set(
+            {
+              item: item,
+              shelf: lastShelf
+            },
+            match[3] == null ? 1 : (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(match[3])
+          );
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
 
       return map;
-    } }]);return FetchFromPage;}();
+    } }]);}();
 
 /***/ }),
 
@@ -2403,7 +2499,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 /* unused harmony export ItemPrice */
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(128);
 /* harmony import */ var kolmafia__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(kolmafia__WEBPACK_IMPORTED_MODULE_0__);
-function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperty(obj, key, value) {key = _toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 
@@ -2443,7 +2539,7 @@ var ItemPrice = /*#__PURE__*/_createClass(
 
 
 
-NewPrices = /*#__PURE__*/function () {function NewPrices() {_classCallCheck(this, NewPrices);_defineProperty(this, "prices", void 0);_defineProperty(this, "lastUpdated", void 0);}_createClass(NewPrices, [{ key: "isValid", value:
+NewPrices = /*#__PURE__*/function () {function NewPrices() {_classCallCheck(this, NewPrices);_defineProperty(this, "prices", void 0);_defineProperty(this, "lastUpdated", void 0);}return _createClass(NewPrices, [{ key: "isValid", value:
 
 
 
@@ -2492,7 +2588,7 @@ NewPrices = /*#__PURE__*/function () {function NewPrices() {_classCallCheck(this
 
           this.prices[itemId] = { price: price, updated: age, volume: volume };
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
-    } }]);return NewPrices;}();
+    } }]);}();
 
 
 var PriceResolver = /*#__PURE__*/function () {
@@ -2514,7 +2610,7 @@ var PriceResolver = /*#__PURE__*/function () {
     }
 
     this.fillSpecialCase();
-  }_createClass(PriceResolver, [{ key: "loadMallHistory", value:
+  }return _createClass(PriceResolver, [{ key: "loadMallHistory", value:
 
     function loadMallHistory() {
       try {
@@ -2681,7 +2777,7 @@ var PriceResolver = /*#__PURE__*/function () {
 
 
 
-    } }]);return PriceResolver;}();var
+    } }]);}();var
 
 
 
@@ -2720,7 +2816,7 @@ MallHistoryPricing = /*#__PURE__*/function () {
     this.item = item;
     this.amount = amount;
     this.records = history.getMallRecords(this.item, 900, false);
-  }_createClass(MallHistoryPricing, [{ key: "isViable", value:
+  }return _createClass(MallHistoryPricing, [{ key: "isViable", value:
 
     function isViable() {
       // If we have no records, or if we have records or last records check attempt was less than 30 days ago
@@ -2789,7 +2885,7 @@ MallHistoryPricing = /*#__PURE__*/function () {
 
     function getPriceType() {
       return PriceType.MALL_SALES;
-    } }]);return MallHistoryPricing;}();var
+    } }]);}();var
 
 
 MallSalesPricing = /*#__PURE__*/function () {
@@ -2801,7 +2897,7 @@ MallSalesPricing = /*#__PURE__*/function () {
     this.settings = settings;
     this.item = item;
     this.amount = amount;
-  }_createClass(MallSalesPricing, [{ key: "isViable", value:
+  }return _createClass(MallSalesPricing, [{ key: "isViable", value:
 
     function isViable() {
       return true;
@@ -2821,7 +2917,7 @@ MallSalesPricing = /*#__PURE__*/function () {
 
     function getPriceType() {
       return PriceType.MALL;
-    } }]);return MallSalesPricing;}();var
+    } }]);}();var
 
 
 HistoricalPricing = /*#__PURE__*/function () {
@@ -2833,7 +2929,7 @@ HistoricalPricing = /*#__PURE__*/function () {
     this.settings = settings;
     this.item = item;
     this.amount = amount;
-  }_createClass(HistoricalPricing, [{ key: "isViable", value:
+  }return _createClass(HistoricalPricing, [{ key: "isViable", value:
 
     function isViable() {
       return (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(this.item) > 0;
@@ -2873,7 +2969,7 @@ HistoricalPricing = /*#__PURE__*/function () {
 
     function getPriceType() {
       return PriceType.HISTORICAL;
-    } }]);return HistoricalPricing;}();
+    } }]);}();
 
 /***/ }),
 
@@ -2972,11 +3068,11 @@ var AccountValSettings = __webpack_require__(351);
 // EXTERNAL MODULE: ./src/AccountValColors.ts
 var AccountValColors = __webpack_require__(477);
 ;// CONCATENATED MODULE: ./src/AccountValUtils.ts
-function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function _createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 
-var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_classCallCheck(this, AccountValUtils);}_createClass(AccountValUtils, null, [{ key: "splitArguments", value:
+var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_classCallCheck(this, AccountValUtils);}return _createClass(AccountValUtils, null, [{ key: "splitArguments", value:
     function splitArguments(
     settings,
     command)
@@ -3087,23 +3183,24 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
       }
 
       return this.getNumber(number);
-    } }]);return AccountValUtils;}();
+    } }]);}();
 // EXTERNAL MODULE: ./src/PriceResolver.ts
 var PriceResolver = __webpack_require__(616);
 ;// CONCATENATED MODULE: ./src/AccountVal.ts
-function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || AccountVal_unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function AccountVal_createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = AccountVal_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function AccountVal_unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return AccountVal_arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return AccountVal_arrayLikeToArray(o, minLen);}function AccountVal_arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function AccountVal_classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function AccountVal_defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, AccountVal_toPropertyKey(descriptor.key), descriptor);}}function AccountVal_createClass(Constructor, protoProps, staticProps) {if (protoProps) AccountVal_defineProperties(Constructor.prototype, protoProps);if (staticProps) AccountVal_defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = AccountVal_toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function AccountVal_toPropertyKey(t) {var i = AccountVal_toPrimitive(t, "string");return "symbol" == typeof i ? i : String(i);}function AccountVal_toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || AccountVal_unsupportedIterableToArray(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function AccountVal_createForOfIteratorHelper(o, allowArrayLike) {var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];if (!it) {if (Array.isArray(o) || (it = AccountVal_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {if (it) o = it;var i = 0;var F = function F() {};return { s: F, n: function n() {if (i >= o.length) return { done: true };return { done: false, value: o[i++] };}, e: function e(_e) {throw _e;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion = true,didErr = false,err;return { s: function s() {it = it.call(o);}, n: function n() {var step = it.next();normalCompletion = step.done;return step;}, e: function e(_e2) {didErr = true;err = _e2;}, f: function f() {try {if (!normalCompletion && it.return != null) it.return();} finally {if (didErr) throw err;}} };}function AccountVal_unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return AccountVal_arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return AccountVal_arrayLikeToArray(o, minLen);}function AccountVal_arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];return arr2;}function AccountVal_classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function AccountVal_defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, AccountVal_toPropertyKey(descriptor.key), descriptor);}}function AccountVal_createClass(Constructor, protoProps, staticProps) {if (protoProps) AccountVal_defineProperties(Constructor.prototype, protoProps);if (staticProps) AccountVal_defineProperties(Constructor, staticProps);Object.defineProperty(Constructor, "prototype", { writable: false });return Constructor;}function _defineProperty(obj, key, value) {key = AccountVal_toPropertyKey(key);if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function AccountVal_toPropertyKey(t) {var i = AccountVal_toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function AccountVal_toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 
 
 var
 
-AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCallCheck(this, AccountVal);_defineProperty(this, "logic", void 0);_defineProperty(this, "settings", void 0);}AccountVal_createClass(AccountVal, [{ key: "doCheck", value:
+AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCallCheck(this, AccountVal);_defineProperty(this, "logic", void 0);_defineProperty(this, "settings", void 0);}return AccountVal_createClass(AccountVal, [{ key: "doCheck", value:
 
 
 
     function doCheck() {
       var netvalue = 0;
+
       this.logic.doPricing();
 
       var aWorth = this.logic.priceResolver.itemPrice(
@@ -3115,6 +3212,28 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
       var mallExtinct = [];
       var shopNetValue = 0;
       var shopPricedAt = 0;
+      var lastCategory = null;
+      var shelfValue = 0;
+
+      var onShelfName = (name, worth) => {
+        if (!this.settings.doCategories || name == lastCategory) {
+          shelfValue += worth;
+
+          return;
+        }
+
+        if (lastCategory != null) {
+          lines.push("<u><b>DC Shelf:</b> ".concat(
+            this.escapeHTML(lastCategory), "<font color='").concat(
+            AccountValColors/* AccountValColors */.HK.minorNote, "'>, worth ").concat(
+            AccountValUtils.getNumber(shelfValue), " meat</font></u>")
+          );
+          lines.push("");
+        }
+
+        lastCategory = name;
+        shelfValue = worth;
+      };
 
       for (var no = this.logic.prices.length - 1; no >= 0; no--) {
         var item = this.logic.prices[no][0];
@@ -3239,6 +3358,8 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
           continue;
         }
 
+        onShelfName(item.category, totalWorth);
+
         var text = "".concat(AccountValUtils.getNumber(
           count
         ), " ").concat(name, " worth a total of ").concat(AccountValUtils.getNumber(totalWorth));
@@ -3247,6 +3368,8 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
           "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>"
         );
       }
+
+      onShelfName(null, 0);
 
       if (!this.settings.brief) {
         lines = lines.reverse();
@@ -3264,6 +3387,14 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
             ), " lines and displaying the last ").concat(AccountValUtils.getNumber(
             this.settings.displayLimit
           ), " lines..</font>"));
+        }
+
+        if (lines.length > 0) {
+          lines.push("");
+        }
+
+        if (lines[0] == "") {
+          lines.shift();
         }var _iterator = AccountVal_createForOfIteratorHelper(
 
             lines),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var line = _step.value;
@@ -3551,7 +3682,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         "red"
         );
       }
-    } }]);return AccountVal;}();
+    } }]);}();
 
 
 function main(command) {
