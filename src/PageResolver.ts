@@ -7,7 +7,7 @@ import {
   toFamiliar,
   toInt,
   toItem,
-  visitUrl
+  visitUrl,
 } from "kolmafia";
 import { AccountValColors } from "./AccountValColors";
 
@@ -16,6 +16,11 @@ export class StoreItem {
   amount: number;
   limit: number;
   price: number;
+}
+
+export interface DisplaycaseItem {
+  shelf: string;
+  item: Item;
 }
 
 export class FetchFromPage {
@@ -169,18 +174,26 @@ export class FetchFromPage {
     return items;
   }
 
-  getDisplaycase(userId: number): Map<Item, number> {
-    const map: Map<Item, number> = new Map();
+  getDisplaycase(userId: number): Map<DisplaycaseItem, number> {
+    const map: Map<DisplaycaseItem, number> = new Map();
     const descs: Map<string, Item> = new Map(
       Item.all().map((i) => [i.descid, i])
     );
 
     const page = visitUrl("displaycollection.php?who=" + userId);
+    let lastShelf: string;
+    const itemRegex =
+      /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/;
+    const shelfRegex = /<font color=white>([^<]+)<\/font>/;
 
     for (const s of page.split("<tr>")) {
-      const match = s.match(
-        /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/
-      );
+      const shelfMatch = s.match(shelfRegex);
+
+      if (shelfMatch != null) {
+        lastShelf = entityDecode(shelfMatch[1]);
+      }
+
+      const match = s.match(itemRegex);
 
       if (match == null) {
         continue;
@@ -196,7 +209,13 @@ export class FetchFromPage {
         continue;
       }
 
-      map.set(item, match[3] == null ? 1 : toInt(match[3]));
+      map.set(
+        {
+          item: item,
+          shelf: lastShelf,
+        },
+        match[3] == null ? 1 : toInt(match[3])
+      );
     }
 
     return map;

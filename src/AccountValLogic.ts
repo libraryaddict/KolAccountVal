@@ -13,6 +13,7 @@ import {
   getWorkshed,
   haveFamiliar,
   Item,
+  myId,
   print,
   shopAmount,
   shopPrice,
@@ -44,6 +45,7 @@ export enum ItemStatus {
 export class ValItem {
   name: string;
   pluralName: string;
+  category?: string;
   actualItem: Item;
   tradeableItem: Item;
   bound: ItemStatus;
@@ -69,6 +71,12 @@ export class ValItem {
     if (this.bound == null && !item.tradeable) {
       this.bound = ItemStatus.NO_TRADE;
     }
+  }
+
+  withCategory(category: string): ValItem {
+    this.category = category;
+
+    return this;
   }
 
   getBound(): string {
@@ -103,6 +111,7 @@ export class AccountValLogic {
   resolver: ItemResolver;
   priceResolver: PriceResolver;
   prices: [ValItem, ItemPrice][] = [];
+  categoryOrder: string[] = [];
   private settings: AccountValSettings;
   private jsFilter: (item: Item, amount: number) => boolean;
 
@@ -144,7 +153,11 @@ export class AccountValLogic {
       const items = pager.getDisplaycase(this.settings.playerId);
 
       items.forEach((v, k) => {
-        this.addItem(new ValItem(k), v);
+        if (!this.categoryOrder.includes(k.shelf)) {
+          this.categoryOrder.push(k.shelf);
+        }
+
+        this.addItem(new ValItem(k.item).withCategory(k.shelf), v);
       });
     }
 
@@ -304,6 +317,7 @@ export class AccountValLogic {
     const mega: { [item: string]: number } = this.settings.fetchInventory
       ? getInventory()
       : {};
+    const megaExtra: Map<Item, { count: number; shelf: string }> = new Map();
 
     const add = (stuff: { [item: string]: number }) => {
       Object.keys(stuff).forEach((k) => {
@@ -324,7 +338,23 @@ export class AccountValLogic {
     }
 
     if (this.settings.fetchDisplaycase) {
-      add(getDisplay());
+      if (this.settings.doCategories) {
+        const pager = new FetchFromPage();
+        const items = pager.getDisplaycase(toInt(myId()));
+
+        items.forEach((v, k) => {
+          if (!this.categoryOrder.includes(k.shelf)) {
+            this.categoryOrder.push(k.shelf);
+          }
+
+          megaExtra.set(k.item, {
+            shelf: k.shelf,
+            count: v,
+          });
+        });
+      } else {
+        add(getDisplay());
+      }
     }
 
     if (this.settings.fetchShop && !this.settings.shopWorth) {
@@ -342,12 +372,19 @@ export class AccountValLogic {
         amount += equippedAmount(item) + (famItems.get(item) ?? 0);
       }
 
+      let category: string;
+
+      if (megaExtra.has(item)) {
+        amount += megaExtra.get(item).count;
+        category = megaExtra.get(item).shelf;
+      }
+
       if (
         this.settings.fetchShop &&
         this.settings.shopWorth &&
         shopAmount(item) > 0
       ) {
-        const i = new ValItem(item);
+        const i = new ValItem(item).withCategory(category);
         i.bound = ItemStatus.SHOP_WORTH;
         i.shopWorth = shopPrice(item);
 
@@ -359,7 +396,7 @@ export class AccountValLogic {
         continue;
       }
 
-      this.ownedItems.set(new ValItem(item), amount);
+      this.ownedItems.set(new ValItem(item).withCategory(category), amount);
     }
 
     if (this.settings.fetchFamiliars != false) {
@@ -587,42 +624,60 @@ export class AccountValLogic {
   }
 
   doSort() {
+    let sorter = (v1: [ValItem, ItemPrice], v2: [ValItem, ItemPrice]) => 0;
+
     if (this.settings.sortBy == SortBy.TOTAL_PRICE) {
-      this.prices.sort(
-        (v1, v2) =>
-          (v1[1].price <= 0
-            ? 999_999_999
-            : (1 / v1[0].worthMultiplier) * v1[1].price) *
-            this.ownedItems.get(v1[0]) -
-          (v2[1].price <= 0
-            ? 999_999_999
-            : (1 / v2[0].worthMultiplier) * v2[1].price) *
-            this.ownedItems.get(v2[0])
-      );
+      sorter = (v1, v2) =>
+        (v1[1].price <= 0
+          ? 999_999_999
+          : (1 / v1[0].worthMultiplier) * v1[1].price) *
+          this.ownedItems.get(v1[0]) -
+        (v2[1].price <= 0
+          ? 999_999_999
+          : (1 / v2[0].worthMultiplier) * v2[1].price) *
+          this.ownedItems.get(v2[0]);
     } else if (this.settings.sortBy == SortBy.PRICE) {
-      this.prices.sort(
-        (v1, v2) =>
-          (v1[1].price <= 0
-            ? 999_999_999
-            : (1 / v1[0].worthMultiplier) * v1[1].price) -
-          (v2[1].price <= 0
-            ? 999_999_999
-            : (1 / v2[0].worthMultiplier) * v2[1].price)
-      );
+      sorter = (v1, v2) =>
+        (v1[1].price <= 0
+          ? 999_999_999
+          : (1 / v1[0].worthMultiplier) * v1[1].price) -
+        (v2[1].price <= 0
+          ? 999_999_999
+          : (1 / v2[0].worthMultiplier) * v2[1].price);
     } else if (this.settings.sortBy == SortBy.QUANTITY) {
-      this.prices.sort(
-        (v1, v2) => this.ownedItems.get(v1[0]) - this.ownedItems.get(v2[0])
-      );
+      sorter = (v1, v2) =>
+        this.ownedItems.get(v1[0]) - this.ownedItems.get(v2[0]);
     } else if (this.settings.sortBy == SortBy.NAME) {
-      this.prices.sort((v1, v2) => v1[0].name.localeCompare(v2[0].name));
+      sorter = (v1, v2) => v1[0].name.localeCompare(v2[0].name);
     } else if (this.settings.sortBy == SortBy.ITEM_ID) {
-      this.prices.sort(
-        (v1, v2) => toInt(v1[0].tradeableItem) - toInt(v2[0].tradeableItem)
-      );
+      sorter = (v1, v2) =>
+        toInt(v1[0].tradeableItem) - toInt(v2[0].tradeableItem);
     } else if (this.settings.sortBy == SortBy.SALES_VOLUME) {
-      this.prices.sort((v1, v2) => v1[1].volume - v2[1].volume);
+      sorter = (v1, v2) => v1[1].volume - v2[1].volume;
     } else {
       abort("Unknown sort option " + this.settings.sortBy);
+    }
+
+    if (this.settings.doCategories && this.categoryOrder != null) {
+      this.prices.sort((v1, v2) => {
+        const c1 = v1[0].category ?? "";
+        const c2 = v2[0].category ?? "";
+
+        if (c1 == c2) {
+          return sorter(v1, v2);
+        }
+
+        const i1 = this.categoryOrder.indexOf(c1);
+        const i2 = this.categoryOrder.indexOf(c2);
+
+        if (i1 == i2) {
+          return sorter(v1, v2);
+        }
+
+        return i1 - i2;
+      });
+    } else {
+      this.prices.sort(sorter);
     }
 
     if (this.settings.reverseSort) {

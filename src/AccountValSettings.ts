@@ -81,6 +81,7 @@ export class AccountValSettings {
   oldPricing: boolean = false;
   colorScheme: string = isDarkMode() ? "dark" : "default";
   presets: PresetSetting[] = [];
+  doCategories: boolean = false;
 
   static getSettings(): ValSetting[] {
     const settings: ValSetting[] = [];
@@ -298,6 +299,13 @@ export class AccountValSettings {
       ["color", "colors", "colorscheme", "scheme"],
       "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " +
         getAccountvalColors().join(", ")
+    );
+
+    makeSetting(
+      FieldType.BOOLEAN,
+      "doCategories",
+      ["category", "categories", "shelf", "shelves"],
+      "Used only for Display Cases at this point, seperates the items into categories"
     );
 
     for (const preset of getPresets()) {

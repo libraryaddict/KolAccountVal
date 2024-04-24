@@ -90,6 +90,7 @@ i	crated wardrobe-o-matic	wardrobe-o-matic
 i	wrapped candy cane sword cane	candy cane sword cane
 i	in-the-box spring shoes	spring shoes
 i	packaged Everfull Dart Holster	Everfull Dart Holster
+i	Boxed Apriling band helmet	Apriling band helmet
 
 
 

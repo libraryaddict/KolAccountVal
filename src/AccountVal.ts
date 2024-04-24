@@ -28,6 +28,7 @@ class AccountVal {
 
   doCheck() {
     let netvalue: number = 0;
+
     this.logic.doPricing();
 
     const aWorth = this.logic.priceResolver.itemPrice(
@@ -39,6 +40,28 @@ class AccountVal {
     const mallExtinct: [string, string][] = [];
     let shopNetValue: number = 0;
     let shopPricedAt: number = 0;
+    let lastCategory = null;
+    let shelfValue: number = 0;
+
+    const onShelfName = (name: string, worth: number) => {
+      if (!this.settings.doCategories || name == lastCategory) {
+        shelfValue += worth;
+
+        return;
+      }
+
+      if (lastCategory != null) {
+        lines.push(
+          `<u><b>DC Shelf:</b> ${this.escapeHTML(lastCategory)}<font color='${
+            AccountValColors.minorNote
+          }'>, worth ${AccountValUtils.getNumber(shelfValue)} meat</font></u>`
+        );
+        lines.push("");
+      }
+
+      lastCategory = name;
+      shelfValue = worth;
+    };
 
     for (let no = this.logic.prices.length - 1; no >= 0; no--) {
       const item = this.logic.prices[no][0];
@@ -163,6 +186,8 @@ class AccountVal {
         continue;
       }
 
+      onShelfName(item.category, totalWorth);
+
       const text = `${AccountValUtils.getNumber(
         count
       )} ${name} worth a total of ${AccountValUtils.getNumber(totalWorth)}`;
@@ -171,6 +196,8 @@ class AccountVal {
         "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>"
       );
     }
+
+    onShelfName(null, 0);
 
     if (!this.settings.brief) {
       lines = lines.reverse();
@@ -188,6 +215,14 @@ class AccountVal {
         )} lines and displaying the last ${AccountValUtils.getNumber(
           this.settings.displayLimit
         )} lines..</font>`);
+      }
+
+      if (lines.length > 0) {
+        lines.push("");
+      }
+
+      if (lines[0] == "") {
+        lines.shift();
       }
 
       for (const line of lines) {

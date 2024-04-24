@@ -20,7 +20,7 @@ export interface AccountValPreset {
 
   isShown?(item: ValItem, worth: number): boolean;
 
-  isProcessed(item: Item, worth: number): boolean;
+  isProcessed?(item: Item, worth: number): boolean;
 
   desc(): string;
 }
@@ -29,7 +29,7 @@ const presets: AccountValPreset[] = [];
 
 presets.push({
   name() {
-    return ["consumables", "diet"];
+    return ["consumables", "diet", "consume", "consumeable"];
   },
 
   isProcessed: function (item: Item, worth: number): boolean {
@@ -38,6 +38,36 @@ presets.push({
 
   desc: function (): string {
     return "Show only consumables";
+  },
+});
+
+for (const type of ["food", "booze", "spleen"]) {
+  presets.push({
+    name() {
+      return [type];
+    },
+
+    isProcessed: function (item: Item): boolean {
+      return itemType(item).replace(" item", "") == type;
+    },
+
+    desc: function (): string {
+      return "Show only " + type;
+    },
+  });
+}
+
+presets.push({
+  name() {
+    return ["beverage"];
+  },
+
+  isProcessed: function (item: Item, worth: number): boolean {
+    return item.notes.includes("BEVERAGE");
+  },
+
+  desc: function (): string {
+    return "Show only beverage";
   },
 });
 
@@ -77,6 +107,7 @@ presets.push({
 
     return itemType(item) == "booze";
   },
+
   desc: function (): string {
     return "Show only booze you can fit in liver";
   },
@@ -97,37 +128,9 @@ presets.push({
 
     return itemType(item) == "spleen item";
   },
+
   desc: function (): string {
     return "Show only spleen items you can fit in spleen";
-  },
-});
-
-for (const type of ["food", "booze", "spleen"]) {
-  presets.push({
-    name() {
-      return [type];
-    },
-
-    isProcessed: function (item: Item): boolean {
-      return itemType(item).replace(" item", "") == type;
-    },
-
-    desc: function (): string {
-      return "Show only " + type;
-    },
-  });
-}
-
-presets.push({
-  name() {
-    return ["beverage"];
-  },
-
-  isProcessed: function (item: Item, worth: number): boolean {
-    return item.notes.includes("BEVERAGE");
-  },
-  desc: function (): string {
-    return "Show only beverage";
   },
 });
 
@@ -139,6 +142,7 @@ presets.push({
   isProcessed: function (item: Item): boolean {
     return toSlot(item) != Slot.none;
   },
+
   desc: function (): string {
     return "Show only items that can be equipped";
   },
@@ -155,9 +159,6 @@ presets.push({
 
   desc: function (): string {
     return "Show only items that can be stolen";
-  },
-  isProcessed: function (item: Item, worth: number): boolean {
-    throw new Error("Function not implemented.");
   },
 });
 
@@ -192,10 +193,6 @@ presets.push({
 
   desc: function (): string {
     return "Show only items that sell at mall min";
-  },
-
-  isProcessed: function (item: Item, worth: number): boolean {
-    throw new Error("Function not implemented.");
   },
 });
 
@@ -235,6 +232,24 @@ presets.push({
   desc: function (): string {
     return "Show only (some) usable items that could make you some meat";
   },
+});
+
+presets.forEach((preset) => {
+  if (preset.isProcessed == null && preset.isShown == null) {
+    throw (
+      "The preset " +
+      preset.name()[0] +
+      " must have one of isProcessed or isShown defined!"
+    );
+  }
+
+  if (preset.isProcessed != null && preset.isShown != null) {
+    throw (
+      "The preset " +
+      preset.name()[0] +
+      " can only have one of isProcessed and isShown defined!"
+    );
+  }
 });
 
 export function getPreset(name: string) {

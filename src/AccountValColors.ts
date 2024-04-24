@@ -25,7 +25,7 @@ map.set("default", {
   mallExtinctColor2: "#934f4f",
   shopPricedOk: "#196f3d",
   shopPricesOverpriced: "#db2525",
-  noteUntradeable: "red"
+  noteUntradeable: "red",
 });
 
 map.set("dark", {
@@ -37,7 +37,7 @@ map.set("dark", {
   mallExtinctColor2: "#d76d6d",
   shopPricedOk: "#269f59",
   shopPricesOverpriced: "#dd4040",
-  noteUntradeable: "red"
+  noteUntradeable: "red",
 });
 
 export function loadAccountvalColors(name: string): boolean {
