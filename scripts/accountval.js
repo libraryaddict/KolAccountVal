@@ -447,20 +447,20 @@ var AccountValLogic = /*#__PURE__*/function () {
       }var _iterator3 = _createForOfIteratorHelper(
 
           kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _mega$_item4$name;var _item4 = _step3.value;
-          var _amount = (_mega$_item4$name = mega[_item4.name]) !== null && _mega$_item4$name !== void 0 ? _mega$_item4$name : 0;
+          var amount = (_mega$_item4$name = mega[_item4.name]) !== null && _mega$_item4$name !== void 0 ? _mega$_item4$name : 0;
 
           if (this.settings.fetchSession) {var _sessionItems$get;
-            _amount += (_sessionItems$get = sessionItems.get(_item4)) !== null && _sessionItems$get !== void 0 ? _sessionItems$get : 0;
+            amount += (_sessionItems$get = sessionItems.get(_item4)) !== null && _sessionItems$get !== void 0 ? _sessionItems$get : 0;
           }
 
           if (this.settings.fetchInventory) {var _famItems$get;
-            _amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.equippedAmount)(_item4) + ((_famItems$get = famItems.get(_item4)) !== null && _famItems$get !== void 0 ? _famItems$get : 0);
+            amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.equippedAmount)(_item4) + ((_famItems$get = famItems.get(_item4)) !== null && _famItems$get !== void 0 ? _famItems$get : 0);
           }
 
           var category = void 0;
 
           if (megaExtra.has(_item4)) {
-            _amount += megaExtra.get(_item4).count;
+            amount += megaExtra.get(_item4).count;
             category = megaExtra.get(_item4).shelf;
           }
 
@@ -477,11 +477,11 @@ var AccountValLogic = /*#__PURE__*/function () {
             continue;
           }
 
-          if (_amount == 0) {
+          if (amount == 0) {
             continue;
           }
 
-          this.ownedItems.set(new ValItem(_item4).withCategory(category), _amount);
+          this.ownedItems.set(new ValItem(_item4).withCategory(category), amount);
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       if (this.settings.fetchFamiliars != false) {
@@ -2005,8 +2005,8 @@ var ItemResolver = /*#__PURE__*/function () {
               s.actualItem = _item.item;
             }
 
-            var _item2 = s.untradeableItem;
-            var pair = copy[_item2.name];
+            var item = s.untradeableItem;
+            var pair = copy[item.name];
 
             if (pair == null) {
               continue;
@@ -2016,10 +2016,10 @@ var ItemResolver = /*#__PURE__*/function () {
 
             this.addItem(
               ownedItems,
-              _item2,
+              item,
               s.actualItem,
-              _item2.name,
-              _item2.plural,
+              item.name,
+              item.plural,
               v.bound == null || v.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Kw.NO_TRADE ?
               s.itemType == ItemType.UNTRADEABLE_ITEM ?
               _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Kw.BOUND :
@@ -2065,13 +2065,13 @@ var ItemResolver = /*#__PURE__*/function () {
             continue;
           }
 
-          var _item3 = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.familiarEquippedEquipment)(fam);
+          var item = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.familiarEquippedEquipment)(fam);
 
-          if (_item3 == null || _item3 == kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.none) {
+          if (item == null || item == kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.none) {
             continue;
           }
 
-          famEquipped.set(_item3, (famEquipped.get(_item3) | 0) + 1);
+          famEquipped.set(item, (famEquipped.get(item) | 0) + 1);
         }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
 
       return famEquipped;
@@ -3670,15 +3670,15 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
     function runTest(args, verify) {
       this.load(args);
 
-      for (var _i = 0, _Object$entries = Object.entries(verify); _i < _Object$entries.length; _i++) {var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),_key = _Object$entries$_i[0],value = _Object$entries$_i[1];
-        var setTo = this.settings[_key];
+      for (var _i = 0, _Object$entries = Object.entries(verify); _i < _Object$entries.length; _i++) {var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),key = _Object$entries$_i[0],value = _Object$entries$_i[1];
+        var setTo = this.settings[key];
 
         if (setTo == value) {
           continue;
         }
 
         (0,external_kolmafia_.print)("On '".concat(
-          args, "', ").concat(_key, " was not set to ").concat(value, " but instead ").concat(setTo),
+          args, "', ").concat(key, " was not set to ").concat(value, " but instead ").concat(setTo),
         "red"
         );
       }
