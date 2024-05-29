@@ -8,7 +8,8 @@ import {
   printHtml,
   Item,
   fileToBuffer,
-  toInt
+  toInt,
+  getRelated,
 } from "kolmafia";
 import { PricingSettings } from "./AccountValSettings";
 
@@ -17,7 +18,7 @@ export enum PriceType {
   HISTORICAL,
   MALL,
   MALL_SALES,
-  AUTOSELL
+  AUTOSELL,
 }
 
 export class ItemPrice {
@@ -156,6 +157,37 @@ export class PriceResolver {
     doSuperFast: boolean = false,
     doEstimates: boolean = false
   ): ItemPrice {
+    if (!ignoreFold) {
+      const foldables = Object.keys(getRelated(item, "fold"));
+
+      if (foldables != null && foldables.length > 1) {
+        const foldPrices = foldables.map((f) =>
+          this.itemPrice(
+            Item.get(f),
+            amount,
+            true,
+            forcePricing,
+            doSuperFast,
+            doEstimates
+          )
+        );
+
+        foldPrices.sort((f1, f2) => f1.price - f2.price);
+
+        const compare = foldPrices.find((f) => f.item == item);
+
+        for (const f of foldPrices) {
+          if (f.daysOutdated > compare.daysOutdated * 3) {
+            continue;
+          }
+
+          return f;
+        }
+
+        return foldPrices[0];
+      }
+    }
+
     if (this.specialCase.has(item)) {
       return new ItemPrice(item, this.specialCase.get(item), PriceType.MALL, 0);
     }
@@ -206,7 +238,7 @@ export class PriceResolver {
       const viablePrices: PriceVolunteer[] = [
         salesPricing,
         historyPricing,
-        mallPricing
+        mallPricing,
       ].filter((p) => p.isViable() && !p.isOutdated());
 
       viablePrices.sort((v1, v2) => {
@@ -268,24 +300,6 @@ export class PriceResolver {
     }
 
     return price;
-
-    /*if (ignoreFold) {
-      return new ItemPrice(item, lowestMall, PriceType.MALL, 0);
-    }
-
-    for (let foldable of Object.keys(getRelated(item, "fold"))) {
-      let folded = Item.get(foldable);
-
-      let p = this.itemPrice(folded, amount, true, PriceType.MALL).price;
-
-      if (p <= 0) {
-        continue;
-      }
-
-      lowestMall = Math.min(p, lowestMall);
-    }
-
-    return new ItemPrice(item, lowestMall, PriceType.MALL, 0);*/
   }
 }
 
