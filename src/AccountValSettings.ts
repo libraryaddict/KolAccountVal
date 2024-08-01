@@ -17,6 +17,7 @@ export enum FieldType {
 }
 
 export interface ValSetting {
+  groupUnder?: string;
   type: FieldType;
   field: string;
   names: string[];
@@ -91,15 +92,21 @@ export class AccountValSettings {
       name: string,
       aliases: string[],
       desc: string,
+      groupUnder?: string,
       preset?: AccountValPreset
     ) {
-      settings.push({
+      const setting: ValSetting = {
+        groupUnder,
         type,
         field: name,
         names: aliases.map((s) => s.toLowerCase()),
         desc,
         preset: preset,
-      });
+      };
+
+      settings.push(setting);
+
+      return setting;
     }
 
     makeSetting(
@@ -314,6 +321,7 @@ export class AccountValSettings {
         preset.name()[0],
         preset.name(),
         preset.desc(),
+        "Preset Filters",
         preset
       );
     }

@@ -84,12 +84,12 @@ class AccountVal {
       let titleName = item.tradeableItem.name;
       const priceType =
         price.accuracy == PriceType.NEW_PRICES
-          ? "last recorded"
+          ? "Last recorded"
           : price.accuracy == PriceType.MALL_SALES
-          ? "last sold"
+          ? "Last sold"
           : price.accuracy == PriceType.AUTOSELL
-          ? "autosell"
-          : "last malled";
+          ? "Autosell"
+          : "Last malled";
       const validAsOf =
         "Price valid as of " +
         AccountValUtils.getNumber(price.daysOutdated, 1) +
@@ -104,7 +104,13 @@ class AccountVal {
       }
 
       let title =
-        titleName + " @ " + priceType + " " + tradeableWorth + " " + validAsOf;
+        `=== ${titleName} ===` +
+        "&#010;&#010;" +
+        priceType +
+        " " +
+        tradeableWorth +
+        "&#010;" +
+        validAsOf;
 
       if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
         titleName = `1 ${item.tradeableItem.name} / ${item.worthMultiplier} ${
@@ -124,14 +130,15 @@ class AccountVal {
       }
 
       if (price.volume >= 0) {
-        title += `. ${AccountValUtils.getNumber(
+        title += `.&#010;${AccountValUtils.getNumber(
           price.volume
         )} sold in the last week.`;
       }
 
       if (item.shopWorth > 0) {
         title +=
-          ". Shop selling at: " + AccountValUtils.getNumber(item.shopWorth);
+          ".&#010;Shop selling at: " +
+          AccountValUtils.getNumber(item.shopWorth);
       }
 
       if (item.snapshotSource != null) {
@@ -226,7 +233,7 @@ class AccountVal {
       }
 
       for (const line of lines) {
-        printHtml(line);
+        printHtml(line.replace(/\n/g, "&#010;"));
       }
 
       if (mallExtinct.length > 0) {
@@ -384,7 +391,7 @@ class AccountVal {
       `<font color='${AccountValColors.helpfulStateInfo}'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>`
     );
 
-    let even = true;
+    const groups: [string, string[]][] = [];
 
     for (const setting of AccountValSettings.getSettings()) {
       let defaultOf = ".</font> <font>Default is: ";
@@ -407,15 +414,48 @@ class AccountVal {
         defaultOf += "null";
       }
 
+      if (setting.groupUnder != null) {
+        let group: [string, string[]] = groups.find(
+          ([l]) => l == setting.groupUnder
+        );
+
+        if (group == null) {
+          groups.push((group = [setting.groupUnder, []]));
+        }
+
+        group[1].push(
+          `<font title='${setting.desc}${
+            setting.names.length > 1
+              ? `&#010;&#010;Aliases: ${setting.names
+                  .filter((s) => s != setting.names[0])
+                  .join(", ")}`
+              : ""
+          }'><b>${setting.names[0]}</b></font>`
+        );
+      } else {
+        printHtml(
+          `<font color='${
+            AccountValColors.minorNote
+          }' title='Aliases: ${setting.names.join(", ")}'><b>${
+            setting.names[0]
+          }</b> - ${setting.desc}${defaultOf}</font>`
+        );
+      }
+    }
+
+    for (const [groupName, grouped] of groups) {
+      const toPrint = grouped.map((s, i) => {
+        return `<font color='${
+          i % 2 == 0
+            ? AccountValColors.mallExtinctColor1
+            : AccountValColors.mallExtinctColor2
+        }'>${s}</font>`;
+      });
       printHtml(
         `<font color='${
           AccountValColors.minorNote
-        }' title='Aliases: ${setting.names.join(", ")}'><b>${
-          setting.names[0]
-        }</b> - ${setting.desc}${defaultOf}</font>`
+        }'><b>${groupName}:</b> ${toPrint.join(", ")}</font>`
       );
-
-      even = !even;
     }
 
     printHtml(

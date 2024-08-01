@@ -1,4 +1,5 @@
 import {
+  allNormalOutfits,
   entityDecode,
   Familiar,
   Item,
@@ -46,6 +47,10 @@ export class FetchFromPage {
     const ignore: string[] = [...fams.values()].map((f) =>
       f.hatchling.toString().toLowerCase()
     );
+    ignore.push(
+      ...Object.values(allNormalOutfits()).map((s) => s.toLowerCase())
+    );
+    ignore.push("miming regalia");
 
     let page = visitUrl(
       "https://api.aventuristo.net/av-snapshot?u=" + username
@@ -59,7 +64,7 @@ export class FetchFromPage {
 
     const tdRegex = /<td(.*?)<\/td>/m;
     const linkRegex =
-      /class='(perm|hcperm|fam_run_90|fam_have|fam_run_100)'.*<a href="[^"]+">(?:.*?>)?([^>]*?)<\/a>/;
+      /class='(perm|hcperm|fam_run_90|fam_have|fam_run_100)'.*?<a href="[^"]+" rel="noreferrer">(?:.*?>)?([^>]*?)<\/a>/;
     let match: string[];
     const has = [];
 

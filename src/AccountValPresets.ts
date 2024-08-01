@@ -29,7 +29,7 @@ const presets: AccountValPreset[] = [];
 
 presets.push({
   name() {
-    return ["consumables", "diet", "consume", "consumeable"];
+    return ["consumables", "consumable", "diet", "consume", "consumeable"];
   },
 
   isProcessed: function (item: Item, worth: number): boolean {
@@ -252,12 +252,12 @@ presets.forEach((preset) => {
   }
 });
 
-export function getPreset(name: string) {
+export function getPreset(name: string): AccountValPreset {
   return presets.find((p) => {
     return p.name().includes(name.toLowerCase());
   });
 }
 
-export function getPresets() {
+export function getPresets(): AccountValPreset[] {
   return presets;
 }
