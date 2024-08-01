@@ -93,6 +93,7 @@ i	packaged Everfull Dart Holster	Everfull Dart Holster
 i	Boxed Apriling band helmet	Apriling band helmet
 i	boxed Mayam Calendar	Mayam Calendar
 i	packaged Roman Candelabra	Roman Candelabra
+i	untorn tearaway pants package	tearaway pants
 
 
 

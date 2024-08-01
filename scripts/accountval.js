@@ -806,7 +806,7 @@ var presets = [];
 
 presets.push({
   name: function name() {
-    return ["consumables", "diet", "consume", "consumeable"];
+    return ["consumables", "consumable", "diet", "consume", "consumeable"];
   },
 
   isProcessed: function isProcessed(item, worth) {
@@ -1061,6 +1061,7 @@ var FieldType = /*#__PURE__*/function (FieldType) {FieldType[FieldType["NUMBER"]
 
 
 
+
 var SortBy = /*#__PURE__*/function (SortBy) {SortBy[SortBy["NAME"] = 0] = "NAME";SortBy[SortBy["QUANTITY"] = 1] = "QUANTITY";SortBy[SortBy["PRICE"] = 2] = "PRICE";SortBy[SortBy["TOTAL_PRICE"] = 3] = "TOTAL_PRICE";SortBy[SortBy["SALES_VOLUME"] = 4] = "SALES_VOLUME";SortBy[SortBy["ITEM_ID"] = 5] = "ITEM_ID";return SortBy;}({});
 
 
@@ -1119,6 +1120,13 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     (0,external_kolmafia_.isDarkMode)() ? "dark" : "default");_defineProperty(this, "presets",
     []);_defineProperty(this, "doCategories",
     false);}return _createClass(AccountValSettings, [{ key: "getSetting", value:
+
+
+
+
+
+
+
 
 
 
@@ -1670,7 +1678,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
       }
 
       return num;
-    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc, preset) {settings.push({ type: type, field: name, names: aliases.map((s) => s.toLowerCase()), desc: desc, preset: preset });}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "fetchSnapshot", ["snapshot"], "Should it attempt to use av-snapshot?");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && toSlot(item) != Slot.none"');makeSetting(FieldType.NUMBER, "sales", ["sales", "sold"], "Hides items that have less than this amount of sales");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");makeSetting(FieldType.BOOLEAN, "brief", ["brief"], "Prints out a single line as the final result, the total meat.");makeSetting(FieldType.BOOLEAN, "oldPricing", ["oldpricing"], "Has accountval calculate prices from the old slower and more inaccurate method");makeSetting(FieldType.COLOR_SCHEME, "colorScheme", ["color", "colors", "colorscheme", "scheme"], "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " + (0,AccountValColors/* getAccountvalColors */.Xf)().join(", "));makeSetting(FieldType.BOOLEAN, "doCategories", ["category", "categories", "shelf", "shelves"], "Used only for Display Cases at this point, seperates the items into categories");var _iterator5 = _createForOfIteratorHelper(getPresets()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var preset = _step5.value;makeSetting(FieldType.BOOLEAN, preset.name()[0], preset.name(), preset.desc(), preset);}} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}return settings;} }]);}();
+    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc, groupUnder, preset) {var setting = { groupUnder: groupUnder, type: type, field: name, names: aliases.map((s) => s.toLowerCase()), desc: desc, preset: preset };settings.push(setting);return setting;}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "fetchSnapshot", ["snapshot"], "Should it attempt to use av-snapshot?");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && toSlot(item) != Slot.none"');makeSetting(FieldType.NUMBER, "sales", ["sales", "sold"], "Hides items that have less than this amount of sales");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");makeSetting(FieldType.BOOLEAN, "brief", ["brief"], "Prints out a single line as the final result, the total meat.");makeSetting(FieldType.BOOLEAN, "oldPricing", ["oldpricing"], "Has accountval calculate prices from the old slower and more inaccurate method");makeSetting(FieldType.COLOR_SCHEME, "colorScheme", ["color", "colors", "colorscheme", "scheme"], "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " + (0,AccountValColors/* getAccountvalColors */.Xf)().join(", "));makeSetting(FieldType.BOOLEAN, "doCategories", ["category", "categories", "shelf", "shelves"], "Used only for Display Cases at this point, seperates the items into categories");var _iterator5 = _createForOfIteratorHelper(getPresets()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var preset = _step5.value;makeSetting(FieldType.BOOLEAN, preset.name()[0], preset.name(), preset.desc(), "Preset Filters", preset);}} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}return settings;} }]);}();
 
 
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_classCallCheck(this, PricingSettings);_defineProperty(this, "expensivePricesAt",
@@ -2312,6 +2320,10 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
       var ignore = _toConsumableArray(fams.values()).map((f) =>
       f.hatchling.toString().toLowerCase()
       );
+      ignore.push.apply(ignore, _toConsumableArray(
+        Object.values((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.allNormalOutfits)()).map((s) => s.toLowerCase()))
+      );
+      ignore.push("miming regalia");
 
       var page = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.visitUrl)(
         "https://api.aventuristo.net/av-snapshot?u=" + username
@@ -2325,7 +2337,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
 
       var tdRegex = /<td(.*?)<\/td>/m;
       var linkRegex =
-      /class='(perm|hcperm|fam_run_90|fam_have|fam_run_100)'.*<a href="[^"]+">(?:.*?>)?([^>]*?)<\/a>/;
+      /class='(perm|hcperm|fam_run_90|fam_have|fam_run_100)'.*?<a href="[^"]+" rel="noreferrer">(?:.*?>)?([^>]*?)<\/a>/;
       var match;
       var has = [];
 
@@ -3267,12 +3279,12 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         var titleName = item.tradeableItem.name;
         var priceType =
         price.accuracy == PriceResolver/* PriceType */.SJ.NEW_PRICES ?
-        "last recorded" :
+        "Last recorded" :
         price.accuracy == PriceResolver/* PriceType */.SJ.MALL_SALES ?
-        "last sold" :
+        "Last sold" :
         price.accuracy == PriceResolver/* PriceType */.SJ.AUTOSELL ?
-        "autosell" :
-        "last malled";
+        "Autosell" :
+        "Last malled";
         var validAsOf =
         "Price valid as of " +
         AccountValUtils.getNumber(price.daysOutdated, 1) +
@@ -3287,7 +3299,13 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         }
 
         var title =
-        titleName + " @ " + priceType + " " + tradeableWorth + " " + validAsOf;
+        "=== ".concat(titleName, " ===") +
+        "&#010;&#010;" +
+        priceType +
+        " " +
+        tradeableWorth +
+        "&#010;" +
+        validAsOf;
 
         if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
           titleName = "1 ".concat(item.tradeableItem.name, " / ").concat(item.worthMultiplier, " ").concat(
@@ -3307,14 +3325,15 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         }
 
         if (price.volume >= 0) {
-          title += ". ".concat(AccountValUtils.getNumber(
+          title += ".&#010;".concat(AccountValUtils.getNumber(
             price.volume
           ), " sold in the last week.");
         }
 
         if (item.shopWorth > 0) {
           title +=
-          ". Shop selling at: " + AccountValUtils.getNumber(item.shopWorth);
+          ".&#010;Shop selling at: " +
+          AccountValUtils.getNumber(item.shopWorth);
         }
 
         if (item.snapshotSource != null) {
@@ -3409,7 +3428,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         }var _iterator = AccountVal_createForOfIteratorHelper(
 
             lines),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var line = _step.value;
-            (0,external_kolmafia_.printHtml)(line);
+            (0,external_kolmafia_.printHtml)(line.replace(/\n/g, "&#010;"));
           }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
         if (mallExtinct.length > 0) {
@@ -3554,7 +3573,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
       replace(/'/g, "&#039;");
     } }, { key: "doHelp", value:
 
-    function doHelp() {
+    function doHelp() {var _this = this;
       (0,external_kolmafia_.print)(
         "AccountVal is a script to check what your account is worth, and find the good stuff fast.",
         AccountValColors/* AccountValColors */.HK.helpfulStateInfo
@@ -3567,13 +3586,13 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
         AccountValColors/* AccountValColors */.HK.helpfulStateInfo, "'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>")
       );
 
-      var even = true;var _iterator2 = AccountVal_createForOfIteratorHelper(
+      var groups = [];var _iterator2 = AccountVal_createForOfIteratorHelper(
 
-          AccountValSettings/* AccountValSettings */.AO.getSettings()),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var setting = _step2.value;
+          AccountValSettings/* AccountValSettings */.AO.getSettings()),_step2;try {var _loop = function _loop() {var setting = _step2.value;
           var defaultOf = ".</font> <font>Default is: ";
 
-          if (this.settings[setting.field] != null) {
-            var val = this.settings[setting.field];
+          if (_this.settings[setting.field] != null) {
+            var val = _this.settings[setting.field];
 
             if (setting.type == AccountValSettings/* FieldType */.PU.NUMBER) {
               val = setting.names[0] + "=" + val;
@@ -3590,16 +3609,49 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
             defaultOf += "null";
           }
 
-          (0,external_kolmafia_.printHtml)("<font color='".concat(
+          if (setting.groupUnder != null) {
+            var group = groups.find(
+              (_ref3) => {var _ref4 = _slicedToArray(_ref3, 1),l = _ref4[0];return l == setting.groupUnder;}
+            );
 
-            AccountValColors/* AccountValColors */.HK.minorNote, "' title='Aliases: ").concat(
-            setting.names.join(", "), "'><b>").concat(
-            setting.names[0], "</b> - ").concat(
-            setting.desc).concat(defaultOf, "</font>")
-          );
+            if (group == null) {
+              groups.push(group = [setting.groupUnder, []]);
+            }
 
-          even = !even;
-        }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+            group[1].push("<font title='".concat(
+              setting.desc).concat(
+              setting.names.length > 1 ? "&#010;&#010;Aliases: ".concat(
+                setting.names.
+                filter((s) => s != setting.names[0]).
+                join(", ")) :
+              "", "'><b>").concat(
+              setting.names[0], "</b></font>")
+            );
+          } else {
+            (0,external_kolmafia_.printHtml)("<font color='".concat(
+
+              AccountValColors/* AccountValColors */.HK.minorNote, "' title='Aliases: ").concat(
+              setting.names.join(", "), "'><b>").concat(
+              setting.names[0], "</b> - ").concat(
+              setting.desc).concat(defaultOf, "</font>")
+            );
+          }
+        };for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {_loop();}} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+
+      for (var _i = 0, _groups = groups; _i < _groups.length; _i++) {var _groups$_i = _slicedToArray(_groups[_i], 2),groupName = _groups$_i[0],grouped = _groups$_i[1];
+        var toPrint = grouped.map((s, i) => {
+          return "<font color='".concat(
+            i % 2 == 0 ?
+            AccountValColors/* AccountValColors */.HK.mallExtinctColor1 :
+            AccountValColors/* AccountValColors */.HK.mallExtinctColor2, "'>").concat(
+            s, "</font>");
+        });
+        (0,external_kolmafia_.printHtml)("<font color='".concat(
+
+          AccountValColors/* AccountValColors */.HK.minorNote, "'><b>").concat(
+          groupName, ":</b> ").concat(toPrint.join(", "), "</font>")
+        );
+      }
 
       (0,external_kolmafia_.printHtml)("<font color='".concat(
         AccountValColors/* AccountValColors */.HK.minorNote, "'>Disclaimer: The prices shown are not absolute, and can overstate what it really is worth.</font>")
@@ -3681,7 +3733,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {AccountVal_classCa
     function runTest(args, verify) {
       this.load(args);
 
-      for (var _i = 0, _Object$entries = Object.entries(verify); _i < _Object$entries.length; _i++) {var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),key = _Object$entries$_i[0],value = _Object$entries$_i[1];
+      for (var _i2 = 0, _Object$entries = Object.entries(verify); _i2 < _Object$entries.length; _i2++) {var _Object$entries$_i = _slicedToArray(_Object$entries[_i2], 2),key = _Object$entries$_i[0],value = _Object$entries$_i[1];
         var setTo = this.settings[key];
 
         if (setTo == value) {
