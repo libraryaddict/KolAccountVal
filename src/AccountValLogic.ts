@@ -29,6 +29,7 @@ import {
 } from "./AccountValSettings";
 import { FetchFromPage } from "./PageResolver";
 import { AccountValColors } from "./AccountValColors";
+import { AccValTiming } from "./AccountValTimings";
 
 export enum ItemStatus {
   BOUND,
@@ -304,19 +305,32 @@ export class AccountValLogic {
   }
 
   loadItems() {
+    AccValTiming.start("Load JS Filter");
     this.loadJsFilter();
+    AccValTiming.stop("Load JS Filter");
 
     if (this.settings.playerId > 0) {
+      AccValTiming.start("Load Page Items");
       this.loadPageItems();
+      AccValTiming.stop("Load Page Items");
 
       return;
     }
 
+    AccValTiming.start("Resolve Familiar Items");
     const famItems: Map<Item, number> = this.resolver.resolveFamiliarItems();
+    AccValTiming.stop("Resolve Familiar Items");
+
+    AccValTiming.start("Resolve Session");
     const sessionItems: Map<Item, number> = this.resolver.resolveSessionItems();
+    AccValTiming.stop("Resolve Session");
+
+    AccValTiming.start("Resolve Inventory");
     const mega: { [item: string]: number } = this.settings.fetchInventory
       ? getInventory()
       : {};
+    AccValTiming.stop("Resolve Inventory");
+
     const megaExtra: Map<Item, { count: number; shelf: string }> = new Map();
 
     const add = (stuff: { [item: string]: number }) => {
@@ -326,19 +340,26 @@ export class AccountValLogic {
     };
 
     if (this.settings.fetchCloset) {
+      AccValTiming.start("Resolve and Add Closet");
       add(getCloset());
+      AccValTiming.stop("Resolve and Add Closet");
     }
 
     if (this.settings.fetchStorage) {
+      AccValTiming.start("Resolve and Add Storage");
       add(getStorage());
+      AccValTiming.stop("Resolve and Add Storage");
     }
 
     if (this.settings.fetchClan) {
+      AccValTiming.start("Resolve and Add Clan Stash");
       add(getStash());
+      AccValTiming.stop("Resolve and Add Clan Stash");
     }
 
     if (this.settings.fetchDisplaycase) {
       if (this.settings.doCategories) {
+        AccValTiming.start("Resolve and Add Display Case with Shelves");
         const pager = new FetchFromPage();
         const items = pager.getDisplaycase(toInt(myId()));
 
@@ -352,14 +373,21 @@ export class AccountValLogic {
             count: v,
           });
         });
+        AccValTiming.stop("Resolve and Add Display Case with Shelves");
       } else {
+        AccValTiming.start("Resolve and Add Display Case");
         add(getDisplay());
+        AccValTiming.stop("Resolve and Add Display Case");
       }
     }
 
     if (this.settings.fetchShop && !this.settings.shopWorth) {
+      AccValTiming.start("Resolve and Add Shop");
       add(getShop());
+      AccValTiming.stop("Resolve and Add Shop");
     }
+
+    AccValTiming.start("Process All Items");
 
     for (const item of Item.all()) {
       let amount = mega[item.name] ?? 0;
@@ -399,15 +427,21 @@ export class AccountValLogic {
       this.ownedItems.set(new ValItem(item).withCategory(category), amount);
     }
 
+    AccValTiming.stop("Process All Items");
+
     if (this.settings.fetchFamiliars != false) {
+      AccValTiming.start("Resolve Familiars");
       this.resolver.resolveFamiliars(
         Familiar.all().filter((f) => haveFamiliar(f)),
         this.ownedItems
       );
+      AccValTiming.stop("Resolve Familiars");
     }
 
     // Check our current workshed
     if (this.settings.fetchingEverywhereish && this.settings.fetchingNonItems) {
+      AccValTiming.start("Resolve Workshed");
+
       if (this.settings.doBound || this.settings.doTradeables) {
         const i = getWorkshed();
 
@@ -421,9 +455,13 @@ export class AccountValLogic {
           }
         }
       }
+
+      AccValTiming.stop("Resolve Workshed");
     }
 
     if (this.settings.doBound && this.settings.fetchingNonItems) {
+      AccValTiming.start("Resolve Urled Items");
+
       for (const [item, status] of this.resolver.getUrledItems()) {
         if (
           item.tradeable &&
@@ -436,9 +474,13 @@ export class AccountValLogic {
 
         this.addItem(new ValItem(item, item, item.name, item.plural, status));
       }
+
+      AccValTiming.stop("Resolve Urled Items");
     }
 
+    AccValTiming.start("Resolve No-Trades");
     this.resolveNoTrades();
+    AccValTiming.stop("Resolve No-Trades");
   }
 
   private resolveNoTrades() {
@@ -561,7 +603,10 @@ export class AccountValLogic {
       prices.push([item, price]);
     };
 
+    AccValTiming.start("Add Logic Prices");
+
     for (const i of this.ownedItems.keys()) {
+      AccValTiming.start("Price Item", true);
       const price: ItemPrice = this.priceResolver.itemPrice(
         i.tradeableItem,
         this.ownedItems.get(i),
@@ -574,13 +619,18 @@ export class AccountValLogic {
         this.settings.doSuperFast,
         true
       );
+      AccValTiming.stop("Price Item");
 
       if (price.price > 0 || price.accuracy == PriceType.NEW_PRICES) {
+        AccValTiming.start("Add Item Price", true);
         addPrice(i, price);
+        AccValTiming.stop("Add Item Price");
       } else {
         toCheck.push([i, price]);
       }
     }
+
+    AccValTiming.stop("Add Logic Prices");
 
     // TODO Sort tocheck
 
@@ -593,34 +643,42 @@ export class AccountValLogic {
       );
     }
 
-    for (const check of toCheck) {
-      const i = check[0];
+    if (toCheck.length > 0) {
+      AccValTiming.start("Check Remaining Logic Item Prices");
 
-      if (++checked % 20 == 0 && lastPrinted + 1000 < Date.now()) {
-        lastPrinted = Date.now();
-        print(
-          "Checking value of " +
-            i.name +
-            " (" +
-            checked +
-            " / " +
-            toCheck.length +
-            ")",
-          AccountValColors.helpfulStateInfo
+      for (const check of toCheck) {
+        const i = check[0];
+
+        if (++checked % 20 == 0 && lastPrinted + 1000 < Date.now()) {
+          lastPrinted = Date.now();
+          print(
+            "Checking value of " +
+              i.name +
+              " (" +
+              checked +
+              " / " +
+              toCheck.length +
+              ")",
+            AccountValColors.helpfulStateInfo
+          );
+        }
+
+        const price: ItemPrice = this.priceResolver.itemPrice(
+          i.tradeableItem,
+          this.ownedItems.get(i),
+          false,
+          check[1].accuracy
         );
+
+        addPrice(i, price);
       }
 
-      const price: ItemPrice = this.priceResolver.itemPrice(
-        i.tradeableItem,
-        this.ownedItems.get(i),
-        false,
-        check[1].accuracy
-      );
-
-      addPrice(i, price);
+      AccValTiming.stop("Check Remaining Logic Item Prices");
     }
 
+    AccValTiming.start("Sort Price List");
     this.doSort();
+    AccValTiming.stop("Sort Price List");
   }
 
   doSort() {

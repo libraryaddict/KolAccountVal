@@ -12,6 +12,7 @@ import {
   getRelated,
 } from "kolmafia";
 import { PricingSettings } from "./AccountValSettings";
+import { AccValTiming } from "./AccountValTimings";
 
 export enum PriceType {
   NEW_PRICES,
@@ -116,13 +117,24 @@ export class PriceResolver {
     }
 
     if (!this.newPrices.isValid()) {
-      this.loadMallHistory();
+      this.getMallHistory("prices no valid");
     }
 
     this.fillSpecialCase();
   }
 
+  getMallHistory(reason: string) {
+    if (this.history == null) {
+      print("Loaded mall history cos " + reason);
+      this.loadMallHistory();
+    }
+
+    return this.history;
+  }
+
   loadMallHistory() {
+    AccValTiming.start("Load Mall History");
+
     try {
       this.history = new (eval("require")(
         "scripts/utils/mallhistory.js"
@@ -140,6 +152,8 @@ export class PriceResolver {
       }
 
       throw e;
+    } finally {
+      AccValTiming.stop("Load Mall History");
     }
   }
 
@@ -158,69 +172,83 @@ export class PriceResolver {
     doEstimates: boolean = false
   ): ItemPrice {
     if (!ignoreFold) {
-      const foldables = Object.keys(getRelated(item, "fold"));
+      AccValTiming.start("Check Foldable", true);
 
-      if (foldables != null && foldables.length > 1) {
-        const foldPrices = foldables.map((f) =>
-          this.itemPrice(
-            Item.get(f),
-            amount,
-            true,
-            forcePricing,
-            doSuperFast,
-            doEstimates
-          )
-        );
+      try {
+        const foldables = Object.keys(getRelated(item, "fold"));
 
-        foldPrices.sort((f1, f2) => f1.price - f2.price);
+        if (foldables != null && foldables.length > 1) {
+          const foldPrices = foldables.map((f) =>
+            this.itemPrice(
+              Item.get(f),
+              amount,
+              true,
+              forcePricing,
+              doSuperFast,
+              doEstimates
+            )
+          );
 
-        const compare = foldPrices.find((f) => f.item == item);
+          foldPrices.sort((f1, f2) => f1.price - f2.price);
 
-        for (const f of foldPrices) {
-          if (f.daysOutdated > compare.daysOutdated * 3) {
-            continue;
+          const compare = foldPrices.find((f) => f.item == item);
+
+          for (const f of foldPrices) {
+            if (f.daysOutdated > compare.daysOutdated * 3) {
+              continue;
+            }
+
+            return f;
           }
 
-          return f;
+          return foldPrices[0];
         }
-
-        return foldPrices[0];
+      } finally {
+        AccValTiming.stop("Check Foldable");
       }
     }
 
-    if (this.specialCase.has(item)) {
-      return new ItemPrice(item, this.specialCase.get(item), PriceType.MALL, 0);
-    }
+    AccValTiming.start("Check Pricing Misc", true);
 
-    if (!item.tradeable) {
-      return new ItemPrice(item, autosellPrice(item), PriceType.AUTOSELL, 0);
-    }
-
-    if (this.newPrices.isValid()) {
-      const price = this.newPrices.prices[toInt(item)];
-
-      if (price != null) {
-        const daysAge = Math.round(
-          (Date.now() / 1000 - price.updated) / (60 * 60 * 24)
-        );
-
+    try {
+      if (this.specialCase.has(item)) {
         return new ItemPrice(
           item,
-          price.price,
-          PriceType.NEW_PRICES,
-          daysAge,
-          price.volume
+          this.specialCase.get(item),
+          PriceType.MALL,
+          0
         );
       }
+
+      if (!item.tradeable) {
+        return new ItemPrice(item, autosellPrice(item), PriceType.AUTOSELL, 0);
+      }
+
+      if (this.newPrices.isValid()) {
+        const price = this.newPrices.prices[toInt(item)];
+
+        if (price != null) {
+          const daysAge = Math.round(
+            (Date.now() / 1000 - price.updated) / (60 * 60 * 24)
+          );
+
+          return new ItemPrice(
+            item,
+            price.price,
+            PriceType.NEW_PRICES,
+            daysAge,
+            price.volume
+          );
+        }
+      }
+    } finally {
+      AccValTiming.stop("Check Pricing Misc");
     }
 
-    if (this.history == null) {
-      this.loadMallHistory();
-    }
-
-    const salesPricing = new MallHistoryPricing(
+    AccValTiming.start("Create Price Resolver", true);
+    const oldMallHistoryPricing = new MallHistoryPricing(
+      this,
       this.settings,
-      this.history,
       item,
       amount
     );
@@ -233,10 +261,10 @@ export class PriceResolver {
     } else if (forcePricing == PriceType.MALL) {
       resolver = mallPricing;
     } else if (forcePricing == PriceType.MALL_SALES) {
-      resolver = salesPricing;
+      resolver = oldMallHistoryPricing;
     } else {
       const viablePrices: PriceVolunteer[] = [
-        salesPricing,
+        oldMallHistoryPricing,
         historyPricing,
         mallPricing,
       ].filter((p) => p.isViable() && !p.isOutdated());
@@ -252,54 +280,70 @@ export class PriceResolver {
         return p1.price - p2.price;
       });
 
-      resolver = viablePrices.length > 0 ? viablePrices[0] : salesPricing;
+      resolver =
+        viablePrices.length > 0 ? viablePrices[0] : oldMallHistoryPricing;
 
       // If we're not doing sales, and the price is apparently worth more than 50m
       if (
         !doSuperFast &&
-        resolver != salesPricing &&
+        resolver != oldMallHistoryPricing &&
         historicalPrice(item) > 50_000_000
       ) {
         // If we have no sale history on record, or the price diff is more than 50m
         if (
-          salesPricing.getAge() == -1 ||
-          Math.abs(salesPricing.getPrice(true).price - historicalPrice(item)) >
-            50_000_000
+          oldMallHistoryPricing.getAge() == -1 ||
+          Math.abs(
+            oldMallHistoryPricing.getPrice(true).price - historicalPrice(item)
+          ) > 50_000_000
         ) {
-          resolver = salesPricing;
+          resolver = oldMallHistoryPricing;
         }
       }
     }
 
-    if (
-      doEstimates &&
-      historyPricing != resolver &&
-      resolver.isOutdated() &&
-      historicalAge(item) < 365 &&
-      historicalPrice(item) <= Math.max(autosellPrice(item) * 3, 500)
-    ) {
-      return new ItemPrice(
-        item,
-        historicalPrice(item),
-        PriceType.HISTORICAL,
-        historicalAge(item)
-      );
+    AccValTiming.stop("Create Price Resolver");
+
+    AccValTiming.start("Run Pricing Checks", true);
+
+    try {
+      if (
+        doEstimates &&
+        historyPricing != resolver &&
+        resolver.isOutdated() &&
+        historicalAge(item) < 365 &&
+        historicalPrice(item) <= Math.max(autosellPrice(item) * 3, 500)
+      ) {
+        return new ItemPrice(
+          item,
+          historicalPrice(item),
+          PriceType.HISTORICAL,
+          historicalAge(item)
+        );
+      }
+    } finally {
+      AccValTiming.stop("Run Pricing Checks");
     }
 
-    if (
-      doEstimates &&
-      (doSuperFast ? !resolver.isViable() : resolver.isOutdated())
-    ) {
-      return new ItemPrice(item, -1, resolver.getPriceType(), 0);
+    AccValTiming.start("Run Final Pricing Check", true);
+
+    try {
+      if (
+        doEstimates &&
+        (doSuperFast ? !resolver.isViable() : resolver.isOutdated())
+      ) {
+        return new ItemPrice(item, -1, resolver.getPriceType(), 0);
+      }
+
+      let price = resolver.getPrice();
+
+      if (price == null) {
+        price = mallPricing.getPrice();
+      }
+
+      return price;
+    } finally {
+      AccValTiming.stop("Run Final Pricing Check");
     }
-
-    let price = resolver.getPrice();
-
-    if (price == null) {
-      price = mallPricing.getPrice();
-    }
-
-    return price;
   }
 }
 
@@ -326,39 +370,51 @@ class MallHistoryPricing implements PriceVolunteer {
   private amount: number;
   private records: MallRecords;
   private settings: PricingSettings;
-  private history: MallHistory;
+  private newPrices: PriceResolver;
+  private attemptedToLoadRecords: boolean = false;
 
   constructor(
+    newPrices: PriceResolver,
     settings: PricingSettings,
-    history: MallHistory,
     item: Item,
     amount: number
   ) {
+    this.newPrices = newPrices;
     this.settings = settings;
-    this.history = history;
     this.item = item;
     this.amount = amount;
-    this.records = history.getMallRecords(this.item, 900, false);
+  }
+
+  private getRecords(): MallRecords {
+    if (this.item.tradeable && !this.attemptedToLoadRecords) {
+      this.attemptedToLoadRecords = true;
+      this.records = this.newPrices
+        .getMallHistory("check " + this.item)
+        .getMallRecords(this.item, 900, false);
+    }
+
+    return this.records;
   }
 
   isViable(): boolean {
     // If we have no records, or if we have records or last records check attempt was less than 30 days ago
-    return this.records == null || this.records.records.length > 0;
+    return this.getRecords() == null || this.getRecords().records.length > 0;
   }
 
   isOutdated(): boolean {
-    if (this.records == null) {
+    if (this.getRecords() == null) {
       return true;
     }
 
     const lastUpdated =
-      (Date.now() / 1000 - this.records.lastUpdated) / (24 * 60 * 60);
+      (Date.now() / 1000 - this.getRecords().lastUpdated) / (24 * 60 * 60);
 
-    if (this.records.records.length == 0) {
+    if (this.getRecords().records.length == 0) {
       return lastUpdated > 30;
     }
 
-    const last = this.records.records[this.records.records.length - 1];
+    const last =
+      this.getRecords().records[this.getRecords().records.length - 1];
     const histAge = Math.min(
       (Date.now() / 1000 - last.date) / (24 * 60 * 60),
       lastUpdated
@@ -372,11 +428,12 @@ class MallHistoryPricing implements PriceVolunteer {
   }
 
   getAge(): number {
-    if (this.records == null) {
+    if (this.getRecords() == null) {
       return -1;
     }
 
-    const last = this.records.records[this.records.records.length - 1];
+    const last =
+      this.getRecords().records[this.getRecords().records.length - 1];
 
     if (last == null) {
       return -1;
@@ -388,11 +445,14 @@ class MallHistoryPricing implements PriceVolunteer {
   }
 
   getPrice(ignoreOutdated: boolean = false): ItemPrice {
-    if (!ignoreOutdated && this.isOutdated()) {
-      this.records = this.history.getMallRecords(this.item, 0.1, true);
+    if (!ignoreOutdated && this.item.tradeable && this.isOutdated()) {
+      this.records = this.newPrices
+        .getMallHistory("check2 " + this.item)
+        .getMallRecords(this.item, 0.1, true);
     }
 
-    const last = this.records.records[this.records.records.length - 1];
+    const last =
+      this.getRecords().records[this.getRecords().records.length - 1];
 
     if (last == null) {
       return null;

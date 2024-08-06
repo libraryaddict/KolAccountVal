@@ -78,6 +78,7 @@ export class AccountValSettings {
   javascriptFilter: string = "";
   useLastSold: boolean = false;
   settingsDebug: boolean = false;
+  static timingsDebug: boolean = false;
   brief: boolean = false;
   oldPricing: boolean = false;
   colorScheme: string = isDarkMode() ? "dark" : "default";
@@ -370,6 +371,15 @@ export class AccountValSettings {
       }
 
       if (arg == "debug") {
+        this.settingsDebug = true;
+        AccountValSettings.timingsDebug = true;
+        continue;
+      }
+
+      if (arg == "timings") {
+        AccountValSettings.timingsDebug = true;
+        continue;
+      } else if (arg == "settings") {
         this.settingsDebug = true;
         continue;
       }

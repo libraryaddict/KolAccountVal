@@ -21,15 +21,18 @@ import {
 import { AccountValUtils } from "./AccountValUtils";
 import { PriceType } from "./PriceResolver";
 import { AccountValColors, showAccountvalColors } from "./AccountValColors";
+import { AccValTiming } from "./AccountValTimings";
 
 class AccountVal {
   private logic: AccountValLogic;
   private settings: AccountValSettings;
 
-  doCheck() {
-    let netvalue: number = 0;
+  getSettings(): AccountValSettings {
+    return this.settings;
+  }
 
-    this.logic.doPricing();
+  runValuation() {
+    let netvalue: number = 0;
 
     const aWorth = this.logic.priceResolver.itemPrice(
       Item.get("Mr. Accessory"),
@@ -516,13 +519,24 @@ class AccountVal {
   }
 
   start() {
+    AccValTiming.start("Construct Logic");
     const priceSettings = new PricingSettings();
     priceSettings.maxPriceAge = this.settings.maxAge;
     priceSettings.oldPricing = this.settings.oldPricing;
     this.logic = new AccountValLogic(this.settings, priceSettings);
+    AccValTiming.stop("Construct Logic");
 
+    AccValTiming.start("Load Logic Items");
     this.logic.loadItems();
-    this.doCheck();
+    AccValTiming.stop("Load Logic Items");
+
+    AccValTiming.start("Load Logic Prices");
+    this.logic.doPricing();
+    AccValTiming.stop("Load Logic Prices");
+
+    AccValTiming.start("Start Valuation");
+    this.runValuation();
+    AccValTiming.stop("Start Valuation");
   }
 
   runTests() {
@@ -554,9 +568,20 @@ class AccountVal {
 }
 
 export function main(command: string) {
+  //   AccValTiming.start("Construct Class");
   const val = new AccountVal();
+  //   AccValTiming.stop("Construct Class");
+
+  //   AccValTiming.start("Load Command");
 
   if (val.load(command)) {
+    //     AccValTiming.stop("Load Command");
+    AccValTiming.start("Run AccountVal");
     val.start();
+    AccValTiming.stop("Run AccountVal");
+  }
+
+  if (AccountValSettings.timingsDebug) {
+    AccValTiming.printTracked("PRINT_JUST_ONCE");
   }
 }
