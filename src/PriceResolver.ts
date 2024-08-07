@@ -117,15 +117,14 @@ export class PriceResolver {
     }
 
     if (!this.newPrices.isValid()) {
-      this.getMallHistory("prices no valid");
+      this.getMallHistory();
     }
 
     this.fillSpecialCase();
   }
 
-  getMallHistory(reason: string) {
+  getMallHistory() {
     if (this.history == null) {
-      print("Loaded mall history cos " + reason);
       this.loadMallHistory();
     }
 
@@ -389,7 +388,7 @@ class MallHistoryPricing implements PriceVolunteer {
     if (this.item.tradeable && !this.attemptedToLoadRecords) {
       this.attemptedToLoadRecords = true;
       this.records = this.newPrices
-        .getMallHistory("check " + this.item)
+        .getMallHistory()
         .getMallRecords(this.item, 900, false);
     }
 
@@ -447,7 +446,7 @@ class MallHistoryPricing implements PriceVolunteer {
   getPrice(ignoreOutdated: boolean = false): ItemPrice {
     if (!ignoreOutdated && this.item.tradeable && this.isOutdated()) {
       this.records = this.newPrices
-        .getMallHistory("check2 " + this.item)
+        .getMallHistory()
         .getMallRecords(this.item, 0.1, true);
     }
 
