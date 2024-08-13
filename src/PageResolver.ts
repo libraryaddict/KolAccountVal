@@ -168,7 +168,7 @@ export class FetchFromPage {
       }
 
       const item = new StoreItem();
-      item.item = toItem(match[1].substring(0, match[1].length - 9));
+      item.item = toItem(match[1].substring(0, match[1].length - 12));
       item.amount = toInt(match[2]);
       item.limit = match[3] == null ? 0 : toInt(match[3]);
       item.price = toInt(match[4]);
