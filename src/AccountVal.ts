@@ -88,12 +88,12 @@ class AccountVal {
       const lastSoldWorth = AccountValUtils.getNumber(price.price2) + " meat.";
       const priceType =
         (price.accuracy == PriceType.NEW_PRICES
-          ? "Last recorded"
+          ? "Last malled"
           : price.accuracy == PriceType.MALL_SALES
           ? "Last sold"
           : price.accuracy == PriceType.AUTOSELL
           ? "Autosell"
-          : "Last malled") +
+          : "Last mafia malled") +
         " @ " +
         tradeableWorth;
       const extraPrice =
