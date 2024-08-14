@@ -25,6 +25,7 @@ export enum PriceType {
 export class ItemPrice {
   item: Item;
   price: number;
+  price2: number;
   accuracy: PriceType;
   daysOutdated: number;
   volume: number;
@@ -34,13 +35,15 @@ export class ItemPrice {
     price: number,
     accuracy: PriceType,
     daysOutdated: number,
-    volume: number = -1
+    volume: number = -1,
+    price2: number = -1
   ) {
     this.item = item;
     this.price = price;
     this.accuracy = accuracy;
     this.daysOutdated = daysOutdated;
     this.volume = volume;
+    this.price2 = price2;
   }
 }
 
@@ -48,6 +51,7 @@ interface ItemPriceMap {
   updated: number;
   price: number;
   volume: number;
+  lastSoldAt: number;
 }
 
 class NewPrices {
@@ -96,8 +100,14 @@ class NewPrices {
       const age = parseInt(spl2[1]);
       const price = parseInt(spl2[2]);
       const volume = parseInt(spl2[3]);
+      const lastSoldAt = parseInt(spl2[4]);
 
-      this.prices[itemId] = { price: price, updated: age, volume: volume };
+      this.prices[itemId] = {
+        price: price,
+        updated: age,
+        volume: volume,
+        lastSoldAt: lastSoldAt,
+      };
     }
   }
 }
@@ -236,7 +246,8 @@ export class PriceResolver {
             price.price,
             PriceType.NEW_PRICES,
             daysAge,
-            price.volume
+            price.volume,
+            price.lastSoldAt
           );
         }
       }

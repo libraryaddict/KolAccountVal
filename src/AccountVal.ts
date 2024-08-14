@@ -84,56 +84,61 @@ class AccountVal {
         continue;
       }
 
-      let titleName = item.tradeableItem.name;
+      let tradeableWorth = AccountValUtils.getNumber(price.price) + " meat.";
+      const lastSoldWorth = AccountValUtils.getNumber(price.price2) + " meat.";
       const priceType =
-        price.accuracy == PriceType.NEW_PRICES
+        (price.accuracy == PriceType.NEW_PRICES
           ? "Last recorded"
           : price.accuracy == PriceType.MALL_SALES
           ? "Last sold"
           : price.accuracy == PriceType.AUTOSELL
           ? "Autosell"
-          : "Last malled";
+          : "Last malled") +
+        " @ " +
+        tradeableWorth;
+      const extraPrice =
+        price.price2 > 0 && price.accuracy == PriceType.NEW_PRICES
+          ? `&#010;Last sold @ ${lastSoldWorth}`
+          : "";
       const validAsOf =
         "Price valid as of " +
         AccountValUtils.getNumber(price.daysOutdated, 1) +
         " day" +
         (price.daysOutdated != 1 ? "s" : "") +
-        " ago";
-      let tradeableWorth =
-        AccountValUtils.getNumber(price.price) + " meat each.";
+        " ago.";
 
       if (price.price < 0) {
         tradeableWorth = "as mall extinct.";
       }
 
       let title =
-        `=== ${titleName} ===` +
+        `=== ${this.escapeHTML(item.tradeableItem.name)} ===` +
         "&#010;&#010;" +
         priceType +
-        " " +
-        tradeableWorth +
-        "&#010;" +
-        validAsOf;
+        extraPrice +
+        (price.accuracy != PriceType.AUTOSELL
+          ? "&#010;&#010;" + validAsOf
+          : "");
 
       if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
-        titleName = `1 ${item.tradeableItem.name} / ${item.worthMultiplier} ${
-          item.pluralName
-        } = ${AccountValUtils.getNumber(worthEach)} each.`;
-
         title =
-          titleName +
-          " " +
-          item.tradeableItem.name +
-          " " +
+          `=== ${this.escapeHTML(item.name)} ===` +
+          "&#010;&#010;" +
+          `${this.escapeHTML(item.tradeableItem.name)} / ${
+            item.worthMultiplier
+          } ${this.escapeHTML(item.pluralName)} = ${AccountValUtils.getNumber(
+            worthEach
+          )} meat each.` +
+          "&#010;" +
           priceType +
-          " " +
-          tradeableWorth +
-          " " +
-          validAsOf;
+          extraPrice +
+          (price.accuracy != PriceType.AUTOSELL
+            ? "&#010;&#010;" + validAsOf
+            : "");
       }
 
       if (price.volume >= 0) {
-        title += `.&#010;${AccountValUtils.getNumber(
+        title += `&#010;${AccountValUtils.getNumber(
           price.volume
         )} sold in the last week.`;
       }
@@ -181,9 +186,9 @@ class AccountVal {
           boundInfo = item.getBound();
         }
 
-        name = `${name} (<font color='${color}' title='${this.escapeHTML(
-          title
-        )}'>${this.escapeHTML(boundInfo)}</font>)`;
+        name = `${name} (<font color='${color}' title='${title}'>${this.escapeHTML(
+          boundInfo
+        )}</font>)`;
       }
 
       if (worthEach <= 0 || worthEach > 999_999_999) {
@@ -250,7 +255,7 @@ class AccountVal {
             "<font color='" +
             colors[i % 2] +
             "' title='" +
-            this.escapeHTML(title) +
+            title +
             "'>" +
             name +
             "</font>"
