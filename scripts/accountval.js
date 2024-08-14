@@ -2925,19 +2925,23 @@ var ItemPrice = /*#__PURE__*/_createClass(
 
 
 
+
   function ItemPrice(
   item,
   price,
   accuracy,
   daysOutdated)
 
-  {var volume = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : -1;_classCallCheck(this, ItemPrice);_defineProperty(this, "item", void 0);_defineProperty(this, "price", void 0);_defineProperty(this, "accuracy", void 0);_defineProperty(this, "daysOutdated", void 0);_defineProperty(this, "volume", void 0);
+
+  {var volume = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : -1;var price2 = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : -1;_classCallCheck(this, ItemPrice);_defineProperty(this, "item", void 0);_defineProperty(this, "price", void 0);_defineProperty(this, "price2", void 0);_defineProperty(this, "accuracy", void 0);_defineProperty(this, "daysOutdated", void 0);_defineProperty(this, "volume", void 0);
     this.item = item;
     this.price = price;
     this.accuracy = accuracy;
     this.daysOutdated = daysOutdated;
     this.volume = volume;
+    this.price2 = price2;
   });var
+
 
 
 
@@ -2992,8 +2996,14 @@ NewPrices = /*#__PURE__*/function () {function NewPrices() {_classCallCheck(this
           var age = parseInt(spl2[1]);
           var price = parseInt(spl2[2]);
           var volume = parseInt(spl2[3]);
+          var lastSoldAt = parseInt(spl2[4]);
 
-          this.prices[itemId] = { price: price, updated: age, volume: volume };
+          this.prices[itemId] = {
+            price: price,
+            updated: age,
+            volume: volume,
+            lastSoldAt: lastSoldAt
+          };
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
     } }]);}();
 
@@ -3132,7 +3142,8 @@ var PriceResolver = /*#__PURE__*/function () {
               price.price,
               PriceType.NEW_PRICES,
               daysAge,
-              price.volume
+              price.volume,
+              price.lastSoldAt
             );
           }
         }
@@ -3608,56 +3619,61 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           continue;
         }
 
-        var titleName = item.tradeableItem.name;
+        var tradeableWorth = _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price) + " meat.";
+        var lastSoldWorth = _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price2) + " meat.";
         var priceType =
-        price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES ?
+        (price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES ?
         "Last recorded" :
         price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.MALL_SALES ?
         "Last sold" :
         price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
         "Autosell" :
-        "Last malled";
+        "Last malled") +
+        " @ " +
+        tradeableWorth;
+        var extraPrice =
+        price.price2 > 0 && price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES ? "&#010;Last sold @ ".concat(
+          lastSoldWorth) :
+        "";
         var validAsOf =
         "Price valid as of " +
         _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.daysOutdated, 1) +
         " day" + (
         price.daysOutdated != 1 ? "s" : "") +
-        " ago";
-        var tradeableWorth =
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price) + " meat each.";
+        " ago.";
 
         if (price.price < 0) {
           tradeableWorth = "as mall extinct.";
         }
 
         var title =
-        "=== ".concat(titleName, " ===") +
+        "=== ".concat(this.escapeHTML(item.tradeableItem.name), " ===") +
         "&#010;&#010;" +
         priceType +
-        " " +
-        tradeableWorth +
-        "&#010;" +
-        validAsOf;
+        extraPrice + (
+        price.accuracy != _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
+        "&#010;&#010;" + validAsOf :
+        "");
 
         if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
-          titleName = "1 ".concat(item.tradeableItem.name, " / ").concat(item.worthMultiplier, " ").concat(
-            item.pluralName, " = ").concat(
-            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(worthEach), " each.");
-
           title =
-          titleName +
-          " " +
-          item.tradeableItem.name +
-          " " +
+          "=== ".concat(this.escapeHTML(item.name), " ===") +
+          "&#010;&#010;" + "".concat(
+            this.escapeHTML(item.tradeableItem.name), " / ").concat(
+            item.worthMultiplier, " ").concat(
+            this.escapeHTML(item.pluralName), " = ").concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(
+            worthEach
+          ), " meat each.") +
+          "&#010;" +
           priceType +
-          " " +
-          tradeableWorth +
-          " " +
-          validAsOf;
+          extraPrice + (
+          price.accuracy != _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
+          "&#010;&#010;" + validAsOf :
+          "");
         }
 
         if (price.volume >= 0) {
-          title += ".&#010;".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(
+          title += "&#010;".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(
             price.volume
           ), " sold in the last week.");
         }
@@ -3705,9 +3721,9 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
             boundInfo = item.getBound();
           }
 
-          name = "".concat(name, " (<font color='").concat(color, "' title='").concat(this.escapeHTML(
-            title
-          ), "'>").concat(this.escapeHTML(boundInfo), "</font>)");
+          name = "".concat(name, " (<font color='").concat(color, "' title='").concat(title, "'>").concat(this.escapeHTML(
+            boundInfo
+          ), "</font>)");
         }
 
         if (worthEach <= 0 || worthEach > 999999999) {
@@ -3774,7 +3790,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
                 "<font color='" +
                 colors[i % 2] +
                 "' title='" +
-                this.escapeHTML(title) +
+                title +
                 "'>" +
                 name +
                 "</font>");}
