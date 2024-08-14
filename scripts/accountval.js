@@ -3623,12 +3623,12 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         var lastSoldWorth = _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price2) + " meat.";
         var priceType =
         (price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES ?
-        "Last recorded" :
+        "Last malled" :
         price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.MALL_SALES ?
         "Last sold" :
         price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
         "Autosell" :
-        "Last malled") +
+        "Last mafia malled") +
         " @ " +
         tradeableWorth;
         var extraPrice =
