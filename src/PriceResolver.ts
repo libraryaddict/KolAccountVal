@@ -142,7 +142,8 @@ export class PriceResolver {
   }
 
   loadMallHistory() {
-    AccValTiming.start("Load Mall History");
+    // I want it in red so its obvious when its being used
+    AccValTiming.start("<font color=red>Load Mall History</font>");
 
     try {
       this.history = new (eval("require")(
@@ -162,7 +163,7 @@ export class PriceResolver {
 
       throw e;
     } finally {
-      AccValTiming.stop("Load Mall History");
+      AccValTiming.stop("<font color=red>Load Mall History</font>");
     }
   }
 
@@ -187,30 +188,42 @@ export class PriceResolver {
         const foldables = Object.keys(getRelated(item, "fold"));
 
         if (foldables != null && foldables.length > 1) {
-          const foldPrices = foldables.map((f) =>
-            this.itemPrice(
-              Item.get(f),
-              amount,
-              true,
-              forcePricing,
-              doSuperFast,
-              doEstimates
-            )
-          );
+          AccValTiming.start("Deeper Foldable Check", true);
 
-          foldPrices.sort((f1, f2) => f1.price - f2.price);
+          try {
+            const foldPrices = foldables.map((f) =>
+              this.itemPrice(
+                Item.get(f),
+                amount,
+                true,
+                forcePricing,
+                doSuperFast,
+                doEstimates
+              )
+            );
 
-          const compare = foldPrices.find((f) => f.item == item);
+            foldPrices.sort((f1, f2) =>
+              f1.item.tradeable != f2.item.tradeable
+                ? f1.item.tradeable
+                  ? -1
+                  : 1
+                : f1.price - f2.price
+            );
 
-          for (const f of foldPrices) {
-            if (f.daysOutdated > compare.daysOutdated * 3) {
-              continue;
+            const compare = foldPrices.find((f) => f.item == item);
+
+            for (const f of foldPrices) {
+              if (f.daysOutdated > compare.daysOutdated * 3) {
+                continue;
+              }
+
+              return f;
             }
 
-            return f;
+            return foldPrices[0];
+          } finally {
+            AccValTiming.stop("Deeper Foldable Check");
           }
-
-          return foldPrices[0];
         }
       } finally {
         AccValTiming.stop("Check Foldable");

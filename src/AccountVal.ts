@@ -46,6 +46,14 @@ class AccountVal {
     let lastCategory = null;
     let shelfValue: number = 0;
 
+    const pronoun = this.settings.fetchClan
+      ? "The clan stash is"
+      : !this.settings.playerId || this.settings.playerId == toInt(myId())
+      ? this.settings.fetchSession
+        ? "Your session is"
+        : "You are"
+      : getPlayerName(this.settings.playerId) + " is";
+
     const onShelfName = (name: string, worth: number) => {
       if (!this.settings.doCategories || name == lastCategory) {
         shelfValue += worth;
@@ -84,73 +92,76 @@ class AccountVal {
         continue;
       }
 
-      let tradeableWorth = AccountValUtils.getNumber(price.price) + " meat.";
-      const lastSoldWorth = AccountValUtils.getNumber(price.price2) + " meat.";
-      const priceType =
+      let title: string[] = [];
+
+      if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
+        title.push(`=== ${this.escapeHTML(item.name)} ===`);
+        title.push("");
+        title.push(
+          `${this.escapeHTML(item.tradeableItem.name)} / ${this.escapeHTML(
+            item.pluralName
+          )} (${item.worthMultiplier}) = ${
+            item.pluralName
+          } are worth ${AccountValUtils.getNumber(
+            Math.round(worthEach)
+          )} meat each.`
+        );
+      } else {
+        title.push(`=== ${this.escapeHTML(item.tradeableItem.name)} ===`);
+        title.push("");
+      }
+
+      let tradeableWorth = ` @ ${AccountValUtils.getNumber(price.price)} meat.`;
+
+      if (price.price < 0) {
+        tradeableWorth = " as mall extinct.";
+      }
+
+      title.push(
         (price.accuracy == PriceType.NEW_PRICES
           ? "Last malled"
           : price.accuracy == PriceType.MALL_SALES
           ? "Last sold"
           : price.accuracy == PriceType.AUTOSELL
           ? "Autosell"
-          : "Last mafia malled") +
-        " @ " +
-        tradeableWorth;
-      const extraPrice =
-        price.price2 > 0 && price.accuracy == PriceType.NEW_PRICES
-          ? `&#010;Last sold @ ${lastSoldWorth}`
-          : "";
-      const validAsOf =
-        "Price valid as of " +
-        AccountValUtils.getNumber(price.daysOutdated, 1) +
-        " day" +
-        (price.daysOutdated != 1 ? "s" : "") +
-        " ago.";
+          : "Last mafia malled") + tradeableWorth
+      );
 
-      if (price.price < 0) {
-        tradeableWorth = "as mall extinct.";
-      }
-
-      let title =
-        `=== ${this.escapeHTML(item.tradeableItem.name)} ===` +
-        "&#010;&#010;" +
-        priceType +
-        extraPrice +
-        (price.accuracy != PriceType.AUTOSELL
-          ? "&#010;&#010;" + validAsOf
-          : "");
-
-      if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
-        title =
-          `=== ${this.escapeHTML(item.name)} ===` +
-          "&#010;&#010;" +
-          `${this.escapeHTML(item.tradeableItem.name)} / ${
-            item.worthMultiplier
-          } ${this.escapeHTML(item.pluralName)} = ${AccountValUtils.getNumber(
-            worthEach
-          )} meat each.` +
-          "&#010;" +
-          priceType +
-          extraPrice +
-          (price.accuracy != PriceType.AUTOSELL
-            ? "&#010;&#010;" + validAsOf
-            : "");
-      }
-
-      if (price.volume >= 0) {
-        title += `&#010;${AccountValUtils.getNumber(
-          price.volume
-        )} sold in the last week.`;
+      if (price.price2 > 0 && price.accuracy == PriceType.NEW_PRICES) {
+        title.push(
+          `Last sold @ ${AccountValUtils.getNumber(price.price2)} meat.`
+        );
       }
 
       if (item.shopWorth > 0) {
-        title +=
-          ".&#010;Shop selling at: " +
-          AccountValUtils.getNumber(item.shopWorth);
+        title.push(
+          pronoun +
+            " selling @ " +
+            AccountValUtils.getNumber(item.shopWorth) +
+            " meat."
+        );
+      }
+
+      if (price.accuracy != PriceType.AUTOSELL) {
+        title.push("");
+        title.push(
+          "Price valid as of " +
+            AccountValUtils.getNumber(price.daysOutdated, 1) +
+            " day" +
+            (price.daysOutdated != 1 ? "s" : "") +
+            " ago."
+        );
+      }
+
+      if (price.volume >= 0) {
+        title.push("");
+        title.push(
+          `${AccountValUtils.getNumber(price.volume)} sold in the last week.`
+        );
       }
 
       if (item.snapshotSource != null) {
-        title = `Owns in ${item.snapshotSource}. ${title}`;
+        title = [`Owns in ${item.snapshotSource}.`, ...title];
       }
 
       let name = this.escapeHTML(item.name);
@@ -186,16 +197,16 @@ class AccountVal {
           boundInfo = item.getBound();
         }
 
-        name = `${name} (<font color='${color}' title='${title}'>${this.escapeHTML(
-          boundInfo
-        )}</font>)`;
+        name = `${name} (<font color='${color}' title='${title.join(
+          "&#010;"
+        )}'>${this.escapeHTML(boundInfo)}</font>)`;
       }
 
       if (worthEach <= 0 || worthEach > 999_999_999) {
         if (count > 1) {
-          mallExtinct.push([count + " @ " + name, title]);
+          mallExtinct.push([count + " @ " + name, title.join("&#010;")]);
         } else {
-          mallExtinct.push([name, title]);
+          mallExtinct.push([name, title.join("&#010;")]);
         }
 
         continue;
@@ -208,7 +219,11 @@ class AccountVal {
       )} ${name} worth a total of ${AccountValUtils.getNumber(totalWorth)}`;
 
       lines.push(
-        "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>"
+        "<font title='" +
+          this.escapeHTML(title.join("&#010;")) +
+          "'>" +
+          text +
+          "</font>"
       );
     }
 
@@ -269,14 +284,6 @@ class AccountVal {
         );
       }
     }
-
-    const pronoun = this.settings.fetchClan
-      ? "The clan stash is"
-      : !this.settings.playerId || this.settings.playerId == toInt(myId())
-      ? this.settings.fetchSession
-        ? "Your session is"
-        : "You are"
-      : getPlayerName(this.settings.playerId) + " is";
 
     let mrAMeat = netvalue;
 
