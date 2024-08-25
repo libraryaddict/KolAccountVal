@@ -2834,7 +2834,7 @@ var FetchFromPage = /*#__PURE__*/function () {function FetchFromPage() {_classCa
           }
 
           var item = new StoreItem();
-          item.item = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toItem)(match[1].substring(0, match[1].length - 12));
+          item.item = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toItem)(match[1]);
           item.amount = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(match[2]);
           item.limit = match[3] == null ? 0 : (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(match[3]);
           item.price = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)(match[4]);
@@ -3038,7 +3038,8 @@ var PriceResolver = /*#__PURE__*/function () {
     } }, { key: "loadMallHistory", value:
 
     function loadMallHistory() {
-      _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.start("Load Mall History");
+      // I want it in red so its obvious when its being used
+      _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.start("<font color=red>Load Mall History</font>");
 
       try {
         this.history = new (eval("require")(
@@ -3058,7 +3059,7 @@ var PriceResolver = /*#__PURE__*/function () {
 
         throw e;
       } finally {
-        _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.stop("Load Mall History");
+        _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.stop("<font color=red>Load Mall History</font>");
       }
     } }, { key: "fillSpecialCase", value:
 
@@ -3083,30 +3084,42 @@ var PriceResolver = /*#__PURE__*/function () {
           var foldables = Object.keys((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getRelated)(item, "fold"));
 
           if (foldables != null && foldables.length > 1) {
-            var foldPrices = foldables.map((f) =>
-            this.itemPrice(
-              kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(f),
-              amount,
-              true,
-              forcePricing,
-              doSuperFast,
-              doEstimates
-            )
-            );
+            _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.start("Deeper Foldable Check", true);
 
-            foldPrices.sort((f1, f2) => f1.price - f2.price);
+            try {
+              var foldPrices = foldables.map((f) =>
+              this.itemPrice(
+                kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(f),
+                amount,
+                true,
+                forcePricing,
+                doSuperFast,
+                doEstimates
+              )
+              );
 
-            var compare = foldPrices.find((f) => f.item == item);var _iterator2 = _createForOfIteratorHelper(
+              foldPrices.sort((f1, f2) =>
+              f1.item.tradeable != f2.item.tradeable ?
+              f1.item.tradeable ?
+              -1 :
+              1 :
+              f1.price - f2.price
+              );
 
-                foldPrices),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var f = _step2.value;
-                if (f.daysOutdated > compare.daysOutdated * 3) {
-                  continue;
-                }
+              var compare = foldPrices.find((f) => f.item == item);var _iterator2 = _createForOfIteratorHelper(
 
-                return f;
-              }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+                  foldPrices),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var f = _step2.value;
+                  if (f.daysOutdated > compare.daysOutdated * 3) {
+                    continue;
+                  }
 
-            return foldPrices[0];
+                  return f;
+                }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
+
+              return foldPrices[0];
+            } finally {
+              _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.stop("Deeper Foldable Check");
+            }
           }
         } finally {
           _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.stop("Check Foldable");
@@ -3550,7 +3563,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PriceResolver__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(616);
 /* harmony import */ var _AccountValColors__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(477);
 /* harmony import */ var _AccountValTimings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(866);
-function _slicedToArray(r, e) {return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(r) {if (Array.isArray(r)) return r;}function _createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function _unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return _arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;}}function _arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function _classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function _defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o);}}function _createClass(e, r, t) {return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function _defineProperty(e, r, t) {return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function _slicedToArray(r, e) {return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(r) {if (Array.isArray(r)) return r;}function _createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function _toConsumableArray(r) {return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return _arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;}}function _iterableToArray(r) {if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);}function _arrayWithoutHoles(r) {if (Array.isArray(r)) return _arrayLikeToArray(r);}function _arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function _classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function _defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o);}}function _createClass(e, r, t) {return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function _defineProperty(e, r, t) {return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == typeof i ? i : i + "";}function _toPrimitive(t, r) {if ("object" != typeof t || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != typeof i) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 
@@ -3580,6 +3593,14 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
       var shopPricedAt = 0;
       var lastCategory = null;
       var shelfValue = 0;
+
+      var pronoun = this.settings.fetchClan ?
+      "The clan stash is" :
+      !this.settings.playerId || this.settings.playerId == (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myId)()) ?
+      this.settings.fetchSession ?
+      "Your session is" :
+      "You are" :
+      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getPlayerName)(this.settings.playerId) + " is";
 
       var onShelfName = (name, worth) => {
         if (!this.settings.doCategories || name == lastCategory) {
@@ -3619,73 +3640,76 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           continue;
         }
 
-        var tradeableWorth = _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price) + " meat.";
-        var lastSoldWorth = _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price2) + " meat.";
-        var priceType =
-        (price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES ?
-        "Last malled" :
-        price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.MALL_SALES ?
-        "Last sold" :
-        price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
-        "Autosell" :
-        "Last mafia malled") +
-        " @ " +
-        tradeableWorth;
-        var extraPrice =
-        price.price2 > 0 && price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES ? "&#010;Last sold @ ".concat(
-          lastSoldWorth) :
-        "";
-        var validAsOf =
-        "Price valid as of " +
-        _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.daysOutdated, 1) +
-        " day" + (
-        price.daysOutdated != 1 ? "s" : "") +
-        " ago.";
-
-        if (price.price < 0) {
-          tradeableWorth = "as mall extinct.";
-        }
-
-        var title =
-        "=== ".concat(this.escapeHTML(item.tradeableItem.name), " ===") +
-        "&#010;&#010;" +
-        priceType +
-        extraPrice + (
-        price.accuracy != _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
-        "&#010;&#010;" + validAsOf :
-        "");
+        var title = [];
 
         if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
-          title =
-          "=== ".concat(this.escapeHTML(item.name), " ===") +
-          "&#010;&#010;" + "".concat(
-            this.escapeHTML(item.tradeableItem.name), " / ").concat(
-            item.worthMultiplier, " ").concat(
-            this.escapeHTML(item.pluralName), " = ").concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(
-            worthEach
-          ), " meat each.") +
-          "&#010;" +
-          priceType +
-          extraPrice + (
-          price.accuracy != _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
-          "&#010;&#010;" + validAsOf :
-          "");
+          title.push("=== ".concat(this.escapeHTML(item.name), " ==="));
+          title.push("");
+          title.push("".concat(
+            this.escapeHTML(item.tradeableItem.name), " / ").concat(this.escapeHTML(
+            item.pluralName
+          ), " (").concat(item.worthMultiplier, ") = ").concat(
+            item.pluralName, " are worth ").concat(
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(
+              Math.round(worthEach)
+            ), " meat each.")
+          );
+        } else {
+          title.push("=== ".concat(this.escapeHTML(item.tradeableItem.name), " ==="));
+          title.push("");
         }
 
-        if (price.volume >= 0) {
-          title += "&#010;".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(
-            price.volume
-          ), " sold in the last week.");
+        var tradeableWorth = " @ ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price), " meat.");
+
+        if (price.price < 0) {
+          tradeableWorth = " as mall extinct.";
+        }
+
+        title.push(
+          (price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES ?
+          "Last malled" :
+          price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.MALL_SALES ?
+          "Last sold" :
+          price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
+          "Autosell" :
+          "Last mafia malled") + tradeableWorth
+        );
+
+        if (price.price2 > 0 && price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES) {
+          title.push("Last sold @ ".concat(
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price2), " meat.")
+          );
         }
 
         if (item.shopWorth > 0) {
-          title +=
-          ".&#010;Shop selling at: " +
-          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(item.shopWorth);
+          title.push(
+            pronoun +
+            " selling @ " +
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(item.shopWorth) +
+            " meat."
+          );
+        }
+
+        if (price.accuracy != _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL) {
+          title.push("");
+          title.push(
+            "Price valid as of " +
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.daysOutdated, 1) +
+            " day" + (
+            price.daysOutdated != 1 ? "s" : "") +
+            " ago."
+          );
+        }
+
+        if (price.volume >= 0) {
+          title.push("");
+          title.push("".concat(
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.volume), " sold in the last week.")
+          );
         }
 
         if (item.snapshotSource != null) {
-          title = "Owns in ".concat(item.snapshotSource, ". ").concat(title);
+          title = ["Owns in ".concat(item.snapshotSource, ".")].concat(_toConsumableArray(title));
         }
 
         var name = this.escapeHTML(item.name);
@@ -3721,16 +3745,16 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
             boundInfo = item.getBound();
           }
 
-          name = "".concat(name, " (<font color='").concat(color, "' title='").concat(title, "'>").concat(this.escapeHTML(
-            boundInfo
-          ), "</font>)");
+          name = "".concat(name, " (<font color='").concat(color, "' title='").concat(title.join(
+            "&#010;"
+          ), "'>").concat(this.escapeHTML(boundInfo), "</font>)");
         }
 
         if (worthEach <= 0 || worthEach > 999999999) {
           if (count > 1) {
-            mallExtinct.push([count + " @ " + name, title]);
+            mallExtinct.push([count + " @ " + name, title.join("&#010;")]);
           } else {
-            mallExtinct.push([name, title]);
+            mallExtinct.push([name, title.join("&#010;")]);
           }
 
           continue;
@@ -3743,7 +3767,11 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         ), " ").concat(name, " worth a total of ").concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(totalWorth));
 
         lines.push(
-          "<font title='" + this.escapeHTML(title) + "'>" + text + "</font>"
+          "<font title='" +
+          this.escapeHTML(title.join("&#010;")) +
+          "'>" +
+          text +
+          "</font>"
         );
       }
 
@@ -3804,14 +3832,6 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           );
         }
       }
-
-      var pronoun = this.settings.fetchClan ?
-      "The clan stash is" :
-      !this.settings.playerId || this.settings.playerId == (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.toInt)((0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.myId)()) ?
-      this.settings.fetchSession ?
-      "Your session is" :
-      "You are" :
-      (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.getPlayerName)(this.settings.playerId) + " is";
 
       var mrAMeat = netvalue;
 
