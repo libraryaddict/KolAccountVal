@@ -1,4 +1,4 @@
-# Original data stolen from https://github.com/soolar/accountval.ash
+# Original data stolen from https://github.com/soolar/accountval.ash (Mostly OG nowadays)
 # Item Containers! Start with i
 i	packet of mayfly bait	mayfly bait necklace
 i	Clan VIP Lounge invitation	Clan VIP Lounge key
@@ -94,6 +94,7 @@ i	Boxed Apriling band helmet	Apriling band helmet
 i	boxed Mayam Calendar	Mayam Calendar
 i	packaged Roman Candelabra	Roman Candelabra
 i	untorn tearaway pants package	tearaway pants
+i	Boxed Sept-Ember Censer	Sept-Ember Censer
 
 
 
