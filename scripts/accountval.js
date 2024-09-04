@@ -3627,10 +3627,12 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         var price = this.logic.prices[no][1];
 
         // Mall extinct items should be 1b
-        var worthEach =
-        price.price <= 0 && item.worthMultiplier == 1 ?
-        -1 :
-        price.price * (1 / item.worthMultiplier);
+        var worthEach = Math.min(
+          1000000000,
+          price.price <= 0 && item.worthMultiplier == 1 ?
+          -1 :
+          price.price * (1 / item.worthMultiplier)
+        );
 
         var count = this.logic.ownedItems.get(item);
         var totalWorth = Math.round(worthEach * count);
