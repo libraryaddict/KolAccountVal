@@ -1,4 +1,4 @@
-# Original data stolen from https://github.com/soolar/accountval.ash (Mostly OG nowadays)
+# Original data stolen from https://github.com/soolar/accountval.ash (Mostly OC nowadays)
 # Item Containers! Start with i
 i	packet of mayfly bait	mayfly bait necklace
 i	Clan VIP Lounge invitation	Clan VIP Lounge key
