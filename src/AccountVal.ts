@@ -79,10 +79,12 @@ class AccountVal {
       const price = this.logic.prices[no][1];
 
       // Mall extinct items should be 1b
-      const worthEach =
+      const worthEach = Math.min(
+        1_000_000_000,
         price.price <= 0 && item.worthMultiplier == 1
           ? -1
-          : price.price * (1 / item.worthMultiplier);
+          : price.price * (1 / item.worthMultiplier)
+      );
 
       const count = this.logic.ownedItems.get(item);
       const totalWorth = Math.round(worthEach * count);
