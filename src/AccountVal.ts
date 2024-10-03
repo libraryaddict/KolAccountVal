@@ -78,9 +78,9 @@ class AccountVal {
       const item = this.logic.prices[no][0];
       const price = this.logic.prices[no][1];
 
-      // Mall extinct items should be 1b
+      // Mall extinct items should be at max natural price
       const worthEach = Math.min(
-        1_000_000_000,
+        this.settings.maxNaturalPrice,
         price.price <= 0 && item.worthMultiplier == 1
           ? -1
           : price.price * (1 / item.worthMultiplier)
@@ -204,7 +204,7 @@ class AccountVal {
         )}'>${this.escapeHTML(boundInfo)}</font>)`;
       }
 
-      if (worthEach <= 0 || worthEach > 999_999_999) {
+      if (worthEach <= 0 || worthEach > this.settings.maxNaturalPrice) {
         if (count > 1) {
           mallExtinct.push([count + " @ " + name, title.join("&#010;")]);
         } else {

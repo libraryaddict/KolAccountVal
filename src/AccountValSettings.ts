@@ -84,6 +84,7 @@ export class AccountValSettings {
   colorScheme: string = isDarkMode() ? "dark" : "default";
   presets: PresetSetting[] = [];
   doCategories: boolean = false;
+  maxNaturalPrice = 999_999_999;
 
   static getSettings(): ValSetting[] {
     const settings: ValSetting[] = [];
@@ -307,6 +308,13 @@ export class AccountValSettings {
       ["color", "colors", "colorscheme", "scheme"],
       "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " +
         getAccountvalColors().join(", ")
+    );
+
+    makeSetting(
+      FieldType.NUMBER,
+      "maxNaturalPrice",
+      ["max", "mallmax"],
+      "The max natural price an item will reach before it's capped and called mall extinct"
     );
 
     makeSetting(
@@ -630,8 +638,8 @@ export class AccountValSettings {
   }
 
   toNumber(arg: string): number {
-    while (arg.includes(",")) {
-      arg = arg.replace(",", "");
+    while (arg.includes(",") || arg.includes("_")) {
+      arg = arg.replace(",", "").replace("_", "");
     }
 
     const match = arg.match(/^((?:\d+)|(?:\d*\.\d+))([mkb]?)$/);

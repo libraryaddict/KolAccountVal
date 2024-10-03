@@ -687,20 +687,20 @@ export class AccountValLogic {
     if (this.settings.sortBy == SortBy.TOTAL_PRICE) {
       sorter = (v1, v2) =>
         (v1[1].price <= 0
-          ? 999_999_999
+          ? this.settings.maxNaturalPrice
           : (1 / v1[0].worthMultiplier) * v1[1].price) *
           this.ownedItems.get(v1[0]) -
         (v2[1].price <= 0
-          ? 999_999_999
+          ? this.settings.maxNaturalPrice
           : (1 / v2[0].worthMultiplier) * v2[1].price) *
           this.ownedItems.get(v2[0]);
     } else if (this.settings.sortBy == SortBy.PRICE) {
       sorter = (v1, v2) =>
         (v1[1].price <= 0
-          ? 999_999_999
+          ? this.settings.maxNaturalPrice
           : (1 / v1[0].worthMultiplier) * v1[1].price) -
         (v2[1].price <= 0
-          ? 999_999_999
+          ? this.settings.maxNaturalPrice
           : (1 / v2[0].worthMultiplier) * v2[1].price);
     } else if (this.settings.sortBy == SortBy.QUANTITY) {
       sorter = (v1, v2) =>
