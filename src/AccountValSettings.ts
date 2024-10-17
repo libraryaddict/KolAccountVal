@@ -38,6 +38,7 @@ const sortByAliases: Map<string, SortBy> = new Map([
   ["count", SortBy.QUANTITY],
   ["amount", SortBy.QUANTITY],
   ["meat", SortBy.PRICE],
+  ["price", SortBy.PRICE],
   ["totalmeat", SortBy.TOTAL_PRICE],
   ["totalprice", SortBy.TOTAL_PRICE],
   ["id", SortBy.ITEM_ID],
@@ -85,6 +86,7 @@ export class AccountValSettings {
   presets: PresetSetting[] = [];
   doCategories: boolean = false;
   maxNaturalPrice = 999_999_999;
+  showSingleItemWorth: boolean = false;
 
   static getSettings(): ValSetting[] {
     const settings: ValSetting[] = [];
@@ -322,6 +324,12 @@ export class AccountValSettings {
       "doCategories",
       ["category", "categories", "shelf", "shelves"],
       "Used only for Display Cases at this point, seperates the items into categories"
+    );
+    makeSetting(
+      FieldType.BOOLEAN,
+      "showSingleItemWorth",
+      ["each"],
+      "Displays the individual price of each item instead of the total, works best with `sort=meat`"
     );
 
     for (const preset of getPresets()) {

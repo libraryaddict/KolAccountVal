@@ -80,7 +80,7 @@ class AccountVal {
 
       // Mall extinct items should be at max natural price
       const worthEach = Math.min(
-        this.settings.maxNaturalPrice,
+        this.settings.maxNaturalPrice + 1,
         price.price <= 0 && item.worthMultiplier == 1
           ? -1
           : price.price * (1 / item.worthMultiplier)
@@ -142,6 +142,10 @@ class AccountVal {
             AccountValUtils.getNumber(item.shopWorth) +
             " meat."
         );
+      }
+
+      if (count > 1 && this.settings.showSingleItemWorth) {
+        title.push(`Worth a total of ${AccountValUtils.getNumber(totalWorth)}`);
       }
 
       if (price.accuracy != PriceType.AUTOSELL) {
@@ -216,9 +220,17 @@ class AccountVal {
 
       onShelfName(item.category, totalWorth);
 
-      const text = `${AccountValUtils.getNumber(
-        count
-      )} ${name} worth a total of ${AccountValUtils.getNumber(totalWorth)}`;
+      let text = `${AccountValUtils.getNumber(count)} ${name}`;
+
+      if (this.settings.showSingleItemWorth) {
+        if (count > 1) {
+          text += ` each worth ${AccountValUtils.getNumber(worthEach)}`;
+        }
+
+        text += ` for total ${AccountValUtils.getNumber(totalWorth)}`;
+      } else {
+        text += ` worth a total of ${AccountValUtils.getNumber(totalWorth)}`;
+      }
 
       lines.push(
         "<font title='" +
