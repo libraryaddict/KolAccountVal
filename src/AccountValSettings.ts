@@ -2,7 +2,7 @@ import { getPlayerId, isDarkMode, print, toBoolean, toFloat } from "kolmafia";
 import {
   AccountValColors,
   getAccountvalColors,
-  loadAccountvalColors,
+  loadAccountvalColors
 } from "./AccountValColors";
 import { AccountValPreset, getPresets } from "./AccountValPresets";
 import { ValItem } from "./AccountValLogic";
@@ -13,7 +13,7 @@ export enum FieldType {
   COLOR_SCHEME,
   BOOLEAN,
   NAME,
-  STRING,
+  STRING
 }
 
 export interface ValSetting {
@@ -31,7 +31,7 @@ export enum SortBy {
   PRICE,
   TOTAL_PRICE,
   SALES_VOLUME,
-  ITEM_ID,
+  ITEM_ID
 }
 
 const sortByAliases: Map<string, SortBy> = new Map([
@@ -43,7 +43,7 @@ const sortByAliases: Map<string, SortBy> = new Map([
   ["totalprice", SortBy.TOTAL_PRICE],
   ["id", SortBy.ITEM_ID],
   ["sales", SortBy.SALES_VOLUME],
-  ["sold", SortBy.SALES_VOLUME],
+  ["sold", SortBy.SALES_VOLUME]
 ]);
 
 type PresetSetting = {
@@ -105,7 +105,7 @@ export class AccountValSettings {
         field: name,
         names: aliases.map((s) => s.toLowerCase()),
         desc,
-        preset: preset,
+        preset: preset
       };
 
       settings.push(setting);
@@ -174,7 +174,7 @@ export class AccountValSettings {
         "nontradeables",
         "untrade",
         "untradeable",
-        "untradeables",
+        "untradeables"
       ],
       "Should it do non-tradeables (Resolves to tradeables if it can)"
     );
@@ -207,7 +207,7 @@ export class AccountValSettings {
         "minmeat",
         "min-meat",
         "minprice",
-        "price",
+        "price"
       ],
       "Each item total worth, at least this amount."
     );
@@ -234,7 +234,7 @@ export class AccountValSettings {
         "who",
         "target",
         "name",
-        "username",
+        "username"
       ],
       'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces'
     );
@@ -540,7 +540,7 @@ export class AccountValSettings {
         if (setting.preset != null) {
           this.presets.push({
             preset: setting.preset,
-            negated: !isTrue,
+            negated: !isTrue
           });
         } else {
           this[setting.field] = isTrue;
@@ -559,7 +559,7 @@ export class AccountValSettings {
       "fetchClan",
       "fetchSession",
       "fetchFamiliars",
-      "fetchSnapshot",
+      "fetchSnapshot"
     ];
 
     // We can do fams if bound isn't false
@@ -658,7 +658,9 @@ export class AccountValSettings {
 
     let num = toFloat(match[1]);
 
-    if (match[2] == "b") {
+    if (match[2] == "t") {
+      num *= 1_000_000_000_000;
+    } else if (match[2] == "b") {
       num *= 1_000_000_000;
     } else if (match[2] == "m") {
       num *= 1_000_000;

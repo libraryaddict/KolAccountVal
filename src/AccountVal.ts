@@ -223,11 +223,7 @@ class AccountVal {
       let text = `${AccountValUtils.getNumber(count)} ${name}`;
 
       if (this.settings.showSingleItemWorth) {
-        if (count > 1) {
-          text += ` each worth ${AccountValUtils.getNumber(worthEach)}`;
-        }
-
-        text += ` for total ${AccountValUtils.getNumber(totalWorth)}`;
+        text += ` each worth ${AccountValUtils.getNumber(worthEach)}`;
       } else {
         text += ` worth a total of ${AccountValUtils.getNumber(totalWorth)}`;
       }
