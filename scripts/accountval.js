@@ -1754,7 +1754,9 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
 
       var num = (0,external_kolmafia_.toFloat)(match[1]);
 
-      if (match[2] == "b") {
+      if (match[2] == "t") {
+        num *= 1000000000000;
+      } else if (match[2] == "b") {
         num *= 1000000000;
       } else if (match[2] == "m") {
         num *= 1000000;
@@ -3787,11 +3789,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         var text = "".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(count), " ").concat(name);
 
         if (this.settings.showSingleItemWorth) {
-          if (count > 1) {
-            text += " each worth ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(worthEach));
-          }
-
-          text += " for total ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(totalWorth));
+          text += " each worth ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(worthEach));
         } else {
           text += " worth a total of ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(totalWorth));
         }
