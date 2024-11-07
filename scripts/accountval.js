@@ -1746,7 +1746,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
         arg = arg.replace(",", "").replace("_", "");
       }
 
-      var match = arg.match(/^((?:\d+)|(?:\d*\.\d+))([mkb]?)$/);
+      var match = arg.match(/^((?:\d+)|(?:\d*\.\d+))([mkbt]?)$/);
 
       if (match == null) {
         return null;
