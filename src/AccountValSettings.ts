@@ -650,7 +650,7 @@ export class AccountValSettings {
       arg = arg.replace(",", "").replace("_", "");
     }
 
-    const match = arg.match(/^((?:\d+)|(?:\d*\.\d+))([mkb]?)$/);
+    const match = arg.match(/^((?:\d+)|(?:\d*\.\d+))([mkbt]?)$/);
 
     if (match == null) {
       return null;
