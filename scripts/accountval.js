@@ -264,15 +264,15 @@ var AccountValLogic = /*#__PURE__*/function () {
         var skills = [];
         var _items2 = new Map();var _iterator = _createForOfIteratorHelper(
 
-            snapshot),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item2 = _step.value;
-            if (_item2 instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar) {
-              _familiars.push(_item2);
-            } else if (_item2 instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill) {
-              skills.push(_item2);
-            } else if (_item2 instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item) {
-              _items2.set(_item2, 1);
+            snapshot),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _item = _step.value;
+            if (_item instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Familiar) {
+              _familiars.push(_item);
+            } else if (_item instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Skill) {
+              skills.push(_item);
+            } else if (_item instanceof kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item) {
+              _items2.set(_item, 1);
             } else {
-              _items2.set(_item2[0], _item2[1]);
+              _items2.set(_item[0], _item[1]);
             }
           }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
@@ -283,13 +283,13 @@ var AccountValLogic = /*#__PURE__*/function () {
         if (this.settings.doBound && this.settings.fetchingNonItems) {var _iterator2 = _createForOfIteratorHelper(
               this.resolver.accValStuff.filter(
                 (s) => s.itemType == _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .S.SKILL && skills.includes(s.skill)
-              )),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var _item = _step2.value;
+              )),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var item = _step2.value;
               this.addItem(
                 new ValItem(
-                  _item.actualItem,
-                  _item.actualItem,
-                  _item.actualItem.name,
-                  _item.actualItem.plural,
+                  item.actualItem,
+                  item.actualItem,
+                  item.actualItem.name,
+                  item.actualItem.plural,
                   ItemStatus.BOUND
                 )
               );
@@ -475,34 +475,34 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       _AccountValTimings__WEBPACK_IMPORTED_MODULE_6__/* .AccValTiming */ .p.start("Process All Items");var _iterator3 = _createForOfIteratorHelper(
 
-          kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _mega$_item4$name;var _item4 = _step3.value;
-          var amount = (_mega$_item4$name = mega[_item4.name]) !== null && _mega$_item4$name !== void 0 ? _mega$_item4$name : 0;
+          kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _mega$_item2$name;var _item2 = _step3.value;
+          var amount = (_mega$_item2$name = mega[_item2.name]) !== null && _mega$_item2$name !== void 0 ? _mega$_item2$name : 0;
 
           if (this.settings.fetchSession) {var _sessionItems$get;
-            amount += (_sessionItems$get = sessionItems.get(_item4)) !== null && _sessionItems$get !== void 0 ? _sessionItems$get : 0;
+            amount += (_sessionItems$get = sessionItems.get(_item2)) !== null && _sessionItems$get !== void 0 ? _sessionItems$get : 0;
           }
 
           if (this.settings.fetchInventory) {var _famItems$get;
-            amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.equippedAmount)(_item4) + ((_famItems$get = famItems.get(_item4)) !== null && _famItems$get !== void 0 ? _famItems$get : 0);
+            amount += (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.equippedAmount)(_item2) + ((_famItems$get = famItems.get(_item2)) !== null && _famItems$get !== void 0 ? _famItems$get : 0);
           }
 
           var category = void 0;
 
-          if (megaExtra.has(_item4)) {
-            amount += megaExtra.get(_item4).count;
-            category = megaExtra.get(_item4).shelf;
+          if (megaExtra.has(_item2)) {
+            amount += megaExtra.get(_item2).count;
+            category = megaExtra.get(_item2).shelf;
           }
 
           if (
           this.settings.fetchShop &&
           this.settings.shopWorth &&
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item4) > 0)
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item2) > 0)
           {
-            var _i = new ValItem(_item4).withCategory(category);
+            var _i = new ValItem(_item2).withCategory(category);
             _i.bound = ItemStatus.SHOP_WORTH;
-            _i.shopWorth = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopPrice)(_item4);
+            _i.shopWorth = (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopPrice)(_item2);
 
-            this.ownedItems.set(_i, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item4));
+            this.ownedItems.set(_i, (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.shopAmount)(_item2));
             continue;
           }
 
@@ -510,7 +510,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             continue;
           }
 
-          this.ownedItems.set(new ValItem(_item4).withCategory(category), amount);
+          this.ownedItems.set(new ValItem(_item2).withCategory(category), amount);
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
 
       _AccountValTimings__WEBPACK_IMPORTED_MODULE_6__/* .AccValTiming */ .p.stop("Process All Items");
@@ -548,9 +548,9 @@ var AccountValLogic = /*#__PURE__*/function () {
       if (this.settings.doBound && this.settings.fetchingNonItems) {
         _AccountValTimings__WEBPACK_IMPORTED_MODULE_6__/* .AccValTiming */ .p.start("Resolve Urled Items");var _iterator4 = _createForOfIteratorHelper(
 
-            this.resolver.getUrledItems()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _step4$value = _slicedToArray(_step4.value, 2),_item3 = _step4$value[0],status = _step4$value[1];
+            this.resolver.getUrledItems()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _step4$value = _slicedToArray(_step4.value, 2),item = _step4$value[0],status = _step4$value[1];
             if (
-            _item3.tradeable && (
+            item.tradeable && (
             status == ItemStatus.FAMILIAR || status != ItemStatus.BOUND) ?
             !this.settings.doTradeables :
             !this.settings.doBound)
@@ -558,7 +558,7 @@ var AccountValLogic = /*#__PURE__*/function () {
               continue;
             }
 
-            this.addItem(new ValItem(_item3, _item3, _item3.name, _item3.plural, status));
+            this.addItem(new ValItem(item, item, item.name, item.plural, status));
           }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
 
         _AccountValTimings__WEBPACK_IMPORTED_MODULE_6__/* .AccValTiming */ .p.stop("Resolve Urled Items");
@@ -583,67 +583,67 @@ var AccountValLogic = /*#__PURE__*/function () {
         );
       }var _iterator5 = _createForOfIteratorHelper(
 
-          this.ownedItems.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _item5 = _step5.value;
+          this.ownedItems.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var item = _step5.value;
           if (
           this.jsFilter != null &&
-          !this.jsFilter(_item5.tradeableItem, this.ownedItems.get(_item5)))
+          !this.jsFilter(item.tradeableItem, this.ownedItems.get(item)))
           {
-            this.ownedItems.delete(_item5);
+            this.ownedItems.delete(item);
             continue;
           }
 
           // If item can't be resolved to a price at all
           if (
-          !_item5.isBound() && (
-          !_item5.tradeableItem.tradeable || _item5.tradeableItem.gift) &&
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(_item5.tradeableItem) == 0)
+          !item.isBound() && (
+          !item.tradeableItem.tradeable || item.tradeableItem.gift) &&
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.autosellPrice)(item.tradeableItem) == 0)
           {
-            this.ownedItems.delete(_item5);
+            this.ownedItems.delete(item);
             continue;
           }
 
-          if (this.ownedItems.get(_item5) < this.settings.minimumAmount) {
-            this.ownedItems.delete(_item5);
+          if (this.ownedItems.get(item) < this.settings.minimumAmount) {
+            this.ownedItems.delete(item);
             continue;
           }
 
           // If we're not doing bound items, and this is a bound item..
           if (
           !this.settings.doBound &&
-          _item5.isBound() &&
-          _item5.bound != ItemStatus.FAMILIAR)
+          item.isBound() &&
+          item.bound != ItemStatus.FAMILIAR)
           {
-            this.ownedItems.delete(_item5);
+            this.ownedItems.delete(item);
             continue;
           }
 
           // If we're not doing familiars and this is a familiar
           if (
-          _item5.bound == ItemStatus.FAMILIAR && (
+          item.bound == ItemStatus.FAMILIAR && (
           this.settings.fetchFamiliars == false ||
           this.settings.fetchFamiliars == null && !this.settings.doBound))
           {
-            this.ownedItems.delete(_item5);
+            this.ownedItems.delete(item);
             continue;
           }
 
           // If we're not doing tradeables, and this isn't a bound item, and is tradeable
           if (
           !this.settings.doTradeables &&
-          _item5.tradeableItem.tradeable &&
-          _item5.isTradeable())
+          item.tradeableItem.tradeable &&
+          item.isTradeable())
           {
-            this.ownedItems.delete(_item5);
+            this.ownedItems.delete(item);
             continue;
           }
 
           // If we're not doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
           if (
           !this.settings.doNontradeables &&
-          !_item5.tradeableItem.tradeable &&
-          !_item5.isBound())
+          !item.tradeableItem.tradeable &&
+          !item.isBound())
           {
-            this.ownedItems.delete(_item5);
+            this.ownedItems.delete(item);
             continue;
           }
         }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
@@ -4174,7 +4174,7 @@ function main(command) {
   }
 }
 var __webpack_export_target__ = exports;
-for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_exports__[i];
+for(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];
 if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
 /******/ })()
 ;
