@@ -97,6 +97,8 @@ i	untorn tearaway pants package	tearaway pants
 i	Boxed Sept-Ember Censer	Sept-Ember Censer
 i	boxed bat wings	bat wings
 i	Sealed TakerSpace letter of Marque	TakerSpace letter of Marque
+i	McHugeLarge deluxe ski set	TakerSpace McHugeLarge duffel bag
+i	CyberRealm keycode	server room key
 
 
 
