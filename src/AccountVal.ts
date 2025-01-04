@@ -366,7 +366,7 @@ class AccountVal {
           AccountValColors.minorNote
         }' title="The max natural price is currently set to ${AccountValUtils.getNumber(
           this.settings.maxNaturalPrice
-        )}, you can change this by using 'max=3b' as an arg, or setting the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc)">Some items were expensive and were marked as mall extinct. Hover for details.</font>`
+        )}.&#010;&#010;You can change this by using 'max=3b' as an arg.&#010;You can also set the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc)">Some items were expensive and were marked as mall extinct. Hover for details.</font>`
       );
     }
   }
