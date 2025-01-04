@@ -1181,7 +1181,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     (0,external_kolmafia_.isDarkMode)() ? "dark" : "default");_defineProperty(this, "presets",
     []);_defineProperty(this, "doCategories",
     false);_defineProperty(this, "maxNaturalPrice",
-    999999999);_defineProperty(this, "showSingleItemWorth",
+    3000000000);_defineProperty(this, "showSingleItemWorth",
     false);}return _createClass(AccountValSettings, [{ key: "getSetting", value:
 
 
@@ -1457,6 +1457,12 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
     } }, { key: "doSettings", value:
 
     function doSettings(args) {var _this = this;
+      if ((0,external_kolmafia_.getProperty)("accountval_maxNaturalPrice").length > 0) {
+        this.maxNaturalPrice = this.toNumber(
+          (0,external_kolmafia_.getProperty)("accountval_maxNaturalPrice")
+        );
+      }
+
       var errors = [];
       var defaultValues = [];
       var wasSet = [];
@@ -3640,9 +3646,16 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         shelfValue = worth;
       };
 
+      var exceededMax = false;
+
       for (var no = this.logic.prices.length - 1; no >= 0; no--) {
         var item = this.logic.prices[no][0];
         var price = this.logic.prices[no][1];
+
+        exceededMax =
+        exceededMax ||
+        this.settings.maxNaturalPrice + 1 <
+        price.price * (1 / item.worthMultiplier);
 
         // Mall extinct items should be at max natural price
         var worthEach = Math.min(
@@ -3918,6 +3931,16 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
       }
 
       this.printMeat();
+
+      if (exceededMax) {
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)("<font color='".concat(
+
+          _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .HK.minorNote, "' title=\"The max natural price is currently set to ").concat(
+          _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(
+            this.settings.maxNaturalPrice
+          ), ", you can change this by using 'max=3b' as an arg, or setting the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc)\">Some items were expensive and were marked as mall extinct. Hover for details.</font>")
+        );
+      }
     } }, { key: "printMeat", value:
 
     function printMeat() {
