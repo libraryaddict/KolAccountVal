@@ -1,4 +1,11 @@
-import { getPlayerId, isDarkMode, print, toBoolean, toFloat } from "kolmafia";
+import {
+  getPlayerId,
+  getProperty,
+  isDarkMode,
+  print,
+  toBoolean,
+  toFloat
+} from "kolmafia";
 import {
   AccountValColors,
   getAccountvalColors,
@@ -85,7 +92,7 @@ export class AccountValSettings {
   colorScheme: string = isDarkMode() ? "dark" : "default";
   presets: PresetSetting[] = [];
   doCategories: boolean = false;
-  maxNaturalPrice = 999_999_999;
+  maxNaturalPrice = 3_000_000_000;
   showSingleItemWorth: boolean = false;
 
   static getSettings(): ValSetting[] {
@@ -361,6 +368,12 @@ export class AccountValSettings {
   }
 
   doSettings(args: string[]): string[] {
+    if (getProperty("accountval_maxNaturalPrice").length > 0) {
+      this.maxNaturalPrice = this.toNumber(
+        getProperty("accountval_maxNaturalPrice")
+      );
+    }
+
     const errors: string[] = [];
     const defaultValues: unknown[] = [];
     const wasSet: string[] = [];

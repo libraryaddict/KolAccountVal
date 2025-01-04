@@ -9,14 +9,14 @@ import {
   myStorageMeat,
   print,
   printHtml,
-  toInt,
+  toInt
 } from "kolmafia";
 import { AccountValLogic, ItemStatus } from "./AccountValLogic";
 import {
   AccountValSettings,
   FieldType,
   PricingSettings,
-  SortBy,
+  SortBy
 } from "./AccountValSettings";
 import { AccountValUtils } from "./AccountValUtils";
 import { PriceType } from "./PriceResolver";
@@ -74,9 +74,16 @@ class AccountVal {
       shelfValue = worth;
     };
 
+    let exceededMax = false;
+
     for (let no = this.logic.prices.length - 1; no >= 0; no--) {
       const item = this.logic.prices[no][0];
       const price = this.logic.prices[no][1];
+
+      exceededMax =
+        exceededMax ||
+        this.settings.maxNaturalPrice + 1 <
+          price.price * (1 / item.worthMultiplier);
 
       // Mall extinct items should be at max natural price
       const worthEach = Math.min(
@@ -272,7 +279,7 @@ class AccountVal {
       if (mallExtinct.length > 0) {
         const colors: string[] = [
           AccountValColors.mallExtinctColor1,
-          AccountValColors.mallExtinctColor2,
+          AccountValColors.mallExtinctColor2
         ];
 
         const extinct = mallExtinct.map(
@@ -352,6 +359,16 @@ class AccountVal {
     }
 
     this.printMeat();
+
+    if (exceededMax) {
+      printHtml(
+        `<font color='${
+          AccountValColors.minorNote
+        }' title="The max natural price is currently set to ${AccountValUtils.getNumber(
+          this.settings.maxNaturalPrice
+        )}, you can change this by using 'max=3b' as an arg, or setting the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc)">Some items were expensive and were marked as mall extinct. Hover for details.</font>`
+      );
+    }
   }
 
   printMeat() {
@@ -565,7 +582,7 @@ class AccountVal {
     this.runTest("", {
       doBound: true,
       sortBy: SortBy.TOTAL_PRICE,
-      fetchInventory: true,
+      fetchInventory: true
     });
     this.runTest("sort meat!bound", { doBound: false, sortBy: SortBy.PRICE });
     print("Tests Finished", "green");
