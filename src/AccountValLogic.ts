@@ -18,14 +18,14 @@ import {
   shopAmount,
   shopPrice,
   Skill,
-  toInt,
+  toInt
 } from "kolmafia";
 import { ItemResolver, ItemType } from "./ItemResolver";
 import { ItemPrice, PriceResolver, PriceType } from "./PriceResolver";
 import {
   AccountValSettings,
   PricingSettings,
-  SortBy,
+  SortBy
 } from "./AccountValSettings";
 import { FetchFromPage } from "./PageResolver";
 import { AccountValColors } from "./AccountValColors";
@@ -40,7 +40,7 @@ export enum ItemStatus {
 
   IN_USE,
 
-  SHOP_WORTH,
+  SHOP_WORTH
 }
 
 export class ValItem {
@@ -370,7 +370,7 @@ export class AccountValLogic {
 
           megaExtra.set(k.item, {
             shelf: k.shelf,
-            count: v,
+            count: v
           });
         });
         AccValTiming.stop("Resolve and Add Display Case with Shelves");
@@ -493,7 +493,7 @@ export class AccountValLogic {
     if (this.settings.doBound || this.settings.doNontradeables) {
       this.resolver.resolveBoundToTradeables(copy, this.ownedItems, [
         this.settings.doBound ? ItemType.UNTRADEABLE_ITEM : null,
-        this.settings.doNontradeables ? ItemType.CURRENCY : null,
+        this.settings.doNontradeables ? ItemType.CURRENCY : null
       ]);
     }
 

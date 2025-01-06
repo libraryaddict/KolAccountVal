@@ -94,6 +94,15 @@ class AccountVal {
       );
 
       const count = this.logic.ownedItems.get(item);
+
+      if (isNaN(count)) {
+        print(
+          "Unable to handle the item '" + item.name + "', skipping..",
+          AccountValColors.attentionGrabbingWarning
+        );
+        continue;
+      }
+
       const totalWorth = Math.round(worthEach * count);
       netvalue += totalWorth;
 
