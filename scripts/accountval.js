@@ -3666,6 +3666,15 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         );
 
         var count = this.logic.ownedItems.get(item);
+
+        if (isNaN(count)) {
+          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
+            "Unable to handle the item '" + item.name + "', skipping..",
+            _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .HK.attentionGrabbingWarning
+          );
+          continue;
+        }
+
         var totalWorth = Math.round(worthEach * count);
         netvalue += totalWorth;
 
