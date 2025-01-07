@@ -420,8 +420,8 @@ var AccountValLogic = /*#__PURE__*/function () {
       var megaExtra = new Map();
 
       var add = (stuff) => {
-        Object.keys(stuff).forEach((k) => {var _mega$k;
-          mega[k] = ((_mega$k = mega[k]) !== null && _mega$k !== void 0 ? _mega$k : 0) + stuff[k];
+        Object.entries(stuff).forEach((_ref3) => {var _mega$k;var _ref4 = _slicedToArray(_ref3, 2),k = _ref4[0],v = _ref4[1];
+          mega[k] = ((_mega$k = mega[k]) !== null && _mega$k !== void 0 ? _mega$k : 0) + v;
         });
       };
 
