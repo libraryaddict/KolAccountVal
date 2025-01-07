@@ -1,7 +1,6 @@
 import {
   Familiar,
   familiarEquippedEquipment,
-  fileToBuffer,
   getCampground,
   getPermedSkills,
   getProperty,
@@ -18,12 +17,13 @@ import {
   toBoolean,
   toInt,
   toItem,
-  visitUrl,
+  visitUrl
 } from "kolmafia";
 import { ItemStatus, ValItem } from "./AccountValLogic";
 import { AccountValColors } from "./AccountValColors";
 import { CoinmasterResolver } from "./CoinmasterResolver";
 import { PriceResolver } from "./PriceResolver";
+import accountvalBinds from "../data/accountval_binds.txt";
 
 class AccValStuff {
   itemType: ItemType;
@@ -58,7 +58,7 @@ export enum ItemType {
 
   CAMPGROUND,
 
-  SCRIPT,
+  SCRIPT
 }
 
 export class ItemResolver {
@@ -323,7 +323,7 @@ export class ItemResolver {
   }
 
   loadAccountValStuff(): AccValStuff[] {
-    const buffer = fileToBuffer("accountval_binds.txt");
+    const buffer = accountvalBinds;
     const values: AccValStuff[] = [];
 
     for (const line of buffer.split(/(\n|\r)+/)) {
