@@ -92,7 +92,8 @@ export class AccountValSettings {
   colorScheme: string = isDarkMode() ? "dark" : "default";
   presets: PresetSetting[] = [];
   doCategories: boolean = false;
-  maxNaturalPrice = 3_000_000_000;
+  static defaultMaxNaturalPrice = 3_000_000_000;
+  maxNaturalPrice = AccountValSettings.defaultMaxNaturalPrice;
   showSingleItemWorth: boolean = false;
 
   static getSettings(): ValSetting[] {
