@@ -334,8 +334,8 @@ export class AccountValLogic {
     const megaExtra: Map<Item, { count: number; shelf: string }> = new Map();
 
     const add = (stuff: { [item: string]: number }) => {
-      Object.keys(stuff).forEach((k) => {
-        mega[k] = (mega[k] ?? 0) + stuff[k];
+      Object.entries(stuff).forEach(([k, v]) => {
+        mega[k] = (mega[k] ?? 0) + v;
       });
     };
 
