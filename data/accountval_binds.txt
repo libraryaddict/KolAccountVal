@@ -99,6 +99,7 @@ i	boxed bat wings	bat wings
 i	Sealed TakerSpace letter of Marque	TakerSpace letter of Marque
 i	McHugeLarge deluxe ski set	McHugeLarge duffel bag
 i	CyberRealm keycode	server room key
+i	eldritch tincture	eldritch tincture (depleted)
 
 
 
