@@ -202,6 +202,11 @@ var AccountValLogic = /*#__PURE__*/function () {
 
 
 
+
+
+
+
+
   function AccountValLogic(settings, priceSettings) {_classCallCheck(this, AccountValLogic);_defineProperty(this, "ownedItems", new Map());_defineProperty(this, "resolver", void 0);_defineProperty(this, "priceResolver", void 0);_defineProperty(this, "prices", []);_defineProperty(this, "categoryOrder", []);_defineProperty(this, "settings", void 0);_defineProperty(this, "jsFilter", void 0);
     this.settings = settings;
     this.priceResolver = new _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceResolver */ .cb(priceSettings);
@@ -581,10 +586,13 @@ var AccountValLogic = /*#__PURE__*/function () {
         this.settings.doBound ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .S.UNTRADEABLE_ITEM : null,
         this.settings.doNontradeables ? _ItemResolver__WEBPACK_IMPORTED_MODULE_1__/* .ItemType */ .S.CURRENCY : null]
         );
-      }var _iterator5 = _createForOfIteratorHelper(
+      }
+
+      var skipJsFilter = this.settings.doesJSFilterUsePriceOrSales();var _iterator5 = _createForOfIteratorHelper(
 
           this.ownedItems.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var item = _step5.value;
           if (
+          !skipJsFilter &&
           this.jsFilter != null &&
           !this.jsFilter(item.tradeableItem, this.ownedItems.get(item)))
           {
@@ -1723,6 +1731,14 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
       }
 
       return errors;
+    } }, { key: "doesJSFilterUsePriceOrSales", value:
+
+    function doesJSFilterUsePriceOrSales() {
+      // We simply check for 3 args
+      return (
+        this.javascriptFilter != null &&
+        this.javascriptFilter.split("=>")[0].split(",").length >= 3);
+
     } }, { key: "isShown", value:
 
     function isShown(item, worth) {
@@ -1772,7 +1788,7 @@ var AccountValSettings = /*#__PURE__*/function () {function AccountValSettings()
       }
 
       return num;
-    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc, groupUnder, preset) {var setting = { groupUnder: groupUnder, type: type, field: name, names: aliases.map((s) => s.toLowerCase()), desc: desc, preset: preset };settings.push(setting);return setting;}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "fetchSnapshot", ["snapshot"], "Should it attempt to use av-snapshot?");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && toSlot(item) != Slot.none"');makeSetting(FieldType.NUMBER, "sales", ["sales", "sold"], "Hides items that have less than this amount of sales");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");makeSetting(FieldType.BOOLEAN, "brief", ["brief"], "Prints out a single line as the final result, the total meat.");makeSetting(FieldType.BOOLEAN, "oldPricing", ["oldpricing"], "Has accountval calculate prices from the old slower and more inaccurate method");makeSetting(FieldType.COLOR_SCHEME, "colorScheme", ["color", "colors", "colorscheme", "scheme"], "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " + (0,AccountValColors/* getAccountvalColors */.Xf)().join(", "));makeSetting(FieldType.NUMBER, "maxNaturalPrice", ["max", "mallmax"], "The max natural price an item will reach before it's capped and called mall extinct");makeSetting(FieldType.BOOLEAN, "doCategories", ["category", "categories", "shelf", "shelves"], "Used only for Display Cases at this point, seperates the items into categories");makeSetting(FieldType.BOOLEAN, "showSingleItemWorth", ["each"], "Displays the individual price of each item instead of the total, works best with `sort=meat`");var _iterator5 = _createForOfIteratorHelper(getPresets()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var preset = _step5.value;makeSetting(FieldType.BOOLEAN, preset.name()[0], preset.name(), preset.desc(), "Preset Filters", preset);}} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}return settings;} }]);}();_defineProperty(AccountValSettings, "timingsDebug", false);_defineProperty(AccountValSettings, "defaultMaxNaturalPrice", 3000000000);
+    } }], [{ key: "getSettings", value: function getSettings() {var settings = [];function makeSetting(type, name, aliases, desc, groupUnder, preset) {var setting = { groupUnder: groupUnder, type: type, field: name, names: aliases.map((s) => s.toLowerCase()), desc: desc, preset: preset };settings.push(setting);return setting;}makeSetting(FieldType.BOOLEAN, "fetchCloset", ["closet", "clos"], "Should it fetch from the closet");makeSetting(FieldType.BOOLEAN, "fetchStorage", ["storage", "stor", "hagnk", "hagnks"], "Should it fetch from storage");makeSetting(FieldType.BOOLEAN, "fetchShop", ["store", "mall", "shop"], "Should it fetch from the shop");makeSetting(FieldType.BOOLEAN, "fetchInventory", ["inventory", "inv"], "Should it fetch from your inventory");makeSetting(FieldType.BOOLEAN, "fetchDisplaycase", ["displaycase", "display", "dc"], "Should it fetch from the displaycase");makeSetting(FieldType.BOOLEAN, "fetchClan", ["clan", "stash"], "Should it check clan's stash? False by default");makeSetting(FieldType.BOOLEAN, "fetchSession", ["session"], "Should it fetch using your current session of items acquired? False by default");makeSetting(FieldType.BOOLEAN, "doTradeables", ["tradeable", "tradeables", "trade", "tradable"], "Should it do tradeables");makeSetting(FieldType.BOOLEAN, "doNontradeables", ["notrade", "nontrade", "notradeable", "notradable", "nontradeable", "notradeables", "nontradeables", "untrade", "untradeable", "untradeables"], "Should it do non-tradeables (Resolves to tradeables if it can)");makeSetting(FieldType.BOOLEAN, "fetchFamiliars", ["familiar", "familiars", "fam", "fams"], "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set");makeSetting(FieldType.BOOLEAN, "fetchSnapshot", ["snapshot"], "Should it attempt to use av-snapshot?");makeSetting(FieldType.BOOLEAN, "doBound", ["bound", "bind", "bounded", "binds", "binded"], "Should it do items that are bound to your account (Generally only iotms)");makeSetting(FieldType.NUMBER, "minimumMeat", ["meat", "minmeat", "minimummeat", "minmeat", "min-meat", "minprice", "price"], "Each item total worth, at least this amount.");makeSetting(FieldType.NUMBER, "minimumAmount", ["amount", "count", "minimumamount", "minamount"], "At least this many items");makeSetting(FieldType.NUMBER, "displayLimit", ["limit", "displaylimit", "maxdisplay", "lines"], "Limit results to display this amount");makeSetting(FieldType.NAME, "playerId", ["player", "playerid", "playername", "user", "who", "target", "name", "username"], 'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces');makeSetting(FieldType.BOOLEAN, "doSuperFast", ["fast", "superfast", "speed", "quick", "rough"], "Try resolve everything with historical price, no matter how outdated");makeSetting(FieldType.NUMBER, "maxAge", ["age", "maxage", "days"], "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date");makeSetting(FieldType.SORTBY, "sortBy", ["sort", "sortby", "sorted"], "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " + Object.keys(SortBy).filter((s) => s.length > 2).join(", "));makeSetting(FieldType.BOOLEAN, "shopWorth", ["worth", "shopworth", "pricing", "prices"], "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate");makeSetting(FieldType.STRING, "javascriptFilter", ["jsfilter", "javascriptfilter", "javascript", "js"], 'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount, worth, sales) => item.name.includes("beer") && toSlot(item) != Slot.none"');makeSetting(FieldType.NUMBER, "sales", ["sales", "sold"], "Hides items that have less than this amount of sales");makeSetting(FieldType.BOOLEAN, "useLastSold", ["useLastSold", "lastsold", "soldprice"], "Resolve prices by their last sold, initial runs with this parameter can be quite slow");makeSetting(FieldType.BOOLEAN, "brief", ["brief"], "Prints out a single line as the final result, the total meat.");makeSetting(FieldType.BOOLEAN, "oldPricing", ["oldpricing"], "Has accountval calculate prices from the old slower and more inaccurate method");makeSetting(FieldType.COLOR_SCHEME, "colorScheme", ["color", "colors", "colorscheme", "scheme"], "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " + (0,AccountValColors/* getAccountvalColors */.Xf)().join(", "));makeSetting(FieldType.NUMBER, "maxNaturalPrice", ["max", "mallmax"], "The max natural price an item will reach before it's capped and called mall extinct");makeSetting(FieldType.BOOLEAN, "doCategories", ["category", "categories", "shelf", "shelves"], "Used only for Display Cases at this point, seperates the items into categories");makeSetting(FieldType.BOOLEAN, "showSingleItemWorth", ["each"], "Displays the individual price of each item instead of the total, works best with `sort=meat`");var _iterator5 = _createForOfIteratorHelper(getPresets()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var preset = _step5.value;makeSetting(FieldType.BOOLEAN, preset.name()[0], preset.name(), preset.desc(), "Preset Filters", preset);}} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}return settings;} }]);}();_defineProperty(AccountValSettings, "timingsDebug", false);_defineProperty(AccountValSettings, "defaultMaxNaturalPrice", 3000000000);
 
 
 var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {_classCallCheck(this, PricingSettings);_defineProperty(this, "expensivePricesAt",
@@ -2039,7 +2055,9 @@ var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_cla
       var tCommand = command;
       var match;
 
-      while ((match = tCommand.match(/(^| )([a-zA-Z]+ )([^ ]+)/)) != null) {
+      while (
+      (match = tCommand.match(/(^| )([a-zA-Z]+ )([a-zA-Z\d"]+)/)) != null)
+      {
         tCommand = tCommand.replace(match[2], "");
 
         var setting = settings.getSetting(match[2].trim());
@@ -3505,7 +3523,7 @@ HistoricalPricing = /*#__PURE__*/function () {
 /***/ 854:
 /***/ ((module) => {
 
-module.exports = "# Original data stolen from https://github.com/soolar/accountval.ash (Mostly OC nowadays)\n# Item Containers! Start with i\ni\tpacket of mayfly bait\tmayfly bait necklace\ni\tClan VIP Lounge invitation\tClan VIP Lounge key\ni\tMake-Your-Own-Vampire-Fangs kit\tplastic vampire fangs\ni\tFolder Holder\tover-the-shoulder Folder Holder\ni\tcan of Rain-Doh\tempty Rain-Doh can\ni\tDiscontent&trade; Winter Garden Catalog\tpacket of winter seeds\ni\tEd the Undying exhibit crate\tThe Crown of Ed the Undying\ni\tPack of Every Card\tDeck of Every Card\ni\tDIY protonic accelerator kit\tprotonic accelerator pack\ni\tDear Past Self Package\tTime-Spinner\ni\tGranny Tood's Thanksgarden Catalog\tpacket of thanksgarden seeds\ni\tsuspicious package\tKremlin's Greatest Briefcase\ni\tLI-11 Motor Pool voucher\tAsdon Martin keyfob (on ring)\ni\tGrumpy Bumpkin's Pumpkin Seed Catalog\tpacket of pumpkin seeds\ni\tMint Salton Pepper's Peppermint Seed Catalog\tPeppermint Pip Packet\ni\tPete & Jackie's Dragon Tooth Emporium Catalog\tpacket of dragon's teeth\ni\tPocket Meteor Guide\tPocket Meteor Guide (well-thumbed)\ni\tcorked genie bottle\tgenie bottle\ni\tpantogram\tportable pantogram\ni\tlocked mumming trunk\tmumming trunk\ni\tJanuary's Garbage Tote (unopened)\tJanuary's Garbage Tote\ni\tPok&eacute;fam Guide to Capturing All of Them\tpacket of tall grass seeds\ni\tSongBoom&trade; BoomBox Box\tSongBoom&trade; BoomBox\ni\tBastille Battalion control rig crate\tBastille Battalion control rig\ni\tlatte lovers club card\tlatte lovers member's mug\ni\tKramco Industries packing carton\tKramco Sausage-o-Matic&trade;\ni\tmint condition Lil' Doctor&trade; bag\tLil' Doctor&trade; bag\ni\tvampyric cloake pattern\tvampyric cloake\ni\tFourth of May Cosplay Saber kit\tFourth of May Cosplay Saber\ni\trune-strewn spoon cocoon\thewn moon-rune spoon\ni\tBeach Comb Box\tBeach Comb\ni\tUnopened Eight Days a Week Pill Keeper\tEight Days a Week Pill Keeper\ni\tunopened diabolic pizza cube box\tdiabolic pizza cube\ni\tunopened Bird-a-Day calendar\tBird-a-Day calendar\ni\tmint-in-box Powerful Glove\tPowerful Glove\ni\tBetter Shrooms and Gardens catalog\tpacket of mushroom spores\ni\tGuzzlr application\tGuzzlr tablet\ni\tbag of Iunion stones\tIunion Crown\ni\tpackaged SpinMaster&trade; lathe\tSpinMaster&trade; lathe\ni\tBagged Cargo Cultist Shorts\tCargo Cultist Shorts\ni\tComprehensive Cartographic Compendium\tComprehensive Cartographic Compendium (well-read)\ni\tpackaged knock-off retro superhero cape\tunwrapped knock-off retro superhero cape\ni\tpackaged miniature crystal ball\tminiature crystal ball\ni\temotion chip\tspinal-fluid-covered emotion chip\ni\tpower seed\tpotted power plant\ni\tpackaged backup camera\tbackup camera\ni\tpackaged familiar scrapbook\tfamiliar scrapbook\ni\tpackaged industrial fire extinguisher\tindustrial fire extinguisher\ni\tPackaged Daylight Shavings Helmet\tDaylight Shavings Helmet\ni\tPackaged cold medicine cabinet\tCold medicine cabinet\ni\tbox o' ghosts\tgregarious ghostling\ni\tGordon Beer's Beer Garden Catalog\tPacket of beer seeds\ni\tMint condition magnifying glass\tcursed magnifying glass\ni\tAntique pair of blue jeans\tEllsbury's journal (used)\ni\twarehouse key\tmime army insignia (cryonics)\ni\twarehouse key\tmime army insignia (morale)\ni\twarehouse key\tmime army insignia (psychological warfare)\ni\twarehouse key\tmime army insignia (pyrotechnics)\ni\twarehouse key\tmime army insignia (sanitation)\ni\twarehouse key\tmime army insignia (espionage)\ni\twarehouse key\tmime army insignia (infantry)\ni\twarehouse key\tmime army insignia (intelligence)\ni\twarehouse key\tmime army infiltration glove\ni\twarehouse key\tmime army challenge coin\ni\twarehouse key\tmime army shotglass\ni\twarehouse key\tmiming corduroys\ni\twarehouse key\tmiming beret\ni\twarehouse key\tmiming gloves\ni\twarehouse key\tmiming boots\ni\twarehouse key\tmiming shirt\ni\tcombat lover's locket lockbox\tcombat lover's locket\ni\tundamaged Unbreakable Umbrella\tUnbreakable umbrella\ni\tpackaged June cleaver\tJune cleaver\ni\tdesigner sweatpants (new old stock)\tDesigner sweatpants\ni\tunopened tiny stillsuit\ttiny stillsuit\ni\tpackaged Jurassic Parka\tJurassic Parka\ni\tpackaged model train set\tmodel train set\ni\tChibiBuddy™ (off)\tChibiBuddy™ (on)\ni\tRock Garden Guide\tpacket of rock seeds\ni\tS.I.T. Course Voucher\tS.I.T. Course Completion Certificate\ni\tClosed-circuit phone system\tClosed-circuit pay phone\ni\tCursed monkey glove\tcursed monkey's paw\ni\tshrink-wrapped Cincho de Mayo\tCincho de Mayo\ni\tshrink-wrapped 2002 Mr. Store Catalog\t2002 Mr. Store Catalog\ni\tboxed august scepter\taugust scepter\ni\tbook of facts\tbook of facts (dog-eared)\ni\tcrated wardrobe-o-matic\twardrobe-o-matic\ni\twrapped candy cane sword cane\tcandy cane sword cane\ni\tin-the-box spring shoes\tspring shoes\ni\tpackaged Everfull Dart Holster\tEverfull Dart Holster\ni\tBoxed Apriling band helmet\tApriling band helmet\ni\tboxed Mayam Calendar\tMayam Calendar\ni\tpackaged Roman Candelabra\tRoman Candelabra\ni\tuntorn tearaway pants package\ttearaway pants\ni\tBoxed Sept-Ember Censer\tSept-Ember Censer\ni\tboxed bat wings\tbat wings\ni\tSealed TakerSpace letter of Marque\tTakerSpace letter of Marque\ni\tMcHugeLarge deluxe ski set\tMcHugeLarge duffel bag\ni\tCyberRealm keycode\tserver room key\ni\teldritch tincture\teldritch tincture (depleted)\n\n\n\n\n# Bookshelf stuff! Start with b\nb\tTome of Snowcone Summoning\tSummon Snowcones\nb\tScratch 'n' Sniff Sticker Tome\tSummon Stickers\nb\tTome of Sugar Shummoning\tSummon Sugar Sheets\nb\tTome of Clip Art\tSummon Clip Art\nb\tTome of Rad Libs\tSummon Rad Libs\nb\tThe Smith's Tome\tSummon Smithsness\nb\tMcPhee's Grimoire of Hilarious Object Summoning\tSummon Hilarious Objects\nb\tSp'n-Zor's Grimoire of &quot;Tasteful&quot; Gifts\tSummon Tasteful Items\nb\tSorcerers of the Shore Grimoire\tSummon Alice's Army Cards\nb\tThinknerd's Grimoire of Geeky Gifts\t Summon Geeky Gifts\nb\tLibram of Candy Heart Summoning\tSummon Candy Heart\nb\tLibram of Divine Favors\tSummon Party Favor\nb\tLibram of Love Songs\tSummon Love Song\nb\tLibram of BRICKOs\tSummon BRICKOs\nb\tGygaxian Libram\tSummon Dice\nb\tLibram of Resolutions\tSummon Resolutions\nb\tLibram of Pulled Taffy\tSummon Taffy\nb\tThe Confiscator's Grimoire\tSummon Confiscated Things\n\n\n\n# Property based detection! Start with p\np\tairplane charter: Spring Break Beach\tsleazeAirportAlways&!_sleazeAirportToday\np\tairplane charter: Conspiracy Island\tspookyAirportAlways&!_spookyAirportToday\np\tairplane charter: Dinseylandfill\tstenchAirportAlways&!_stenchAirportToday\np\tairplane charter: That 70s Volcano\thotAirportAlways&!_hotAirportToday\np\tairplane charter: The Glaciest\tcoldAirportAlways&!_coldAirportToday\np\tChateau Mantegna room key\tchateauAvailable\np\tbottle of lovebug pheromones\tlovebugsUnlocked\np\tshrine to the Barrel god\tbarrelShrineUnlocked\np\tX-32-F snowman crate\tsnojoAvailable\np\tLT&T telegraph office deed\ttelegraphOfficeAvailable\np\tdetective school application\thasDetectiveSchool\np\tBuild-a-City Gingerbread kit\tgingerbreadCityAvailable&!_gingerbreadCityToday\np\theart-shaped crate\tloveTunnelAvailable&!_loveTunnelUsed\np\tSpacegate access badge\tspacegateAlways&!_spacegateToday\np\tFantasyRealm membership packet\tfrAlways&!_frToday\np\tHorsery contract\thorseryAvailable\np\tNeverending Party invitation envelope\tneverendingPartyAlways&!_neverendingPartyToday\np\tvoter registration form\tvoteAlways&!_voteToday\np\tBoxing Day care package\tdaycareOpen&!_daycareToday\np\tPirateRealm membership packet\tprAlways&!_prToday\np\tDistant Woods Getaway Brochure\tgetawayCampsiteUnlocked\np\tUndrilled cosmic bowling ball\thasCosmicBowlingBall\np\tMayDay™ contract\thasMaydayContract\np\tboxed autumn-aton\thasAutumnaton\np\tdeed to Oliver's Place\townsSpeakeasy\n\n\n\n# Eudoras! Start with e\ne\tMy Own Pen Pal kit\tPen Pal\ne\tGameInformPowerDailyPro subscription card\tGameInformPowerDailyPro Magazine\ne\tXi Receiver Unit\tXi Receiver Unit\ne\tNew-You Club Membership Form\tNew-You Club\ne\tOur Daily Candles™ order form\tOur Daily Candles\ne\tBlack and White Apron Enrollment Form\tBlack & White Apron\n\n\n\n# visit_url contains... Start with v\n\n\n\n# eval(function) => boolean! Starts with s for script\ns\tOrder of the Green Thumb Order Form\trequire(\"kolmafia\").floristAvailable()\n\n\n\n# campground items! Starts with c\nc\tHaunted Doghouse\nc\tWitchess Set\nc\tSource terminal\nc\tpotted tea tree\nc\tA Guide to Burning Leaves\n\n\n\n# Gardens\ng\tpacket of pumpkin seeds\tpumpkin\t\ng\tPeppermint Pip Packet\tpeppermint\ng\tpacket of dragon's teeth\tskeleton\ng\tPacket of beer seeds\tbeer\ng\tpacket of winter seeds\twinter\ng\tpacket of thanksgarden seeds\tthanksgarden\ng\tpacket of tall grass seeds\tgrass\ng\tpacket of mushroom spores\tmushroom\ng\tpacket of rock seeds\trock\n\n\n# Items that are dependent on the value of another as they're no-trade\n# Item | Check Against | X of our item = 1 of that item\nt\tChibiBuddy™ (on)\tChibiBuddy™ (off)\t1\nt\tdistilled resin\tinflammable leaf\t50\n\n\n# Items that are a coinmaster currency, and is dynamically priced because there's no solid metric\n# The price is resolved at runtime\nt\tfat loot token\nt\tCop dollar\nt\tDriplet\nt\tChroner\nt\tFreddy Kruegerand\nt\tGuzzlrbuck\nt\tBeach Buck\nt\tVolcoino\nt\tFunFunds™\nt\tCoinspiracy\nt\tWal-Mart gift certificate\nt\tRubee™\nt\tbuffalo dime\nt\tSpacegate Research\n";
+module.exports = "# Original data stolen from https://github.com/soolar/accountval.ash (Mostly OC nowadays)\n# Item Containers! Start with i\ni\tpacket of mayfly bait\tmayfly bait necklace\ni\tClan VIP Lounge invitation\tClan VIP Lounge key\ni\tMake-Your-Own-Vampire-Fangs kit\tplastic vampire fangs\ni\tFolder Holder\tover-the-shoulder Folder Holder\ni\tcan of Rain-Doh\tempty Rain-Doh can\ni\tDiscontent&trade; Winter Garden Catalog\tpacket of winter seeds\ni\tEd the Undying exhibit crate\tThe Crown of Ed the Undying\ni\tPack of Every Card\tDeck of Every Card\ni\tDIY protonic accelerator kit\tprotonic accelerator pack\ni\tDear Past Self Package\tTime-Spinner\ni\tGranny Tood's Thanksgarden Catalog\tpacket of thanksgarden seeds\ni\tsuspicious package\tKremlin's Greatest Briefcase\ni\tLI-11 Motor Pool voucher\tAsdon Martin keyfob (on ring)\ni\tGrumpy Bumpkin's Pumpkin Seed Catalog\tpacket of pumpkin seeds\ni\tMint Salton Pepper's Peppermint Seed Catalog\tPeppermint Pip Packet\ni\tPete & Jackie's Dragon Tooth Emporium Catalog\tpacket of dragon's teeth\ni\tPocket Meteor Guide\tPocket Meteor Guide (well-thumbed)\ni\tcorked genie bottle\tgenie bottle\ni\tpantogram\tportable pantogram\ni\tlocked mumming trunk\tmumming trunk\ni\tJanuary's Garbage Tote (unopened)\tJanuary's Garbage Tote\ni\tPok&eacute;fam Guide to Capturing All of Them\tpacket of tall grass seeds\ni\tSongBoom&trade; BoomBox Box\tSongBoom&trade; BoomBox\ni\tBastille Battalion control rig crate\tBastille Battalion control rig\ni\tlatte lovers club card\tlatte lovers member's mug\ni\tKramco Industries packing carton\tKramco Sausage-o-Matic&trade;\ni\tmint condition Lil' Doctor&trade; bag\tLil' Doctor&trade; bag\ni\tvampyric cloake pattern\tvampyric cloake\ni\tFourth of May Cosplay Saber kit\tFourth of May Cosplay Saber\ni\trune-strewn spoon cocoon\thewn moon-rune spoon\ni\tBeach Comb Box\tBeach Comb\ni\tUnopened Eight Days a Week Pill Keeper\tEight Days a Week Pill Keeper\ni\tunopened diabolic pizza cube box\tdiabolic pizza cube\ni\tunopened Bird-a-Day calendar\tBird-a-Day calendar\ni\tmint-in-box Powerful Glove\tPowerful Glove\ni\tBetter Shrooms and Gardens catalog\tpacket of mushroom spores\ni\tGuzzlr application\tGuzzlr tablet\ni\tbag of Iunion stones\tIunion Crown\ni\tpackaged SpinMaster&trade; lathe\tSpinMaster&trade; lathe\ni\tBagged Cargo Cultist Shorts\tCargo Cultist Shorts\ni\tComprehensive Cartographic Compendium\tComprehensive Cartographic Compendium (well-read)\ni\tpackaged knock-off retro superhero cape\tunwrapped knock-off retro superhero cape\ni\tpackaged miniature crystal ball\tminiature crystal ball\ni\temotion chip\tspinal-fluid-covered emotion chip\ni\tpower seed\tpotted power plant\ni\tpackaged backup camera\tbackup camera\ni\tpackaged familiar scrapbook\tfamiliar scrapbook\ni\tpackaged industrial fire extinguisher\tindustrial fire extinguisher\ni\tPackaged Daylight Shavings Helmet\tDaylight Shavings Helmet\ni\tPackaged cold medicine cabinet\tCold medicine cabinet\ni\tbox o' ghosts\tgregarious ghostling\ni\tGordon Beer's Beer Garden Catalog\tPacket of beer seeds\ni\tMint condition magnifying glass\tcursed magnifying glass\ni\tAntique pair of blue jeans\tEllsbury's journal (used)\ni\twarehouse key\tmime army insignia (cryonics)\ni\twarehouse key\tmime army insignia (morale)\ni\twarehouse key\tmime army insignia (psychological warfare)\ni\twarehouse key\tmime army insignia (pyrotechnics)\ni\twarehouse key\tmime army insignia (sanitation)\ni\twarehouse key\tmime army insignia (espionage)\ni\twarehouse key\tmime army insignia (infantry)\ni\twarehouse key\tmime army insignia (intelligence)\ni\twarehouse key\tmime army infiltration glove\ni\twarehouse key\tmime army challenge coin\ni\twarehouse key\tmime army shotglass\ni\twarehouse key\tmiming corduroys\ni\twarehouse key\tmiming beret\ni\twarehouse key\tmiming gloves\ni\twarehouse key\tmiming boots\ni\twarehouse key\tmiming shirt\ni\tcombat lover's locket lockbox\tcombat lover's locket\ni\tundamaged Unbreakable Umbrella\tUnbreakable umbrella\ni\tpackaged June cleaver\tJune cleaver\ni\tdesigner sweatpants (new old stock)\tDesigner sweatpants\ni\tunopened tiny stillsuit\ttiny stillsuit\ni\tpackaged Jurassic Parka\tJurassic Parka\ni\tpackaged model train set\tmodel train set\ni\tChibiBuddy™ (off)\tChibiBuddy™ (on)\ni\tRock Garden Guide\tpacket of rock seeds\ni\tS.I.T. Course Voucher\tS.I.T. Course Completion Certificate\ni\tClosed-circuit phone system\tClosed-circuit pay phone\ni\tCursed monkey glove\tcursed monkey's paw\ni\tshrink-wrapped Cincho de Mayo\tCincho de Mayo\ni\tshrink-wrapped 2002 Mr. Store Catalog\t2002 Mr. Store Catalog\ni\tboxed august scepter\taugust scepter\ni\tbook of facts\tbook of facts (dog-eared)\ni\tcrated wardrobe-o-matic\twardrobe-o-matic\ni\twrapped candy cane sword cane\tcandy cane sword cane\ni\tin-the-box spring shoes\tspring shoes\ni\tpackaged Everfull Dart Holster\tEverfull Dart Holster\ni\tBoxed Apriling band helmet\tApriling band helmet\ni\tboxed Mayam Calendar\tMayam Calendar\ni\tpackaged Roman Candelabra\tRoman Candelabra\ni\tuntorn tearaway pants package\ttearaway pants\ni\tBoxed Sept-Ember Censer\tSept-Ember Censer\ni\tboxed bat wings\tbat wings\ni\tSealed TakerSpace letter of Marque\tTakerSpace letter of Marque\ni\tMcHugeLarge deluxe ski set\tMcHugeLarge duffel bag\ni\tCyberRealm keycode\tserver room key\ni\teldritch tincture\teldritch tincture (depleted)\ni\tnew-in-box toy Cupid bow\ttoy Cupid bow\n\n\n\n\n# Bookshelf stuff! Start with b\nb\tTome of Snowcone Summoning\tSummon Snowcones\nb\tScratch 'n' Sniff Sticker Tome\tSummon Stickers\nb\tTome of Sugar Shummoning\tSummon Sugar Sheets\nb\tTome of Clip Art\tSummon Clip Art\nb\tTome of Rad Libs\tSummon Rad Libs\nb\tThe Smith's Tome\tSummon Smithsness\nb\tMcPhee's Grimoire of Hilarious Object Summoning\tSummon Hilarious Objects\nb\tSp'n-Zor's Grimoire of &quot;Tasteful&quot; Gifts\tSummon Tasteful Items\nb\tSorcerers of the Shore Grimoire\tSummon Alice's Army Cards\nb\tThinknerd's Grimoire of Geeky Gifts\t Summon Geeky Gifts\nb\tLibram of Candy Heart Summoning\tSummon Candy Heart\nb\tLibram of Divine Favors\tSummon Party Favor\nb\tLibram of Love Songs\tSummon Love Song\nb\tLibram of BRICKOs\tSummon BRICKOs\nb\tGygaxian Libram\tSummon Dice\nb\tLibram of Resolutions\tSummon Resolutions\nb\tLibram of Pulled Taffy\tSummon Taffy\nb\tThe Confiscator's Grimoire\tSummon Confiscated Things\n\n\n\n# Property based detection! Start with p\np\tairplane charter: Spring Break Beach\tsleazeAirportAlways&!_sleazeAirportToday\np\tairplane charter: Conspiracy Island\tspookyAirportAlways&!_spookyAirportToday\np\tairplane charter: Dinseylandfill\tstenchAirportAlways&!_stenchAirportToday\np\tairplane charter: That 70s Volcano\thotAirportAlways&!_hotAirportToday\np\tairplane charter: The Glaciest\tcoldAirportAlways&!_coldAirportToday\np\tChateau Mantegna room key\tchateauAvailable\np\tbottle of lovebug pheromones\tlovebugsUnlocked\np\tshrine to the Barrel god\tbarrelShrineUnlocked\np\tX-32-F snowman crate\tsnojoAvailable\np\tLT&T telegraph office deed\ttelegraphOfficeAvailable\np\tdetective school application\thasDetectiveSchool\np\tBuild-a-City Gingerbread kit\tgingerbreadCityAvailable&!_gingerbreadCityToday\np\theart-shaped crate\tloveTunnelAvailable&!_loveTunnelUsed\np\tSpacegate access badge\tspacegateAlways&!_spacegateToday\np\tFantasyRealm membership packet\tfrAlways&!_frToday\np\tHorsery contract\thorseryAvailable\np\tNeverending Party invitation envelope\tneverendingPartyAlways&!_neverendingPartyToday\np\tvoter registration form\tvoteAlways&!_voteToday\np\tBoxing Day care package\tdaycareOpen&!_daycareToday\np\tPirateRealm membership packet\tprAlways&!_prToday\np\tDistant Woods Getaway Brochure\tgetawayCampsiteUnlocked\np\tUndrilled cosmic bowling ball\thasCosmicBowlingBall\np\tMayDay™ contract\thasMaydayContract\np\tboxed autumn-aton\thasAutumnaton\np\tdeed to Oliver's Place\townsSpeakeasy\n\n\n\n# Eudoras! Start with e\ne\tMy Own Pen Pal kit\tPen Pal\ne\tGameInformPowerDailyPro subscription card\tGameInformPowerDailyPro Magazine\ne\tXi Receiver Unit\tXi Receiver Unit\ne\tNew-You Club Membership Form\tNew-You Club\ne\tOur Daily Candles™ order form\tOur Daily Candles\ne\tBlack and White Apron Enrollment Form\tBlack & White Apron\n\n\n\n# visit_url contains... Start with v\n\n\n\n# eval(function) => boolean! Starts with s for script\ns\tOrder of the Green Thumb Order Form\trequire(\"kolmafia\").floristAvailable()\n\n\n\n# campground items! Starts with c\nc\tHaunted Doghouse\nc\tWitchess Set\nc\tSource terminal\nc\tpotted tea tree\nc\tA Guide to Burning Leaves\n\n\n\n# Gardens\ng\tpacket of pumpkin seeds\tpumpkin\t\ng\tPeppermint Pip Packet\tpeppermint\ng\tpacket of dragon's teeth\tskeleton\ng\tPacket of beer seeds\tbeer\ng\tpacket of winter seeds\twinter\ng\tpacket of thanksgarden seeds\tthanksgarden\ng\tpacket of tall grass seeds\tgrass\ng\tpacket of mushroom spores\tmushroom\ng\tpacket of rock seeds\trock\n\n\n# Items that are dependent on the value of another as they're no-trade\n# Item | Check Against | X of our item = 1 of that item\nt\tChibiBuddy™ (on)\tChibiBuddy™ (off)\t1\nt\tdistilled resin\tinflammable leaf\t50\n\n\n# Items that are a coinmaster currency, and is dynamically priced because there's no solid metric\n# The price is resolved at runtime\nt\tfat loot token\nt\tCop dollar\nt\tDriplet\nt\tChroner\nt\tFreddy Kruegerand\nt\tGuzzlrbuck\nt\tBeach Buck\nt\tVolcoino\nt\tFunFunds™\nt\tCoinspiracy\nt\tWal-Mart gift certificate\nt\tRubee™\nt\tbuffalo dime\nt\tSpacegate Research\n";
 
 /***/ }),
 
@@ -3657,15 +3675,22 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
       };
 
       var exceededMax = false;
+      var useJsFilter =
+      this.logic.jsFilter != null &&
+      this.settings.doesJSFilterUsePriceOrSales();
+
+
+
+
+
+
+
+
+      var resolved = [];
 
       for (var no = this.logic.prices.length - 1; no >= 0; no--) {
         var item = this.logic.prices[no][0];
         var price = this.logic.prices[no][1];
-
-        exceededMax =
-        exceededMax ||
-        this.settings.maxNaturalPrice + 1 <
-        price.price * (1 / item.worthMultiplier);
 
         // Mall extinct items should be at max natural price
         var worthEach = Math.min(
@@ -3685,7 +3710,29 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           continue;
         }
 
-        var totalWorth = Math.round(worthEach * count);
+        if (useJsFilter) {
+          if (
+          !this.logic.jsFilter(item.actualItem, count, worthEach, price.volume))
+          {
+            continue;
+          }
+        }
+
+        resolved.push({
+          item: item,
+          price: price,
+          worthEach: worthEach,
+          count: count
+        });
+      }
+
+      for (var _i = 0, _resolved = resolved; _i < _resolved.length; _i++) {var _resolved$_i = _resolved[_i],_item = _resolved$_i.item,_price = _resolved$_i.price,_worthEach = _resolved$_i.worthEach,_count = _resolved$_i.count;
+        exceededMax =
+        exceededMax ||
+        this.settings.maxNaturalPrice + 1 <
+        _price.price * (1 / _item.worthMultiplier);
+
+        var totalWorth = Math.round(_worthEach * _count);
         netvalue += totalWorth;
 
         if (lines.length >= this.settings.displayLimit) {
@@ -3694,91 +3741,91 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
         var title = [];
 
-        if (item.name != item.tradeableItem.name && item.worthMultiplier != 1) {
-          title.push("=== ".concat(this.escapeHTML(item.name), " ==="));
+        if (_item.name != _item.tradeableItem.name && _item.worthMultiplier != 1) {
+          title.push("=== ".concat(this.escapeHTML(_item.name), " ==="));
           title.push("");
           title.push("".concat(
-            this.escapeHTML(item.tradeableItem.name), " / ").concat(this.escapeHTML(
-            item.pluralName
-          ), " (").concat(item.worthMultiplier, ") = ").concat(
-            item.pluralName, " are worth ").concat(
+            this.escapeHTML(_item.tradeableItem.name), " / ").concat(this.escapeHTML(
+            _item.pluralName
+          ), " (").concat(_item.worthMultiplier, ") = ").concat(
+            _item.pluralName, " are worth ").concat(
             _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(
-              Math.round(worthEach)
+              Math.round(_worthEach)
             ), " meat each.")
           );
         } else {
-          title.push("=== ".concat(this.escapeHTML(item.tradeableItem.name), " ==="));
+          title.push("=== ".concat(this.escapeHTML(_item.tradeableItem.name), " ==="));
           title.push("");
         }
 
-        var tradeableWorth = " @ ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price), " meat.");
+        var tradeableWorth = " @ ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(_price.price), " meat.");
 
-        if (price.price < 0) {
+        if (_price.price < 0) {
           tradeableWorth = " as mall extinct.";
         }
 
         title.push(
-          (price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES ?
+          (_price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES ?
           "Last malled" :
-          price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.MALL_SALES ?
+          _price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.MALL_SALES ?
           "Last sold" :
-          price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
+          _price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL ?
           "Autosell" :
           "Last mafia malled") + tradeableWorth
         );
 
-        if (price.price2 > 0 && price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES) {
+        if (_price.price2 > 0 && _price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.NEW_PRICES) {
           title.push("Last sold @ ".concat(
-            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.price2), " meat.")
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(_price.price2), " meat.")
           );
         }
 
-        if (item.shopWorth > 0) {
+        if (_item.shopWorth > 0) {
           title.push(
             pronoun +
             " selling @ " +
-            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(item.shopWorth) +
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(_item.shopWorth) +
             " meat."
           );
         }
 
-        if (count > 1 && this.settings.showSingleItemWorth) {
+        if (_count > 1 && this.settings.showSingleItemWorth) {
           title.push("Worth a total of ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(totalWorth)));
         }
 
-        if (price.accuracy != _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL) {
+        if (_price.accuracy != _PriceResolver__WEBPACK_IMPORTED_MODULE_4__/* .PriceType */ .SJ.AUTOSELL) {
           title.push("");
           title.push(
             "Price valid as of " +
-            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.daysOutdated, 1) +
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(_price.daysOutdated, 1) +
             " day" + (
-            price.daysOutdated != 1 ? "s" : "") +
+            _price.daysOutdated != 1 ? "s" : "") +
             " ago."
           );
         }
 
-        if (price.volume >= 0) {
+        if (_price.volume >= 0) {
           title.push("");
           title.push("".concat(
-            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(price.volume), " sold in the last week.")
+            _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(_price.volume), " sold in the last week.")
           );
         }
 
-        if (item.snapshotSource != null) {
-          title = ["Owns in ".concat(item.snapshotSource, ".")].concat(_toConsumableArray(title));
+        if (_item.snapshotSource != null) {
+          title = ["Owns in ".concat(_item.snapshotSource, ".")].concat(_toConsumableArray(title));
         }
 
-        var name = this.escapeHTML(item.name);
+        var name = this.escapeHTML(_item.name);
 
-        if (item.bound != null) {
+        if (_item.bound != null) {
           var boundInfo = void 0;
           var color = _AccountValColors__WEBPACK_IMPORTED_MODULE_5__/* .AccountValColors */ .HK.shopPricesOverpriced;
 
-          if (item.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Kw.SHOP_WORTH) {
-            var overpricedPerc = item.shopWorth / worthEach;
+          if (_item.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Kw.SHOP_WORTH) {
+            var overpricedPerc = _item.shopWorth / _worthEach;
 
-            if (item.shopWorth < 999999000) {
-              shopPricedAt += item.shopWorth * count;
+            if (_item.shopWorth < 999999000) {
+              shopPricedAt += _item.shopWorth * _count;
               shopNetValue += totalWorth;
             }
 
@@ -3798,7 +3845,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
               boundInfo = "Price: ".concat(boundInfo, "%");
             }
           } else {
-            boundInfo = item.getBound();
+            boundInfo = _item.getBound();
           }
 
           name = "".concat(name, " (<font color='").concat(color, "' title='").concat(title.join(
@@ -3806,9 +3853,9 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           ), "'>").concat(this.escapeHTML(boundInfo), "</font>)");
         }
 
-        if (worthEach <= 0 || worthEach > this.settings.maxNaturalPrice) {
-          if (count > 1) {
-            mallExtinct.push([count + " @ " + name, title.join("&#010;")]);
+        if (_worthEach <= 0 || _worthEach > this.settings.maxNaturalPrice) {
+          if (_count > 1) {
+            mallExtinct.push([_count + " @ " + name, title.join("&#010;")]);
           } else {
             mallExtinct.push([name, title.join("&#010;")]);
           }
@@ -3816,12 +3863,12 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           continue;
         }
 
-        onShelfName(item.category, totalWorth);
+        onShelfName(_item.category, totalWorth);
 
-        var text = "".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(count), " ").concat(name);
+        var text = "".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(_count), " ").concat(name);
 
         if (this.settings.showSingleItemWorth) {
-          text += " each worth ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(worthEach));
+          text += " each worth ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(_worthEach));
         } else {
           text += " worth a total of ".concat(_AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumber(totalWorth));
         }
@@ -3841,7 +3888,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
         lines = lines.reverse();
         var skipping = Math.max(
           0,
-          this.logic.prices.length - this.settings.displayLimit
+          resolved.length - this.settings.displayLimit
         );
 
         if (skipping > 0) {
@@ -3926,8 +3973,8 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
       if (
       shopPricedAt > 0 &&
-      this.logic.prices.filter((v) => v[0].bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Kw.SHOP_WORTH).
-      length == this.logic.prices.length)
+      resolved.filter((v) => v.item.bound == _AccountValLogic__WEBPACK_IMPORTED_MODULE_1__/* .ItemStatus */ .Kw.SHOP_WORTH).length ==
+      resolved.length)
       {
         shopPricedAt /= shopNetValue;
         var perc = _AccountValUtils__WEBPACK_IMPORTED_MODULE_3__/* .AccountValUtils */ .E.getNumberOrClamp(
@@ -4083,7 +4130,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
           }
         };for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {_loop();}} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
 
-      for (var _i = 0, _groups = groups; _i < _groups.length; _i++) {var _groups$_i = _slicedToArray(_groups[_i], 2),groupName = _groups$_i[0],grouped = _groups$_i[1];
+      for (var _i2 = 0, _groups = groups; _i2 < _groups.length; _i2++) {var _groups$_i = _slicedToArray(_groups[_i2], 2),groupName = _groups$_i[0],grouped = _groups$_i[1];
         var toPrint = grouped.map((s, i) => {
           return "<font color='".concat(
             i % 2 == 0 ?
@@ -4189,7 +4236,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
     function runTest(args, verify) {
       this.load(args);
 
-      for (var _i2 = 0, _Object$entries = Object.entries(verify); _i2 < _Object$entries.length; _i2++) {var _Object$entries$_i = _slicedToArray(_Object$entries[_i2], 2),key = _Object$entries$_i[0],value = _Object$entries$_i[1];
+      for (var _i3 = 0, _Object$entries = Object.entries(verify); _i3 < _Object$entries.length; _i3++) {var _Object$entries$_i = _slicedToArray(_Object$entries[_i3], 2),key = _Object$entries$_i[0],value = _Object$entries$_i[1];
         var setTo = this.settings[key];
 
         if (setTo == value) {
