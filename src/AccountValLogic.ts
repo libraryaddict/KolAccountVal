@@ -114,7 +114,12 @@ export class AccountValLogic {
   prices: [ValItem, ItemPrice][] = [];
   categoryOrder: string[] = [];
   private settings: AccountValSettings;
-  private jsFilter: (item: Item, amount: number) => boolean;
+  jsFilter: (
+    item: Item,
+    amount: number,
+    price?: number,
+    sales?: number
+  ) => boolean;
 
   constructor(settings: AccountValSettings, priceSettings: PricingSettings) {
     this.settings = settings;
@@ -497,8 +502,11 @@ export class AccountValLogic {
       ]);
     }
 
+    const skipJsFilter = this.settings.doesJSFilterUsePriceOrSales();
+
     for (const item of this.ownedItems.keys()) {
       if (
+        !skipJsFilter &&
         this.jsFilter != null &&
         !this.jsFilter(item.tradeableItem, this.ownedItems.get(item))
       ) {

@@ -19,7 +19,9 @@ export class AccountValUtils {
     let tCommand = command;
     let match: RegExpMatchArray;
 
-    while ((match = tCommand.match(/(^| )([a-zA-Z]+ )([^ ]+)/)) != null) {
+    while (
+      (match = tCommand.match(/(^| )([a-zA-Z]+ )([a-zA-Z\d"]+)/)) != null
+    ) {
       tCommand = tCommand.replace(match[2], "");
 
       const setting = settings.getSetting(match[2].trim());

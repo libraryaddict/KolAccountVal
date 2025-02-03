@@ -11,7 +11,7 @@ import {
   printHtml,
   toInt
 } from "kolmafia";
-import { AccountValLogic, ItemStatus } from "./AccountValLogic";
+import { AccountValLogic, ItemStatus, ValItem } from "./AccountValLogic";
 import {
   AccountValSettings,
   FieldType,
@@ -19,7 +19,7 @@ import {
   SortBy
 } from "./AccountValSettings";
 import { AccountValUtils } from "./AccountValUtils";
-import { PriceType } from "./PriceResolver";
+import { ItemPrice, PriceType } from "./PriceResolver";
 import { AccountValColors, showAccountvalColors } from "./AccountValColors";
 import { AccValTiming } from "./AccountValTimings";
 
@@ -75,15 +75,22 @@ class AccountVal {
     };
 
     let exceededMax = false;
+    const useJsFilter =
+      this.logic.jsFilter != null &&
+      this.settings.doesJSFilterUsePriceOrSales();
+
+    interface ResolvedItem {
+      item: ValItem;
+      price: ItemPrice;
+      worthEach: number;
+      count: number;
+    }
+
+    const resolved: ResolvedItem[] = [];
 
     for (let no = this.logic.prices.length - 1; no >= 0; no--) {
       const item = this.logic.prices[no][0];
       const price = this.logic.prices[no][1];
-
-      exceededMax =
-        exceededMax ||
-        this.settings.maxNaturalPrice + 1 <
-          price.price * (1 / item.worthMultiplier);
 
       // Mall extinct items should be at max natural price
       const worthEach = Math.min(
@@ -102,6 +109,28 @@ class AccountVal {
         );
         continue;
       }
+
+      if (useJsFilter) {
+        if (
+          !this.logic.jsFilter(item.actualItem, count, worthEach, price.volume)
+        ) {
+          continue;
+        }
+      }
+
+      resolved.push({
+        item: item,
+        price: price,
+        worthEach: worthEach,
+        count: count
+      });
+    }
+
+    for (const { item, price, worthEach, count } of resolved) {
+      exceededMax =
+        exceededMax ||
+        this.settings.maxNaturalPrice + 1 <
+          price.price * (1 / item.worthMultiplier);
 
       const totalWorth = Math.round(worthEach * count);
       netvalue += totalWorth;
@@ -259,7 +288,7 @@ class AccountVal {
       lines = lines.reverse();
       const skipping = Math.max(
         0,
-        this.logic.prices.length - this.settings.displayLimit
+        resolved.length - this.settings.displayLimit
       );
 
       if (skipping > 0) {
@@ -344,8 +373,8 @@ class AccountVal {
 
     if (
       shopPricedAt > 0 &&
-      this.logic.prices.filter((v) => v[0].bound == ItemStatus.SHOP_WORTH)
-        .length == this.logic.prices.length
+      resolved.filter((v) => v.item.bound == ItemStatus.SHOP_WORTH).length ==
+        resolved.length
     ) {
       shopPricedAt /= shopNetValue;
       let perc = AccountValUtils.getNumberOrClamp(

@@ -281,7 +281,7 @@ export class AccountValSettings {
       FieldType.STRING,
       "javascriptFilter",
       ["jsfilter", "javascriptfilter", "javascript", "js"],
-      'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount) => item.name.includes("beer") && toSlot(item) != Slot.none"'
+      'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount, worth, sales) => item.name.includes("beer") && toSlot(item) != Slot.none"'
     );
 
     makeSetting(
@@ -634,6 +634,14 @@ export class AccountValSettings {
     }
 
     return errors;
+  }
+
+  doesJSFilterUsePriceOrSales(): boolean {
+    // We simply check for 3 args
+    return (
+      this.javascriptFilter != null &&
+      this.javascriptFilter.split("=>")[0].split(",").length >= 3
+    );
   }
 
   isShown(item: ValItem, worth: number): boolean {
