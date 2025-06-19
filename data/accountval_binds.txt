@@ -101,6 +101,10 @@ i	McHugeLarge deluxe ski set	McHugeLarge duffel bag
 i	CyberRealm keycode	server room key
 i	eldritch tincture	eldritch tincture (depleted)
 i	new-in-box toy Cupid bow	toy Cupid bow
+i	assemble-it-yourself Leprecondo	Leprecondo
+i	Packaged April Shower Thoughts Calendar	April Shower Thoughts shield
+i	Unpeeled Peridot of Peril	Peridot of Peril
+i	packaged prismatic beret	prismatic beret
 
 
 
