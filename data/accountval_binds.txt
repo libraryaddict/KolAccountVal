@@ -105,6 +105,7 @@ i	assemble-it-yourself Leprecondo	Leprecondo
 i	Packaged April Shower Thoughts Calendar	April Shower Thoughts shield
 i	Unpeeled Peridot of Peril	Peridot of Peril
 i	packaged prismatic beret	prismatic beret
+i	Möbius ring box	Möbius ring
 
 
 
