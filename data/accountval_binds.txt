@@ -106,6 +106,8 @@ i	Packaged April Shower Thoughts Calendar	April Shower Thoughts shield
 i	Unpeeled Peridot of Peril	Peridot of Peril
 i	packaged prismatic beret	prismatic beret
 i	Möbius ring box	Möbius ring
+i	packaged Monodent of the Sea	Monodent of the Sea
+i	Lab-grown blood cubic zirconia	blood cubic zirconia
 
 
 
