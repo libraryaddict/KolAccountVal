@@ -108,6 +108,7 @@ i	packaged prismatic beret	prismatic beret
 i	Möbius ring box	Möbius ring
 i	packaged Monodent of the Sea	Monodent of the Sea
 i	Lab-grown blood cubic zirconia	blood cubic zirconia
+i	shrunken head in a duffel bag	shrunken head
 
 
 
