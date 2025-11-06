@@ -66,7 +66,13 @@ var CoinmasterResolver = /*#__PURE__*/function () {
           }
 
           if (item.price == null) {
-            item.price = this.prices.itemPrice(item.item, 1).price;
+            var itemPrice = this.prices.itemPrice(item.item, 1);
+
+            if (itemPrice == null) {
+              return null;
+            }
+
+            item.price = itemPrice.price;
             item.priceEach = item.price / item.currencyCost;
           }
 
@@ -1800,7 +1806,9 @@ var AccountValLogic = /*#__PURE__*/function () {
           );
           _AccountValTimings__WEBPACK_IMPORTED_MODULE_6__/* .AccValTiming */ .p.stop("Price Item");
 
-          if (_price.price > 0 || _price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceType */ .SJ.NEW_PRICES) {
+          if (_price == null) {
+            continue;
+          } else if (_price.price > 0 || _price.accuracy == _PriceResolver__WEBPACK_IMPORTED_MODULE_2__/* .PriceType */ .SJ.NEW_PRICES) {
             _AccountValTimings__WEBPACK_IMPORTED_MODULE_6__/* .AccValTiming */ .p.start("Add Item Price", true);
             addPrice(_i2, _price);
             _AccountValTimings__WEBPACK_IMPORTED_MODULE_6__/* .AccValTiming */ .p.stop("Add Item Price");
@@ -1848,6 +1856,10 @@ var AccountValLogic = /*#__PURE__*/function () {
               false,
               check[1].accuracy
             );
+
+            if (price == null) {
+              continue;
+            }
 
             addPrice(i, price);
           }} catch (err) {_iterator7.e(err);} finally {_iterator7.f();}
@@ -2134,6 +2146,10 @@ var ItemResolver = /*#__PURE__*/function () {
               }
 
               var _item = coinmaster.getHighestCoinmaster(s.actualItem);
+
+              if (_item == null) {
+                continue;
+              }
 
               s.currencyAmount = _item.currencyCost;
               s.untradeableItem = _item.currency;
@@ -2700,7 +2716,8 @@ var PriceResolver = /*#__PURE__*/function () {
             _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.start("Deeper Foldable Check", true);
 
             try {
-              var foldPrices = foldables.map((f) =>
+              var foldPrices = foldables.
+              map((f) =>
               this.itemPrice(
                 kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get(f),
                 amount,
@@ -2709,7 +2726,8 @@ var PriceResolver = /*#__PURE__*/function () {
                 doSuperFast,
                 doEstimates
               )
-              );
+              ).
+              filter((p) => p != null);
 
               foldPrices.sort((f1, f2) =>
               f1.item.tradeable != f2.item.tradeable ?
@@ -2771,6 +2789,8 @@ var PriceResolver = /*#__PURE__*/function () {
               price.volume,
               price.lastSoldAt
             );
+          } else if (this.newPrices.ofThePast) {
+            return null;
           }
         }
       } finally {
