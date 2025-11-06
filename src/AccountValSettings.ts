@@ -95,6 +95,7 @@ export class AccountValSettings {
   static defaultMaxNaturalPrice = 3_000_000_000;
   maxNaturalPrice = AccountValSettings.defaultMaxNaturalPrice;
   showSingleItemWorth: boolean = false;
+  dateToFetch: string;
 
   static getSettings(): ValSetting[] {
     const settings: ValSetting[] = [];
@@ -338,6 +339,12 @@ export class AccountValSettings {
       "showSingleItemWorth",
       ["each"],
       "Displays the individual price of each item instead of the total, works best with `sort=meat`"
+    );
+    makeSetting(
+      FieldType.STRING,
+      "dateToFetch",
+      ["date", "fetchdate", "historical", "time", "when", "at"],
+      "View everything with the prices of the past, either provide a `1d2m3y` which will automatically convert that into 1 day, 2 months and 3 years ago (capped automatically), or a specified date `DD-MM-YYYY` which cannot be older than 22-08-2023. This obviously won't work for newer items, and will make a backend call to `kolprices.lib.co.nz/files/:date`"
     );
 
     for (const preset of getPresets()) {
@@ -700,6 +707,7 @@ export class PricingSettings {
   public cheapPricesLessThan: number = 2_000_000;
   public maxPriceAge: number;
   public oldPricing: boolean;
+  public dateToFetch: string;
 
   /**
    * A scaler on where we want stuff that's lower priced, to be updated less often. Returns day count.

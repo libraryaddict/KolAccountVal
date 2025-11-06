@@ -607,6 +607,7 @@ class AccountVal {
     const priceSettings = new PricingSettings();
     priceSettings.maxPriceAge = this.settings.maxAge;
     priceSettings.oldPricing = this.settings.oldPricing;
+    priceSettings.dateToFetch = this.settings.dateToFetch;
     this.logic = new AccountValLogic(this.settings, priceSettings);
     AccValTiming.stop("Construct Logic");
 
