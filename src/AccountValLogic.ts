@@ -629,7 +629,9 @@ export class AccountValLogic {
       );
       AccValTiming.stop("Price Item");
 
-      if (price.price > 0 || price.accuracy == PriceType.NEW_PRICES) {
+      if (price == null) {
+        continue;
+      } else if (price.price > 0 || price.accuracy == PriceType.NEW_PRICES) {
         AccValTiming.start("Add Item Price", true);
         addPrice(i, price);
         AccValTiming.stop("Add Item Price");
@@ -677,6 +679,10 @@ export class AccountValLogic {
           false,
           check[1].accuracy
         );
+
+        if (price == null) {
+          continue;
+        }
 
         addPrice(i, price);
       }

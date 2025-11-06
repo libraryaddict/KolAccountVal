@@ -300,16 +300,18 @@ export class PriceResolver {
           AccValTiming.start("Deeper Foldable Check", true);
 
           try {
-            const foldPrices = foldables.map((f) =>
-              this.itemPrice(
-                Item.get(f),
-                amount,
-                true,
-                forcePricing,
-                doSuperFast,
-                doEstimates
+            const foldPrices = foldables
+              .map((f) =>
+                this.itemPrice(
+                  Item.get(f),
+                  amount,
+                  true,
+                  forcePricing,
+                  doSuperFast,
+                  doEstimates
+                )
               )
-            );
+              .filter((p) => p != null);
 
             foldPrices.sort((f1, f2) =>
               f1.item.tradeable != f2.item.tradeable
@@ -371,6 +373,8 @@ export class PriceResolver {
             price.volume,
             price.lastSoldAt
           );
+        } else if (this.newPrices.ofThePast) {
+          return null;
         }
       }
     } finally {

@@ -40,7 +40,7 @@ export class CoinmasterResolver {
         item: item,
         coinmaster: item.seller,
         currencyCost: price,
-        currency: token,
+        currency: token
       });
     }
   }
@@ -54,7 +54,13 @@ export class CoinmasterResolver {
       }
 
       if (item.price == null) {
-        item.price = this.prices.itemPrice(item.item, 1).price;
+        const itemPrice = this.prices.itemPrice(item.item, 1);
+
+        if (itemPrice == null) {
+          return null;
+        }
+
+        item.price = itemPrice.price;
         item.priceEach = item.price / item.currencyCost;
       }
 

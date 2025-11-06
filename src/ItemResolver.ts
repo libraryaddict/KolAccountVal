@@ -216,6 +216,10 @@ export class ItemResolver {
 
           const item = coinmaster.getHighestCoinmaster(s.actualItem);
 
+          if (item == null) {
+            continue;
+          }
+
           s.currencyAmount = item.currencyCost;
           s.untradeableItem = item.currency;
           s.actualItem = item.item;
