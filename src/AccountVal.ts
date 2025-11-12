@@ -475,6 +475,8 @@ class AccountVal {
 
     if (textType == "html") {
       printHtml(line);
+    } else if (color != null) {
+      print(line, color);
     } else {
       print(line);
     }
