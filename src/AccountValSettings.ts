@@ -20,7 +20,8 @@ export enum FieldType {
   COLOR_SCHEME,
   BOOLEAN,
   NAME,
-  STRING
+  STRING,
+  TEXT_TYPE
 }
 
 export interface ValSetting {
@@ -96,6 +97,7 @@ export class AccountValSettings {
   maxNaturalPrice = AccountValSettings.defaultMaxNaturalPrice;
   showSingleItemWorth: boolean = false;
   dateToFetch: string;
+  logOutputAs: "fancy" | "plain" = "fancy";
 
   static getSettings(): ValSetting[] {
     const settings: ValSetting[] = [];
@@ -346,6 +348,12 @@ export class AccountValSettings {
       ["date", "fetchdate", "historical", "time", "when", "at"],
       "View everything with the prices of the past, either provide a `1d2m3y` which will automatically convert that into 1 day, 2 months and 3 years ago (capped automatically), or a specified date `DD-MM-YYYY` which cannot be older than 22-08-2023. This obviously won't work for newer items, and will make a backend call to `kolprices.lib.co.nz/files/:date`"
     );
+    makeSetting(
+      FieldType.TEXT_TYPE,
+      "logOutputAs",
+      ["text", "logtype", "formatting"],
+      `If accountval should log everything with "fancy" text, which means html, or "plain" which means the output is also logged to your session log, but will have no hover text or colors. Try looking into kolmafia 'mirror' if you want the output as html. Example usage: "text=plain". Change the default by using "set accountval_text=plain"`
+    );
 
     for (const preset of getPresets()) {
       makeSetting(
@@ -376,13 +384,26 @@ export class AccountValSettings {
   }
 
   doSettings(args: string[]): string[] {
+    const errors: string[] = [];
+
     if (getProperty("accountval_maxNaturalPrice").length > 0) {
       this.maxNaturalPrice = this.toNumber(
         getProperty("accountval_maxNaturalPrice")
       );
     }
 
-    const errors: string[] = [];
+    if (getProperty("accountval_text").length > 0) {
+      const str = getProperty("accountval_text");
+
+      if (str == "plain" || str == "fancy") {
+        this.logOutputAs = str;
+      } else {
+        errors.push(
+          `The property 'accountval_text' has been set to '${str}' which is invalid.`
+        );
+      }
+    }
+
     const defaultValues: unknown[] = [];
     const wasSet: string[] = [];
 
@@ -506,6 +527,25 @@ export class AccountValSettings {
 
         this.colorScheme = v;
         loadAccountvalColors(v);
+      } else if (setting.type == FieldType.TEXT_TYPE) {
+        if (!arg.includes("=")) {
+          addUnknown(arg);
+          continue;
+        }
+
+        const v = arg.substring(arg.indexOf("=") + 1).toLowerCase();
+
+        if (v.length == 0) {
+          addUnknown(arg);
+          continue;
+        }
+
+        if (v != "plain" && v != "fancy") {
+          addUnknown(arg);
+          continue;
+        }
+
+        this.logOutputAs = v;
       } else if (
         setting.type == FieldType.NUMBER ||
         setting.type == FieldType.NAME

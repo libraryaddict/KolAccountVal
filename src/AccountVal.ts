@@ -103,8 +103,9 @@ class AccountVal {
       const count = this.logic.ownedItems.get(item);
 
       if (isNaN(count)) {
-        print(
+        this.printLine(
           "Unable to handle the item '" + item.name + "', skipping..",
+          "plain",
           AccountValColors.attentionGrabbingWarning
         );
         continue;
@@ -292,14 +293,17 @@ class AccountVal {
       );
 
       if (skipping > 0) {
-        printHtml(`
+        this.printLine(
+          `
           <font color='${
             AccountValColors.minorNote
           }'>Skipping ${AccountValUtils.getNumber(
-          skipping
-        )} lines and displaying the last ${AccountValUtils.getNumber(
-          this.settings.displayLimit
-        )} lines..</font>`);
+            skipping
+          )} lines and displaying the last ${AccountValUtils.getNumber(
+            this.settings.displayLimit
+          )} lines..</font>`,
+          "html"
+        );
       }
 
       if (lines.length > 0) {
@@ -311,7 +315,7 @@ class AccountVal {
       }
 
       for (const line of lines) {
-        printHtml(line.replace(/\n/g, "&#010;"));
+        this.printLine(line.replace(/\n/g, "&#010;"), "html");
       }
 
       if (mallExtinct.length > 0) {
@@ -331,28 +335,31 @@ class AccountVal {
             "</font>"
         );
 
-        printHtml(
+        this.printLine(
           "There were " +
             extinct.length +
             " mall extinct items! Items: " +
-            extinct.join(", ")
+            extinct.join(", "),
+          "html"
         );
       }
     }
 
     let mrAMeat = netvalue;
 
-    print(
+    this.printLine(
       pronoun + " worth " + AccountValUtils.getNumber(netvalue) + " meat!",
+      "plain",
       AccountValColors.helpfulStateInfo
     );
 
     if (this.settings.fetchSession && mySessionMeat() != 0) {
       mrAMeat = netvalue + mySessionMeat();
-      print(
+      this.printLine(
         `Add meat from session, that's ${AccountValUtils.getNumber(
           mrAMeat
         )} meat!`,
+        "plain",
         AccountValColors.helpfulStateInfo
       );
     }
@@ -363,12 +370,13 @@ class AccountVal {
 
     const mrAWorth = (0.0 + mrAMeat) / aWorth;
 
-    printHtml(
+    this.printLine(
       `<font title='With Mr. Accessory worth being ${AccountValUtils.getNumber(
         aWorth
       )} meat'>Going by the value of a Mr. Accessory, that's $${AccountValUtils.getNumber(
         mrAWorth * 10
-      )}</font>`
+      )}</font>`,
+      "html"
     );
 
     if (
@@ -389,9 +397,10 @@ class AccountVal {
         perc += "%";
       }
 
-      print(`Overall, the shop is ${perc} of mall`);
-      print(
+      this.printLine(`Overall, the shop is ${perc} of mall`, "plain");
+      this.printLine(
         "Disclaimer: Cheapest price being 100% can mean we're comparing prices against.. this shop.",
+        "plain",
         AccountValColors.minorNote
       );
     }
@@ -399,7 +408,7 @@ class AccountVal {
     this.printMeat();
 
     if (exceededMax) {
-      printHtml(
+      this.printLine(
         `<font color='${
           AccountValColors.minorNote
         }' title="The max natural price is currently set to ${AccountValUtils.getNumber(
@@ -411,7 +420,8 @@ class AccountVal {
             : `default is ${AccountValUtils.getNumber(
                 AccountValSettings.defaultMaxNaturalPrice
               )}`
-        })&#010;&#010;You can change this by using 'max=3b' as an arg.&#010;You can also set the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc)">Some items were expensive and were marked as mall extinct. Hover for details.</font>`
+        })&#010;&#010;You can change this by using 'max=3b' as an arg.&#010;You can also set the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc)">Some items were expensive and were marked as mall extinct. Hover for details.</font>`,
+        "html"
       );
     }
   }
@@ -446,13 +456,27 @@ class AccountVal {
     }
 
     if (meat > 0 && this.settings.playerId == 0) {
-      printHtml(
+      this.printLine(
         "<font title='" +
           meatSources.join(", ") +
           "'>This doesn't include your " +
           AccountValUtils.getNumber(meat) +
-          " meat!</font>"
+          " meat!</font>",
+        "html"
       );
+    }
+  }
+
+  printLine(line: string, textType: "html" | "plain", color?: string) {
+    if (this.settings.logOutputAs == "plain" && textType == "html") {
+      line = line.replace(/<[^>]*>/g, "");
+      textType = "plain";
+    }
+
+    if (textType == "html") {
+      printHtml(line);
+    } else {
+      print(line);
     }
   }
 
@@ -466,16 +490,19 @@ class AccountVal {
   }
 
   doHelp() {
-    print(
+    this.printLine(
       "AccountVal is a script to check what your account is worth, and find the good stuff fast.",
+      "plain",
       AccountValColors.helpfulStateInfo
     );
-    print(
+    this.printLine(
       "You can provide these as a parameter to accountval to do other stuff than the base script. Hover over them to see aliases.",
+      "plain",
       AccountValColors.helpfulStateInfo
     );
-    printHtml(
-      `<font color='${AccountValColors.helpfulStateInfo}'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>`
+    this.printLine(
+      `<font color='${AccountValColors.helpfulStateInfo}'>Use ! or - to negate a boolean option, as well as =. Eg:</font><font color='gray'> -bound !bound bound=false</font>`,
+      "html"
     );
 
     const groups: [string, string[]][] = [];
@@ -520,12 +547,13 @@ class AccountVal {
           }'><b>${setting.names[0]}</b></font>`
         );
       } else {
-        printHtml(
+        this.printLine(
           `<font color='${
             AccountValColors.minorNote
           }' title='Aliases: ${setting.names.join(", ")}'><b>${
             setting.names[0]
-          }</b> - ${setting.desc}${defaultOf}</font>`
+          }</b> - ${setting.desc}${defaultOf}</font>`,
+          "html"
         );
       }
     }
@@ -538,15 +566,17 @@ class AccountVal {
             : AccountValColors.mallExtinctColor2
         }'>${s}</font>`;
       });
-      printHtml(
+      this.printLine(
         `<font color='${
           AccountValColors.minorNote
-        }'><b>${groupName}:</b> ${toPrint.join(", ")}</font>`
+        }'><b>${groupName}:</b> ${toPrint.join(", ")}</font>`,
+        "html"
       );
     }
 
-    printHtml(
-      `<font color='${AccountValColors.minorNote}'>Disclaimer: The prices shown are not absolute, and can overstate what it really is worth.</font>`
+    this.printLine(
+      `<font color='${AccountValColors.minorNote}'>Disclaimer: The prices shown are not absolute, and can overstate what it really is worth.</font>`,
+      "html"
     );
     // show - How many to show, defaults to 100
     // count - How many we must have of this item
@@ -565,8 +595,9 @@ class AccountVal {
     }
 
     if (command == null) {
-      print(
+      this.printLine(
         "To fine tune what we check, including to tradeables only.. Provide the parameter 'help' for more info",
+        "plain",
         AccountValColors.helpfulStateInfo
       );
       command = "";
@@ -591,8 +622,9 @@ class AccountVal {
 
     if (unknown.length > 0) {
       unknown.forEach((s) =>
-        printHtml(
-          `<font color='${AccountValColors.attentionGrabbingWarning}'>${s}</font>`
+        this.printLine(
+          `<font color='${AccountValColors.attentionGrabbingWarning}'>${s}</font>`,
+          "html"
         )
       );
 
@@ -631,7 +663,7 @@ class AccountVal {
       fetchInventory: true
     });
     this.runTest("sort meat!bound", { doBound: false, sortBy: SortBy.PRICE });
-    print("Tests Finished", "green");
+    this.printLine("Tests Finished", "plain", "green");
   }
 
   runTest(args: string, verify: { [key: string]: any }) {
@@ -644,8 +676,9 @@ class AccountVal {
         continue;
       }
 
-      print(
+      this.printLine(
         `On '${args}', ${key} was not set to ${value} but instead ${setTo}`,
+        "plain",
         "red"
       );
     }
