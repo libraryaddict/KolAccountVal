@@ -4251,6 +4251,8 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {_classCallCheck(th
 
       if (textType == "html") {
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(line);
+      } else if (color != null) {
+        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(line, color);
       } else {
         (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(line);
       }
