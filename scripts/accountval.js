@@ -2470,7 +2470,6 @@ function _typeof(o) {"@babel/helpers - typeof";return _typeof = "function" == ty
 
 
 
-
 var PriceType = /*#__PURE__*/function (PriceType) {PriceType[PriceType["NEW_PRICES"] = 0] = "NEW_PRICES";PriceType[PriceType["HISTORICAL"] = 1] = "HISTORICAL";PriceType[PriceType["MALL"] = 2] = "MALL";PriceType[PriceType["MALL_SALES"] = 3] = "MALL_SALES";PriceType[PriceType["AUTOSELL"] = 4] = "AUTOSELL";return PriceType;}({});
 
 
@@ -2534,8 +2533,14 @@ NewPrices = /*#__PURE__*/function () {
         return false;
       }
 
-      // If it hasn't been updated in a week, then Irrat is ded
-      if (this.lastUpdated + 7 * 24 * 60 * 60 < Date.now() / 1000) {
+      // If it hasn't been updated in a five week, then Irrat is ded
+      var irratDedAtWeek = 3;
+      var aWeekIsThisManyMillis = 7 * 24 * 60 * 60 * 1000;
+
+      if (
+      this.lastUpdated + irratDedAtWeek * aWeekIsThisManyMillis <
+      Date.now())
+      {
         return false;
       }
 
@@ -2682,8 +2687,7 @@ var PriceResolver = /*#__PURE__*/function () {
 
 
 
-
-  function PriceResolver(settings) {_classCallCheck(this, PriceResolver);_defineProperty(this, "history", void 0);_defineProperty(this, "specialCase", new Map());_defineProperty(this, "settings", void 0);_defineProperty(this, "newPrices", void 0);
+  function PriceResolver(settings) {_classCallCheck(this, PriceResolver);_defineProperty(this, "specialCase", new Map());_defineProperty(this, "settings", void 0);_defineProperty(this, "newPrices", void 0);
     this.settings = settings;
     this.newPrices = new NewPrices(settings);
 
@@ -2691,46 +2695,8 @@ var PriceResolver = /*#__PURE__*/function () {
       this.newPrices.load();
     }
 
-    if (!this.newPrices.isValid()) {
-      this.getMallHistory();
-    }
-
     this.fillSpecialCase();
-  }return _createClass(PriceResolver, [{ key: "getMallHistory", value:
-
-    function getMallHistory() {
-      if (this.history == null) {
-        this.loadMallHistory();
-      }
-
-      return this.history;
-    } }, { key: "loadMallHistory", value:
-
-    function loadMallHistory() {
-      // I want it in red so its obvious when its being used
-      _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.start("<font color=red>Load Mall History</font>");
-
-      try {
-        this.history = new (eval("require")(
-          "scripts/utils/mallhistory.js"
-        ).MallHistory)();
-      } catch (e) {
-        if (e != null && e.message != null && e.message.includes(" not found.")) {
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)(
-            "A required library seems to be missing! This should've been installed automatically, try running in CLI:",
-            "red"
-          );
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.printHtml)(
-            "<u color='gray'>git checkout libraryaddict/KolMallHistory release</u>"
-          );
-          (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.print)("");
-        }
-
-        throw e;
-      } finally {
-        _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.stop("<font color=red>Load Mall History</font>");
-      }
-    } }, { key: "fillSpecialCase", value:
+  }return _createClass(PriceResolver, [{ key: "fillSpecialCase", value:
 
     function fillSpecialCase() {
       this.specialCase.set(kolmafia__WEBPACK_IMPORTED_MODULE_0__.Item.get("Meat Paste"), 10);
@@ -2838,12 +2804,7 @@ var PriceResolver = /*#__PURE__*/function () {
       }
 
       _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.start("Create Price Resolver", true);
-      var oldMallHistoryPricing = new MallHistoryPricing(
-        this,
-        this.settings,
-        item,
-        amount
-      );
+
       var historyPricing = new HistoricalPricing(this.settings, item, amount);
       var mallPricing = new MallSalesPricing(this.settings, item, amount);
       var resolver;
@@ -2852,11 +2813,8 @@ var PriceResolver = /*#__PURE__*/function () {
         resolver = historyPricing;
       } else if (forcePricing == PriceType.MALL) {
         resolver = mallPricing;
-      } else if (forcePricing == PriceType.MALL_SALES) {
-        resolver = oldMallHistoryPricing;
       } else {
         var viablePrices = [
-        oldMallHistoryPricing,
         historyPricing,
         mallPricing].
         filter((p) => p.isViable() && !p.isOutdated());
@@ -2872,25 +2830,24 @@ var PriceResolver = /*#__PURE__*/function () {
           return p1.price - p2.price;
         });
 
-        resolver =
-        viablePrices.length > 0 ? viablePrices[0] : oldMallHistoryPricing;
+        resolver = viablePrices.length > 0 ? viablePrices[0] : historyPricing;
 
-        // If we're not doing sales, and the price is apparently worth more than 50m
+        /* // If we're not doing sales, and the price is apparently worth more than 50m
         if (
-        !doSuperFast &&
-        resolver != oldMallHistoryPricing &&
-        (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item) > 50000000)
-        {
+          !doSuperFast &&
+          resolver != null &&
+          historicalPrice(item) > 50_000_000
+        ) {
           // If we have no sale history on record, or the price diff is more than 50m
           if (
-          oldMallHistoryPricing.getAge() == -1 ||
-          Math.abs(
-            oldMallHistoryPricing.getPrice(true).price - (0,kolmafia__WEBPACK_IMPORTED_MODULE_0__.historicalPrice)(item)
-          ) > 50000000)
-          {
+            oldMallHistoryPricing.getAge() == -1 ||
+            Math.abs(
+              oldMallHistoryPricing.getPrice(true).price - historicalPrice(item)
+            ) > 50_000_000
+          ) {
             resolver = oldMallHistoryPricing;
           }
-        }
+        }*/
       }
 
       _AccountValTimings__WEBPACK_IMPORTED_MODULE_1__/* .AccValTiming */ .p.stop("Create Price Resolver");
@@ -2899,6 +2856,7 @@ var PriceResolver = /*#__PURE__*/function () {
 
       try {
         if (
+        resolver != null &&
         doEstimates &&
         historyPricing != resolver &&
         resolver.isOutdated() &&
@@ -2955,112 +2913,6 @@ var PriceResolver = /*#__PURE__*/function () {
 
 
 
-
-
-MallHistoryPricing = /*#__PURE__*/function () {
-
-
-
-
-
-
-
-  function MallHistoryPricing(
-  newPrices,
-  settings,
-  item,
-  amount)
-  {_classCallCheck(this, MallHistoryPricing);_defineProperty(this, "item", void 0);_defineProperty(this, "amount", void 0);_defineProperty(this, "records", void 0);_defineProperty(this, "settings", void 0);_defineProperty(this, "newPrices", void 0);_defineProperty(this, "attemptedToLoadRecords", false);
-    this.newPrices = newPrices;
-    this.settings = settings;
-    this.item = item;
-    this.amount = amount;
-  }return _createClass(MallHistoryPricing, [{ key: "getRecords", value:
-
-    function getRecords() {
-      if (this.item.tradeable && !this.attemptedToLoadRecords) {
-        this.attemptedToLoadRecords = true;
-        this.records = this.newPrices.
-        getMallHistory().
-        getMallRecords(this.item, 900, false);
-      }
-
-      return this.records;
-    } }, { key: "isViable", value:
-
-    function isViable() {
-      // If we have no records, or if we have records or last records check attempt was less than 30 days ago
-      return this.getRecords() == null || this.getRecords().records.length > 0;
-    } }, { key: "isOutdated", value:
-
-    function isOutdated() {
-      if (this.getRecords() == null) {
-        return true;
-      }
-
-      var lastUpdated =
-      (Date.now() / 1000 - this.getRecords().lastUpdated) / (24 * 60 * 60);
-
-      if (this.getRecords().records.length == 0) {
-        return lastUpdated > 30;
-      }
-
-      var last =
-      this.getRecords().records[this.getRecords().records.length - 1];
-      var histAge = Math.min(
-        (Date.now() / 1000 - last.date) / (24 * 60 * 60),
-        lastUpdated
-      );
-
-      var histPrice = last.meat;
-
-      var days = this.settings.getMaxPriceAge(histPrice, this.amount);
-
-      return histAge > days;
-    } }, { key: "getAge", value:
-
-    function getAge() {
-      if (this.getRecords() == null) {
-        return -1;
-      }
-
-      var last =
-      this.getRecords().records[this.getRecords().records.length - 1];
-
-      if (last == null) {
-        return -1;
-      }
-
-      var dateNow = Date.now() / 1000;
-
-      return (dateNow - last.date) / (24 * 60 * 60);
-    } }, { key: "getPrice", value:
-
-    function getPrice() {var ignoreOutdated = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-      if (!ignoreOutdated && this.item.tradeable && this.isOutdated()) {
-        this.records = this.newPrices.
-        getMallHistory().
-        getMallRecords(this.item, 0.1, true);
-      }
-
-      var last =
-      this.getRecords().records[this.getRecords().records.length - 1];
-
-      if (last == null) {
-        return null;
-      }
-
-      return new ItemPrice(
-        this.item,
-        last.meat,
-        PriceType.MALL_SALES,
-        this.getAge()
-      );
-    } }, { key: "getPriceType", value:
-
-    function getPriceType() {
-      return PriceType.MALL_SALES;
-    } }]);}();var
 
 
 MallSalesPricing = /*#__PURE__*/function () {
