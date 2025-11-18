@@ -1,2 +1,1 @@
-github libraryaddict/KolMallHistory release
 github libraryaddict/KolItemPrices master

@@ -1,11 +1,9 @@
-import { MallHistory, MallRecords } from "kol-mallhistory";
 import {
   autosellPrice,
   historicalAge,
   historicalPrice,
   mallPrice,
   print,
-  printHtml,
   Item,
   fileToBuffer,
   toInt,
@@ -78,8 +76,14 @@ class NewPrices {
       return false;
     }
 
-    // If it hasn't been updated in a week, then Irrat is ded
-    if (this.lastUpdated + 7 * 24 * 60 * 60 < Date.now() / 1000) {
+    // If it hasn't been updated in a five week, then Irrat is ded
+    const irratDedAtWeek = 3;
+    const aWeekIsThisManyMillis = 7 * 24 * 60 * 60 * 1000;
+
+    if (
+      this.lastUpdated + irratDedAtWeek * aWeekIsThisManyMillis <
+      Date.now()
+    ) {
       return false;
     }
 
@@ -222,7 +226,6 @@ class NewPrices {
 }
 
 export class PriceResolver {
-  history: MallHistory;
   private specialCase: Map<Item, number> = new Map();
   private settings: PricingSettings;
   private newPrices: NewPrices;
@@ -235,45 +238,7 @@ export class PriceResolver {
       this.newPrices.load();
     }
 
-    if (!this.newPrices.isValid()) {
-      this.getMallHistory();
-    }
-
     this.fillSpecialCase();
-  }
-
-  getMallHistory() {
-    if (this.history == null) {
-      this.loadMallHistory();
-    }
-
-    return this.history;
-  }
-
-  loadMallHistory() {
-    // I want it in red so its obvious when its being used
-    AccValTiming.start("<font color=red>Load Mall History</font>");
-
-    try {
-      this.history = new (eval("require")(
-        "scripts/utils/mallhistory.js"
-      ).MallHistory)();
-    } catch (e) {
-      if (e != null && e.message != null && e.message.includes(" not found.")) {
-        print(
-          "A required library seems to be missing! This should've been installed automatically, try running in CLI:",
-          "red"
-        );
-        printHtml(
-          "<u color='gray'>git checkout libraryaddict/KolMallHistory release</u>"
-        );
-        print("");
-      }
-
-      throw e;
-    } finally {
-      AccValTiming.stop("<font color=red>Load Mall History</font>");
-    }
   }
 
   private fillSpecialCase() {
@@ -382,12 +347,7 @@ export class PriceResolver {
     }
 
     AccValTiming.start("Create Price Resolver", true);
-    const oldMallHistoryPricing = new MallHistoryPricing(
-      this,
-      this.settings,
-      item,
-      amount
-    );
+
     const historyPricing = new HistoricalPricing(this.settings, item, amount);
     const mallPricing = new MallSalesPricing(this.settings, item, amount);
     let resolver: PriceVolunteer;
@@ -396,11 +356,8 @@ export class PriceResolver {
       resolver = historyPricing;
     } else if (forcePricing == PriceType.MALL) {
       resolver = mallPricing;
-    } else if (forcePricing == PriceType.MALL_SALES) {
-      resolver = oldMallHistoryPricing;
     } else {
       const viablePrices: PriceVolunteer[] = [
-        oldMallHistoryPricing,
         historyPricing,
         mallPricing
       ].filter((p) => p.isViable() && !p.isOutdated());
@@ -416,13 +373,12 @@ export class PriceResolver {
         return p1.price - p2.price;
       });
 
-      resolver =
-        viablePrices.length > 0 ? viablePrices[0] : oldMallHistoryPricing;
+      resolver = viablePrices.length > 0 ? viablePrices[0] : historyPricing;
 
-      // If we're not doing sales, and the price is apparently worth more than 50m
+      /* // If we're not doing sales, and the price is apparently worth more than 50m
       if (
         !doSuperFast &&
-        resolver != oldMallHistoryPricing &&
+        resolver != null &&
         historicalPrice(item) > 50_000_000
       ) {
         // If we have no sale history on record, or the price diff is more than 50m
@@ -434,7 +390,7 @@ export class PriceResolver {
         ) {
           resolver = oldMallHistoryPricing;
         }
-      }
+      }*/
     }
 
     AccValTiming.stop("Create Price Resolver");
@@ -443,6 +399,7 @@ export class PriceResolver {
 
     try {
       if (
+        resolver != null &&
         doEstimates &&
         historyPricing != resolver &&
         resolver.isOutdated() &&
@@ -499,112 +456,6 @@ interface PriceVolunteer {
   getPrice(dontUpdate?: boolean): ItemPrice;
 
   getPriceType(): PriceType;
-}
-
-class MallHistoryPricing implements PriceVolunteer {
-  private item: Item;
-  private amount: number;
-  private records: MallRecords;
-  private settings: PricingSettings;
-  private newPrices: PriceResolver;
-  private attemptedToLoadRecords: boolean = false;
-
-  constructor(
-    newPrices: PriceResolver,
-    settings: PricingSettings,
-    item: Item,
-    amount: number
-  ) {
-    this.newPrices = newPrices;
-    this.settings = settings;
-    this.item = item;
-    this.amount = amount;
-  }
-
-  private getRecords(): MallRecords {
-    if (this.item.tradeable && !this.attemptedToLoadRecords) {
-      this.attemptedToLoadRecords = true;
-      this.records = this.newPrices
-        .getMallHistory()
-        .getMallRecords(this.item, 900, false);
-    }
-
-    return this.records;
-  }
-
-  isViable(): boolean {
-    // If we have no records, or if we have records or last records check attempt was less than 30 days ago
-    return this.getRecords() == null || this.getRecords().records.length > 0;
-  }
-
-  isOutdated(): boolean {
-    if (this.getRecords() == null) {
-      return true;
-    }
-
-    const lastUpdated =
-      (Date.now() / 1000 - this.getRecords().lastUpdated) / (24 * 60 * 60);
-
-    if (this.getRecords().records.length == 0) {
-      return lastUpdated > 30;
-    }
-
-    const last =
-      this.getRecords().records[this.getRecords().records.length - 1];
-    const histAge = Math.min(
-      (Date.now() / 1000 - last.date) / (24 * 60 * 60),
-      lastUpdated
-    );
-
-    const histPrice = last.meat;
-
-    const days = this.settings.getMaxPriceAge(histPrice, this.amount);
-
-    return histAge > days;
-  }
-
-  getAge(): number {
-    if (this.getRecords() == null) {
-      return -1;
-    }
-
-    const last =
-      this.getRecords().records[this.getRecords().records.length - 1];
-
-    if (last == null) {
-      return -1;
-    }
-
-    const dateNow = Date.now() / 1000;
-
-    return (dateNow - last.date) / (24 * 60 * 60);
-  }
-
-  getPrice(ignoreOutdated: boolean = false): ItemPrice {
-    if (!ignoreOutdated && this.item.tradeable && this.isOutdated()) {
-      this.records = this.newPrices
-        .getMallHistory()
-        .getMallRecords(this.item, 0.1, true);
-    }
-
-    const last =
-      this.getRecords().records[this.getRecords().records.length - 1];
-
-    if (last == null) {
-      return null;
-    }
-
-    return new ItemPrice(
-      this.item,
-      last.meat,
-      PriceType.MALL_SALES,
-      this.getAge()
-    );
-  }
-
-  getPriceType(): PriceType {
-    return PriceType.MALL_SALES;
-  }
 }
 
 class MallSalesPricing implements PriceVolunteer {
