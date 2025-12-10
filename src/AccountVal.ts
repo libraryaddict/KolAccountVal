@@ -420,7 +420,7 @@ class AccountVal {
             : `default is ${AccountValUtils.getNumber(
                 AccountValSettings.defaultMaxNaturalPrice
               )}`
-        })&#010;&#010;You can change this by using 'max=3b' as an arg.&#010;You can also set the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc)">Some items were expensive and were marked as mall extinct. Hover for details.</font>`,
+        })&#010;&#010;You can change this by using 'max=3b' as an arg.&#010;You can also set the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc), this cap increases by 2b every year to account for meatflation">Some items were expensive and were marked as mall extinct. Hover for details.</font>`,
         "html"
       );
     }

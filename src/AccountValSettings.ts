@@ -93,7 +93,11 @@ export class AccountValSettings {
   colorScheme: string = isDarkMode() ? "dark" : "default";
   presets: PresetSetting[] = [];
   doCategories: boolean = false;
-  static defaultMaxNaturalPrice = 3_000_000_000;
+  // Increase the max by 2b every year.
+  // 2022 = 2b, 23 = 4b, 25 = 8b, 26 = 10b
+  static defaultMaxNaturalPrice =
+    (new Date().getFullYear() - 2021) * 2_000_000_000;
+
   maxNaturalPrice = AccountValSettings.defaultMaxNaturalPrice;
   showSingleItemWorth: boolean = false;
   dateToFetch: string;
