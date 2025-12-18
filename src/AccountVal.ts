@@ -424,6 +424,9 @@ class AccountVal {
         "html"
       );
     }
+
+    this.printLine(`Unfortunately I'm having issues resolving mall prices, the old database has gone down and my PR for the other source is on hold and waiting for approval. https://github.com/loathers/pricegun/pull/8`, "plain");
+    this.printLine(`As such please bear with me that prices are effectively 'frozen'.`, "plain");
   }
 
   printMeat() {
