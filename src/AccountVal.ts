@@ -425,8 +425,15 @@ class AccountVal {
       );
     }
 
-    this.printLine(`Unfortunately I'm having issues resolving mall prices, the old database has gone down and my PR for the other source is on hold and waiting for approval. https://github.com/loathers/pricegun/pull/8`, "plain");
-    this.printLine(`As such please bear with me that prices are effectively 'frozen'.`, "plain");
+    this.printLine(
+      `<font color='${AccountValColors.attentionGrabbingWarning}'>Unfortunately I'm having issues resolving mall prices, the old database has gone down and my PR for the other source is on hold and waiting for approval. <u><a href='https://github.com/loathers/pricegun/pull/8'>https://github.com/loathers/pricegun/pull/8</a></u></font>`,
+      "html"
+    );
+    this.printLine(
+      `As such please bear with me that prices are effectively 'frozen'.`,
+      "plain",
+      AccountValColors.attentionGrabbingWarning
+    );
   }
 
   printMeat() {
