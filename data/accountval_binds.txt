@@ -109,8 +109,8 @@ i	Möbius ring box	Möbius ring
 i	packaged Monodent of the Sea	Monodent of the Sea
 i	Lab-grown blood cubic zirconia	blood cubic zirconia
 i	shrunken head in a duffel bag	shrunken head
-i	seal-clubbing club loot box	The Eternity Codpiece
-i	discreetly-wrapped Eternity Codpiece	legendary seal-clubbing club
+i	seal-clubbing club loot box	legendary seal-clubbing club
+i	discreetly-wrapped Eternity Codpiece	The Eternity Codpiece
 i	boxed Heartstone	Heartstone
 i	Boxed Archaeologist's Spade	Archaeologist's Spade
 
