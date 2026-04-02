@@ -113,6 +113,7 @@ i	seal-clubbing club loot box	legendary seal-clubbing club
 i	discreetly-wrapped Eternity Codpiece	The Eternity Codpiece
 i	boxed Heartstone	Heartstone
 i	Boxed Archaeologist's Spade	Archaeologist's Spade
+i	wrapped Baseball Diamond	Baseball Diamond
 
 
 
