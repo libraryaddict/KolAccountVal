@@ -42,7 +42,7 @@ export class PricegunResolver implements PriceVolunteer {
 
     bufferToFile(
       JSON.stringify(this.items.filter((i) => i && i.retrieved > cutoff)),
-      "pricegun_prices.txt"
+      "pricegun_prices.txt",
     );
   }
 
@@ -52,7 +52,7 @@ export class PricegunResolver implements PriceVolunteer {
       value: item.value,
       dateTime: Math.round(Date.parse(item.date) / 1000),
       volume: item.volume,
-      retrieved: Math.round(Date.now() / 1000)
+      retrieved: Math.round(Date.now() / 1000),
     };
   }
 
@@ -77,7 +77,7 @@ export class PricegunResolver implements PriceVolunteer {
         Math.round(price.value),
         PriceType.NEW_PRICES,
         now - price.dateTime,
-        price.volume
+        price.volume,
       );
     });
   }
@@ -89,7 +89,7 @@ export class PricegunResolver implements PriceVolunteer {
     if (items.length > MAX_AMOUNT) {
       // We try to have every request take the same length of time
       const amountInEachReq = Math.ceil(
-        items.length / Math.ceil(items.length / MAX_AMOUNT)
+        items.length / Math.ceil(items.length / MAX_AMOUNT),
       );
 
       for (let i = 0; i < items.length; i += amountInEachReq) {
@@ -112,7 +112,7 @@ export class PricegunResolver implements PriceVolunteer {
 
     try {
       const page = visitUrl(
-        `https://pricegun.loathers.net/api/${items.map((i) => i.id).join(",")}`
+        `https://pricegun.loathers.net/api/${items.map((i) => i.id).join(",")}`,
       );
 
       if (items.length == 1) {
@@ -134,8 +134,8 @@ export class PricegunResolver implements PriceVolunteer {
             value: 0,
             volume: -1,
             retrieved: Math.round(Date.now() / 1000),
-            dateTime: 0
-          })
+            dateTime: 0,
+          }),
       );
     } catch (e) {
       items.forEach(
@@ -145,8 +145,8 @@ export class PricegunResolver implements PriceVolunteer {
             value: 0,
             volume: -1,
             retrieved: Math.round(Date.now() / 1000),
-            dateTime: 0
-          })
+            dateTime: 0,
+          }),
       );
     }
   }

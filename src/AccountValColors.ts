@@ -73,5 +73,5 @@ const def = isDarkMode() ? "dark" : "default";
 loadAccountvalColors(
   map.has(getProperty("accountvalColorScheme"))
     ? getProperty("accountvalColorScheme")
-    : def
+    : def,
 );

@@ -87,7 +87,7 @@ export class PriceResolver {
     ignoreFold: boolean = false,
     forcePricing: PriceType = null,
     doSuperFast: boolean = false,
-    doEstimates: boolean = false
+    doEstimates: boolean = false,
   ): ItemPrice {
     if (this.settings.globalSettings.pricegun) {
       ignoreFold = true;
@@ -110,8 +110,8 @@ export class PriceResolver {
                   true,
                   forcePricing,
                   doSuperFast,
-                  doEstimates
-                )
+                  doEstimates,
+                ),
               )
               .filter((p) => p != null);
 
@@ -120,7 +120,7 @@ export class PriceResolver {
                 ? f1.item.tradeable
                   ? -1
                   : 1
-                : f1.price - f2.price
+                : f1.price - f2.price,
             );
 
             const compare = foldPrices.find((f) => f.item == item);
@@ -151,7 +151,7 @@ export class PriceResolver {
           item,
           this.specialCase.get(item),
           PriceType.MALL,
-          0
+          0,
         );
       }
 

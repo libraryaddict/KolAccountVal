@@ -17,7 +17,7 @@ import {
   toBoolean,
   toInt,
   toItem,
-  visitUrl
+  visitUrl,
 } from "kolmafia";
 import { ItemStatus, ValItem } from "./AccountValLogic";
 import { AccountValColors } from "./AccountValColors";
@@ -58,7 +58,7 @@ export enum ItemType {
 
   CAMPGROUND,
 
-  SCRIPT
+  SCRIPT,
 }
 
 export class ItemResolver {
@@ -75,7 +75,7 @@ export class ItemResolver {
 
   loadCache() {
     const prop: string[] = getProperty(this.accountValVisitCachePropName).split(
-      ","
+      ",",
     );
 
     for (const p of prop) {
@@ -125,7 +125,7 @@ export class ItemResolver {
           this.visitCheck(
             s.actualItem,
             "account.php?tab=correspondence",
-            s.correspondence
+            s.correspondence,
           )
         ) {
           items.push([s.actualItem, ItemStatus.BOUND]);
@@ -187,7 +187,7 @@ export class ItemResolver {
     plural: string,
     bound?: ItemStatus,
     count: number = 1,
-    worthMultiplier: number = 1
+    worthMultiplier: number = 1,
   ) {
     const v = new ValItem(actualItem, item, name, plural, bound);
     v.worthMultiplier = worthMultiplier;
@@ -198,7 +198,7 @@ export class ItemResolver {
   resolveBoundToTradeables(
     copy: { [item: string]: [ValItem, number] },
     ownedItems: Map<ValItem, number>,
-    resolve: ItemType[]
+    resolve: ItemType[],
   ) {
     let coinmaster: CoinmasterResolver;
 
@@ -246,12 +246,12 @@ export class ItemResolver {
               : ItemStatus.NO_TRADE
             : v.bound,
           pair[1],
-          s.currencyAmount ?? 1
+          s.currencyAmount ?? 1,
         );
       } catch (e) {
         print(
           "You probably need to update mafia! Got an error! " + e,
-          AccountValColors.attentionGrabbingWarning
+          AccountValColors.attentionGrabbingWarning,
         );
       }
     }
@@ -269,7 +269,7 @@ export class ItemResolver {
         fam.hatchling,
         fam + "",
         fam + "",
-        ItemStatus.FAMILIAR
+        ItemStatus.FAMILIAR,
       );
     }
   }
@@ -348,7 +348,7 @@ export class ItemResolver {
       } catch (e) {
         print(
           "You probably need to update mafia! Got an error! " + e,
-          AccountValColors.attentionGrabbingWarning
+          AccountValColors.attentionGrabbingWarning,
         );
         continue;
       }
@@ -403,7 +403,7 @@ export class ItemResolver {
         default:
           print(
             "Found line '" + line + "' which I can't handle!",
-            AccountValColors.attentionGrabbingWarning
+            AccountValColors.attentionGrabbingWarning,
           );
           continue;
       }
@@ -438,7 +438,7 @@ export class ItemResolver {
 
       print(
         "Missing a tradeable item for " + v.actualItem,
-        AccountValColors.attentionGrabbingWarning
+        AccountValColors.attentionGrabbingWarning,
       );
     }
 
@@ -454,8 +454,8 @@ export class ItemResolver {
         .map((i) => [i, skillModifier(i, "Skill")] as [Item, Skill])
         .filter(
           ([i, skill]) =>
-            !i.reusable && !i.quest && !i.gift && skill != Skill.none
-        )
+            !i.reusable && !i.quest && !i.gift && skill != Skill.none,
+        ),
     );
 
     const alreadyNoted = values.map((v) => v.actualItem);

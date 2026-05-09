@@ -25,7 +25,9 @@ export abstract class FlatfilePrices implements PriceVolunteer {
   resolve(item: Item): ItemPrice {
     const price = this.prices[item.id];
 
-    if (price == null) return null;
+    if (price == null) {
+      return null;
+    }
 
     return new ItemPrice(
       item,

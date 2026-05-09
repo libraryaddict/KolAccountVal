@@ -35,25 +35,25 @@ export class FetchFromPage {
         }
 
         return [entityDecode(name).toLowerCase(), i];
-      })
+      }),
     );
     const skills: Map<string, Skill> = new Map(
-      Skill.all().map((s) => [entityDecode(s.name).toLowerCase(), s])
+      Skill.all().map((s) => [entityDecode(s.name).toLowerCase(), s]),
     );
     const fams: Map<string, Familiar> = new Map(
-      Familiar.all().map((f) => [f.toString().toLowerCase(), f])
+      Familiar.all().map((f) => [f.toString().toLowerCase(), f]),
     );
     // The hatching item is also listed alongside the familiar, so delete any items.
     const ignore: string[] = [...fams.values()].map((f) =>
-      f.hatchling.toString().toLowerCase()
+      f.hatchling.toString().toLowerCase(),
     );
     ignore.push(
-      ...Object.values(allNormalOutfits()).map((s) => s.toLowerCase())
+      ...Object.values(allNormalOutfits()).map((s) => s.toLowerCase()),
     );
     ignore.push("miming regalia");
 
     let page = visitUrl(
-      "https://api.aventuristo.net/av-snapshot?u=" + username
+      "https://api.aventuristo.net/av-snapshot?u=" + username,
     );
 
     if (!page.includes("<p>Snapshot for <b>")) {
@@ -92,7 +92,7 @@ export class FetchFromPage {
         } else {
           print(
             "Unable to resolve the familiar '" + name + "' from av-snapshot",
-            AccountValColors.attentionGrabbingWarning
+            AccountValColors.attentionGrabbingWarning,
           );
         }
 
@@ -127,7 +127,7 @@ export class FetchFromPage {
       if (!items.has(name)) {
         print(
           "Unable to resolve the item '" + name + "' from av-snapshot",
-          AccountValColors.attentionGrabbingWarning
+          AccountValColors.attentionGrabbingWarning,
         );
         continue;
       }
@@ -160,7 +160,7 @@ export class FetchFromPage {
 
     for (const s of page.split("<tr>")) {
       const match = s.match(
-        /selecteditem=(\d+).+?<b>.+?<\/b> \(([\d,]+)\) +(?:\(Limit ([\d,]+) \/ day\))?<\/td><td>((?:\d|,)+) Meat<\/td>/
+        /selecteditem=(\d+).+?<b>.+?<\/b> \(([\d,]+)\) +(?:\(Limit ([\d,]+) \/ day\))?<\/td><td>((?:\d|,)+) Meat<\/td>/,
       );
 
       if (match == null) {
@@ -182,7 +182,7 @@ export class FetchFromPage {
   getDisplaycase(userId: number): Map<DisplaycaseItem, number> {
     const map: Map<DisplaycaseItem, number> = new Map();
     const descs: Map<string, Item> = new Map(
-      Item.all().map((i) => [i.descid, i])
+      Item.all().map((i) => [i.descid, i]),
     );
 
     const page = visitUrl("displaycollection.php?who=" + userId);
@@ -209,7 +209,7 @@ export class FetchFromPage {
       if (item == null) {
         print(
           "Unknown item description: " + match[1] + ", update mafia?",
-          AccountValColors.attentionGrabbingWarning
+          AccountValColors.attentionGrabbingWarning,
         );
         continue;
       }
@@ -219,7 +219,7 @@ export class FetchFromPage {
           item: item,
           shelf: lastShelf,
         },
-        match[3] == null ? 1 : toInt(match[3])
+        match[3] == null ? 1 : toInt(match[3]),
       );
     }
 

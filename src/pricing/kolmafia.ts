@@ -1,4 +1,4 @@
-import { historicalAge, historicalPrice, Item, mallPrice } from "kolmafia";
+import { historicalAge, historicalPrice, Item } from "kolmafia";
 import { ItemPrice, PriceType, PriceVolunteer } from "../types";
 
 export class MallPricing implements PriceVolunteer {

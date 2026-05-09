@@ -47,7 +47,7 @@ export class AccValTiming {
 
     if (print) {
       printHtml(
-        `<font color='blue'>${this.getName()}<font color='green'> time taken: </font>${this.getTimeStr()}</font>`
+        `<font color='blue'>${this.getName()}<font color='green'> time taken: </font>${this.getTimeStr()}</font>`,
       );
     }
 
@@ -89,7 +89,7 @@ export class AccValTiming {
 
     if (existing == null) {
       this.tracking.push(
-        (existing = ["STARTED", new AccValTiming(name, withSteps)])
+        (existing = ["STARTED", new AccValTiming(name, withSteps)]),
       );
 
       existing[1].depth =
@@ -116,7 +116,7 @@ export class AccValTiming {
     }
 
     this.tracking = this.tracking.filter(
-      ([s, t]) => s != "STOPPED" || t != existing[1]
+      ([s, t]) => s != "STOPPED" || t != existing[1],
     );
     this.tracking.push(["STOPPED", existing[1]]);
 
@@ -128,7 +128,7 @@ export class AccValTiming {
   }
 
   static printTracked(
-    method: "PRINT_JUST_ONCE" | "PRINT_START_AND_END" | "PRINT_JUST_END"
+    method: "PRINT_JUST_ONCE" | "PRINT_START_AND_END" | "PRINT_JUST_END",
   ) {
     const sortedTimes: ["STARTED" | "STOPPED", AccValTiming][] = [
       ...this.tracking,
@@ -142,7 +142,7 @@ export class AccValTiming {
 
     for (const [state, timing] of sortedTimes) {
       const depthStr = `<font color='gray'>${">&nbsp;".repeat(
-        timing.depth
+        timing.depth,
       )}</font>`;
 
       if (method == "PRINT_JUST_ONCE") {
@@ -151,16 +151,16 @@ export class AccValTiming {
         }
 
         printHtml(
-          `${depthStr}<font color='blue'>${timing.getName()} <font color='green'>time taken:</font> ${timing.getTimeStr()}</font>`
+          `${depthStr}<font color='blue'>${timing.getName()} <font color='green'>time taken:</font> ${timing.getTimeStr()}</font>`,
         );
       } else if (method == "PRINT_START_AND_END") {
         if (state == "STARTED") {
           printHtml(
-            `${depthStr}<font color='blue'>${timing.getName()}</font> <font color='green'>started</font>`
+            `${depthStr}<font color='blue'>${timing.getName()}</font> <font color='green'>started</font>`,
           );
         } else {
           printHtml(
-            `${depthStr}<font color='blue'>${timing.getName()}<font color='green'> stopped, time taken: </font>${timing.getTimeStr()}</font>`
+            `${depthStr}<font color='blue'>${timing.getName()}<font color='green'> stopped, time taken: </font>${timing.getTimeStr()}</font>`,
           );
         }
       } else if (method == "PRINT_JUST_END") {
@@ -169,15 +169,15 @@ export class AccValTiming {
         }
 
         printHtml(
-          `${depthStr}<font color='blue'>${timing.getName()}<font color='green'> time taken: </font>${timing.getTimeStr()}</font>`
+          `${depthStr}<font color='blue'>${timing.getName()}<font color='green'> time taken: </font>${timing.getTimeStr()}</font>`,
         );
       }
     }
 
     printHtml(
       `<font color='green'>The usage of timings took an extra: </font><font color='blue'>${AccountValUtils.getNumber(
-        this.timingsSlowdown
-      )}ms</font>`
+        this.timingsSlowdown,
+      )}ms</font>`,
     );
   }
 }

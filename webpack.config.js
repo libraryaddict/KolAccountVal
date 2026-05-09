@@ -1,7 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
 
-// eslint-disable-next-line no-undef
+ 
 module.exports = {
   entry: {
     accountval: "./src/AccountVal.ts"
@@ -26,7 +26,7 @@ module.exports = {
   },
   output: {
     filename: "[name].js",
-    // eslint-disable-next-line no-undef
+     
     path: path.join(__dirname, "./built/scripts/"),
     libraryTarget: "commonjs"
   },

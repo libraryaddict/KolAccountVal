@@ -6,7 +6,7 @@ export class AccountValUtils {
   static splitArguments(
     settings: AccountValSettings,
     command: string,
-    debugMessages: boolean = false
+    debugMessages: boolean = false,
   ): string[] {
     const debug = function (message: string) {
       if (!debugMessages) {
@@ -28,7 +28,7 @@ export class AccountValUtils {
 
       const v2 = (match[3] || "").replace("!", "").split("=")[0].trim();
       const setting2 = settings.getSetting(
-        v2.toLowerCase() == "true" ? "" : v2
+        v2.toLowerCase() == "true" ? "" : v2,
       );
 
       if (
@@ -42,7 +42,7 @@ export class AccountValUtils {
       command = command.replace(match[2], match[2].trim() + "=");
       tCommand = tCommand.replace(match[3], "");
       debug(
-        `Replacing '${match[2]}' as a key parameter, matched using '${match[0]}'`
+        `Replacing '${match[2]}' as a key parameter, matched using '${match[0]}'`,
       );
     }
 
@@ -104,7 +104,7 @@ export class AccountValUtils {
     min: number,
     max: number,
     minStr: string,
-    maxStr: string
+    maxStr: string,
   ): string {
     if (number > max) {
       return maxStr;
