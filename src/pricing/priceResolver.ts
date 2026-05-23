@@ -1,13 +1,16 @@
-import { autosellPrice, Item, getRelated } from "kolmafia";
-import { PricingSettings } from "./AccountValSettings";
-import { AccValTiming } from "./AccountValTimings";
-import { ItemPrice, PriceType, PriceVolunteer } from "./types";
-import { HistoricalPricing, MallPricing } from "./pricing/kolmafia";
-import { IrratPrices } from "./pricing/irratprices";
-import { PricegunResolver } from "./pricing/pricegun";
+import { kol } from "../api/apiSupplier";
+import { PricingSettings } from "../settings/settings";
+import { AccValTiming } from "../utils/timings";
+import { ItemPrice, PriceType } from "../models/typings";
+import { PriceVolunteer } from "./priceInterface";
+import { HistoricalPricing, MallPricing } from "./variants/kolmafia";
+import { IrratPrices } from "./variants/irratprices";
+import { PricegunResolver } from "./variants/pricegun";
+import { KoLItem } from "../api/supplierTypings";
+import { Item } from "kolmafia";
 
 export class PriceResolver {
-  private specialCase: Map<Item, number> = new Map();
+  private specialCase: Map<KoLItem, number> = new Map();
   private settings: PricingSettings;
   private resolvers: PriceVolunteer[] = [];
 
@@ -33,7 +36,7 @@ export class PriceResolver {
     this.fillSpecialCase();
   }
 
-  addSpecialCase(item: Item, meat: number) {
+  addSpecialCase(item: KoLItem, meat: number) {
     this.specialCase.set(item, meat);
   }
 
@@ -55,35 +58,35 @@ export class PriceResolver {
     this.resolvers.forEach((r) => r.stop && r.stop());
   }
 
-  bulkLoad(items: Item[]) {
-    // Dedupes items
+  bulkLoad(items: KoLItem[]) {
     const toCheck = items.filter((i, ind) => items.lastIndexOf(i) == ind);
-    const checked: Item[] = [];
+    const checked: KoLItem[] = [];
 
     for (const item of items) {
       if (checked.includes(item)) {
         continue;
       }
 
-      const foldables = Object.keys(getRelated(item, "fold"));
+      const foldables = Object.keys(kol.getRelated(item, "fold"));
 
       if (foldables == null || foldables.length <= 1) {
         continue;
       }
 
-      const items = foldables
-        .map((s) => Item.get(s))
+      const itemsRelated = foldables
+        .map((s) => KoLItem.get(s))
         .filter((i) => !checked.includes(i));
-
-      checked.push(...items);
-      items.filter((i) => !toCheck.includes(i)).forEach((i) => toCheck.push(i));
+      checked.push(...itemsRelated);
+      itemsRelated
+        .filter((i) => !toCheck.includes(i))
+        .forEach((i) => toCheck.push(i));
     }
 
     this.resolvers[0].bulkResolve(toCheck);
   }
 
   itemPrice(
-    item: Item,
+    item: KoLItem,
     ignoreFold: boolean = false,
     forcePricing: PriceType = null,
     doSuperFast: boolean = false,
@@ -97,7 +100,7 @@ export class PriceResolver {
       AccValTiming.start("Check Foldable", true);
 
       try {
-        const foldables = Object.keys(getRelated(item, "fold"));
+        const foldables = Object.keys(kol.getRelated(item, "fold"));
 
         if (foldables != null && foldables.length > 1) {
           AccValTiming.start("Deeper Foldable Check", true);
@@ -106,7 +109,7 @@ export class PriceResolver {
             const foldPrices = foldables
               .map((f) =>
                 this.itemPrice(
-                  Item.get(f),
+                  KoLItem.get(f),
                   true,
                   forcePricing,
                   doSuperFast,
@@ -122,7 +125,6 @@ export class PriceResolver {
                   : 1
                 : f1.price - f2.price,
             );
-
             const compare = foldPrices.find((f) => f.item == item);
 
             for (const f of foldPrices) {
@@ -156,7 +158,12 @@ export class PriceResolver {
       }
 
       if (!item.tradeable) {
-        return new ItemPrice(item, autosellPrice(item), PriceType.AUTOSELL, 0);
+        return new ItemPrice(
+          item,
+          kol.autosellPrice(item),
+          PriceType.AUTOSELL,
+          0,
+        );
       }
     } finally {
       AccValTiming.stop("Check Pricing Misc");

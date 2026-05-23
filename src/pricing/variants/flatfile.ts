@@ -1,6 +1,8 @@
-import { Item } from "kolmafia";
-import { PricingSettings } from "../AccountValSettings";
-import { ItemPrice, PriceType, PriceVolunteer } from "../types";
+import { PricingSettings } from "../../settings/settings";
+import { ItemPrice, PriceType } from "../../models/typings";
+import { PriceVolunteer } from "../priceInterface";
+import { KoLItem } from "../../api/supplierTypings";
+import { kol } from "../../api/apiSupplier";
 
 export interface ItemPriceMap {
   updated: number;
@@ -18,12 +20,12 @@ export abstract class FlatfilePrices implements PriceVolunteer {
     this.settings = settings;
   }
 
-  bulkResolve(items: Item[]): ItemPrice[] {
+  bulkResolve(items: KoLItem[]): ItemPrice[] {
     return items.map((i) => this.resolve(i));
   }
 
-  resolve(item: Item): ItemPrice {
-    const price = this.prices[item.id];
+  resolve(item: KoLItem): ItemPrice {
+    const price = this.prices[kol.toInt(item)];
 
     if (price == null) {
       return null;
@@ -39,9 +41,7 @@ export abstract class FlatfilePrices implements PriceVolunteer {
   }
 
   abstract isViable(): boolean;
-
   abstract loadDataFile(): string;
-
   abstract loadDataItem(line: string[]): [number, ItemPriceMap];
 
   load() {
@@ -62,7 +62,6 @@ export abstract class FlatfilePrices implements PriceVolunteer {
 
       if (spl2.length == 2 && spl2[0] == "Last Updated:") {
         this.lastUpdated = parseInt(spl2[1]);
-
         continue;
       }
 

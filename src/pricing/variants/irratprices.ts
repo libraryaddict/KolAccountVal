@@ -1,4 +1,4 @@
-import { fileToBuffer, print, visitUrl } from "kolmafia";
+import { kol } from "../../api/apiSupplier";
 import { FlatfilePrices, ItemPriceMap } from "./flatfile";
 
 export class IrratPrices extends FlatfilePrices {
@@ -31,7 +31,6 @@ export class IrratPrices extends FlatfilePrices {
       return false;
     }
 
-    // If it hasn't been updated in a five week, then Irrat is ded
     const irratDedAtWeek = 3;
     const aWeekIsThisManyMillis = 7 * 24 * 60 * 60 * 1000;
 
@@ -49,12 +48,12 @@ export class IrratPrices extends FlatfilePrices {
     const toFetch = this.settings.dateToFetch;
 
     if (toFetch == null) {
-      return fileToBuffer("irrats_item_prices.txt");
+      return kol.fileToBuffer("irrats_item_prices.txt");
     }
 
     let finalDateString: string;
-    const minDate = new Date(2023, 7, 23); // August is month 7 (0-indexed)
-    minDate.setHours(0, 0, 0, 0); // Normalize to midnight for accurate comparison
+    const minDate = new Date(2023, 7, 23);
+    minDate.setHours(0, 0, 0, 0);
 
     const absoluteDateRegex = /^\d{1,2}[-/]\d{1,2}[-/]\d{4}$/;
 
@@ -63,16 +62,13 @@ export class IrratPrices extends FlatfilePrices {
       const parsedDate = new Date(year, month - 1, day);
       parsedDate.setHours(0, 0, 0, 0);
 
-      // Verify that the created date is valid
       if (
         parsedDate.getFullYear() !== year ||
         parsedDate.getMonth() !== month - 1 ||
         parsedDate.getDate() !== day
       ) {
         throw new Error(
-          `Invalid date provided: ${toFetch} resolved to ${parsedDate.getDate()}-${
-            parsedDate.getMonth() + 1
-          }-${parsedDate.getFullYear()}.`,
+          `Invalid date provided: ${toFetch} resolved to ${parsedDate.getDate()}-${parsedDate.getMonth() + 1}-${parsedDate.getFullYear()}.`,
         );
       }
 
@@ -82,7 +78,6 @@ export class IrratPrices extends FlatfilePrices {
 
       finalDateString = toFetch;
     } else {
-      // Handle relative date format like '1d2m3y'
       const dMatch = toFetch.match(/(\d+)d(?:ays?)?/);
       const mMatch = toFetch.match(/(\d+)m(?:onths?)?/);
       const yMatch = toFetch.match(/(\d+)y(?:ears?)?/);
@@ -91,7 +86,6 @@ export class IrratPrices extends FlatfilePrices {
       const months = mMatch ? parseInt(mMatch[1], 10) : 0;
       const years = yMatch ? parseInt(yMatch[1], 10) : 0;
 
-      // Validate that the entire string consists only of relative times
       const consumedLength =
         (dMatch?.[0].length ?? 0) +
         (mMatch?.[0].length ?? 0) +
@@ -108,19 +102,17 @@ export class IrratPrices extends FlatfilePrices {
       targetDate.setMonth(targetDate.getMonth() - months);
       targetDate.setFullYear(targetDate.getFullYear() - years);
 
-      // Cap the date if it's older than the allowed date
       if (targetDate < minDate) {
         targetDate = minDate;
       }
 
-      // Format the calculated date into DD-MM-YYYY
       const finalDay = String(targetDate.getDate()).padStart(2, "0");
       const finalMonth = String(targetDate.getMonth() + 1).padStart(2, "0");
       const finalYear = targetDate.getFullYear();
       finalDateString = `${finalDay}-${finalMonth}-${finalYear}`;
     }
 
-    const responseText: string = visitUrl(
+    const responseText: string = kol.visitUrl(
       `https://kolprices.lib.co.nz/file/${finalDateString}`,
     );
 
@@ -132,7 +124,7 @@ export class IrratPrices extends FlatfilePrices {
       }
     }
 
-    print(`Now resolving prices with date: ${finalDateString}`, "blue");
+    kol.print(`Now resolving prices with date: ${finalDateString}`, "blue");
     this.ofThePast = true;
 
     return responseText;
@@ -147,12 +139,7 @@ export class IrratPrices extends FlatfilePrices {
 
     return [
       itemId,
-      {
-        price: price,
-        updated: age,
-        volume: volume,
-        lastSoldAt: lastSoldAt,
-      },
+      { price: price, updated: age, volume: volume, lastSoldAt: lastSoldAt },
     ];
   }
 }

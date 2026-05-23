@@ -1,11 +1,12 @@
-import { Coinmaster, Item, sellPrice } from "kolmafia";
-import { PriceResolver } from "./PriceResolver";
+import { kol } from "../api/apiSupplier";
+import { KoLCoinmaster, KoLItem } from "../api/supplierTypings";
+import { PriceResolver } from "../pricing/priceResolver";
 
 interface CoinmasterItem {
-  coinmaster: Coinmaster;
-  currency: Item;
+  coinmaster: KoLCoinmaster;
+  currency: KoLItem;
   currencyCost: number;
-  item: Item;
+  item: KoLItem;
   price?: number;
   priceEach?: number;
 }
@@ -19,18 +20,18 @@ export class CoinmasterResolver {
   }
 
   load() {
-    for (const item of Item.all()) {
+    for (const item of KoLItem.all()) {
       if (!item.tradeable || item.gift || item.quest || item.seller == null) {
         continue;
       }
 
       const token = item.seller.item;
 
-      if (token == Item.none) {
+      if (token == KoLItem.none) {
         continue;
       }
 
-      const price = sellPrice(item.seller, item);
+      const price = kol.sellPrice(item.seller, item);
 
       if (price <= 0) {
         continue;
@@ -47,7 +48,7 @@ export class CoinmasterResolver {
     this.prices.bulkLoad(this.items.map((i) => i.item));
   }
 
-  getHighestCoinmaster(currency: Item): CoinmasterItem {
+  getHighestCoinmaster(currency: KoLItem): CoinmasterItem {
     let highest: CoinmasterItem = null;
 
     for (const item of this.items) {

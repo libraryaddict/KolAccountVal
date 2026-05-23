@@ -1,4 +1,4 @@
-import { getProperty, isDarkMode, print, printHtml } from "kolmafia";
+import { kol } from "../api/apiSupplier";
 
 export interface ColorsInterface {
   attentionGrabbingWarning: string;
@@ -56,7 +56,7 @@ export function getAccountvalColors(): string[] {
 
 export function showAccountvalColors(name: string) {
   if (!map.has(name)) {
-    print("Can't find any colors by that name", "red");
+    kol.print("Can't find any colors by that name", "red");
 
     return;
   }
@@ -64,14 +64,15 @@ export function showAccountvalColors(name: string) {
   const colors = map.get(name);
 
   for (const [k, v] of Object.entries(colors)) {
-    printHtml(`<font color='${v}'>${k}</font>`);
+    kol.printHtml(`<font color='${v}'>${k}</font>`);
   }
 }
 
-const def = isDarkMode() ? "dark" : "default";
-
-loadAccountvalColors(
-  map.has(getProperty("accountvalColorScheme"))
-    ? getProperty("accountvalColorScheme")
-    : def,
-);
+export function initAccountValColors() {
+  const def = kol.isDarkMode() ? "dark" : "default";
+  loadAccountvalColors(
+    kol.getProperty("accountvalColorScheme")
+      ? kol.getProperty("accountvalColorScheme")
+      : def,
+  );
+}

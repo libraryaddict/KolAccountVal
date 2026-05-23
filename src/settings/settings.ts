@@ -1,46 +1,17 @@
-import {
-  getPlayerId,
-  getProperty,
-  isDarkMode,
-  print,
-  toBoolean,
-  toFloat,
-} from "kolmafia";
+import { kol } from "../api/apiSupplier";
 import {
   AccountValColors,
   getAccountvalColors,
   loadAccountvalColors,
-} from "./AccountValColors";
-import { AccountValPreset, getPresets } from "./AccountValPresets";
-import { ValItem } from "./AccountValLogic";
-
-export enum FieldType {
-  NUMBER,
-  SORTBY,
-  COLOR_SCHEME,
-  BOOLEAN,
-  NAME,
-  STRING,
-  TEXT_TYPE,
-}
-
-export interface ValSetting {
-  groupUnder?: string;
-  type: FieldType;
-  field: string;
-  names: string[];
-  desc: string;
-  preset?: AccountValPreset;
-}
-
-export enum SortBy {
-  NAME,
-  QUANTITY,
-  PRICE,
-  TOTAL_PRICE,
-  SALES_VOLUME,
-  ITEM_ID,
-}
+} from "../utils/colors";
+import { AccountValPreset, getPresets } from "./presets";
+import {
+  ValItem,
+  FieldType,
+  SortBy,
+  ValSetting,
+  PresetSetting,
+} from "../models/typings";
 
 const sortByAliases: Map<string, SortBy> = new Map([
   ["count", SortBy.QUANTITY],
@@ -54,11 +25,6 @@ const sortByAliases: Map<string, SortBy> = new Map([
   ["sold", SortBy.SALES_VOLUME],
 ]);
 
-type PresetSetting = {
-  preset: AccountValPreset;
-  negated: boolean;
-};
-
 export class AccountValSettings {
   fetchCloset: boolean;
   fetchStorage: boolean;
@@ -67,7 +33,7 @@ export class AccountValSettings {
   fetchDisplaycase: boolean;
   fetchSession: boolean = false;
   fetchClan: boolean = false;
-  fetchingEverywhereish: boolean = true; // If we're fetching from everywhere but maybe some areas
+  fetchingEverywhereish: boolean = true;
   fetchingNonItems: boolean = true;
   doSuperFast: boolean = false;
   doTradeables: boolean;
@@ -90,11 +56,10 @@ export class AccountValSettings {
   static timingsDebug: boolean = false;
   brief: boolean = false;
   oldPricing: boolean = false;
-  colorScheme: string = isDarkMode() ? "dark" : "default";
+  colorScheme: string;
   presets: PresetSetting[] = [];
   doCategories: boolean = false;
-  // Increase the max by 2b every year.
-  // 2022 = 2b, 23 = 4b, 25 = 8b, 26 = 10b
+
   static defaultMaxNaturalPrice =
     (new Date().getFullYear() - 2021) * 2_000_000_000;
 
@@ -105,7 +70,17 @@ export class AccountValSettings {
   logOutputTo: string;
   pricegun: boolean = false;
 
+  private static settingsCache: ValSetting[] = null;
+
+  constructor() {
+    this.colorScheme = "default";
+  }
+
   static getSettings(): ValSetting[] {
+    if (this.settingsCache) {
+      return this.settingsCache;
+    }
+
     const settings: ValSetting[] = [];
 
     function makeSetting(
@@ -124,7 +99,6 @@ export class AccountValSettings {
         desc,
         preset: preset,
       };
-
       settings.push(setting);
 
       return setting;
@@ -193,13 +167,13 @@ export class AccountValSettings {
         "untradeable",
         "untradeables",
       ],
-      "Should it do non-tradeables (Resolves to tradeables if it can)",
+      "Should it do non-tradeables",
     );
     makeSetting(
       FieldType.BOOLEAN,
       "fetchFamiliars",
       ["familiar", "familiars", "fam", "fams"],
-      "Should it do familiars (Resolves to their item). Bound being true also means this is true if not set",
+      "Should it do familiars. Bound being true also means this is true if not set",
     );
     makeSetting(
       FieldType.BOOLEAN,
@@ -211,7 +185,7 @@ export class AccountValSettings {
       FieldType.BOOLEAN,
       "doBound",
       ["bound", "bind", "bounded", "binds", "binded"],
-      "Should it do items that are bound to your account (Generally only iotms)",
+      "Should it do items that are bound to your account",
     );
 
     makeSetting(
@@ -253,124 +227,109 @@ export class AccountValSettings {
         "name",
         "username",
       ],
-      'Target another player\'s DC and Shop. Can provide the dc/shop param. Can do player="John Smith" for spaces',
+      "Target another player's DC and Shop.",
     );
     makeSetting(
       FieldType.BOOLEAN,
       "doSuperFast",
       ["fast", "superfast", "speed", "quick", "rough"],
-      "Try resolve everything with historical price, no matter how outdated",
+      "Try resolve everything with historical price",
     );
-
     makeSetting(
       FieldType.NUMBER,
       "maxAge",
       ["age", "maxage", "days"],
-      "The max days a price is allowed to be outdated, useful if you're trying to force things to be more up to date",
+      "The max days a price is allowed to be outdated",
     );
-
     makeSetting(
       FieldType.SORTBY,
       "sortBy",
       ["sort", "sortby", "sorted"],
-      "What we should sort the results by, prefix with ! or - to reverse sort. Supports: " +
-        Object.keys(SortBy)
-          .filter((s) => s.length > 2)
-          .join(", "),
+      "What we should sort the results by",
     );
-
     makeSetting(
       FieldType.BOOLEAN,
       "shopWorth",
       ["worth", "shopworth", "pricing", "prices"],
-      "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate",
+      "Seperates items in shop from the other items",
     );
-
     makeSetting(
       FieldType.STRING,
       "javascriptFilter",
       ["jsfilter", "javascriptfilter", "javascript", "js"],
-      'Filters if an item can be shown, provides an item & amount and expects a boolean. Any double quotes in your code must not have an empty space to the right. Example: jsfilter="(item, amount, worth, sales) => item.name.includes("beer") && toSlot(item) != Slot.none"',
+      "Filters if an item can be shown",
     );
-
     makeSetting(
       FieldType.NUMBER,
       "sales",
       ["sales", "sold"],
       "Hides items that have less than this amount of sales",
     );
-
     makeSetting(
       FieldType.BOOLEAN,
       "useLastSold",
       ["useLastSold", "lastsold", "soldprice"],
-      "Resolve prices by their last sold, initial runs with this parameter can be quite slow",
+      "Resolve prices by their last sold",
     );
-
     makeSetting(
       FieldType.BOOLEAN,
       "brief",
       ["brief"],
       "Prints out a single line as the final result, the total meat.",
     );
-
     makeSetting(
       FieldType.BOOLEAN,
       "oldPricing",
       ["oldpricing"],
-      "Has accountval calculate prices from the old slower and more inaccurate method",
+      "Has accountval calculate prices from the old slower method",
     );
-
     makeSetting(
       FieldType.COLOR_SCHEME,
       "colorScheme",
       ["color", "colors", "colorscheme", "scheme"],
-      "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " +
-        getAccountvalColors().join(", "),
+      "What color schemes to use",
     );
-
     makeSetting(
       FieldType.NUMBER,
       "maxNaturalPrice",
       ["max", "mallmax"],
-      "The max natural price an item will reach before it's capped and called mall extinct",
+      "The max natural price an item will reach before it's capped",
     );
-
     makeSetting(
       FieldType.BOOLEAN,
       "doCategories",
       ["category", "categories", "shelf", "shelves"],
-      "Used only for Display Cases at this point, seperates the items into categories",
+      "Seperates the items into categories",
     );
     makeSetting(
       FieldType.BOOLEAN,
       "showSingleItemWorth",
       ["each"],
-      "Displays the individual price of each item instead of the total, works best with `sort=meat`",
+      "Displays the individual price of each item",
     );
     makeSetting(
       FieldType.STRING,
       "dateToFetch",
       ["date", "fetchdate", "historical", "time", "when", "at"],
-      "View everything with the prices of the past, either provide a `1d2m3y` which will automatically convert that into 1 day, 2 months and 3 years ago (capped automatically), or a specified date `DD-MM-YYYY` which cannot be older than 22-08-2023. This obviously won't work for newer items, and will make a backend call to `kolprices.lib.co.nz/files/:date`",
+      "View everything with the prices of the past",
     );
     makeSetting(
       FieldType.TEXT_TYPE,
       "logOutputAs",
       ["text", "logtype", "formatting"],
-      `If accountval should log everything with "fancy" text, which means html, or "plain" which means the output is also logged to your session log, but will have no hover text or colors. Try looking into kolmafia 'mirror' if you want the output as html. Example usage: "text=plain". Change the default by using "set accountval_text=plain"`,
+      "If accountval should log everything with plain or fancy text",
     );
     makeSetting(
       FieldType.STRING,
       "logOutputTo",
       ["output"],
-      `Send the output of accountval to a file instead of printing into cli, eg 'output=accountval.html' would send it into the 'data/accountval.html'. If the file ends with .html, it will entity encode all non-html lines.`,
+      "Send the output of accountval to a file instead of printing into cli",
     );
     makeSetting(
       FieldType.BOOLEAN,
       "pricegun",
       ["pricegun"],
-      `Resolve prices using pricegun. This will be slow.`,
+      "Resolve prices using pricegun. This will be slow.",
     );
 
     for (const preset of getPresets()) {
@@ -384,34 +343,33 @@ export class AccountValSettings {
       );
     }
 
+    this.settingsCache = settings;
+
     return settings;
   }
 
   getSetting(alias: string): ValSetting {
     alias = alias.toLowerCase();
 
-    for (const setting of AccountValSettings.getSettings()) {
-      if (!setting.names.includes(alias)) {
-        continue;
-      }
-
-      return setting;
-    }
-
-    return null;
+    return (
+      AccountValSettings.getSettings().find((s) => s.names.includes(alias)) ||
+      null
+    );
   }
 
   doSettings(args: string[]): string[] {
     const errors: string[] = [];
 
-    if (getProperty("accountval_maxNaturalPrice").length > 0) {
+    this.colorScheme = kol.isDarkMode() ? "dark" : "default";
+
+    if (kol.getProperty("accountval_maxNaturalPrice").length > 0) {
       this.maxNaturalPrice = this.toNumber(
-        getProperty("accountval_maxNaturalPrice"),
+        kol.getProperty("accountval_maxNaturalPrice"),
       );
     }
 
-    if (getProperty("accountval_text").length > 0) {
-      const str = getProperty("accountval_text");
+    if (kol.getProperty("accountval_text").length > 0) {
+      const str = kol.getProperty("accountval_text");
 
       if (str == "plain" || str == "fancy") {
         this.logOutputAs = str;
@@ -422,18 +380,8 @@ export class AccountValSettings {
       }
     }
 
-    const defaultValues: unknown[] = [];
     const wasSet: string[] = [];
-
     const settings = AccountValSettings.getSettings();
-
-    for (const setting of settings) {
-      if (setting.preset != null) {
-        continue;
-      }
-
-      defaultValues[setting.field] = this[setting.field];
-    }
 
     const addUnknown = (arg) => {
       errors.push(
@@ -460,21 +408,8 @@ export class AccountValSettings {
         continue;
       }
 
-      let setting: ValSetting;
-      const name = arg
-        .split("=")[0]
-        .toLowerCase()
-        .replace("-", "")
-        .replace("+", "")
-        .replace("!", "");
-
-      settings.forEach((s) => {
-        if (!s.names.includes(name)) {
-          return;
-        }
-
-        setting = s;
-      });
+      const name = arg.split("=")[0].toLowerCase().replace(/[-+!]/g, "");
+      const setting = settings.find((s) => s.names.includes(name));
 
       if (setting == null) {
         addUnknown(arg);
@@ -493,142 +428,168 @@ export class AccountValSettings {
           continue;
         }
 
-        isTrue = toBoolean(v);
+        isTrue = kol.toBoolean(v);
       }
 
-      if (setting.type == FieldType.SORTBY) {
-        if (!arg.includes("=")) {
-          addUnknown(arg);
-          continue;
-        }
-
-        const v = arg.substring(arg.indexOf("=") + 1);
-
-        if (v.length == 0) {
-          addUnknown(arg);
-          continue;
-        }
-
-        let sortBy: SortBy =
-          SortBy[
-            Object.keys(SortBy).find((k) => k.toLowerCase() == v.toLowerCase())
-          ];
-
-        if (sortBy == null) {
-          sortBy = sortByAliases.get(v.toLowerCase());
-        }
-
-        if (sortBy == null) {
-          addUnknown(arg);
-          continue;
-        }
-
-        this.sortBy = sortBy;
-        this.reverseSort = !isTrue;
-      } else if (setting.type == FieldType.COLOR_SCHEME) {
-        if (!arg.includes("=")) {
-          addUnknown(arg);
-          continue;
-        }
-
-        const v = arg.substring(arg.indexOf("=") + 1);
-
-        if (v.length == 0) {
-          addUnknown(arg);
-          continue;
-        }
-
-        if (!getAccountvalColors().includes(v)) {
-          addUnknown(arg);
-          continue;
-        }
-
-        this.colorScheme = v;
-        loadAccountvalColors(v);
-      } else if (setting.type == FieldType.TEXT_TYPE) {
-        if (!arg.includes("=")) {
-          addUnknown(arg);
-          continue;
-        }
-
-        const v = arg.substring(arg.indexOf("=") + 1).toLowerCase();
-
-        if (v.length == 0) {
-          addUnknown(arg);
-          continue;
-        }
-
-        if (v != "plain" && v != "fancy") {
-          addUnknown(arg);
-          continue;
-        }
-
-        this.logOutputAs = v;
-      } else if (
-        setting.type == FieldType.NUMBER ||
-        setting.type == FieldType.NAME
-      ) {
-        if (!arg.includes("=")) {
-          addUnknown(arg);
-          continue;
-        }
-
-        let v = arg.substring(arg.indexOf("=") + 1);
-
-        if (v.length == 0) {
-          addUnknown(arg);
-          continue;
-        }
-
-        if (setting.type == FieldType.NAME) {
-          if (!v.match(/^[0-9]+$/)) {
-            v = getPlayerId(v);
-
-            if (!v.match(/^[0-9]+$/)) {
-              errors.push(
-                `Failed to convert <font color='${AccountValColors.failedToParseSettings}'>${v}</font> into a player ID`,
-              );
-              continue;
-            }
+      switch (setting.type) {
+        case FieldType.SORTBY:
+          this.parseSortBy(arg, isTrue, addUnknown);
+          break;
+        case FieldType.COLOR_SCHEME:
+          this.parseColorScheme(arg, addUnknown);
+          break;
+        case FieldType.TEXT_TYPE:
+          this.parseTextType(arg, addUnknown);
+          break;
+        case FieldType.NUMBER:
+        case FieldType.NAME:
+          this.parseNumberOrName(setting, arg, addUnknown, errors);
+          break;
+        case FieldType.STRING:
+          this.parseString(setting, arg, addUnknown);
+          break;
+        default: // BOOLEAN
+          if (setting.preset != null) {
+            this.presets.push({ preset: setting.preset, negated: !isTrue });
+          } else {
+            this[setting.field] = isTrue;
           }
-        }
 
-        const num = this.toNumber(v);
-
-        if (v == null) {
-          addUnknown(arg);
-          continue;
-        }
-
-        this[setting.field] = num;
-      } else if (setting.type == FieldType.STRING) {
-        if (!arg.includes("=")) {
-          addUnknown(arg);
-          continue;
-        }
-
-        const v = arg.substring(arg.indexOf("=") + 1);
-
-        if (v.length == 0) {
-          addUnknown(arg);
-          continue;
-        }
-
-        this[setting.field] = v;
-      } else {
-        if (setting.preset != null) {
-          this.presets.push({
-            preset: setting.preset,
-            negated: !isTrue,
-          });
-        } else {
-          this[setting.field] = isTrue;
-        }
-
-        wasSet.push(setting.field);
+          wasSet.push(setting.field);
+          break;
       }
     }
 
+    this.resolveFetchSources(wasSet);
+
+    if (this.settingsDebug) {
+      for (const setting of Object.keys(this)) {
+        kol.print(setting + " = " + this[setting]);
+      }
+    }
+
+    return errors;
+  }
+
+  private parseSortBy(
+    arg: string,
+    isTrue: boolean,
+    addUnknown: (arg: string) => void,
+  ) {
+    if (!arg.includes("=")) {
+      return addUnknown(arg);
+    }
+
+    const v = arg.substring(arg.indexOf("=") + 1);
+
+    if (v.length == 0) {
+      return addUnknown(arg);
+    }
+
+    let sortBy: SortBy =
+      SortBy[
+        Object.keys(SortBy).find((k) => k.toLowerCase() == v.toLowerCase())
+      ];
+
+    if (sortBy == null) {
+      sortBy = sortByAliases.get(v.toLowerCase());
+    }
+
+    if (sortBy == null) {
+      return addUnknown(arg);
+    }
+
+    this.sortBy = sortBy;
+    this.reverseSort = !isTrue;
+  }
+
+  private parseColorScheme(arg: string, addUnknown: (arg: string) => void) {
+    if (!arg.includes("=")) {
+      return addUnknown(arg);
+    }
+
+    const v = arg.substring(arg.indexOf("=") + 1);
+
+    if (v.length == 0 || !getAccountvalColors().includes(v)) {
+      return addUnknown(arg);
+    }
+
+    this.colorScheme = v;
+    loadAccountvalColors(v);
+  }
+
+  private parseTextType(arg: string, addUnknown: (arg: string) => void) {
+    if (!arg.includes("=")) {
+      return addUnknown(arg);
+    }
+
+    const v = arg.substring(arg.indexOf("=") + 1).toLowerCase();
+
+    if (v.length == 0 || (v != "plain" && v != "fancy")) {
+      return addUnknown(arg);
+    }
+
+    this.logOutputAs = v as "plain" | "fancy";
+  }
+
+  private parseNumberOrName(
+    setting: ValSetting,
+    arg: string,
+    addUnknown: (arg: string) => void,
+    errors: string[],
+  ) {
+    if (!arg.includes("=")) {
+      return addUnknown(arg);
+    }
+
+    let v = arg.substring(arg.indexOf("=") + 1);
+
+    if (v.length == 0) {
+      return addUnknown(arg);
+    }
+
+    if (setting.type == FieldType.NAME) {
+      if (!v.match(/^[0-9]+$/)) {
+        v = kol.getPlayerId(v);
+
+        if (!v.match(/^[0-9]+$/)) {
+          errors.push(
+            `Failed to convert <font color='${AccountValColors.failedToParseSettings}'>${v}</font> into a player ID`,
+          );
+
+          return;
+        }
+      }
+    }
+
+    const num = this.toNumber(v);
+
+    if (num == null) {
+      return addUnknown(arg);
+    }
+
+    this[setting.field] = num;
+  }
+
+  private parseString(
+    setting: ValSetting,
+    arg: string,
+    addUnknown: (arg: string) => void,
+  ) {
+    if (!arg.includes("=")) {
+      return addUnknown(arg);
+    }
+
+    const v = arg.substring(arg.indexOf("=") + 1);
+
+    if (v.length == 0) {
+      return addUnknown(arg);
+    }
+
+    this[setting.field] = v;
+  }
+
+  private resolveFetchSources(wasSet: string[]) {
     const fetchSources: string[] = [
       "fetchCloset",
       "fetchStorage",
@@ -640,11 +601,6 @@ export class AccountValSettings {
       "fetchFamiliars",
       "fetchSnapshot",
     ];
-
-    // We can do fams if bound isn't false
-    // We can do bound if nontrade isn't false
-    // We can do notrade if tradeables isn't true
-    // We can do tradeables if non-trade isn't true
 
     this.fetchingEverywhereish =
       !this.fetchSession &&
@@ -691,18 +647,9 @@ export class AccountValSettings {
     }
 
     this.fetchingNonItems = this.fetchingEverywhereish;
-
-    if (this.settingsDebug) {
-      for (const setting of Object.keys(this)) {
-        print(setting + " = " + this[setting]);
-      }
-    }
-
-    return errors;
   }
 
   doesJSFilterUsePriceOrSales(): boolean {
-    // We simply check for 3 args
     return (
       this.javascriptFilter != null &&
       this.javascriptFilter.split("=>")[0].split(",").length >= 3
@@ -721,15 +668,7 @@ export class AccountValSettings {
   isArg(arg: string, args: string[]): boolean {
     arg = arg.toLowerCase().split("=")[0];
 
-    for (const a of args) {
-      if (arg != a) {
-        continue;
-      }
-
-      return true;
-    }
-
-    return false;
+    return args.some((a) => arg === a);
   }
 
   toNumber(arg: string): number {
@@ -743,7 +682,7 @@ export class AccountValSettings {
       return null;
     }
 
-    let num = toFloat(match[1]);
+    let num = kol.toFloat(match[1]);
 
     if (match[2] == "t") {
       num *= 1_000_000_000_000;
@@ -768,9 +707,6 @@ export class PricingSettings {
   public dateToFetch: string;
   public globalSettings: AccountValSettings;
 
-  /**
-   * A scaler on where we want stuff that's lower priced, to be updated less often. Returns day count.
-   */
   getMaxPriceAge(price: number, amount: number): number {
     return Math.min(this.maxPriceAge, this.internalMaxPriceAge(price, amount));
   }

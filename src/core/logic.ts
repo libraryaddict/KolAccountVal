@@ -1,114 +1,19 @@
+import { kol } from "../api/apiSupplier";
+import { KoLItem, KoLFamiliar, KoLSkill } from "../api/supplierTypings";
+import { ItemResolver } from "../resolvers/items";
+import { PageResolver } from "../resolvers/pages";
+import { PriceResolver } from "../pricing/priceResolver";
+import { AccountValSettings, PricingSettings } from "../settings/settings";
+import { AccountValColors } from "../utils/colors";
+import { AccValTiming } from "../utils/timings";
 import {
-  abort,
-  autosellPrice,
-  equippedAmount,
-  Familiar,
-  getCloset,
-  getDisplay,
-  getFreePulls,
-  getInventory,
-  getNoPulls,
-  getPlayerName,
-  getShop,
-  getStash,
-  getStorage,
-  getWorkshed,
-  haveFamiliar,
-  Item,
-  myId,
-  print,
-  shopAmount,
-  shopPrice,
-  Skill,
-  toInt,
-} from "kolmafia";
-import { ItemResolver, ItemType } from "./ItemResolver";
-import {
-  AccountValSettings,
-  PricingSettings,
+  ItemStatus,
+  ItemType,
+  ValItem,
+  ItemPrice,
+  PriceType,
   SortBy,
-} from "./AccountValSettings";
-import { FetchFromPage } from "./PageResolver";
-import { AccountValColors } from "./AccountValColors";
-import { AccValTiming } from "./AccountValTimings";
-import { PriceResolver } from "./PriceResolver";
-import { ItemPrice, PriceType } from "./types";
-
-export enum ItemStatus {
-  BOUND,
-
-  NO_TRADE,
-
-  FAMILIAR,
-
-  IN_USE,
-
-  SHOP_WORTH,
-}
-
-export class ValItem {
-  name: string;
-  pluralName: string;
-  category?: string;
-  actualItem: Item;
-  tradeableItem: Item;
-  bound: ItemStatus;
-  shopWorth: number;
-  worthMultiplier: number = 1;
-  snapshotSource: string;
-
-  constructor(
-    actualItem: Item,
-    item: Item = actualItem,
-    name: string = item.name,
-    pluralName: string = item.plural,
-    bound?: ItemStatus,
-    snapshotSource?: string,
-  ) {
-    this.actualItem = actualItem;
-    this.name = name;
-    this.pluralName = pluralName;
-    this.tradeableItem = item;
-    this.bound = bound;
-    this.snapshotSource = snapshotSource;
-
-    if (this.bound == null && !item.tradeable) {
-      this.bound = ItemStatus.NO_TRADE;
-    }
-  }
-
-  withCategory(category: string): ValItem {
-    this.category = category;
-
-    return this;
-  }
-
-  getBound(): string {
-    if (this.bound == ItemStatus.BOUND) {
-      return "Bound";
-    } else if (this.bound == ItemStatus.FAMILIAR) {
-      return "Familiar";
-    } else if (this.bound == ItemStatus.IN_USE) {
-      return "In Use";
-    } else if (this.bound == ItemStatus.NO_TRADE) {
-      return "Untradeable";
-    }
-
-    return null;
-  }
-
-  isBound(): boolean {
-    return this.bound == ItemStatus.BOUND || this.bound == ItemStatus.FAMILIAR;
-  }
-
-  isTradeable(): boolean {
-    return (
-      this.bound == null ||
-      this.bound == ItemStatus.IN_USE ||
-      this.bound == ItemStatus.SHOP_WORTH
-    );
-  }
-}
+} from "../models/typings";
 
 export class AccountValLogic {
   ownedItems: Map<ValItem, number> = new Map();
@@ -116,9 +21,9 @@ export class AccountValLogic {
   priceResolver: PriceResolver;
   prices: [ValItem, ItemPrice][] = [];
   categoryOrder: string[] = [];
-  private settings: AccountValSettings;
+  public settings: AccountValSettings;
   jsFilter: (
-    item: Item,
+    item: KoLItem,
     amount: number,
     price?: number,
     sales?: number,
@@ -134,18 +39,49 @@ export class AccountValLogic {
     this.ownedItems.set(item, (this.ownedItems.get(item) | 0) + count);
   }
 
-  bindsIntoAccountFlag(itemType: ItemType) {
-    return (
-      itemType != ItemType.CURRENCY && itemType != ItemType.UNTRADEABLE_ITEM
-    );
+  loadItems() {
+    AccValTiming.start("Load JS Filter");
+    this.loadJsFilter();
+    AccValTiming.stop("Load JS Filter");
+
+    if (this.settings.playerId > 0) {
+      AccValTiming.start("Load Page Items");
+      this.loadPageItems();
+      AccValTiming.stop("Load Page Items");
+
+      return;
+    }
+
+    this.loadSelfItems();
   }
 
-  loadPageItems() {
-    const pager = new FetchFromPage();
+  private loadJsFilter() {
+    if (this.settings.javascriptFilter == "") {
+      return;
+    }
+
+    kol.print(
+      "JS Filter has been set to: " + this.settings.javascriptFilter,
+      AccountValColors.minorNote,
+    );
+
+    try {
+      this.jsFilter = kol.evalJsFilter(this.settings.javascriptFilter);
+    } catch (e) {
+      kol.print(
+        "Invalid jsfilter provided! Error as follows:",
+        AccountValColors.attentionGrabbingWarning,
+      );
+      kol.print("");
+      throw e;
+    }
+  }
+
+  private loadPageItems() {
+    const pager = new PageResolver();
 
     if (this.settings.fetchShop) {
       const items = pager.getStore(this.settings.playerId);
-
       items.forEach((i) => {
         const item = new ValItem(i.item);
 
@@ -160,7 +96,6 @@ export class AccountValLogic {
 
     if (this.settings.fetchDisplaycase) {
       const items = pager.getDisplaycase(this.settings.playerId);
-
       items.forEach((v, k) => {
         if (!this.categoryOrder.includes(k.shelf)) {
           this.categoryOrder.push(k.shelf);
@@ -174,27 +109,30 @@ export class AccountValLogic {
 
     if (this.settings.fetchFamiliars != false) {
       const familiars = pager.getFamiliars(this.settings.playerId);
-
       resolvedFamiliars = familiars.length > 0;
-
       this.resolver.resolveFamiliars(familiars, this.ownedItems);
     }
 
     if (this.settings.fetchSnapshot == true) {
-      const snapshot = pager.getSnapshot(getPlayerName(this.settings.playerId));
-      const familiars: Familiar[] = [];
-      const skills: Skill[] = [];
-      const items: Map<Item, number> = new Map();
+      const snapshot = pager.getSnapshot(
+        kol.getPlayerName(this.settings.playerId),
+      );
+      const familiars: KoLFamiliar[] = [];
+      const skills: KoLSkill[] = [];
+      const items: Map<KoLItem, number> = new Map();
 
       for (const item of snapshot) {
-        if (item instanceof Familiar) {
-          familiars.push(item);
-        } else if (item instanceof Skill) {
-          skills.push(item);
-        } else if (item instanceof Item) {
-          items.set(item, 1);
+        if ("hatchling" in item) {
+          familiars.push(item as KoLFamiliar);
+        } else if ("name" in item && !("tradeable" in item)) {
+          skills.push(item as KoLSkill);
+        } else if ("tradeable" in item) {
+          items.set(item as KoLItem, 1);
         } else {
-          items.set(item[0], item[1]);
+          items.set(
+            (item as [KoLItem, number])[0],
+            (item as [KoLItem, number])[1],
+          );
         }
       }
 
@@ -218,10 +156,9 @@ export class AccountValLogic {
         }
       }
 
-      const owned: Map<Item, [ValItem, number]> = new Map(
+      const owned: Map<KoLItem, [ValItem, number]> = new Map(
         [...this.ownedItems].map(([k, v]) => [k.tradeableItem, [k, v]]),
       );
-
       items.forEach((v, k) => {
         const boundItem = this.resolver.accValStuff.find(
           (i) => i.actualItem == k,
@@ -252,7 +189,6 @@ export class AccountValLogic {
 
         if (boundItem.itemType == ItemType.UNTRADEABLE_ITEM) {
           const untradeable = boundItem.untradeableItem;
-
           v -= owned.has(k) ? owned.get(k)[1] : 0;
 
           if (v <= 0) {
@@ -281,65 +217,20 @@ export class AccountValLogic {
     this.resolveNoTrades();
   }
 
-  loadJsFilter() {
-    if (this.settings.javascriptFilter == "") {
-      return;
-    }
-
-    while (this.settings.javascriptFilter.includes("$kol")) {
-      this.settings.javascriptFilter = this.settings.javascriptFilter.replace(
-        "$kol",
-        'require("kolmafia")',
-      );
-    }
-
-    print(
-      "JS Filter has been set to: " + this.settings.javascriptFilter,
-      AccountValColors.minorNote,
-    );
-
-    try {
-      this.jsFilter = eval(
-        `with (require("kolmafia")) ` + this.settings.javascriptFilter,
-      );
-    } catch (e) {
-      print(
-        "Invalid jsfilter provided! Error as follows:",
-        AccountValColors.attentionGrabbingWarning,
-      );
-      print();
-      throw e;
-    }
-  }
-
-  loadItems() {
-    AccValTiming.start("Load JS Filter");
-    this.loadJsFilter();
-    AccValTiming.stop("Load JS Filter");
-
-    if (this.settings.playerId > 0) {
-      AccValTiming.start("Load Page Items");
-      this.loadPageItems();
-      AccValTiming.stop("Load Page Items");
-
-      return;
-    }
-
+  private loadSelfItems() {
     AccValTiming.start("Resolve Familiar Items");
-    const famItems: Map<Item, number> = this.resolver.resolveFamiliarItems();
+    const famItems = this.resolver.resolveFamiliarItems();
     AccValTiming.stop("Resolve Familiar Items");
 
     AccValTiming.start("Resolve Session");
-    const sessionItems: Map<Item, number> = this.resolver.resolveSessionItems();
+    const sessionItems = this.resolver.resolveSessionItems();
     AccValTiming.stop("Resolve Session");
 
     AccValTiming.start("Resolve Inventory");
-    const mega: { [item: string]: number } = this.settings.fetchInventory
-      ? getInventory()
-      : {};
+    const mega = this.settings.fetchInventory ? kol.getInventory() : {};
     AccValTiming.stop("Resolve Inventory");
 
-    const megaExtra: Map<Item, { count: number; shelf: string }> = new Map();
+    const megaExtra: Map<KoLItem, { count: number; shelf: string }> = new Map();
 
     const add = (stuff: { [item: string]: number }) => {
       Object.entries(stuff).forEach(([k, v]) => {
@@ -349,57 +240,53 @@ export class AccountValLogic {
 
     if (this.settings.fetchCloset) {
       AccValTiming.start("Resolve and Add Closet");
-      add(getCloset());
+      add(kol.getCloset());
       AccValTiming.stop("Resolve and Add Closet");
     }
 
     if (this.settings.fetchStorage) {
       AccValTiming.start("Resolve and Add Storage");
-      add(getStorage());
-      add(getFreePulls());
-      add(getNoPulls());
+      add(kol.getStorage());
+      add(kol.getFreePulls());
+      add(kol.getNoPulls());
       AccValTiming.stop("Resolve and Add Storage");
     }
 
     if (this.settings.fetchClan) {
       AccValTiming.start("Resolve and Add Clan Stash");
-      add(getStash());
+      add(kol.getStash());
       AccValTiming.stop("Resolve and Add Clan Stash");
     }
 
     if (this.settings.fetchDisplaycase) {
       if (this.settings.doCategories) {
         AccValTiming.start("Resolve and Add Display Case with Shelves");
-        const pager = new FetchFromPage();
-        const items = pager.getDisplaycase(toInt(myId()));
-
+        const pager = new PageResolver();
+        const items = pager.getDisplaycase(kol.toInt(kol.myId()));
         items.forEach((v, k) => {
           if (!this.categoryOrder.includes(k.shelf)) {
             this.categoryOrder.push(k.shelf);
           }
 
-          megaExtra.set(k.item, {
-            shelf: k.shelf,
-            count: v,
-          });
+          megaExtra.set(k.item, { shelf: k.shelf, count: v });
         });
         AccValTiming.stop("Resolve and Add Display Case with Shelves");
       } else {
         AccValTiming.start("Resolve and Add Display Case");
-        add(getDisplay());
+        add(kol.getDisplay());
         AccValTiming.stop("Resolve and Add Display Case");
       }
     }
 
     if (this.settings.fetchShop && !this.settings.shopWorth) {
       AccValTiming.start("Resolve and Add Shop");
-      add(getShop());
+      add(kol.getShop());
       AccValTiming.stop("Resolve and Add Shop");
     }
 
     AccValTiming.start("Process All Items");
 
-    for (const item of Item.all()) {
+    for (const item of KoLItem.all()) {
       let amount = mega[item.name] ?? 0;
 
       if (this.settings.fetchSession) {
@@ -407,7 +294,7 @@ export class AccountValLogic {
       }
 
       if (this.settings.fetchInventory) {
-        amount += equippedAmount(item) + (famItems.get(item) ?? 0);
+        amount += kol.equippedAmount(item) + (famItems.get(item) ?? 0);
       }
 
       let category: string;
@@ -420,13 +307,12 @@ export class AccountValLogic {
       if (
         this.settings.fetchShop &&
         this.settings.shopWorth &&
-        shopAmount(item) > 0
+        kol.shopAmount(item) > 0
       ) {
         const i = new ValItem(item).withCategory(category);
         i.bound = ItemStatus.SHOP_WORTH;
-        i.shopWorth = shopPrice(item);
-
-        this.ownedItems.set(i, shopAmount(item));
+        i.shopWorth = kol.shopPrice(item);
+        this.ownedItems.set(i, kol.shopAmount(item));
         continue;
       }
 
@@ -442,27 +328,24 @@ export class AccountValLogic {
     if (this.settings.fetchFamiliars != false) {
       AccValTiming.start("Resolve Familiars");
       this.resolver.resolveFamiliars(
-        Familiar.all().filter((f) => haveFamiliar(f)),
+        KoLFamiliar.all().filter((f) => kol.haveFamiliar(f)),
         this.ownedItems,
       );
       AccValTiming.stop("Resolve Familiars");
     }
 
-    // Check our current workshed
     if (this.settings.fetchingEverywhereish && this.settings.fetchingNonItems) {
       AccValTiming.start("Resolve Workshed");
 
       if (this.settings.doBound || this.settings.doTradeables) {
-        const i = getWorkshed();
+        const i = kol.getWorkshed();
 
-        if (i != null && i != Item.none) {
-          if (
-            i.tradeable ? this.settings.doTradeables : this.settings.doBound
-          ) {
-            this.addItem(
-              new ValItem(i, i, i.name, i.plural, ItemStatus.IN_USE),
-            );
-          }
+        if (
+          i != null &&
+          i != KoLItem.none &&
+          (i.tradeable ? this.settings.doTradeables : this.settings.doBound)
+        ) {
+          this.addItem(new ValItem(i, i, i.name, i.plural, ItemStatus.IN_USE));
         }
       }
 
@@ -495,7 +378,6 @@ export class AccountValLogic {
 
   private resolveNoTrades() {
     const copy: { [item: string]: [ValItem, number] } = {};
-
     this.ownedItems.forEach((v, k) => {
       copy[k.tradeableItem.name] = [k, v];
     });
@@ -519,11 +401,10 @@ export class AccountValLogic {
         continue;
       }
 
-      // If item can't be resolved to a price at all
       if (
         !item.isBound() &&
         (!item.tradeableItem.tradeable || item.tradeableItem.gift) &&
-        autosellPrice(item.tradeableItem) == 0
+        kol.autosellPrice(item.tradeableItem) == 0
       ) {
         this.ownedItems.delete(item);
         continue;
@@ -534,7 +415,6 @@ export class AccountValLogic {
         continue;
       }
 
-      // If we're not doing bound items, and this is a bound item..
       if (
         !this.settings.doBound &&
         item.isBound() &&
@@ -544,7 +424,6 @@ export class AccountValLogic {
         continue;
       }
 
-      // If we're not doing familiars and this is a familiar
       if (
         item.bound == ItemStatus.FAMILIAR &&
         (this.settings.fetchFamiliars == false ||
@@ -554,7 +433,6 @@ export class AccountValLogic {
         continue;
       }
 
-      // If we're not doing tradeables, and this isn't a bound item, and is tradeable
       if (
         !this.settings.doTradeables &&
         item.tradeableItem.tradeable &&
@@ -564,7 +442,6 @@ export class AccountValLogic {
         continue;
       }
 
-      // If we're not doing non-tradeables, and this is a non-tradeable that isn't bound. Also is worth something..
       if (
         !this.settings.doNontradeables &&
         !item.tradeableItem.tradeable &&
@@ -614,14 +491,13 @@ export class AccountValLogic {
           (p) => !p.negated && p.preset.name().includes("autosell"),
         )
       ) {
-        price.price = autosellPrice(item.actualItem);
+        price.price = kol.autosellPrice(item.actualItem);
       }
 
       prices.push([item, price]);
     };
 
     AccValTiming.start("Add Logic Prices");
-
     this.priceResolver.bulkLoad(
       [...this.ownedItems.keys()].map((i) => i.tradeableItem),
     );
@@ -654,12 +530,10 @@ export class AccountValLogic {
 
     AccValTiming.stop("Add Logic Prices");
 
-    // TODO Sort tocheck
-
     let checked = -1;
 
     if (toCheck.length > 200) {
-      print(
+      kol.print(
         "Think this will take too long? Use the parameter 'fast', it's less accurate!",
         AccountValColors.helpfulStateInfo,
       );
@@ -667,7 +541,6 @@ export class AccountValLogic {
 
     if (toCheck.length > 0) {
       AccValTiming.start("Check Remaining Logic Item Prices");
-
       this.priceResolver.bulkLoad(toCheck.map((i) => i[0].tradeableItem));
 
       for (const check of toCheck) {
@@ -675,7 +548,7 @@ export class AccountValLogic {
 
         if (++checked % 20 == 0 && lastPrinted + 1000 < Date.now()) {
           lastPrinted = Date.now();
-          print(
+          kol.print(
             "Checking value of " +
               i.name +
               " (" +
@@ -736,11 +609,11 @@ export class AccountValLogic {
       sorter = (v1, v2) => v1[0].name.localeCompare(v2[0].name);
     } else if (this.settings.sortBy == SortBy.ITEM_ID) {
       sorter = (v1, v2) =>
-        toInt(v1[0].tradeableItem) - toInt(v2[0].tradeableItem);
+        kol.toInt(v1[0].tradeableItem) - kol.toInt(v2[0].tradeableItem);
     } else if (this.settings.sortBy == SortBy.SALES_VOLUME) {
       sorter = (v1, v2) => v1[1].volume - v2[1].volume;
     } else {
-      abort("Unknown sort option " + this.settings.sortBy);
+      kol.abort("Unknown sort option " + this.settings.sortBy);
     }
 
     if (this.settings.doCategories && this.categoryOrder != null) {

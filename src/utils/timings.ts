@@ -1,6 +1,6 @@
-import { printHtml } from "kolmafia";
-import { AccountValUtils } from "./AccountValUtils";
-import { AccountValSettings } from "./AccountValSettings";
+import { kol } from "../api/apiSupplier";
+import { AccountValUtils } from "./utils";
+import { AccountValSettings } from "../settings/settings";
 
 export class AccValTiming {
   static tracking: ["STARTED" | "STOPPED", AccValTiming][] = [];
@@ -46,7 +46,7 @@ export class AccValTiming {
     this.stopped = Date.now();
 
     if (print) {
-      printHtml(
+      kol.printHtml(
         `<font color='blue'>${this.getName()}<font color='green'> time taken: </font>${this.getTimeStr()}</font>`,
       );
     }
@@ -91,7 +91,6 @@ export class AccValTiming {
       this.tracking.push(
         (existing = ["STARTED", new AccValTiming(name, withSteps)]),
       );
-
       existing[1].depth =
         this.tracking.filter(([state, t]) => t.stopped == null).length - 1;
     } else {
@@ -121,7 +120,6 @@ export class AccValTiming {
     this.tracking.push(["STOPPED", existing[1]]);
 
     existing[1].stop(print);
-
     this.timingsSlowdown += Date.now() - started;
 
     return existing[1];
@@ -141,25 +139,23 @@ export class AccValTiming {
     });
 
     for (const [state, timing] of sortedTimes) {
-      const depthStr = `<font color='gray'>${">&nbsp;".repeat(
-        timing.depth,
-      )}</font>`;
+      const depthStr = `<font color='gray'>${">&nbsp;".repeat(timing.depth)}</font>`;
 
       if (method == "PRINT_JUST_ONCE") {
         if (state != "STARTED") {
           continue;
         }
 
-        printHtml(
+        kol.printHtml(
           `${depthStr}<font color='blue'>${timing.getName()} <font color='green'>time taken:</font> ${timing.getTimeStr()}</font>`,
         );
       } else if (method == "PRINT_START_AND_END") {
         if (state == "STARTED") {
-          printHtml(
+          kol.printHtml(
             `${depthStr}<font color='blue'>${timing.getName()}</font> <font color='green'>started</font>`,
           );
         } else {
-          printHtml(
+          kol.printHtml(
             `${depthStr}<font color='blue'>${timing.getName()}<font color='green'> stopped, time taken: </font>${timing.getTimeStr()}</font>`,
           );
         }
@@ -168,16 +164,14 @@ export class AccValTiming {
           continue;
         }
 
-        printHtml(
+        kol.printHtml(
           `${depthStr}<font color='blue'>${timing.getName()}<font color='green'> time taken: </font>${timing.getTimeStr()}</font>`,
         );
       }
     }
 
-    printHtml(
-      `<font color='green'>The usage of timings took an extra: </font><font color='blue'>${AccountValUtils.getNumber(
-        this.timingsSlowdown,
-      )}ms</font>`,
+    kol.printHtml(
+      `<font color='green'>The usage of timings took an extra: </font><font color='blue'>${AccountValUtils.getNumber(this.timingsSlowdown)}ms</font>`,
     );
   }
 }

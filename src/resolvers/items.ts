@@ -1,35 +1,16 @@
-import {
-  Familiar,
-  familiarEquippedEquipment,
-  getCampground,
-  getPermedSkills,
-  getProperty,
-  haveFamiliar,
-  haveSkill,
-  Item,
-  myFamiliar,
-  myGardenType,
-  mySessionItems,
-  print,
-  setProperty,
-  Skill,
-  skillModifier,
-  toBoolean,
-  toInt,
-  toItem,
-  visitUrl,
-} from "kolmafia";
-import { ItemStatus, ValItem } from "./AccountValLogic";
-import { AccountValColors } from "./AccountValColors";
-import { CoinmasterResolver } from "./CoinmasterResolver";
-import { PriceResolver } from "./PriceResolver";
-import accountvalBinds from "../data/accountval_binds.txt";
+import { kol } from "../api/apiSupplier";
+import { KoLItem, KoLSkill, KoLFamiliar } from "../api/supplierTypings";
+import { ItemStatus, ItemType, ValItem } from "../models/typings";
+import { AccountValColors } from "../utils/colors";
+import { CoinmasterResolver } from "./coinmaster";
+import { PriceResolver } from "../pricing/priceResolver";
+import accountvalBinds from "../../data/accountval_binds.txt";
 
 class AccValStuff {
   itemType: ItemType;
-  actualItem: Item;
-  skill?: Skill;
-  untradeableItem?: Item;
+  actualItem: KoLItem;
+  skill?: KoLSkill;
+  untradeableItem?: KoLItem;
   garden?: string;
   script?: string;
   userSetting?: string;
@@ -39,32 +20,10 @@ class AccValStuff {
   currencyAmount?: number;
 }
 
-export enum ItemType {
-  UNTRADEABLE_ITEM,
-
-  BOOK,
-
-  PROPERTY,
-
-  EUDORA,
-
-  GARDEN,
-
-  VISIT_URL_CHECK,
-
-  SKILL,
-
-  CURRENCY,
-
-  CAMPGROUND,
-
-  SCRIPT,
-}
-
 export class ItemResolver {
   private visitCache: Map<string, string> = new Map();
   accValStuff: AccValStuff[];
-  private accountValCache: Map<Item, boolean> = new Map();
+  private accountValCache: Map<KoLItem, boolean> = new Map();
   private accountValVisitCachePropName = "_accountValVisitCache";
   prices: PriceResolver;
 
@@ -74,9 +33,9 @@ export class ItemResolver {
   }
 
   loadCache() {
-    const prop: string[] = getProperty(this.accountValVisitCachePropName).split(
-      ",",
-    );
+    const prop: string[] = kol
+      .getProperty(this.accountValVisitCachePropName)
+      .split(",");
 
     for (const p of prop) {
       if (!p.includes(":")) {
@@ -84,40 +43,36 @@ export class ItemResolver {
       }
 
       const spl = p.split(":");
-
-      this.accountValCache.set(toItem(toInt(spl[0])), spl[1].startsWith("t"));
+      this.accountValCache.set(
+        kol.toItem(kol.toInt(spl[0])),
+        spl[1].startsWith("t"),
+      );
     }
   }
 
   saveCache() {
     const values: string[] = [];
-
-    this.accountValCache.forEach((val, key) => {
-      values.push(toInt(key) + ":" + (val ? "t" : "f"));
-    });
-
+    this.accountValCache.forEach((val, key) =>
+      values.push(kol.toInt(key) + ":" + (val ? "t" : "f")),
+    );
     values.sort((v1, v2) => v1.localeCompare(v2));
 
     const val = values.join(",");
 
-    if (getProperty(this.accountValVisitCachePropName) == val) {
+    if (kol.getProperty(this.accountValVisitCachePropName) == val) {
       return;
     }
 
-    setProperty(this.accountValVisitCachePropName, values.join(","));
+    kol.setProperty(this.accountValVisitCachePropName, values.join(","));
   }
 
-  /**
-   * Get the items from stuff like url visits
-   */
-  getUrledItems(): [Item, ItemStatus?][] {
-    const items: [Item, ItemStatus][] = [];
+  getUrledItems(): [KoLItem, ItemStatus?][] {
+    const items: [KoLItem, ItemStatus][] = [];
     const origSize = this.accountValCache.size;
 
     for (const s of this.accValStuff) {
-      // Skills that are marked as no-perm but are permed, basically librams
       if (s.itemType == ItemType.BOOK) {
-        if (haveSkill(s.skill)) {
+        if (kol.haveSkill(s.skill)) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.EUDORA) {
@@ -139,15 +94,15 @@ export class ItemResolver {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.GARDEN) {
-        if (myGardenType() == s.garden) {
+        if (kol.myGardenType() == s.garden) {
           items.push([s.actualItem, ItemStatus.IN_USE]);
         }
       } else if (s.itemType == ItemType.SKILL) {
-        if (getPermedSkills()[s.skill.name]) {
+        if (kol.getPermedSkills()[s.skill.name]) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.CAMPGROUND) {
-        if (getCampground()[s.actualItem.name] != null) {
+        if (kol.getCampground()[s.actualItem.name] != null) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.SCRIPT) {
@@ -164,14 +119,11 @@ export class ItemResolver {
     return items;
   }
 
-  /**
-   * This way we can check if they have "always airport" and don't have "_airport today"
-   */
   private testProperty(property: string): boolean {
     let result: boolean = true;
 
     for (const prop of property.split("&")) {
-      const isTrue = toBoolean(getProperty(prop.replace("!", "")));
+      const isTrue = kol.toBoolean(kol.getProperty(prop.replace("!", "")));
       const isNotNegated = !prop.includes("!");
       result = result && isTrue == isNotNegated;
     }
@@ -181,8 +133,8 @@ export class ItemResolver {
 
   private addItem(
     ownedItems: Map<ValItem, number>,
-    actualItem: Item,
-    item: Item,
+    actualItem: KoLItem,
+    item: KoLItem,
     name: string,
     plural: string,
     bound?: ItemStatus,
@@ -191,7 +143,6 @@ export class ItemResolver {
   ) {
     const v = new ValItem(actualItem, item, name, plural, bound);
     v.worthMultiplier = worthMultiplier;
-
     ownedItems.set(v, (ownedItems.get(v) | 0) + count);
   }
 
@@ -233,7 +184,6 @@ export class ItemResolver {
         }
 
         const v = pair[0];
-
         this.addItem(
           ownedItems,
           item,
@@ -249,7 +199,7 @@ export class ItemResolver {
           s.currencyAmount ?? 1,
         );
       } catch (e) {
-        print(
+        kol.print(
           "You probably need to update mafia! Got an error! " + e,
           AccountValColors.attentionGrabbingWarning,
         );
@@ -257,7 +207,7 @@ export class ItemResolver {
     }
   }
 
-  resolveFamiliars(familiars: Familiar[], ownedItems: Map<ValItem, number>) {
+  resolveFamiliars(familiars: KoLFamiliar[], ownedItems: Map<ValItem, number>) {
     for (const fam of familiars) {
       if (!fam.hatchling.tradeable) {
         continue;
@@ -267,27 +217,24 @@ export class ItemResolver {
         ownedItems,
         fam.hatchling,
         fam.hatchling,
-        fam + "",
-        fam + "",
+        fam.toString(),
+        fam.toString(),
         ItemStatus.FAMILIAR,
       );
     }
   }
 
-  /**
-   * Items that are equipped on an unused fam doesn't show otherwise
-   */
   resolveFamiliarItems() {
-    const famEquipped: Map<Item, number> = new Map();
+    const famEquipped: Map<KoLItem, number> = new Map();
 
-    for (const fam of Familiar.all()) {
-      if (!haveFamiliar(fam) || myFamiliar() == fam) {
+    for (const fam of KoLFamiliar.all()) {
+      if (!kol.haveFamiliar(fam) || kol.myFamiliar() == fam) {
         continue;
       }
 
-      const item = familiarEquippedEquipment(fam);
+      const item = kol.familiarEquippedEquipment(fam);
 
-      if (item == null || item == Item.none) {
+      if (item == null || item == KoLItem.none) {
         continue;
       }
 
@@ -298,16 +245,15 @@ export class ItemResolver {
   }
 
   resolveSessionItems() {
-    const map: Map<Item, number> = new Map();
-
-    Object.entries(mySessionItems()).forEach((value) => {
-      map.set(Item.get(value[0]), value[1]);
-    });
+    const map: Map<KoLItem, number> = new Map();
+    Object.entries(kol.mySessionItems()).forEach((value) =>
+      map.set(KoLItem.get(value[0]), value[1]),
+    );
 
     return map;
   }
 
-  visitCheck(item: Item, url: string, find: string) {
+  visitCheck(item: KoLItem, url: string, find: string) {
     if (this.accountValCache.has(item)) {
       return this.accountValCache.get(item);
     }
@@ -315,12 +261,11 @@ export class ItemResolver {
     let page = this.visitCache.get(url);
 
     if (page == null) {
-      page = visitUrl(url);
+      page = kol.visitUrl(url);
       this.visitCache.set(url, page);
     }
 
     const result: boolean = page.includes(find);
-
     this.accountValCache.set(item, result);
 
     return result;
@@ -344,10 +289,10 @@ export class ItemResolver {
       const v: AccValStuff = new AccValStuff();
 
       try {
-        v.actualItem = Item.get(spl[1]);
+        v.actualItem = KoLItem.get(spl[1]);
       } catch (e) {
-        print(
-          "You probably need to update mafia! Got an error! " + e,
+        kol.print(
+          "Error! Update mafia? " + e,
           AccountValColors.attentionGrabbingWarning,
         );
         continue;
@@ -356,11 +301,11 @@ export class ItemResolver {
       switch (spl[0]) {
         case "i":
           v.itemType = ItemType.UNTRADEABLE_ITEM;
-          v.untradeableItem = Item.get(spl[2]);
+          v.untradeableItem = KoLItem.get(spl[2]);
           break;
         case "b":
           v.itemType = ItemType.BOOK;
-          v.skill = Skill.get(spl[2]);
+          v.skill = KoLSkill.get(spl[2]);
           break;
         case "p":
           v.itemType = ItemType.PROPERTY;
@@ -382,9 +327,8 @@ export class ItemResolver {
         case "t":
           v.itemType = ItemType.CURRENCY;
 
-          // Some currencies are resolved later
           if (spl.length > 2) {
-            v.untradeableItem = Item.get(spl[2]);
+            v.untradeableItem = KoLItem.get(spl[2]);
             v.currencyAmount = parseInt(spl[3]);
           }
 
@@ -401,7 +345,7 @@ export class ItemResolver {
           continue loop;
           break;
         default:
-          print(
+          kol.print(
             "Found line '" + line + "' which I can't handle!",
             AccountValColors.attentionGrabbingWarning,
           );
@@ -436,7 +380,7 @@ export class ItemResolver {
         continue loop;
       }
 
-      print(
+      kol.print(
         "Missing a tradeable item for " + v.actualItem,
         AccountValColors.attentionGrabbingWarning,
       );
@@ -448,37 +392,25 @@ export class ItemResolver {
   }
 
   loadSkills(values: AccValStuff[]) {
-    // Skip items that don't last across ascensions or can't be valued
-    const itemsSkills: Map<Item, Skill> = new Map(
-      Item.all()
-        .map((i) => [i, skillModifier(i, "Skill")] as [Item, Skill])
+    const itemsSkills: Map<KoLItem, KoLSkill> = new Map(
+      KoLItem.all()
+        .map((i) => [i, kol.skillModifier(i, "Skill")] as [KoLItem, KoLSkill])
         .filter(
           ([i, skill]) =>
-            !i.reusable && !i.quest && !i.gift && skill != Skill.none,
+            !i.reusable && !i.quest && !i.gift && skill != KoLSkill.none,
         ),
     );
-
     const alreadyNoted = values.map((v) => v.actualItem);
 
-    // Now we load the skills we have
     for (const [i, skill] of itemsSkills) {
-      // Skip items that are not tradeable skills, because you either have a skill linked to an untradeable item, or a tradeable item.
-      // If its linked to an untradeable, then we can check the untradeable item itself. Not bother with the skill.
-      if (!i.tradeable) {
-        continue;
-      }
-
-      // Skip items we already have stored
-      if (alreadyNoted.includes(i)) {
+      if (!i.tradeable || alreadyNoted.includes(i)) {
         continue;
       }
 
       const v: AccValStuff = new AccValStuff();
-
       v.itemType = ItemType.SKILL;
       v.actualItem = i;
       v.skill = skill;
-
       values.push(v);
     }
   }
