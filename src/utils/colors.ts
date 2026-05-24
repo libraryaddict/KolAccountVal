@@ -71,8 +71,8 @@ export function showAccountvalColors(name: string) {
 export function initAccountValColors() {
   const def = kol.isDarkMode() ? "dark" : "default";
   loadAccountvalColors(
-    kol.getProperty("accountvalColorScheme")
-      ? kol.getProperty("accountvalColorScheme")
+    kol.retrieveCache("accountvalColorScheme", "small_persist")
+      ? kol.retrieveCache("accountvalColorScheme", "small_persist")
       : def,
   );
 }

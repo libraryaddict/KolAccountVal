@@ -2,7 +2,6 @@ import { PricingSettings } from "../../settings/settings";
 import { ItemPrice, PriceType } from "../../models/typings";
 import { PriceVolunteer } from "../priceInterface";
 import { KoLItem } from "../../api/supplierTypings";
-import { kol } from "../../api/apiSupplier";
 
 export interface ItemPriceMap {
   updated: number;
@@ -25,7 +24,7 @@ export abstract class FlatfilePrices implements PriceVolunteer {
   }
 
   resolve(item: KoLItem): ItemPrice {
-    const price = this.prices[kol.toInt(item)];
+    const price = this.prices[item.id];
 
     if (price == null) {
       return null;

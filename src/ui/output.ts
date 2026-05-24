@@ -57,7 +57,11 @@ export class ReportOutput {
       return;
     }
 
-    kol.bufferToFile(this.output.join("\n"), this.settings.logOutputTo);
+    kol.storeCache(
+      this.settings.logOutputTo,
+      this.output.join("\n"),
+      "large_persist",
+    );
     kol.print(
       `accounval results printed to 'data/${this.settings.logOutputTo}'`,
     );

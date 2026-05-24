@@ -5,7 +5,7 @@
     "allowUnreachableCode": true,
     "allowUnusedLabels": false,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["esnext"],
+    "lib": ["esnext", "DOM"],
     "module": "commonjs",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,

@@ -48,7 +48,7 @@ export class IrratPrices extends FlatfilePrices {
     const toFetch = this.settings.dateToFetch;
 
     if (toFetch == null) {
-      return kol.fileToBuffer("irrats_item_prices.txt");
+      return kol.retrieveCache("irrats_item_prices.txt", "large_persist");
     }
 
     let finalDateString: string;

@@ -1,5 +1,5 @@
-import { kol, setProvider } from "./api/apiSupplier";
-import { KolmafiaProvider } from "./api/kolmafiaProvider";
+import { setProvider } from "./api/apiSupplier";
+import { KolmafiaProvider } from "./api/provider/kolmafiaProvider";
 import { AccountValLogic } from "./core/logic";
 import { AccountValSettings, PricingSettings } from "./settings/settings";
 import { AccountValUtils } from "./utils/utils";
@@ -206,14 +206,6 @@ class AccountVal {
 export function main(command: string) {
   setProvider(new KolmafiaProvider());
   initAccountValColors();
-
-  const requiredRevision = 28933;
-
-  if (kol.getRevision() < requiredRevision) {
-    kol.printHtml(
-      `<font color='red'>You need to update KoLMafia to the latest version. This script will not work properly on versions older than ${requiredRevision}.</font>`,
-    );
-  }
 
   const val = new AccountVal();
 

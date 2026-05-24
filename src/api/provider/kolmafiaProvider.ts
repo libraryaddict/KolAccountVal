@@ -2,8 +2,6 @@ import {
   print,
   printHtml,
   abort,
-  getProperty,
-  setProperty,
   visitUrl,
   getRevision,
   myId,
@@ -21,10 +19,7 @@ import {
   spleenLimit,
   myLevel,
   isDarkMode,
-  toBoolean,
-  toFloat,
   Item,
-  toInt,
   toItem,
   Familiar,
   toFamiliar,
@@ -33,7 +28,6 @@ import {
   bufferToFile,
   fileToBuffer,
   autosellPrice,
-  shopAmount,
   shopPrice,
   Coinmaster,
   sellPrice,
@@ -62,11 +56,15 @@ import {
   getRelated,
   allNormalOutfits,
   itemType,
-  isDiscardable,
   Slot,
   toSlot,
+  sessionStorage,
+  setProperty,
+  getProperty,
 } from "kolmafia";
-import { KoLAPI } from "./supplierTypings";
+import { DataType, KoLAPI } from "../supplierTypings";
+
+const requiredRevision = 28933;
 
 export class KolmafiaProvider implements KoLAPI {
   print(message: string, color?: string): void {
@@ -81,20 +79,18 @@ export class KolmafiaProvider implements KoLAPI {
     abort(message);
   }
 
-  getProperty(name: string): string {
-    return getProperty(name);
-  }
-
-  setProperty(name: string, value: string): void {
-    setProperty(name, value);
-  }
-
   visitUrl(url: string): string {
     return visitUrl(url);
   }
 
-  getRevision(): number {
-    return getRevision();
+  checkOutdated(): void {
+    if (getRevision() >= requiredRevision) {
+      return;
+    }
+
+    this.printHtml(
+      `<font color='red'>You need to update KoLMafia to the latest version. This script will not work properly on versions older than ${requiredRevision}.</font>`,
+    );
   }
 
   myId(): string {
@@ -157,19 +153,7 @@ export class KolmafiaProvider implements KoLAPI {
     return isDarkMode();
   }
 
-  toBoolean(val: string): boolean {
-    return toBoolean(val);
-  }
-
-  toFloat(val: string): number {
-    return toFloat(val);
-  }
-
-  toInt(val: string | Item): number {
-    return typeof val == "string" ? toInt(val) : toInt(val);
-  }
-
-  toItem(val: string | number): Item {
+  toItem(val: number): Item {
     if (typeof val == "string") {
       return Item.get(val);
     }
@@ -193,20 +177,28 @@ export class KolmafiaProvider implements KoLAPI {
     return entityDecode(val);
   }
 
-  bufferToFile(buffer: string, file: string): void {
-    bufferToFile(buffer, file);
+  storeCache(key: string, value: string, dataType: DataType): void {
+    if (dataType == "large_persist") {
+      bufferToFile(key, value);
+    } else if (dataType == "small_persist") {
+      setProperty(key, value);
+    } else {
+      sessionStorage.setItem(key, value);
+    }
   }
 
-  fileToBuffer(file: string): string {
-    return fileToBuffer(file);
+  retrieveCache(key: string, dataType: DataType): string {
+    if (dataType == "large_persist") {
+      return fileToBuffer(key);
+    } else if (dataType == "small_persist") {
+      return getProperty(dataType);
+    }
+
+    return sessionStorage.getItem(key) ?? "";
   }
 
   autosellPrice(item: Item): number {
     return autosellPrice(item);
-  }
-
-  shopAmount(item: Item): number {
-    return shopAmount(item);
   }
 
   shopPrice(item: Item): number {
@@ -233,44 +225,56 @@ export class KolmafiaProvider implements KoLAPI {
     return familiarEquippedEquipment(fam);
   }
 
-  getInventory(): { [item: string]: number } {
-    return getInventory();
+  itemsToMap(items: { [item: string]: number }): Map<Item, number> {
+    const map: Map<Item, number> = new Map();
+
+    for (const [key, value] of Object.entries(items)) {
+      map.set(Item.get(key), value);
+    }
+
+    return map;
   }
 
-  getCloset(): { [item: string]: number } {
-    return getCloset();
+  getInventory(): Map<Item, number> {
+    return this.itemsToMap(getInventory());
   }
 
-  getStorage(): { [item: string]: number } {
-    return getStorage();
+  getCloset(): Map<Item, number> {
+    return this.itemsToMap(getCloset());
   }
 
-  getFreePulls(): { [item: string]: number } {
-    return getFreePulls();
+  getStorage(): Map<Item, number> {
+    const map: Map<Item, number> = this.itemsToMap(getStorage());
+
+    for (const items of [getFreePulls(), getNoPulls()]) {
+      const m = this.itemsToMap(items);
+
+      for (const [item, amount] of m) {
+        map.set(item, (map.get(item) ?? 0) + amount);
+      }
+    }
+
+    return map;
   }
 
-  getNoPulls(): { [item: string]: number } {
-    return getNoPulls();
+  getStash(): Map<Item, number> {
+    return this.itemsToMap(getStash());
   }
 
-  getStash(): { [item: string]: number } {
-    return getStash();
+  getDisplay(): Map<Item, number> {
+    return this.itemsToMap(getDisplay());
   }
 
-  getDisplay(): { [item: string]: number } {
-    return getDisplay();
+  getShop(): Map<Item, number> {
+    return this.itemsToMap(getShop());
   }
 
-  getShop(): { [item: string]: number } {
-    return getShop();
+  mySessionItems(): Map<Item, number> {
+    return this.itemsToMap(mySessionItems());
   }
 
-  mySessionItems(): { [item: string]: number } {
-    return mySessionItems();
-  }
-
-  getCampground(): { [item: string]: number } {
-    return getCampground();
+  getCampground(): Map<Item, number> {
+    return this.itemsToMap(getCampground());
   }
 
   myFamiliar(): Familiar {
@@ -289,8 +293,8 @@ export class KolmafiaProvider implements KoLAPI {
     return getPermedSkills();
   }
 
-  skillModifier(item: Item, mod: string): Skill {
-    return skillModifier(item, mod);
+  associatedSkill(item: Item): Skill {
+    return skillModifier(item, "Skill");
   }
 
   myGardenType(): string {
@@ -301,8 +305,8 @@ export class KolmafiaProvider implements KoLAPI {
     return getWorkshed();
   }
 
-  getRelated(item: Item, type: string): { [item: string]: number } {
-    return getRelated(item, type);
+  getRelated(item: Item, type: string): Map<Item, number> {
+    return this.itemsToMap(getRelated(item, type));
   }
 
   allNormalOutfits(): string[] {
@@ -311,10 +315,6 @@ export class KolmafiaProvider implements KoLAPI {
 
   itemType(item: Item): string {
     return itemType(item);
-  }
-
-  isDiscardable(item: Item): boolean {
-    return isDiscardable(item);
   }
 
   getItem(name: string | number): Item {

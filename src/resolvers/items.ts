@@ -5,6 +5,7 @@ import { AccountValColors } from "../utils/colors";
 import { CoinmasterResolver } from "./coinmaster";
 import { PriceResolver } from "../pricing/priceResolver";
 import accountvalBinds from "../../data/accountval_binds.txt";
+import { AccountValUtils } from "../utils/utils";
 
 class AccValStuff {
   itemType: ItemType;
@@ -34,7 +35,7 @@ export class ItemResolver {
 
   loadCache() {
     const prop: string[] = kol
-      .getProperty(this.accountValVisitCachePropName)
+      .retrieveCache(this.accountValVisitCachePropName, "transient")
       .split(",");
 
     for (const p of prop) {
@@ -44,7 +45,7 @@ export class ItemResolver {
 
       const spl = p.split(":");
       this.accountValCache.set(
-        kol.toItem(kol.toInt(spl[0])),
+        KoLItem.get(AccountValUtils.toInt(spl[0])),
         spl[1].startsWith("t"),
       );
     }
@@ -53,17 +54,23 @@ export class ItemResolver {
   saveCache() {
     const values: string[] = [];
     this.accountValCache.forEach((val, key) =>
-      values.push(kol.toInt(key) + ":" + (val ? "t" : "f")),
+      values.push(key.id + ":" + (val ? "t" : "f")),
     );
     values.sort((v1, v2) => v1.localeCompare(v2));
 
     const val = values.join(",");
 
-    if (kol.getProperty(this.accountValVisitCachePropName) == val) {
+    if (
+      kol.retrieveCache(this.accountValVisitCachePropName, "transient") == val
+    ) {
       return;
     }
 
-    kol.setProperty(this.accountValVisitCachePropName, values.join(","));
+    kol.storeCache(
+      this.accountValVisitCachePropName,
+      values.join(","),
+      "transient",
+    );
   }
 
   getUrledItems(): [KoLItem, ItemStatus?][] {
@@ -123,7 +130,9 @@ export class ItemResolver {
     let result: boolean = true;
 
     for (const prop of property.split("&")) {
-      const isTrue = kol.toBoolean(kol.getProperty(prop.replace("!", "")));
+      const isTrue = AccountValUtils.toBoolean(
+        kol.retrieveCache(prop.replace("!", ""), "small_persist"),
+      );
       const isNotNegated = !prop.includes("!");
       result = result && isTrue == isNotNegated;
     }
@@ -242,15 +251,6 @@ export class ItemResolver {
     }
 
     return famEquipped;
-  }
-
-  resolveSessionItems() {
-    const map: Map<KoLItem, number> = new Map();
-    Object.entries(kol.mySessionItems()).forEach((value) =>
-      map.set(KoLItem.get(value[0]), value[1]),
-    );
-
-    return map;
   }
 
   visitCheck(item: KoLItem, url: string, find: string) {
@@ -394,7 +394,7 @@ export class ItemResolver {
   loadSkills(values: AccValStuff[]) {
     const itemsSkills: Map<KoLItem, KoLSkill> = new Map(
       KoLItem.all()
-        .map((i) => [i, kol.skillModifier(i, "Skill")] as [KoLItem, KoLSkill])
+        .map((i) => [i, kol.associatedSkill(i)] as [KoLItem, KoLSkill])
         .filter(
           ([i, skill]) =>
             !i.reusable && !i.quest && !i.gift && skill != KoLSkill.none,

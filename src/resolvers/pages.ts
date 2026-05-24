@@ -1,6 +1,7 @@
 import { kol } from "../api/apiSupplier";
 import { KoLItem, KoLFamiliar, KoLSkill } from "../api/supplierTypings";
 import { AccountValColors } from "../utils/colors";
+import { AccountValUtils } from "../utils/utils";
 
 export class StoreItem {
   item: KoLItem;
@@ -110,7 +111,9 @@ export class PageResolver {
       let count = 1;
 
       if (name.match(/ x\d+$/)) {
-        count = kol.toInt(name.substring(name.lastIndexOf("x") + 1));
+        count = AccountValUtils.toInt(
+          name.substring(name.lastIndexOf("x") + 1),
+        );
         name = name.substring(0, name.lastIndexOf(" "));
       }
 
@@ -136,7 +139,7 @@ export class PageResolver {
 
     while ((match = page.match(regex)) != null) {
       page = page.replace(match[0], "");
-      familiars.push(kol.toFamiliar(kol.toInt(match[1])));
+      familiars.push(kol.toFamiliar(AccountValUtils.toInt(match[1])));
     }
 
     return familiars;
@@ -156,10 +159,10 @@ export class PageResolver {
       }
 
       const item = new StoreItem();
-      item.item = kol.toItem(match[1]);
-      item.amount = kol.toInt(match[2]);
-      item.limit = match[3] == null ? 0 : kol.toInt(match[3]);
-      item.price = kol.toInt(match[4]);
+      item.item = KoLItem.get(AccountValUtils.toInt(match[1]));
+      item.amount = AccountValUtils.toInt(match[2]);
+      item.limit = match[3] == null ? 0 : AccountValUtils.toInt(match[3]);
+      item.price = AccountValUtils.toInt(match[4]);
       items.push(item);
     }
 
@@ -202,7 +205,7 @@ export class PageResolver {
 
       map.set(
         { item: item, shelf: lastShelf },
-        match[3] == null ? 1 : kol.toInt(match[3]),
+        match[3] == null ? 1 : AccountValUtils.toInt(match[3]),
       );
     }
 

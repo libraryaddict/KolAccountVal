@@ -130,7 +130,7 @@ export function getPresets(): AccountValPreset[] {
       return ["pvpable", "pvp", "stealable"];
     },
     isShown(item: ValItem, worth: number): boolean {
-      return item.isTradeable() && kol.isDiscardable(item.actualItem);
+      return item.isTradeable() && item.actualItem.discardable;
     },
     desc: function (): string {
       return "Show only items that can be stolen";
@@ -154,7 +154,7 @@ export function getPresets(): AccountValPreset[] {
       return ["autosell", "junk"];
     },
     isShown(item: ValItem, worth: number): boolean {
-      if (item.isBound() || !kol.isDiscardable(item.actualItem)) {
+      if (item.isBound() || !item.actualItem.discardable) {
         return false;
       }
 

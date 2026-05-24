@@ -2,7 +2,6 @@ import { kol } from "../../api/apiSupplier";
 import { ItemPrice, PriceType } from "../../models/typings";
 import { PriceVolunteer } from "../priceInterface";
 import { KoLItem } from "../../api/supplierTypings";
-import { Item } from "kolmafia";
 
 type PricegunItem = {
   value: number;
@@ -17,7 +16,7 @@ export class PricegunResolver implements PriceVolunteer {
 
   load(): void {
     this.items.clear();
-    const buffer = kol.fileToBuffer("pricegun_prices.txt");
+    const buffer = kol.retrieveCache("pricegun_prices.txt", "large_persist");
 
     if (!buffer) {
       return;
@@ -41,11 +40,12 @@ export class PricegunResolver implements PriceVolunteer {
 
   stop(): void {
     const cutoff = Math.floor(Date.now() / 1000) - 23 * 60 * 60;
-    kol.bufferToFile(
+    kol.storeCache(
+      "pricegun_prices.txt",
       JSON.stringify(
         [...this.items.values()].filter((i) => i.retrieved > cutoff),
       ),
-      "pricegun_prices.txt",
+      "large_persist",
     );
   }
 
@@ -66,7 +66,7 @@ export class PricegunResolver implements PriceVolunteer {
   }
 
   bulkResolve(items: KoLItem[]): ItemPrice[] {
-    const missing = items.filter((i) => !this.items.has(kol.toInt(i)));
+    const missing = items.filter((i) => !this.items.has(i.id));
 
     if (missing.length) {
       this.fetch(missing);
@@ -76,7 +76,7 @@ export class PricegunResolver implements PriceVolunteer {
 
     return items
       .map((i) => {
-        const price = this.items.get(kol.toInt(i));
+        const price = this.items.get(i.id);
 
         if (!price || price.volume < 0) {
           return null;
@@ -98,11 +98,8 @@ export class PricegunResolver implements PriceVolunteer {
     const now = Math.floor(Date.now() / 1000);
 
     // Ensure at least one result
-    if (
-      items.length + 3 < MAX_AMOUNT &&
-      !items.find((i) => kol.toInt(i) === 1)
-    ) {
-      items.push(Item.get(1));
+    if (items.length + 3 < MAX_AMOUNT && !items.find((i) => i.id === 1)) {
+      items.push(KoLItem.get(1));
     }
 
     const totalLength = items.length;
@@ -111,7 +108,7 @@ export class PricegunResolver implements PriceVolunteer {
       const batch = items.slice(start, start + MAX_AMOUNT);
 
       try {
-        const url = `https://pricegun.loathers.net/api/${batch.map((i) => kol.toInt(i)).join(",")}`;
+        const url = `https://pricegun.loathers.net/api/${batch.map((i) => i.id).join(",")}`;
         const response = JSON.parse(kol.visitUrl(url));
         const parsed = batch.length === 1 ? [response] : response;
 
@@ -122,7 +119,7 @@ export class PricegunResolver implements PriceVolunteer {
         }
 
         for (const i of batch) {
-          const id = kol.toInt(i);
+          const id = i.id;
 
           if (!this.items.has(id)) {
             this.items.set(id, {
@@ -136,7 +133,7 @@ export class PricegunResolver implements PriceVolunteer {
         }
       } catch {
         for (const i of batch) {
-          const id = kol.toInt(i);
+          const id = i.id;
           this.items.set(id, {
             itemId: id,
             value: 0,

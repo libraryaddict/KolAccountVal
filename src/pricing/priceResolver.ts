@@ -7,7 +7,6 @@ import { HistoricalPricing, MallPricing } from "./variants/kolmafia";
 import { IrratPrices } from "./variants/irratprices";
 import { PricegunResolver } from "./variants/pricegun";
 import { KoLItem } from "../api/supplierTypings";
-import { Item } from "kolmafia";
 
 export class PriceResolver {
   private specialCase: Map<KoLItem, number> = new Map();
@@ -41,9 +40,9 @@ export class PriceResolver {
   }
 
   private fillSpecialCase() {
-    this.specialCase.set(Item.get("Meat Paste"), 10);
-    this.specialCase.set(Item.get("Meat Stack"), 100);
-    this.specialCase.set(Item.get("Dense meat stack"), 1000);
+    this.specialCase.set(KoLItem.get("Meat Paste"), 10);
+    this.specialCase.set(KoLItem.get("Meat Stack"), 100);
+    this.specialCase.set(KoLItem.get("Dense meat stack"), 1000);
   }
 
   doWarning(): boolean {

@@ -113,4 +113,16 @@ export class AccountValUtils {
 
     return this.getNumber(number);
   }
+
+  static toBoolean(string: string): boolean {
+    return ["true", "yes", "1"].includes(string.toLowerCase());
+  }
+
+  static toFloat(string: string): number {
+    return parseFloat(string.replaceAll(",", ""));
+  }
+
+  static toInt(string: string): number {
+    return parseInt(string.replaceAll(",", ""));
+  }
 }

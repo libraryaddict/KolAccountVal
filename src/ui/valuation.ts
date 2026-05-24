@@ -43,7 +43,7 @@ export class ValuationReport {
     this.pronoun = this.settings.fetchClan
       ? "The clan stash is"
       : !this.settings.playerId ||
-          this.settings.playerId == kol.toInt(kol.myId())
+          this.settings.playerId == AccountValUtils.toInt(kol.myId())
         ? this.settings.fetchSession
           ? "Your session is"
           : "You are"

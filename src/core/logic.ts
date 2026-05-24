@@ -14,6 +14,7 @@ import {
   PriceType,
   SortBy,
 } from "../models/typings";
+import { AccountValUtils } from "../utils/utils";
 
 export class AccountValLogic {
   ownedItems: Map<ValItem, number> = new Map();
@@ -223,20 +224,24 @@ export class AccountValLogic {
     AccValTiming.stop("Resolve Familiar Items");
 
     AccValTiming.start("Resolve Session");
-    const sessionItems = this.resolver.resolveSessionItems();
+    const sessionItems = kol.mySessionItems();
     AccValTiming.stop("Resolve Session");
 
-    AccValTiming.start("Resolve Inventory");
-    const mega = this.settings.fetchInventory ? kol.getInventory() : {};
-    AccValTiming.stop("Resolve Inventory");
+    const mega: Map<KoLItem, number> = new Map();
 
     const megaExtra: Map<KoLItem, { count: number; shelf: string }> = new Map();
 
-    const add = (stuff: { [item: string]: number }) => {
-      Object.entries(stuff).forEach(([k, v]) => {
-        mega[k] = (mega[k] ?? 0) + v;
-      });
+    const add = (stuff: Map<KoLItem, number>) => {
+      for (const [item, amount] of stuff) {
+        mega.set(item, (mega.get(item) ?? 0) + amount);
+      }
     };
+
+    if (this.settings.fetchInventory) {
+      AccValTiming.start("Resolve and Add Inventory");
+      add(kol.getInventory());
+      AccValTiming.stop("Resolve and Add Inventory");
+    }
 
     if (this.settings.fetchCloset) {
       AccValTiming.start("Resolve and Add Closet");
@@ -247,8 +252,6 @@ export class AccountValLogic {
     if (this.settings.fetchStorage) {
       AccValTiming.start("Resolve and Add Storage");
       add(kol.getStorage());
-      add(kol.getFreePulls());
-      add(kol.getNoPulls());
       AccValTiming.stop("Resolve and Add Storage");
     }
 
@@ -262,7 +265,7 @@ export class AccountValLogic {
       if (this.settings.doCategories) {
         AccValTiming.start("Resolve and Add Display Case with Shelves");
         const pager = new PageResolver();
-        const items = pager.getDisplaycase(kol.toInt(kol.myId()));
+        const items = pager.getDisplaycase(AccountValUtils.toInt(kol.myId()));
         items.forEach((v, k) => {
           if (!this.categoryOrder.includes(k.shelf)) {
             this.categoryOrder.push(k.shelf);
@@ -278,16 +281,20 @@ export class AccountValLogic {
       }
     }
 
+    AccValTiming.start("Resolve Shop");
+    const shop = this.settings.fetchShop ? kol.getShop() : null;
+    AccValTiming.stop("Resolve Shop");
+
     if (this.settings.fetchShop && !this.settings.shopWorth) {
-      AccValTiming.start("Resolve and Add Shop");
-      add(kol.getShop());
-      AccValTiming.stop("Resolve and Add Shop");
+      AccValTiming.start("Add Shop");
+      add(shop);
+      AccValTiming.stop("Add Shop");
     }
 
     AccValTiming.start("Process All Items");
 
     for (const item of KoLItem.all()) {
-      let amount = mega[item.name] ?? 0;
+      let amount = mega.get(item) ?? 0;
 
       if (this.settings.fetchSession) {
         amount += sessionItems.get(item) ?? 0;
@@ -304,15 +311,11 @@ export class AccountValLogic {
         category = megaExtra.get(item).shelf;
       }
 
-      if (
-        this.settings.fetchShop &&
-        this.settings.shopWorth &&
-        kol.shopAmount(item) > 0
-      ) {
+      if (this.settings.shopWorth && (shop.get(item) ?? 0) > 0) {
         const i = new ValItem(item).withCategory(category);
         i.bound = ItemStatus.SHOP_WORTH;
         i.shopWorth = kol.shopPrice(item);
-        this.ownedItems.set(i, kol.shopAmount(item));
+        this.ownedItems.set(i, shop.get(item));
         continue;
       }
 
@@ -608,8 +611,7 @@ export class AccountValLogic {
     } else if (this.settings.sortBy == SortBy.NAME) {
       sorter = (v1, v2) => v1[0].name.localeCompare(v2[0].name);
     } else if (this.settings.sortBy == SortBy.ITEM_ID) {
-      sorter = (v1, v2) =>
-        kol.toInt(v1[0].tradeableItem) - kol.toInt(v2[0].tradeableItem);
+      sorter = (v1, v2) => v1[0].tradeableItem.id - v2[0].tradeableItem.id;
     } else if (this.settings.sortBy == SortBy.SALES_VOLUME) {
       sorter = (v1, v2) => v1[1].volume - v2[1].volume;
     } else {

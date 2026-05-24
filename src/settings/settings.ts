@@ -12,6 +12,7 @@ import {
   ValSetting,
   PresetSetting,
 } from "../models/typings";
+import { AccountValUtils } from "../utils/utils";
 
 const sortByAliases: Map<string, SortBy> = new Map([
   ["count", SortBy.QUANTITY],
@@ -362,14 +363,17 @@ export class AccountValSettings {
 
     this.colorScheme = kol.isDarkMode() ? "dark" : "default";
 
-    if (kol.getProperty("accountval_maxNaturalPrice").length > 0) {
+    if (
+      kol.retrieveCache("accountval_maxNaturalPrice", "small_persist").length >
+      0
+    ) {
       this.maxNaturalPrice = this.toNumber(
-        kol.getProperty("accountval_maxNaturalPrice"),
+        kol.retrieveCache("accountval_maxNaturalPrice", "small_persist"),
       );
     }
 
-    if (kol.getProperty("accountval_text").length > 0) {
-      const str = kol.getProperty("accountval_text");
+    if (kol.retrieveCache("accountval_text", "small_persist").length > 0) {
+      const str = kol.retrieveCache("accountval_text", "small_persist");
 
       if (str == "plain" || str == "fancy") {
         this.logOutputAs = str;
@@ -428,7 +432,7 @@ export class AccountValSettings {
           continue;
         }
 
-        isTrue = kol.toBoolean(v);
+        isTrue = AccountValUtils.toBoolean(v);
       }
 
       switch (setting.type) {
@@ -682,7 +686,7 @@ export class AccountValSettings {
       return null;
     }
 
-    let num = kol.toFloat(match[1]);
+    let num = AccountValUtils.toFloat(match[1]);
 
     if (match[2] == "t") {
       num *= 1_000_000_000_000;
