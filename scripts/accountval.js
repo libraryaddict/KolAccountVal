@@ -51,6 +51,10 @@ function _typeof(o) {"@babel/helpers - typeof";return _typeof = "function" == ty
 
 
 
+
+
+
+
 var KoLItem = /*#__PURE__*/function () {function KoLItem() {_classCallCheck(this, KoLItem);}return _createClass(KoLItem, null, [{ key: "get", value:
     function get(key) {
       return _apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.getItem(key);
@@ -376,7 +380,9 @@ var CoinmasterResolver = /*#__PURE__*/function () {
 /* harmony import */ var _utils_colors__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(169);
 /* harmony import */ var _coinmaster__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(316);
 /* harmony import */ var _data_accountval_binds_txt__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(854);
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(688);
 function _typeof(o) {"@babel/helpers - typeof";return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, _typeof(o);}function _slicedToArray(r, e) {return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(r) {if (Array.isArray(r)) return r;}function _createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function _unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return _arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;}}function _arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function _defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o);}}function _createClass(e, r, t) {return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function _classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function _defineProperty(e, r, t) {return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == _typeof(i) ? i : i + "";}function _toPrimitive(t, r) {if ("object" != _typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != _typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+
 
 
 
@@ -412,7 +418,7 @@ var ItemResolver = /*#__PURE__*/function () {
 
     function loadCache() {
       var prop = _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.
-      getProperty(this.accountValVisitCachePropName).
+      retrieveCache(this.accountValVisitCachePropName, "transient").
       split(",");var _iterator = _createForOfIteratorHelper(
 
           prop),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var p = _step.value;
@@ -422,7 +428,7 @@ var ItemResolver = /*#__PURE__*/function () {
 
           var spl = p.split(":");
           this.accountValCache.set(
-            _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.toItem(_api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.toInt(spl[0])),
+            _api_supplierTypings__WEBPACK_IMPORTED_MODULE_1__/* .KoLItem */ .U8.get(_utils_utils__WEBPACK_IMPORTED_MODULE_6__/* .AccountValUtils */ .E.toInt(spl[0])),
             spl[1].startsWith("t")
           );
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
@@ -431,17 +437,23 @@ var ItemResolver = /*#__PURE__*/function () {
     function saveCache() {
       var values = [];
       this.accountValCache.forEach((val, key) =>
-      values.push(_api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.toInt(key) + ":" + (val ? "t" : "f"))
+      values.push(key.id + ":" + (val ? "t" : "f"))
       );
       values.sort((v1, v2) => v1.localeCompare(v2));
 
       var val = values.join(",");
 
-      if (_api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.getProperty(this.accountValVisitCachePropName) == val) {
+      if (
+      _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.retrieveCache(this.accountValVisitCachePropName, "transient") == val)
+      {
         return;
       }
 
-      _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.setProperty(this.accountValVisitCachePropName, values.join(","));
+      _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.storeCache(
+        this.accountValVisitCachePropName,
+        values.join(","),
+        "transient"
+      );
     } }, { key: "getUrledItems", value:
 
     function getUrledItems() {
@@ -501,7 +513,9 @@ var ItemResolver = /*#__PURE__*/function () {
       var result = true;var _iterator3 = _createForOfIteratorHelper(
 
           property.split("&")),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var prop = _step3.value;
-          var isTrue = _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.toBoolean(_api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.getProperty(prop.replace("!", "")));
+          var isTrue = _utils_utils__WEBPACK_IMPORTED_MODULE_6__/* .AccountValUtils */ .E.toBoolean(
+            _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.retrieveCache(prop.replace("!", ""), "small_persist")
+          );
           var isNotNegated = !prop.includes("!");
           result = result && isTrue == isNotNegated;
         }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
@@ -620,15 +634,6 @@ var ItemResolver = /*#__PURE__*/function () {
         }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
 
       return famEquipped;
-    } }, { key: "resolveSessionItems", value:
-
-    function resolveSessionItems() {
-      var map = new Map();
-      Object.entries(_api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.mySessionItems()).forEach((value) =>
-      map.set(_api_supplierTypings__WEBPACK_IMPORTED_MODULE_1__/* .KoLItem */ .U8.get(value[0]), value[1])
-      );
-
-      return map;
     } }, { key: "visitCheck", value:
 
     function visitCheck(item, url, find) {
@@ -772,7 +777,7 @@ var ItemResolver = /*#__PURE__*/function () {
     function loadSkills(values) {
       var itemsSkills = new Map(
         _api_supplierTypings__WEBPACK_IMPORTED_MODULE_1__/* .KoLItem */ .U8.all().
-        map((i) => [i, _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.skillModifier(i, "Skill")]).
+        map((i) => [i, _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.associatedSkill(i)]).
         filter(
           (_ref) => {var _ref2 = _slicedToArray(_ref, 2),i = _ref2[0],skill = _ref2[1];return (
               !i.reusable && !i.quest && !i.gift && skill != _api_supplierTypings__WEBPACK_IMPORTED_MODULE_1__/* .KoLSkill */ .cw.none);}
@@ -879,11 +884,150 @@ function showAccountvalColors(name) {
 function initAccountValColors() {
   var def = _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.isDarkMode() ? "dark" : "default";
   loadAccountvalColors(
-    _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.getProperty("accountvalColorScheme") ?
-    _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.getProperty("accountvalColorScheme") :
+    _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.retrieveCache("accountvalColorScheme", "small_persist") ?
+    _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.retrieveCache("accountvalColorScheme", "small_persist") :
     def
   );
 }
+
+/***/ },
+
+/***/ 688
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   E: () => (/* binding */ AccountValUtils)
+/* harmony export */ });
+/* harmony import */ var _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(424);
+/* harmony import */ var _colors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(169);
+/* harmony import */ var _models_typings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(198);
+function _typeof(o) {"@babel/helpers - typeof";return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, _typeof(o);}function _createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function _unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return _arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;}}function _arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function _classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function _defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o);}}function _createClass(e, r, t) {return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == _typeof(i) ? i : i + "";}function _toPrimitive(t, r) {if ("object" != _typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != _typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+
+
+
+
+var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {_classCallCheck(this, AccountValUtils);}return _createClass(AccountValUtils, null, [{ key: "splitArguments", value:
+    function splitArguments(
+    settings,
+    command)
+
+    {var debugMessages = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var debug = function debug(message) {
+        if (!debugMessages) {
+          return;
+        }
+
+        _api_apiSupplier__WEBPACK_IMPORTED_MODULE_0__/* .kol */ .x.print("DEBUG: " + message, _colors__WEBPACK_IMPORTED_MODULE_1__/* .AccountValColors */ .HK.minorNote);
+      };
+
+      var tCommand = command;
+      var match;
+
+      while (
+      (match = tCommand.match(/(^| )([a-zA-Z]+ )([a-zA-Z\d"]+)/)) != null)
+      {
+        tCommand = tCommand.replace(match[2], "");
+        var setting = settings.getSetting(match[2].trim());
+        var v2 = (match[3] || "").replace("!", "").split("=")[0].trim();
+        var setting2 = settings.getSetting(
+          v2.toLowerCase() == "true" ? "" : v2
+        );
+
+        if (
+        setting == null ||
+        setting.type == _models_typings__WEBPACK_IMPORTED_MODULE_2__/* .FieldType */ .PU.BOOLEAN && setting2 != null)
+        {
+          debug("'".concat(match[2], "' is not a key parameter"));
+          continue;
+        }
+
+        command = command.replace(match[2], match[2].trim() + "=");
+        tCommand = tCommand.replace(match[3], "");
+        debug("Replacing '".concat(
+          match[2], "' as a key parameter, matched using '").concat(match[0], "'")
+        );
+      }
+
+      tCommand = command;
+      var spl = [];
+
+      while (
+      (match = tCommand.match(/(?:^| )([^ =]+=("|').+?"|')(?=(?:$| ))/)) != null)
+      {
+        var v = match[1];
+        var val = "";
+
+        if (v.indexOf("=") > 0) {
+          val = v.substring(0, v.indexOf("=") + 1);
+          v = v.substring(val.length);
+        }
+
+        if (
+        v.startsWith('"') && v.endsWith('"') ||
+        v.startsWith("'") && v.endsWith("'"))
+        {
+          v = v.substring(1, v.length - 1);
+        }
+
+        v = val + v;
+        spl.push(v);
+        tCommand = tCommand.replace(match[1], "").trim().replace(/ +/, " ");
+        debug("'".concat(v, " defined as a key=\"value\", matched '").concat(match[0], "'"));
+      }
+
+      if (tCommand.length > 0) {var _iterator = _createForOfIteratorHelper(
+            tCommand.split(" ")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var arg = _step.value;
+            debug("Found leftover parameter '".concat(arg));
+            spl.push(arg);
+          }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
+      }
+
+      debug("Final parameters are: " + spl.map((s) => "{".concat(s, "}")).join(" "));
+
+      return spl;
+    } }, { key: "getNumber", value:
+
+    function getNumber(number) {var trimAt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+      var str = number.toString().split(".");
+
+      if (str.length > 1 && str[1].length > trimAt) {
+        str[1] = str[1].substring(0, trimAt);
+      }
+
+      str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+      return str.join(".");
+    } }, { key: "getNumberOrClamp", value:
+
+    function getNumberOrClamp(
+    number,
+    min,
+    max,
+    minStr,
+    maxStr)
+    {
+      if (number > max) {
+        return maxStr;
+      }
+
+      if (number < min) {
+        return minStr;
+      }
+
+      return this.getNumber(number);
+    } }, { key: "toBoolean", value:
+
+    function toBoolean(string) {
+      return ["true", "yes", "1"].includes(string.toLowerCase());
+    } }, { key: "toFloat", value:
+
+    function toFloat(string) {
+      return parseFloat(string.replaceAll(",", ""));
+    } }, { key: "toInt", value:
+
+    function toInt(string) {
+      return parseInt(string.replaceAll(",", ""));
+    } }]);}();
 
 /***/ },
 
@@ -963,9 +1107,11 @@ __webpack_require__.d(__webpack_exports__, {
 var apiSupplier = __webpack_require__(424);
 ;// external "kolmafia"
 const external_kolmafia_namespaceObject = require("kolmafia");
-;// ./src/api/kolmafiaProvider.ts
-function _typeof(o) {"@babel/helpers - typeof";return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, _typeof(o);}function _classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function _defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o);}}function _createClass(e, r, t) {return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == _typeof(i) ? i : i + "";}function _toPrimitive(t, r) {if ("object" != _typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != _typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+;// ./src/api/provider/kolmafiaProvider.ts
+function _typeof(o) {"@babel/helpers - typeof";return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, _typeof(o);}function _createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function _slicedToArray(r, e) {return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return _arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;}}function _arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(r) {if (Array.isArray(r)) return r;}function _classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function _defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o);}}function _createClass(e, r, t) {return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function _toPropertyKey(t) {var i = _toPrimitive(t, "string");return "symbol" == _typeof(i) ? i : i + "";}function _toPrimitive(t, r) {if ("object" != _typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != _typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
+
+var requiredRevision = 28933;
 
 var KolmafiaProvider = /*#__PURE__*/function () {function KolmafiaProvider() {_classCallCheck(this, KolmafiaProvider);}return _createClass(KolmafiaProvider, [{ key: "print", value:
     function print(message, color) {
@@ -978,22 +1124,20 @@ var KolmafiaProvider = /*#__PURE__*/function () {function KolmafiaProvider() {_c
 
     function abort(message) {
       (0,external_kolmafia_namespaceObject.abort)(message);
-    } }, { key: "getProperty", value:
-
-    function getProperty(name) {
-      return (0,external_kolmafia_namespaceObject.getProperty)(name);
-    } }, { key: "setProperty", value:
-
-    function setProperty(name, value) {
-      (0,external_kolmafia_namespaceObject.setProperty)(name, value);
     } }, { key: "visitUrl", value:
 
     function visitUrl(url) {
       return (0,external_kolmafia_namespaceObject.visitUrl)(url);
-    } }, { key: "getRevision", value:
+    } }, { key: "checkOutdated", value:
 
-    function getRevision() {
-      return (0,external_kolmafia_namespaceObject.getRevision)();
+    function checkOutdated() {
+      if ((0,external_kolmafia_namespaceObject.getRevision)() >= requiredRevision) {
+        return;
+      }
+
+      this.printHtml("<font color='red'>You need to update KoLMafia to the latest version. This script will not work properly on versions older than ".concat(
+        requiredRevision, ".</font>")
+      );
     } }, { key: "myId", value:
 
     function myId() {
@@ -1054,18 +1198,6 @@ var KolmafiaProvider = /*#__PURE__*/function () {function KolmafiaProvider() {_c
 
     function isDarkMode() {
       return (0,external_kolmafia_namespaceObject.isDarkMode)();
-    } }, { key: "toBoolean", value:
-
-    function toBoolean(val) {
-      return (0,external_kolmafia_namespaceObject.toBoolean)(val);
-    } }, { key: "toFloat", value:
-
-    function toFloat(val) {
-      return (0,external_kolmafia_namespaceObject.toFloat)(val);
-    } }, { key: "toInt", value:
-
-    function toInt(val) {
-      return typeof val == "string" ? (0,external_kolmafia_namespaceObject.toInt)(val) : (0,external_kolmafia_namespaceObject.toInt)(val);
     } }, { key: "toItem", value:
 
     function toItem(val) {
@@ -1090,22 +1222,30 @@ var KolmafiaProvider = /*#__PURE__*/function () {function KolmafiaProvider() {_c
 
     function entityDecode(val) {
       return (0,external_kolmafia_namespaceObject.entityDecode)(val);
-    } }, { key: "bufferToFile", value:
+    } }, { key: "storeCache", value:
 
-    function bufferToFile(buffer, file) {
-      (0,external_kolmafia_namespaceObject.bufferToFile)(buffer, file);
-    } }, { key: "fileToBuffer", value:
+    function storeCache(key, value, dataType) {
+      if (dataType == "large_persist") {
+        (0,external_kolmafia_namespaceObject.bufferToFile)(key, value);
+      } else if (dataType == "small_persist") {
+        (0,external_kolmafia_namespaceObject.setProperty)(key, value);
+      } else {
+        external_kolmafia_namespaceObject.sessionStorage.setItem(key, value);
+      }
+    } }, { key: "retrieveCache", value:
 
-    function fileToBuffer(file) {
-      return (0,external_kolmafia_namespaceObject.fileToBuffer)(file);
+    function retrieveCache(key, dataType) {var _sessionStorage$getIt;
+      if (dataType == "large_persist") {
+        return (0,external_kolmafia_namespaceObject.fileToBuffer)(key);
+      } else if (dataType == "small_persist") {
+        return (0,external_kolmafia_namespaceObject.getProperty)(dataType);
+      }
+
+      return (_sessionStorage$getIt = external_kolmafia_namespaceObject.sessionStorage.getItem(key)) !== null && _sessionStorage$getIt !== void 0 ? _sessionStorage$getIt : "";
     } }, { key: "autosellPrice", value:
 
     function autosellPrice(item) {
       return (0,external_kolmafia_namespaceObject.autosellPrice)(item);
-    } }, { key: "shopAmount", value:
-
-    function shopAmount(item) {
-      return (0,external_kolmafia_namespaceObject.shopAmount)(item);
     } }, { key: "shopPrice", value:
 
     function shopPrice(item) {
@@ -1130,46 +1270,58 @@ var KolmafiaProvider = /*#__PURE__*/function () {function KolmafiaProvider() {_c
 
     function familiarEquippedEquipment(fam) {
       return (0,external_kolmafia_namespaceObject.familiarEquippedEquipment)(fam);
+    } }, { key: "itemsToMap", value:
+
+    function itemsToMap(items) {
+      var map = new Map();
+
+      for (var _i = 0, _Object$entries = Object.entries(items); _i < _Object$entries.length; _i++) {var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),key = _Object$entries$_i[0],value = _Object$entries$_i[1];
+        map.set(external_kolmafia_namespaceObject.Item.get(key), value);
+      }
+
+      return map;
     } }, { key: "getInventory", value:
 
     function getInventory() {
-      return (0,external_kolmafia_namespaceObject.getInventory)();
+      return this.itemsToMap((0,external_kolmafia_namespaceObject.getInventory)());
     } }, { key: "getCloset", value:
 
     function getCloset() {
-      return (0,external_kolmafia_namespaceObject.getCloset)();
+      return this.itemsToMap((0,external_kolmafia_namespaceObject.getCloset)());
     } }, { key: "getStorage", value:
 
     function getStorage() {
-      return (0,external_kolmafia_namespaceObject.getStorage)();
-    } }, { key: "getFreePulls", value:
+      var map = this.itemsToMap((0,external_kolmafia_namespaceObject.getStorage)());
 
-    function getFreePulls() {
-      return (0,external_kolmafia_namespaceObject.getFreePulls)();
-    } }, { key: "getNoPulls", value:
+      for (var _i2 = 0, _arr = [(0,external_kolmafia_namespaceObject.getFreePulls)(), (0,external_kolmafia_namespaceObject.getNoPulls)()]; _i2 < _arr.length; _i2++) {var items = _arr[_i2];
+        var m = this.itemsToMap(items);var _iterator = _createForOfIteratorHelper(
 
-    function getNoPulls() {
-      return (0,external_kolmafia_namespaceObject.getNoPulls)();
+            m),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _map$get;var _step$value = _slicedToArray(_step.value, 2),item = _step$value[0],amount = _step$value[1];
+            map.set(item, ((_map$get = map.get(item)) !== null && _map$get !== void 0 ? _map$get : 0) + amount);
+          }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
+      }
+
+      return map;
     } }, { key: "getStash", value:
 
     function getStash() {
-      return (0,external_kolmafia_namespaceObject.getStash)();
+      return this.itemsToMap((0,external_kolmafia_namespaceObject.getStash)());
     } }, { key: "getDisplay", value:
 
     function getDisplay() {
-      return (0,external_kolmafia_namespaceObject.getDisplay)();
+      return this.itemsToMap((0,external_kolmafia_namespaceObject.getDisplay)());
     } }, { key: "getShop", value:
 
     function getShop() {
-      return (0,external_kolmafia_namespaceObject.getShop)();
+      return this.itemsToMap((0,external_kolmafia_namespaceObject.getShop)());
     } }, { key: "mySessionItems", value:
 
     function mySessionItems() {
-      return (0,external_kolmafia_namespaceObject.mySessionItems)();
+      return this.itemsToMap((0,external_kolmafia_namespaceObject.mySessionItems)());
     } }, { key: "getCampground", value:
 
     function getCampground() {
-      return (0,external_kolmafia_namespaceObject.getCampground)();
+      return this.itemsToMap((0,external_kolmafia_namespaceObject.getCampground)());
     } }, { key: "myFamiliar", value:
 
     function myFamiliar() {
@@ -1186,10 +1338,10 @@ var KolmafiaProvider = /*#__PURE__*/function () {function KolmafiaProvider() {_c
 
     function getPermedSkills() {
       return (0,external_kolmafia_namespaceObject.getPermedSkills)();
-    } }, { key: "skillModifier", value:
+    } }, { key: "associatedSkill", value:
 
-    function skillModifier(item, mod) {
-      return (0,external_kolmafia_namespaceObject.skillModifier)(item, mod);
+    function associatedSkill(item) {
+      return (0,external_kolmafia_namespaceObject.skillModifier)(item, "Skill");
     } }, { key: "myGardenType", value:
 
     function myGardenType() {
@@ -1201,7 +1353,7 @@ var KolmafiaProvider = /*#__PURE__*/function () {function KolmafiaProvider() {_c
     } }, { key: "getRelated", value:
 
     function getRelated(item, type) {
-      return (0,external_kolmafia_namespaceObject.getRelated)(item, type);
+      return this.itemsToMap((0,external_kolmafia_namespaceObject.getRelated)(item, type));
     } }, { key: "allNormalOutfits", value:
 
     function allNormalOutfits() {
@@ -1210,10 +1362,6 @@ var KolmafiaProvider = /*#__PURE__*/function () {function KolmafiaProvider() {_c
 
     function itemType(item) {
       return (0,external_kolmafia_namespaceObject.itemType)(item);
-    } }, { key: "isDiscardable", value:
-
-    function isDiscardable(item) {
-      return (0,external_kolmafia_namespaceObject.isDiscardable)(item);
     } }, { key: "getItem", value:
 
     function getItem(name) {
@@ -1263,8 +1411,11 @@ var supplierTypings = __webpack_require__(532);
 var items = __webpack_require__(427);
 // EXTERNAL MODULE: ./src/utils/colors.ts
 var utils_colors = __webpack_require__(169);
+// EXTERNAL MODULE: ./src/utils/utils.ts
+var utils = __webpack_require__(688);
 ;// ./src/resolvers/pages.ts
-function pages_typeof(o) {"@babel/helpers - typeof";return pages_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, pages_typeof(o);}function _createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function _toConsumableArray(r) {return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return _arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;}}function _iterableToArray(r) {if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);}function _arrayWithoutHoles(r) {if (Array.isArray(r)) return _arrayLikeToArray(r);}function _arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function pages_defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, pages_toPropertyKey(o.key), o);}}function pages_createClass(e, r, t) {return r && pages_defineProperties(e.prototype, r), t && pages_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function pages_classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function _defineProperty(e, r, t) {return (r = pages_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function pages_toPropertyKey(t) {var i = pages_toPrimitive(t, "string");return "symbol" == pages_typeof(i) ? i : i + "";}function pages_toPrimitive(t, r) {if ("object" != pages_typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != pages_typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+function pages_typeof(o) {"@babel/helpers - typeof";return pages_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, pages_typeof(o);}function pages_createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = pages_unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function _toConsumableArray(r) {return _arrayWithoutHoles(r) || _iterableToArray(r) || pages_unsupportedIterableToArray(r) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function pages_unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return pages_arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? pages_arrayLikeToArray(r, a) : void 0;}}function _iterableToArray(r) {if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);}function _arrayWithoutHoles(r) {if (Array.isArray(r)) return pages_arrayLikeToArray(r);}function pages_arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function pages_defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, pages_toPropertyKey(o.key), o);}}function pages_createClass(e, r, t) {return r && pages_defineProperties(e.prototype, r), t && pages_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function pages_classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function _defineProperty(e, r, t) {return (r = pages_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function pages_toPropertyKey(t) {var i = pages_toPrimitive(t, "string");return "symbol" == pages_typeof(i) ? i : i + "";}function pages_toPrimitive(t, r) {if ("object" != pages_typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != pages_typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+
 
 
 
@@ -1376,7 +1527,9 @@ var PageResolver = /*#__PURE__*/function () {function PageResolver() {pages_clas
         var count = 1;
 
         if (name.match(/ x\d+$/)) {
-          count = apiSupplier/* kol */.x.toInt(name.substring(name.lastIndexOf("x") + 1));
+          count = utils/* AccountValUtils */.E.toInt(
+            name.substring(name.lastIndexOf("x") + 1)
+          );
           name = name.substring(0, name.lastIndexOf(" "));
         }
 
@@ -1402,7 +1555,7 @@ var PageResolver = /*#__PURE__*/function () {function PageResolver() {pages_clas
 
       while ((match = page.match(regex)) != null) {
         page = page.replace(match[0], "");
-        familiars.push(apiSupplier/* kol */.x.toFamiliar(apiSupplier/* kol */.x.toInt(match[1])));
+        familiars.push(apiSupplier/* kol */.x.toFamiliar(utils/* AccountValUtils */.E.toInt(match[1])));
       }
 
       return familiars;
@@ -1410,7 +1563,7 @@ var PageResolver = /*#__PURE__*/function () {function PageResolver() {pages_clas
 
     function getStore(userId) {
       var items = [];
-      var page = apiSupplier/* kol */.x.visitUrl("mallstore.php?whichstore=" + userId);var _iterator = _createForOfIteratorHelper(
+      var page = apiSupplier/* kol */.x.visitUrl("mallstore.php?whichstore=" + userId);var _iterator = pages_createForOfIteratorHelper(
 
           page.split("<tr>")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var s = _step.value;
           var match = s.match(
@@ -1422,10 +1575,10 @@ var PageResolver = /*#__PURE__*/function () {function PageResolver() {pages_clas
           }
 
           var item = new StoreItem();
-          item.item = apiSupplier/* kol */.x.toItem(match[1]);
-          item.amount = apiSupplier/* kol */.x.toInt(match[2]);
-          item.limit = match[3] == null ? 0 : apiSupplier/* kol */.x.toInt(match[3]);
-          item.price = apiSupplier/* kol */.x.toInt(match[4]);
+          item.item = supplierTypings/* KoLItem */.U8.get(utils/* AccountValUtils */.E.toInt(match[1]));
+          item.amount = utils/* AccountValUtils */.E.toInt(match[2]);
+          item.limit = match[3] == null ? 0 : utils/* AccountValUtils */.E.toInt(match[3]);
+          item.price = utils/* AccountValUtils */.E.toInt(match[4]);
           items.push(item);
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
@@ -1441,7 +1594,7 @@ var PageResolver = /*#__PURE__*/function () {function PageResolver() {pages_clas
       var lastShelf;
       var itemRegex =
       /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/;
-      var shelfRegex = /<font color=white>([^<]+)<\/font>/;var _iterator2 = _createForOfIteratorHelper(
+      var shelfRegex = /<font color=white>([^<]+)<\/font>/;var _iterator2 = pages_createForOfIteratorHelper(
 
           page.split("<tr>")),_step2;try {for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {var s = _step2.value;
           var shelfMatch = s.match(shelfRegex);
@@ -1468,129 +1621,11 @@ var PageResolver = /*#__PURE__*/function () {function PageResolver() {pages_clas
 
           map.set(
             { item: item, shelf: lastShelf },
-            match[3] == null ? 1 : apiSupplier/* kol */.x.toInt(match[3])
+            match[3] == null ? 1 : utils/* AccountValUtils */.E.toInt(match[3])
           );
         }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}
 
       return map;
-    } }]);}();
-// EXTERNAL MODULE: ./src/models/typings.ts
-var typings = __webpack_require__(198);
-;// ./src/utils/utils.ts
-function utils_typeof(o) {"@babel/helpers - typeof";return utils_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, utils_typeof(o);}function utils_createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = utils_unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function utils_unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return utils_arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? utils_arrayLikeToArray(r, a) : void 0;}}function utils_arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function utils_classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function utils_defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, utils_toPropertyKey(o.key), o);}}function utils_createClass(e, r, t) {return r && utils_defineProperties(e.prototype, r), t && utils_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function utils_toPropertyKey(t) {var i = utils_toPrimitive(t, "string");return "symbol" == utils_typeof(i) ? i : i + "";}function utils_toPrimitive(t, r) {if ("object" != utils_typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != utils_typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
-
-
-
-
-var AccountValUtils = /*#__PURE__*/function () {function AccountValUtils() {utils_classCallCheck(this, AccountValUtils);}return utils_createClass(AccountValUtils, null, [{ key: "splitArguments", value:
-    function splitArguments(
-    settings,
-    command)
-
-    {var debugMessages = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-      var debug = function debug(message) {
-        if (!debugMessages) {
-          return;
-        }
-
-        apiSupplier/* kol */.x.print("DEBUG: " + message, utils_colors/* AccountValColors */.HK.minorNote);
-      };
-
-      var tCommand = command;
-      var match;
-
-      while (
-      (match = tCommand.match(/(^| )([a-zA-Z]+ )([a-zA-Z\d"]+)/)) != null)
-      {
-        tCommand = tCommand.replace(match[2], "");
-        var setting = settings.getSetting(match[2].trim());
-        var v2 = (match[3] || "").replace("!", "").split("=")[0].trim();
-        var setting2 = settings.getSetting(
-          v2.toLowerCase() == "true" ? "" : v2
-        );
-
-        if (
-        setting == null ||
-        setting.type == typings/* FieldType */.PU.BOOLEAN && setting2 != null)
-        {
-          debug("'".concat(match[2], "' is not a key parameter"));
-          continue;
-        }
-
-        command = command.replace(match[2], match[2].trim() + "=");
-        tCommand = tCommand.replace(match[3], "");
-        debug("Replacing '".concat(
-          match[2], "' as a key parameter, matched using '").concat(match[0], "'")
-        );
-      }
-
-      tCommand = command;
-      var spl = [];
-
-      while (
-      (match = tCommand.match(/(?:^| )([^ =]+=("|').+?"|')(?=(?:$| ))/)) != null)
-      {
-        var v = match[1];
-        var val = "";
-
-        if (v.indexOf("=") > 0) {
-          val = v.substring(0, v.indexOf("=") + 1);
-          v = v.substring(val.length);
-        }
-
-        if (
-        v.startsWith('"') && v.endsWith('"') ||
-        v.startsWith("'") && v.endsWith("'"))
-        {
-          v = v.substring(1, v.length - 1);
-        }
-
-        v = val + v;
-        spl.push(v);
-        tCommand = tCommand.replace(match[1], "").trim().replace(/ +/, " ");
-        debug("'".concat(v, " defined as a key=\"value\", matched '").concat(match[0], "'"));
-      }
-
-      if (tCommand.length > 0) {var _iterator = utils_createForOfIteratorHelper(
-            tCommand.split(" ")),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var arg = _step.value;
-            debug("Found leftover parameter '".concat(arg));
-            spl.push(arg);
-          }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
-      }
-
-      debug("Final parameters are: " + spl.map((s) => "{".concat(s, "}")).join(" "));
-
-      return spl;
-    } }, { key: "getNumber", value:
-
-    function getNumber(number) {var trimAt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
-      var str = number.toString().split(".");
-
-      if (str.length > 1 && str[1].length > trimAt) {
-        str[1] = str[1].substring(0, trimAt);
-      }
-
-      str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-      return str.join(".");
-    } }, { key: "getNumberOrClamp", value:
-
-    function getNumberOrClamp(
-    number,
-    min,
-    max,
-    minStr,
-    maxStr)
-    {
-      if (number > max) {
-        return maxStr;
-      }
-
-      if (number < min) {
-        return minStr;
-      }
-
-      return this.getNumber(number);
     } }]);}();
 ;// ./src/settings/presets.ts
 
@@ -1725,7 +1760,7 @@ function getPresets() {
       return ["pvpable", "pvp", "stealable"];
     },
     isShown: function isShown(item, worth) {
-      return item.isTradeable() && apiSupplier/* kol */.x.isDiscardable(item.actualItem);
+      return item.isTradeable() && item.actualItem.discardable;
     },
     desc: function desc() {
       return "Show only items that can be stolen";
@@ -1749,7 +1784,7 @@ function getPresets() {
       return ["autosell", "junk"];
     },
     isShown: function isShown(item, worth) {
-      if (item.isBound() || !apiSupplier/* kol */.x.isDiscardable(item.actualItem)) {
+      if (item.isBound() || !item.actualItem.discardable) {
         return false;
       }
 
@@ -1836,8 +1871,11 @@ function getPresets() {
 function getPreset(name) {
   return getPresets().find((p) => p.name().includes(name.toLowerCase()));
 }
+// EXTERNAL MODULE: ./src/models/typings.ts
+var typings = __webpack_require__(198);
 ;// ./src/settings/settings.ts
 function settings_typeof(o) {"@babel/helpers - typeof";return settings_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, settings_typeof(o);}function settings_createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = settings_unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function settings_unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return settings_arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? settings_arrayLikeToArray(r, a) : void 0;}}function settings_arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function settings_classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function settings_defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, settings_toPropertyKey(o.key), o);}}function settings_createClass(e, r, t) {return r && settings_defineProperties(e.prototype, r), t && settings_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function settings_defineProperty(e, r, t) {return (r = settings_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function settings_toPropertyKey(t) {var i = settings_toPrimitive(t, "string");return "symbol" == settings_typeof(i) ? i : i + "";}function settings_toPrimitive(t, r) {if ("object" != settings_typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != settings_typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+
 
 
 
@@ -2191,14 +2229,17 @@ var AccountValSettings = /*#__PURE__*/function () {
 
       this.colorScheme = apiSupplier/* kol */.x.isDarkMode() ? "dark" : "default";
 
-      if (apiSupplier/* kol */.x.getProperty("accountval_maxNaturalPrice").length > 0) {
+      if (
+      apiSupplier/* kol */.x.retrieveCache("accountval_maxNaturalPrice", "small_persist").length >
+      0)
+      {
         this.maxNaturalPrice = this.toNumber(
-          apiSupplier/* kol */.x.getProperty("accountval_maxNaturalPrice")
+          apiSupplier/* kol */.x.retrieveCache("accountval_maxNaturalPrice", "small_persist")
         );
       }
 
-      if (apiSupplier/* kol */.x.getProperty("accountval_text").length > 0) {
-        var str = apiSupplier/* kol */.x.getProperty("accountval_text");
+      if (apiSupplier/* kol */.x.retrieveCache("accountval_text", "small_persist").length > 0) {
+        var str = apiSupplier/* kol */.x.retrieveCache("accountval_text", "small_persist");
 
         if (str == "plain" || str == "fancy") {
           this.logOutputAs = str;
@@ -2257,7 +2298,7 @@ var AccountValSettings = /*#__PURE__*/function () {
 
               }
 
-              isTrue = apiSupplier/* kol */.x.toBoolean(v);
+              isTrue = utils/* AccountValUtils */.E.toBoolean(v);
             }
 
             switch (setting.type) {
@@ -2511,7 +2552,7 @@ var AccountValSettings = /*#__PURE__*/function () {
         return null;
       }
 
-      var num = apiSupplier/* kol */.x.toFloat(match[1]);
+      var num = utils/* AccountValUtils */.E.toFloat(match[1]);
 
       if (match[2] == "t") {
         num *= 1000000000000;
@@ -2562,7 +2603,7 @@ var PricingSettings = /*#__PURE__*/function () {function PricingSettings() {sett
       return 900;
     } }]);}();
 ;// ./src/utils/timings.ts
-var _AccValTiming;function timings_typeof(o) {"@babel/helpers - typeof";return timings_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, timings_typeof(o);}function timings_createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = timings_unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function timings_toConsumableArray(r) {return timings_arrayWithoutHoles(r) || timings_iterableToArray(r) || timings_unsupportedIterableToArray(r) || timings_nonIterableSpread();}function timings_nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function timings_iterableToArray(r) {if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);}function timings_arrayWithoutHoles(r) {if (Array.isArray(r)) return timings_arrayLikeToArray(r);}function _slicedToArray(r, e) {return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || timings_unsupportedIterableToArray(r, e) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function timings_unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return timings_arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? timings_arrayLikeToArray(r, a) : void 0;}}function timings_arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function _iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function _arrayWithHoles(r) {if (Array.isArray(r)) return r;}function timings_classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function timings_defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, timings_toPropertyKey(o.key), o);}}function timings_createClass(e, r, t) {return r && timings_defineProperties(e.prototype, r), t && timings_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function timings_defineProperty(e, r, t) {return (r = timings_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function timings_toPropertyKey(t) {var i = timings_toPrimitive(t, "string");return "symbol" == timings_typeof(i) ? i : i + "";}function timings_toPrimitive(t, r) {if ("object" != timings_typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != timings_typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+var _AccValTiming;function timings_typeof(o) {"@babel/helpers - typeof";return timings_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, timings_typeof(o);}function timings_createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = timings_unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function timings_toConsumableArray(r) {return timings_arrayWithoutHoles(r) || timings_iterableToArray(r) || timings_unsupportedIterableToArray(r) || timings_nonIterableSpread();}function timings_nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function timings_iterableToArray(r) {if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);}function timings_arrayWithoutHoles(r) {if (Array.isArray(r)) return timings_arrayLikeToArray(r);}function timings_slicedToArray(r, e) {return timings_arrayWithHoles(r) || timings_iterableToArrayLimit(r, e) || timings_unsupportedIterableToArray(r, e) || timings_nonIterableRest();}function timings_nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function timings_unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return timings_arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? timings_arrayLikeToArray(r, a) : void 0;}}function timings_arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function timings_iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function timings_arrayWithHoles(r) {if (Array.isArray(r)) return r;}function timings_classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function timings_defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, timings_toPropertyKey(o.key), o);}}function timings_createClass(e, r, t) {return r && timings_defineProperties(e.prototype, r), t && timings_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function timings_defineProperty(e, r, t) {return (r = timings_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function timings_toPropertyKey(t) {var i = timings_toPrimitive(t, "string");return "symbol" == timings_typeof(i) ? i : i + "";}function timings_toPrimitive(t, r) {if ("object" != timings_typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != timings_typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
 
 
 
@@ -2629,7 +2670,7 @@ var AccValTiming = /*#__PURE__*/function () {
 
     function getTimeStr() {
       return (
-        AccountValUtils.getNumber(this.getTime()) +
+        utils/* AccountValUtils */.E.getNumber(this.getTime()) +
         "ms" + (
         this.stopped == null ? " (never stopped)" : "") + (
         this.stepStarted != null ? " (step never stopped)" : ""));
@@ -2642,7 +2683,7 @@ var AccValTiming = /*#__PURE__*/function () {
       }
 
       var started = Date.now();
-      var existing = this.tracking.find((_ref) => {var _ref2 = _slicedToArray(_ref, 2),t = _ref2[1];return t.getName() == name;});
+      var existing = this.tracking.find((_ref) => {var _ref2 = timings_slicedToArray(_ref, 2),t = _ref2[1];return t.getName() == name;});
 
       if (
       existing != null && (
@@ -2656,7 +2697,7 @@ var AccValTiming = /*#__PURE__*/function () {
           existing = ["STARTED", new AccValTiming(name, withSteps)]
         );
         existing[1].depth =
-        this.tracking.filter((_ref3) => {var _ref4 = _slicedToArray(_ref3, 2),state = _ref4[0],t = _ref4[1];return t.stopped == null;}).length - 1;
+        this.tracking.filter((_ref3) => {var _ref4 = timings_slicedToArray(_ref3, 2),state = _ref4[0],t = _ref4[1];return t.stopped == null;}).length - 1;
       } else {
         existing[1].start();
       }
@@ -2672,14 +2713,14 @@ var AccValTiming = /*#__PURE__*/function () {
       }
 
       var started = Date.now();
-      var existing = this.tracking.find((_ref5) => {var _ref6 = _slicedToArray(_ref5, 2),t = _ref6[1];return t.getName() == name;});
+      var existing = this.tracking.find((_ref5) => {var _ref6 = timings_slicedToArray(_ref5, 2),t = _ref6[1];return t.getName() == name;});
 
       if (existing == null) {
         throw "There was no time tracking created for " + name;
       }
 
       this.tracking = this.tracking.filter(
-        (_ref7) => {var _ref8 = _slicedToArray(_ref7, 2),s = _ref8[0],t = _ref8[1];return s != "STOPPED" || t != existing[1];}
+        (_ref7) => {var _ref8 = timings_slicedToArray(_ref7, 2),s = _ref8[0],t = _ref8[1];return s != "STOPPED" || t != existing[1];}
       );
       this.tracking.push(["STOPPED", existing[1]]);
 
@@ -2696,13 +2737,13 @@ var AccValTiming = /*#__PURE__*/function () {
         this.tracking);
 
 
-      this.tracking.forEach((_ref9) => {var _ref0 = _slicedToArray(_ref9, 2),state = _ref0[0],t = _ref0[1];
+      this.tracking.forEach((_ref9) => {var _ref0 = timings_slicedToArray(_ref9, 2),state = _ref0[0],t = _ref0[1];
         if (t.stopped == null) {
           sortedTimes.push(["STOPPED", t]);
         }
       });var _iterator = timings_createForOfIteratorHelper(
 
-          sortedTimes),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _step$value = _slicedToArray(_step.value, 2),state = _step$value[0],timing = _step$value[1];
+          sortedTimes),_step;try {for (_iterator.s(); !(_step = _iterator.n()).done;) {var _step$value = timings_slicedToArray(_step.value, 2),state = _step$value[0],timing = _step$value[1];
           var depthStr = "<font color='gray'>".concat(">&nbsp;".repeat(timing.depth), "</font>");
 
           if (method == "PRINT_JUST_ONCE") {
@@ -2735,7 +2776,7 @@ var AccValTiming = /*#__PURE__*/function () {
         }} catch (err) {_iterator.e(err);} finally {_iterator.f();}
 
       apiSupplier/* kol */.x.printHtml("<font color='green'>The usage of timings took an extra: </font><font color='blue'>".concat(
-        AccountValUtils.getNumber(this.timingsSlowdown), "ms</font>")
+        utils/* AccountValUtils */.E.getNumber(this.timingsSlowdown), "ms</font>")
       );
     } }]);}();_AccValTiming = AccValTiming;timings_defineProperty(AccValTiming, "tracking", []);timings_defineProperty(AccValTiming, "timingsSlowdown", 0);
 ;// ./src/pricing/variants/kolmafia.ts
@@ -2790,7 +2831,6 @@ function flatfile_typeof(o) {"@babel/helpers - typeof";return flatfile_typeof = 
 
 
 
-
 var FlatfilePrices = /*#__PURE__*/function () {
 
 
@@ -2805,7 +2845,7 @@ var FlatfilePrices = /*#__PURE__*/function () {
     } }, { key: "resolve", value:
 
     function resolve(item) {
-      var price = this.prices[apiSupplier/* kol */.x.toInt(item)];
+      var price = this.prices[item.id];
 
       if (price == null) {
         return null;
@@ -2909,7 +2949,7 @@ var IrratPrices = /*#__PURE__*/function (_FlatfilePrices) {function IrratPrices(
       var toFetch = this.settings.dateToFetch;
 
       if (toFetch == null) {
-        return apiSupplier/* kol */.x.fileToBuffer("irrats_item_prices.txt");
+        return apiSupplier/* kol */.x.retrieveCache("irrats_item_prices.txt", "large_persist");
       }
 
       var finalDateString;
@@ -3017,13 +3057,12 @@ function pricegun_typeof(o) {"@babel/helpers - typeof";return pricegun_typeof = 
 
 
 
-
 var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pricegun_classCallCheck(this, PricegunResolver);pricegun_defineProperty(this, "items",
     new Map());}return pricegun_createClass(PricegunResolver, [{ key: "load", value:
 
     function load() {
       this.items.clear();
-      var buffer = apiSupplier/* kol */.x.fileToBuffer("pricegun_prices.txt");
+      var buffer = apiSupplier/* kol */.x.retrieveCache("pricegun_prices.txt", "large_persist");
 
       if (!buffer) {
         return;
@@ -3047,11 +3086,12 @@ var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pr
 
     function stop() {
       var cutoff = Math.floor(Date.now() / 1000) - 23 * 60 * 60;
-      apiSupplier/* kol */.x.bufferToFile(
+      apiSupplier/* kol */.x.storeCache(
+        "pricegun_prices.txt",
         JSON.stringify(
           pricegun_toConsumableArray(this.items.values()).filter((i) => i.retrieved > cutoff)
         ),
-        "pricegun_prices.txt"
+        "large_persist"
       );
     } }, { key: "parseValue", value:
 
@@ -3072,7 +3112,7 @@ var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pr
     } }, { key: "bulkResolve", value:
 
     function bulkResolve(items) {
-      var missing = items.filter((i) => !this.items.has(apiSupplier/* kol */.x.toInt(i)));
+      var missing = items.filter((i) => !this.items.has(i.id));
 
       if (missing.length) {
         this.fetch(missing);
@@ -3082,7 +3122,7 @@ var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pr
 
       return items.
       map((i) => {
-        var price = this.items.get(apiSupplier/* kol */.x.toInt(i));
+        var price = this.items.get(i.id);
 
         if (!price || price.volume < 0) {
           return null;
@@ -3104,11 +3144,8 @@ var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pr
       var now = Math.floor(Date.now() / 1000);
 
       // Ensure at least one result
-      if (
-      items.length + 3 < MAX_AMOUNT &&
-      !items.find((i) => apiSupplier/* kol */.x.toInt(i) === 1))
-      {
-        items.push(external_kolmafia_namespaceObject.Item.get(1));
+      if (items.length + 3 < MAX_AMOUNT && !items.find((i) => i.id === 1)) {
+        items.push(supplierTypings/* KoLItem */.U8.get(1));
       }
 
       var totalLength = items.length;
@@ -3117,7 +3154,7 @@ var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pr
         var batch = items.slice(start, start + MAX_AMOUNT);
 
         try {
-          var url = "https://pricegun.loathers.net/api/".concat(batch.map((i) => apiSupplier/* kol */.x.toInt(i)).join(","));
+          var url = "https://pricegun.loathers.net/api/".concat(batch.map((i) => i.id).join(","));
           var response = JSON.parse(apiSupplier/* kol */.x.visitUrl(url));
           var parsed = batch.length === 1 ? [response] : response;var _iterator2 = pricegun_createForOfIteratorHelper(
 
@@ -3128,7 +3165,7 @@ var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pr
             }} catch (err) {_iterator2.e(err);} finally {_iterator2.f();}var _iterator3 = pricegun_createForOfIteratorHelper(
 
               batch),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var i = _step3.value;
-              var id = apiSupplier/* kol */.x.toInt(i);
+              var id = i.id;
 
               if (!this.items.has(id)) {
                 this.items.set(id, {
@@ -3142,7 +3179,7 @@ var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pr
             }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
         } catch (_unused2) {var _iterator4 = pricegun_createForOfIteratorHelper(
               batch),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _i = _step4.value;
-              var _id = apiSupplier/* kol */.x.toInt(_i);
+              var _id = _i.id;
               this.items.set(_id, {
                 itemId: _id,
                 value: 0,
@@ -3168,7 +3205,6 @@ var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pr
     } }]);}();
 ;// ./src/pricing/priceResolver.ts
 function priceResolver_typeof(o) {"@babel/helpers - typeof";return priceResolver_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, priceResolver_typeof(o);}function priceResolver_toConsumableArray(r) {return priceResolver_arrayWithoutHoles(r) || priceResolver_iterableToArray(r) || priceResolver_unsupportedIterableToArray(r) || priceResolver_nonIterableSpread();}function priceResolver_nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function priceResolver_iterableToArray(r) {if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);}function priceResolver_arrayWithoutHoles(r) {if (Array.isArray(r)) return priceResolver_arrayLikeToArray(r);}function priceResolver_createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = priceResolver_unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function priceResolver_unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return priceResolver_arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? priceResolver_arrayLikeToArray(r, a) : void 0;}}function priceResolver_arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function priceResolver_classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function priceResolver_defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, priceResolver_toPropertyKey(o.key), o);}}function priceResolver_createClass(e, r, t) {return r && priceResolver_defineProperties(e.prototype, r), t && priceResolver_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function priceResolver_defineProperty(e, r, t) {return (r = priceResolver_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function priceResolver_toPropertyKey(t) {var i = priceResolver_toPrimitive(t, "string");return "symbol" == priceResolver_typeof(i) ? i : i + "";}function priceResolver_toPrimitive(t, r) {if ("object" != priceResolver_typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != priceResolver_typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
-
 
 
 
@@ -3210,9 +3246,9 @@ var PriceResolver = /*#__PURE__*/function () {
     } }, { key: "fillSpecialCase", value:
 
     function fillSpecialCase() {
-      this.specialCase.set(external_kolmafia_namespaceObject.Item.get("Meat Paste"), 10);
-      this.specialCase.set(external_kolmafia_namespaceObject.Item.get("Meat Stack"), 100);
-      this.specialCase.set(external_kolmafia_namespaceObject.Item.get("Dense meat stack"), 1000);
+      this.specialCase.set(supplierTypings/* KoLItem */.U8.get("Meat Paste"), 10);
+      this.specialCase.set(supplierTypings/* KoLItem */.U8.get("Meat Stack"), 100);
+      this.specialCase.set(supplierTypings/* KoLItem */.U8.get("Dense meat stack"), 1000);
     } }, { key: "doWarning", value:
 
     function doWarning() {
@@ -3354,6 +3390,7 @@ var PriceResolver = /*#__PURE__*/function () {
     } }]);}();
 ;// ./src/core/logic.ts
 function logic_typeof(o) {"@babel/helpers - typeof";return logic_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {return typeof o;} : function (o) {return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;}, logic_typeof(o);}function logic_slicedToArray(r, e) {return logic_arrayWithHoles(r) || logic_iterableToArrayLimit(r, e) || logic_unsupportedIterableToArray(r, e) || logic_nonIterableRest();}function logic_nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function logic_iterableToArrayLimit(r, l) {var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (null != t) {var e,n,i,u,a = [],f = !0,o = !1;try {if (i = (t = t.call(r)).next, 0 === l) {if (Object(t) !== t) return;f = !1;} else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);} catch (r) {o = !0, n = r;} finally {try {if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;} finally {if (o) throw n;}}return a;}}function logic_arrayWithHoles(r) {if (Array.isArray(r)) return r;}function logic_toConsumableArray(r) {return logic_arrayWithoutHoles(r) || logic_iterableToArray(r) || logic_unsupportedIterableToArray(r) || logic_nonIterableSpread();}function logic_nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function logic_iterableToArray(r) {if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);}function logic_arrayWithoutHoles(r) {if (Array.isArray(r)) return logic_arrayLikeToArray(r);}function logic_createForOfIteratorHelper(r, e) {var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];if (!t) {if (Array.isArray(r) || (t = logic_unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {t && (r = t);var _n = 0,F = function F() {};return { s: F, n: function n() {return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };}, e: function e(r) {throw r;}, f: F };}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var o,a = !0,u = !1;return { s: function s() {t = t.call(r);}, n: function n() {var r = t.next();return a = r.done, r;}, e: function e(r) {u = !0, o = r;}, f: function f() {try {a || null == t.return || t.return();} finally {if (u) throw o;}} };}function logic_unsupportedIterableToArray(r, a) {if (r) {if ("string" == typeof r) return logic_arrayLikeToArray(r, a);var t = {}.toString.call(r).slice(8, -1);return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? logic_arrayLikeToArray(r, a) : void 0;}}function logic_arrayLikeToArray(r, a) {(null == a || a > r.length) && (a = r.length);for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];return n;}function logic_classCallCheck(a, n) {if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");}function logic_defineProperties(e, r) {for (var t = 0; t < r.length; t++) {var o = r[t];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, logic_toPropertyKey(o.key), o);}}function logic_createClass(e, r, t) {return r && logic_defineProperties(e.prototype, r), t && logic_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;}function logic_defineProperty(e, r, t) {return (r = logic_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e;}function logic_toPropertyKey(t) {var i = logic_toPrimitive(t, "string");return "symbol" == logic_typeof(i) ? i : i + "";}function logic_toPrimitive(t, r) {if ("object" != logic_typeof(t) || !t) return t;var e = t[Symbol.toPrimitive];if (void 0 !== e) {var i = e.call(t, r || "default");if ("object" != logic_typeof(i)) return i;throw new TypeError("@@toPrimitive must return a primitive value.");}return ("string" === r ? String : Number)(t);}
+
 
 
 
@@ -3571,20 +3608,24 @@ var AccountValLogic = /*#__PURE__*/function () {
       AccValTiming.stop("Resolve Familiar Items");
 
       AccValTiming.start("Resolve Session");
-      var sessionItems = this.resolver.resolveSessionItems();
+      var sessionItems = apiSupplier/* kol */.x.mySessionItems();
       AccValTiming.stop("Resolve Session");
 
-      AccValTiming.start("Resolve Inventory");
-      var mega = this.settings.fetchInventory ? apiSupplier/* kol */.x.getInventory() : {};
-      AccValTiming.stop("Resolve Inventory");
+      var mega = new Map();
 
       var megaExtra = new Map();
 
-      var add = (stuff) => {
-        Object.entries(stuff).forEach((_ref3) => {var _mega$k;var _ref4 = logic_slicedToArray(_ref3, 2),k = _ref4[0],v = _ref4[1];
-          mega[k] = ((_mega$k = mega[k]) !== null && _mega$k !== void 0 ? _mega$k : 0) + v;
-        });
+      var add = (stuff) => {var _iterator3 = logic_createForOfIteratorHelper(
+            stuff),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _mega$get;var _step3$value = logic_slicedToArray(_step3.value, 2),item = _step3$value[0],amount = _step3$value[1];
+            mega.set(item, ((_mega$get = mega.get(item)) !== null && _mega$get !== void 0 ? _mega$get : 0) + amount);
+          }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
       };
+
+      if (this.settings.fetchInventory) {
+        AccValTiming.start("Resolve and Add Inventory");
+        add(apiSupplier/* kol */.x.getInventory());
+        AccValTiming.stop("Resolve and Add Inventory");
+      }
 
       if (this.settings.fetchCloset) {
         AccValTiming.start("Resolve and Add Closet");
@@ -3595,8 +3636,6 @@ var AccountValLogic = /*#__PURE__*/function () {
       if (this.settings.fetchStorage) {
         AccValTiming.start("Resolve and Add Storage");
         add(apiSupplier/* kol */.x.getStorage());
-        add(apiSupplier/* kol */.x.getFreePulls());
-        add(apiSupplier/* kol */.x.getNoPulls());
         AccValTiming.stop("Resolve and Add Storage");
       }
 
@@ -3610,7 +3649,7 @@ var AccountValLogic = /*#__PURE__*/function () {
         if (this.settings.doCategories) {
           AccValTiming.start("Resolve and Add Display Case with Shelves");
           var pager = new PageResolver();
-          var items = pager.getDisplaycase(apiSupplier/* kol */.x.toInt(apiSupplier/* kol */.x.myId()));
+          var items = pager.getDisplaycase(utils/* AccountValUtils */.E.toInt(apiSupplier/* kol */.x.myId()));
           items.forEach((v, k) => {
             if (!this.categoryOrder.includes(k.shelf)) {
               this.categoryOrder.push(k.shelf);
@@ -3626,16 +3665,20 @@ var AccountValLogic = /*#__PURE__*/function () {
         }
       }
 
+      AccValTiming.start("Resolve Shop");
+      var shop = this.settings.fetchShop ? apiSupplier/* kol */.x.getShop() : null;
+      AccValTiming.stop("Resolve Shop");
+
       if (this.settings.fetchShop && !this.settings.shopWorth) {
-        AccValTiming.start("Resolve and Add Shop");
-        add(apiSupplier/* kol */.x.getShop());
-        AccValTiming.stop("Resolve and Add Shop");
+        AccValTiming.start("Add Shop");
+        add(shop);
+        AccValTiming.stop("Add Shop");
       }
 
-      AccValTiming.start("Process All Items");var _iterator3 = logic_createForOfIteratorHelper(
+      AccValTiming.start("Process All Items");var _iterator4 = logic_createForOfIteratorHelper(
 
-          supplierTypings/* KoLItem */.U8.all()),_step3;try {for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {var _mega$_item2$name;var _item2 = _step3.value;
-          var amount = (_mega$_item2$name = mega[_item2.name]) !== null && _mega$_item2$name !== void 0 ? _mega$_item2$name : 0;
+          supplierTypings/* KoLItem */.U8.all()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _mega$get2, _shop$get;var _item2 = _step4.value;
+          var amount = (_mega$get2 = mega.get(_item2)) !== null && _mega$get2 !== void 0 ? _mega$get2 : 0;
 
           if (this.settings.fetchSession) {var _sessionItems$get;
             amount += (_sessionItems$get = sessionItems.get(_item2)) !== null && _sessionItems$get !== void 0 ? _sessionItems$get : 0;
@@ -3652,15 +3695,11 @@ var AccountValLogic = /*#__PURE__*/function () {
             category = megaExtra.get(_item2).shelf;
           }
 
-          if (
-          this.settings.fetchShop &&
-          this.settings.shopWorth &&
-          apiSupplier/* kol */.x.shopAmount(_item2) > 0)
-          {
+          if (this.settings.shopWorth && ((_shop$get = shop.get(_item2)) !== null && _shop$get !== void 0 ? _shop$get : 0) > 0) {
             var _i = new typings/* ValItem */.Fx(_item2).withCategory(category);
             _i.bound = typings/* ItemStatus */.Kw.SHOP_WORTH;
             _i.shopWorth = apiSupplier/* kol */.x.shopPrice(_item2);
-            this.ownedItems.set(_i, apiSupplier/* kol */.x.shopAmount(_item2));
+            this.ownedItems.set(_i, shop.get(_item2));
             continue;
           }
 
@@ -3669,7 +3708,7 @@ var AccountValLogic = /*#__PURE__*/function () {
           }
 
           this.ownedItems.set(new typings/* ValItem */.Fx(_item2).withCategory(category), amount);
-        }} catch (err) {_iterator3.e(err);} finally {_iterator3.f();}
+        }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
 
       AccValTiming.stop("Process All Items");
 
@@ -3701,9 +3740,9 @@ var AccountValLogic = /*#__PURE__*/function () {
       }
 
       if (this.settings.doBound && this.settings.fetchingNonItems) {
-        AccValTiming.start("Resolve Urled Items");var _iterator4 = logic_createForOfIteratorHelper(
+        AccValTiming.start("Resolve Urled Items");var _iterator5 = logic_createForOfIteratorHelper(
 
-            this.resolver.getUrledItems()),_step4;try {for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {var _step4$value = logic_slicedToArray(_step4.value, 2),item = _step4$value[0],status = _step4$value[1];
+            this.resolver.getUrledItems()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var _step5$value = logic_slicedToArray(_step5.value, 2),item = _step5$value[0],status = _step5$value[1];
             if (
             item.tradeable && (
             status == typings/* ItemStatus */.Kw.FAMILIAR || status != typings/* ItemStatus */.Kw.BOUND) ?
@@ -3714,7 +3753,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             }
 
             this.addItem(new typings/* ValItem */.Fx(item, item, item.name, item.plural, status));
-          }} catch (err) {_iterator4.e(err);} finally {_iterator4.f();}
+          }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
 
         AccValTiming.stop("Resolve Urled Items");
       }
@@ -3737,9 +3776,9 @@ var AccountValLogic = /*#__PURE__*/function () {
         );
       }
 
-      var skipJsFilter = this.settings.doesJSFilterUsePriceOrSales();var _iterator5 = logic_createForOfIteratorHelper(
+      var skipJsFilter = this.settings.doesJSFilterUsePriceOrSales();var _iterator6 = logic_createForOfIteratorHelper(
 
-          this.ownedItems.keys()),_step5;try {for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {var item = _step5.value;
+          this.ownedItems.keys()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var item = _step6.value;
           if (
           !skipJsFilter &&
           this.jsFilter != null &&
@@ -3802,7 +3841,7 @@ var AccountValLogic = /*#__PURE__*/function () {
           if (item.isBound() && this.ownedItems.get(item) > 1) {
             this.ownedItems.set(item, 1);
           }
-        }} catch (err) {_iterator5.e(err);} finally {_iterator5.f();}
+        }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
     } }, { key: "doPricing", value:
 
     function doPricing() {
@@ -3848,9 +3887,9 @@ var AccountValLogic = /*#__PURE__*/function () {
       AccValTiming.start("Add Logic Prices");
       this.priceResolver.bulkLoad(
         logic_toConsumableArray(this.ownedItems.keys()).map((i) => i.tradeableItem)
-      );var _iterator6 = logic_createForOfIteratorHelper(
+      );var _iterator7 = logic_createForOfIteratorHelper(
 
-          this.ownedItems.keys()),_step6;try {for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {var _i2 = _step6.value;
+          this.ownedItems.keys()),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var _i2 = _step7.value;
           AccValTiming.start("Price Item", true);
           var _price = this.priceResolver.itemPrice(
             _i2.tradeableItem,
@@ -3874,7 +3913,7 @@ var AccountValLogic = /*#__PURE__*/function () {
           } else {
             toCheck.push([_i2, _price]);
           }
-        }} catch (err) {_iterator6.e(err);} finally {_iterator6.f();}
+        }} catch (err) {_iterator7.e(err);} finally {_iterator7.f();}
 
       AccValTiming.stop("Add Logic Prices");
 
@@ -3889,9 +3928,9 @@ var AccountValLogic = /*#__PURE__*/function () {
 
       if (toCheck.length > 0) {
         AccValTiming.start("Check Remaining Logic Item Prices");
-        this.priceResolver.bulkLoad(toCheck.map((i) => i[0].tradeableItem));var _iterator7 = logic_createForOfIteratorHelper(
+        this.priceResolver.bulkLoad(toCheck.map((i) => i[0].tradeableItem));var _iterator8 = logic_createForOfIteratorHelper(
 
-            toCheck),_step7;try {for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {var check = _step7.value;
+            toCheck),_step8;try {for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {var check = _step8.value;
             var i = check[0];
 
             if (++checked % 20 == 0 && lastPrinted + 1000 < Date.now()) {
@@ -3919,7 +3958,7 @@ var AccountValLogic = /*#__PURE__*/function () {
             }
 
             addPrice(i, price);
-          }} catch (err) {_iterator7.e(err);} finally {_iterator7.f();}
+          }} catch (err) {_iterator8.e(err);} finally {_iterator8.f();}
 
         AccValTiming.stop("Check Remaining Logic Item Prices");
       }
@@ -3956,8 +3995,7 @@ var AccountValLogic = /*#__PURE__*/function () {
       } else if (this.settings.sortBy == typings/* SortBy */.gx.NAME) {
         sorter = (v1, v2) => v1[0].name.localeCompare(v2[0].name);
       } else if (this.settings.sortBy == typings/* SortBy */.gx.ITEM_ID) {
-        sorter = (v1, v2) =>
-        apiSupplier/* kol */.x.toInt(v1[0].tradeableItem) - apiSupplier/* kol */.x.toInt(v2[0].tradeableItem);
+        sorter = (v1, v2) => v1[0].tradeableItem.id - v2[0].tradeableItem.id;
       } else if (this.settings.sortBy == typings/* SortBy */.gx.SALES_VOLUME) {
         sorter = (v1, v2) => v1[1].volume - v2[1].volume;
       } else {
@@ -4050,7 +4088,11 @@ var ReportOutput = /*#__PURE__*/function () {
         return;
       }
 
-      apiSupplier/* kol */.x.bufferToFile(this.output.join("\n"), this.settings.logOutputTo);
+      apiSupplier/* kol */.x.storeCache(
+        this.settings.logOutputTo,
+        this.output.join("\n"),
+        "large_persist"
+      );
       apiSupplier/* kol */.x.print("accounval results printed to 'data/".concat(
         this.settings.logOutputTo, "'")
       );
@@ -4101,7 +4143,7 @@ var ValuationReport = /*#__PURE__*/function () {
     this.pronoun = this.settings.fetchClan ?
     "The clan stash is" :
     !this.settings.playerId ||
-    this.settings.playerId == apiSupplier/* kol */.x.toInt(apiSupplier/* kol */.x.myId()) ?
+    this.settings.playerId == utils/* AccountValUtils */.E.toInt(apiSupplier/* kol */.x.myId()) ?
     this.settings.fetchSession ?
     "Your session is" :
     "You are" :
@@ -4168,7 +4210,7 @@ var ValuationReport = /*#__PURE__*/function () {
 
       if (this.lastCategory != null) {
         this.lines.push("<u><b>DC Shelf:</b> ".concat(
-          this.out.escapeHTML(this.lastCategory), "<font color='").concat(utils_colors/* AccountValColors */.HK.minorNote, "'>, worth ").concat(AccountValUtils.getNumber(this.shelfValue), " meat</font></u>")
+          this.out.escapeHTML(this.lastCategory), "<font color='").concat(utils_colors/* AccountValColors */.HK.minorNote, "'>, worth ").concat(utils/* AccountValUtils */.E.getNumber(this.shelfValue), " meat</font></u>")
         );
         this.lines.push("");
       }
@@ -4195,14 +4237,14 @@ var ValuationReport = /*#__PURE__*/function () {
         title.push("=== ".concat(this.out.escapeHTML(item.name), " ==="));
         title.push("");
         title.push("".concat(
-          this.out.escapeHTML(item.tradeableItem.name), " / ").concat(this.out.escapeHTML(item.pluralName), " (").concat(item.worthMultiplier, ") = ").concat(item.pluralName, " are worth ").concat(AccountValUtils.getNumber(Math.round(worthEach)), " meat each.")
+          this.out.escapeHTML(item.tradeableItem.name), " / ").concat(this.out.escapeHTML(item.pluralName), " (").concat(item.worthMultiplier, ") = ").concat(item.pluralName, " are worth ").concat(utils/* AccountValUtils */.E.getNumber(Math.round(worthEach)), " meat each.")
         );
       } else {
         title.push("=== ".concat(this.out.escapeHTML(item.tradeableItem.name), " ==="));
         title.push("");
       }
 
-      var tradeableWorth = " @ ".concat(AccountValUtils.getNumber(price.price), " meat.");
+      var tradeableWorth = " @ ".concat(utils/* AccountValUtils */.E.getNumber(price.price), " meat.");
 
       if (price.price < 0) {
         tradeableWorth = " as mall extinct.";
@@ -4220,31 +4262,31 @@ var ValuationReport = /*#__PURE__*/function () {
 
       if (price.price2 > 0 && price.accuracy == typings/* PriceType */.SJ.NEW_PRICES) {
         title.push("Last sold @ ".concat(
-          AccountValUtils.getNumber(price.price2), " meat.")
+          utils/* AccountValUtils */.E.getNumber(price.price2), " meat.")
         );
       }
 
       if (item.shopWorth > 0) {
         title.push("".concat(
-          this.pronoun, " selling @ ").concat(AccountValUtils.getNumber(item.shopWorth), " meat.")
+          this.pronoun, " selling @ ").concat(utils/* AccountValUtils */.E.getNumber(item.shopWorth), " meat.")
         );
       }
 
       if (count > 1 && this.settings.showSingleItemWorth) {
-        title.push("Worth a total of ".concat(AccountValUtils.getNumber(totalWorth)));
+        title.push("Worth a total of ".concat(utils/* AccountValUtils */.E.getNumber(totalWorth)));
       }
 
       if (price.accuracy != typings/* PriceType */.SJ.AUTOSELL) {
         title.push("");
         title.push("Price valid as of ".concat(
-          AccountValUtils.getNumber(price.daysOutdated, 1), " day").concat(price.daysOutdated != 1 ? "s" : "", " ago.")
+          utils/* AccountValUtils */.E.getNumber(price.daysOutdated, 1), " day").concat(price.daysOutdated != 1 ? "s" : "", " ago.")
         );
       }
 
       if (price.volume >= 0) {
         title.push("");
         title.push("".concat(
-          AccountValUtils.getNumber(price.volume), " sold in the last week.")
+          utils/* AccountValUtils */.E.getNumber(price.volume), " sold in the last week.")
         );
       }
 
@@ -4270,7 +4312,7 @@ var ValuationReport = /*#__PURE__*/function () {
             color = utils_colors/* AccountValColors */.HK.shopPricedOk;
           }
 
-          boundInfo = AccountValUtils.getNumberOrClamp(
+          boundInfo = utils/* AccountValUtils */.E.getNumberOrClamp(
             Math.round(overpricedPerc * 100),
             -999,
             999,
@@ -4300,12 +4342,12 @@ var ValuationReport = /*#__PURE__*/function () {
 
       this.onShelfName(item.category, totalWorth);
 
-      var text = "".concat(AccountValUtils.getNumber(count), " ").concat(name);
+      var text = "".concat(utils/* AccountValUtils */.E.getNumber(count), " ").concat(name);
 
       if (this.settings.showSingleItemWorth) {
-        text += " each worth ".concat(AccountValUtils.getNumber(worthEach));
+        text += " each worth ".concat(utils/* AccountValUtils */.E.getNumber(worthEach));
       } else {
-        text += " worth a total of ".concat(AccountValUtils.getNumber(totalWorth));
+        text += " worth a total of ".concat(utils/* AccountValUtils */.E.getNumber(totalWorth));
       }
 
       this.lines.push(
@@ -4325,7 +4367,7 @@ var ValuationReport = /*#__PURE__*/function () {
         if (skipping > 0) {
           this.out.printLine("", "plain");
           this.out.printLine("<font color='".concat(
-            utils_colors/* AccountValColors */.HK.minorNote, "'>Skipping ").concat(AccountValUtils.getNumber(skipping), " lines and displaying the last ").concat(AccountValUtils.getNumber(this.settings.displayLimit), " lines..</font>"),
+            utils_colors/* AccountValColors */.HK.minorNote, "'>Skipping ").concat(utils/* AccountValUtils */.E.getNumber(skipping), " lines and displaying the last ").concat(utils/* AccountValUtils */.E.getNumber(this.settings.displayLimit), " lines..</font>"),
           "html"
           );
         }
@@ -4373,7 +4415,7 @@ var ValuationReport = /*#__PURE__*/function () {
       this.out.printLine(
         this.pronoun +
         " worth " +
-        AccountValUtils.getNumber(this.netvalue) +
+        utils/* AccountValUtils */.E.getNumber(this.netvalue) +
         " meat!",
         "plain",
         utils_colors/* AccountValColors */.HK.helpfulStateInfo
@@ -4382,7 +4424,7 @@ var ValuationReport = /*#__PURE__*/function () {
       if (this.settings.fetchSession && apiSupplier/* kol */.x.mySessionMeat() != 0) {
         mrAMeat = this.netvalue + apiSupplier/* kol */.x.mySessionMeat();
         this.out.printLine("Add meat from session, that's ".concat(
-          AccountValUtils.getNumber(mrAMeat), " meat!"),
+          utils/* AccountValUtils */.E.getNumber(mrAMeat), " meat!"),
         "plain",
         utils_colors/* AccountValColors */.HK.helpfulStateInfo
         );
@@ -4394,13 +4436,13 @@ var ValuationReport = /*#__PURE__*/function () {
 
       var mrAWorth = (0.0 + mrAMeat) / this.aWorth;
       this.out.printLine("<font title='With Mr. Accessory worth being ".concat(
-        AccountValUtils.getNumber(this.aWorth), " meat'>Going by the value of a Mr. Accessory, that's $").concat(AccountValUtils.getNumber(mrAWorth * 10), "</font>"),
+        utils/* AccountValUtils */.E.getNumber(this.aWorth), " meat'>Going by the value of a Mr. Accessory, that's $").concat(utils/* AccountValUtils */.E.getNumber(mrAWorth * 10), "</font>"),
       "html"
       );
 
       if (this.shopPricedAt > 0) {
         this.shopPricedAt /= this.shopNetValue;
-        var perc = AccountValUtils.getNumberOrClamp(
+        var perc = utils/* AccountValUtils */.E.getNumberOrClamp(
           Math.round(this.shopPricedAt * 100),
           -999,
           999,
@@ -4424,7 +4466,7 @@ var ValuationReport = /*#__PURE__*/function () {
 
       if (this.exceededMax) {
         this.out.printLine("<font color='".concat(
-          utils_colors/* AccountValColors */.HK.minorNote, "' title=\"The max natural price is currently set to ").concat(AccountValUtils.getNumber(this.settings.maxNaturalPrice), ". (").concat(this.settings.maxNaturalPrice == AccountValSettings.defaultMaxNaturalPrice ? "default" : "default is ".concat(AccountValUtils.getNumber(AccountValSettings.defaultMaxNaturalPrice)), ")&#010;&#010;You can change this by using 'max=3b' as an arg.&#010;You can also set the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc), this cap increases by 2b every year to account for meatflation\">Some items were expensive and were marked as mall extinct. Hover for details.</font>"),
+          utils_colors/* AccountValColors */.HK.minorNote, "' title=\"The max natural price is currently set to ").concat(utils/* AccountValUtils */.E.getNumber(this.settings.maxNaturalPrice), ". (").concat(this.settings.maxNaturalPrice == AccountValSettings.defaultMaxNaturalPrice ? "default" : "default is ".concat(utils/* AccountValUtils */.E.getNumber(AccountValSettings.defaultMaxNaturalPrice)), ")&#010;&#010;You can change this by using 'max=3b' as an arg.&#010;You can also set the property 'accountval_maxNaturalPrice' to a number (3b, 5,000,000, 3m1k, etc), this cap increases by 2b every year to account for meatflation\">Some items were expensive and were marked as mall extinct. Hover for details.</font>"),
         "html"
         );
       }
@@ -4453,21 +4495,21 @@ var ValuationReport = /*#__PURE__*/function () {
       if (this.settings.fetchInventory && apiSupplier/* kol */.x.myMeat() != 0) {
         meat += apiSupplier/* kol */.x.myMeat();
         meatSources.push(
-          AccountValUtils.getNumber(apiSupplier/* kol */.x.myMeat()) + " meat in inventory"
+          utils/* AccountValUtils */.E.getNumber(apiSupplier/* kol */.x.myMeat()) + " meat in inventory"
         );
       }
 
       if (this.settings.fetchCloset && apiSupplier/* kol */.x.myClosetMeat() != 0) {
         meat += apiSupplier/* kol */.x.myClosetMeat();
         meatSources.push(
-          AccountValUtils.getNumber(apiSupplier/* kol */.x.myClosetMeat()) + " meat in closet"
+          utils/* AccountValUtils */.E.getNumber(apiSupplier/* kol */.x.myClosetMeat()) + " meat in closet"
         );
       }
 
       if (this.settings.fetchStorage && apiSupplier/* kol */.x.myStorageMeat() != 0) {
         meat += apiSupplier/* kol */.x.myStorageMeat();
         meatSources.push(
-          AccountValUtils.getNumber(apiSupplier/* kol */.x.myStorageMeat()) + " meat in storage"
+          utils/* AccountValUtils */.E.getNumber(apiSupplier/* kol */.x.myStorageMeat()) + " meat in storage"
         );
       }
 
@@ -4476,7 +4518,7 @@ var ValuationReport = /*#__PURE__*/function () {
           "<font title='" +
           meatSources.join(", ") +
           "'>This doesn't include your " +
-          AccountValUtils.getNumber(meat) +
+          utils/* AccountValUtils */.E.getNumber(meat) +
           " meat!</font>",
           "html"
         );
@@ -4606,7 +4648,7 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {accountval_classCa
         return false;
       }
 
-      var spl = AccountValUtils.splitArguments(
+      var spl = utils/* AccountValUtils */.E.splitArguments(
         this.settings,
         command
       );
@@ -4687,14 +4729,6 @@ AccountVal = /*#__PURE__*/function () {function AccountVal() {accountval_classCa
 function main(command) {
   (0,apiSupplier/* setProvider */.U)(new KolmafiaProvider());
   (0,utils_colors/* initAccountValColors */.BG)();
-
-  var requiredRevision = 28933;
-
-  if (apiSupplier/* kol */.x.getRevision() < requiredRevision) {
-    apiSupplier/* kol */.x.printHtml("<font color='red'>You need to update KoLMafia to the latest version. This script will not work properly on versions older than ".concat(
-      requiredRevision, ".</font>")
-    );
-  }
 
   var val = new AccountVal();
 
