@@ -62,6 +62,7 @@ import {
   setProperty,
   getProperty,
 } from "kolmafia";
+import * as kolmafia from "kolmafia";
 import { DataType, KoLAPI } from "../supplierTypings";
 
 const requiredRevision = 28933;
@@ -354,8 +355,6 @@ export class KolmafiaProvider implements KoLAPI {
   }
 
   evalJsFilter(js: string) {
-    return new Function(`with (this) { return (${js}); }`).call(
-      `require("kolmafia")`,
-    );
+    return new Function("scope", `with (scope) {${js}}`)(kolmafia);
   }
 }
