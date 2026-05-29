@@ -355,6 +355,8 @@ export class KolmafiaProvider implements KoLAPI {
   }
 
   evalJsFilter(js: string) {
-    return new Function("scope", `with (scope) {${js}}`)(kolmafia);
+    return new Function("kolmafia", `with (kolmafia) { return (${js})}`)(
+      kolmafia,
+    );
   }
 }
