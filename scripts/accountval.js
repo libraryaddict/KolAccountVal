@@ -1402,7 +1402,9 @@ var KolmafiaProvider = /*#__PURE__*/function () {function KolmafiaProvider() {_c
     } }, { key: "evalJsFilter", value:
 
     function evalJsFilter(js) {
-      return new Function("scope", "with (scope) {".concat(js, "}"))(external_kolmafia_namespaceObject);
+      return new Function("kolmafia", "with (kolmafia) { return (".concat(js, ")}"))(
+        external_kolmafia_namespaceObject
+      );
     } }]);}();
 // EXTERNAL MODULE: ./src/api/supplierTypings.ts
 var supplierTypings = __webpack_require__(532);
