@@ -4014,7 +4014,7 @@ var PricegunResolver = /*#__PURE__*/function () {function PricegunResolver() {pr
         }
 
         (0,apiSupplier/* provider */.M)().print("Pricegun progress: ".concat(
-          totalLength - items.length, " / ").concat(totalLength, " (+").concat(batch.length, ")")
+          start, " / ").concat(totalLength, " (+").concat(batch.length, ")")
         );
       }
     } }, { key: "resolve", value:
