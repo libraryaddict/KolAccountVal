@@ -146,7 +146,7 @@ export class PricegunResolver implements PriceVolunteer {
       }
 
       provider().print(
-        `Pricegun progress: ${totalLength - items.length} / ${totalLength} (+${batch.length})`,
+        `Pricegun progress: ${start} / ${totalLength} (+${batch.length})`,
       );
     }
   }
