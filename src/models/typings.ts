@@ -40,15 +40,17 @@ export enum FieldType {
   TEXT_TYPE,
 }
 
-export enum SortBy {
-  NAME,
-  QUANTITY,
-  PRICE,
-  TOTAL_PRICE,
-  SALES_VOLUME,
-  ITEM_ID,
+export interface SortBy {
+  name: string;
+  aliases: string[];
+  assignValue: (
+    item: ValItem,
+    price: ItemPrice,
+    owned: Map<ValItem, number>,
+    maxPrice: number,
+  ) => void;
+  fallback?: (item1: ValItem, item2: ValItem) => number;
 }
-
 export interface ValSetting {
   groupUnder?: string;
   type: FieldType;
@@ -73,6 +75,7 @@ export class ValItem {
   shopWorth: number;
   worthMultiplier: number = 1;
   snapshotSource: string;
+  sortValue: number;
 
   constructor(
     actualItem: KoLItem,

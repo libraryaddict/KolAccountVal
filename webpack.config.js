@@ -3,7 +3,7 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    accountval: "./src/accountval.ts",
+    accountval: "./src/kolmafia/index.ts",
   },
   mode: "production",
   module: {

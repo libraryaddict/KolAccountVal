@@ -1,4 +1,4 @@
-import { kol } from "../../api/apiSupplier";
+import { provider } from "../../api/apiSupplier";
 import { FlatfilePrices, ItemPriceMap } from "./flatfile";
 
 export class IrratPrices extends FlatfilePrices {
@@ -48,7 +48,10 @@ export class IrratPrices extends FlatfilePrices {
     const toFetch = this.settings.dateToFetch;
 
     if (toFetch == null) {
-      return kol.retrieveCache("irrats_item_prices.txt", "large_persist");
+      return provider().retrieveCache(
+        "irrats_item_prices.txt",
+        "large_persist",
+      );
     }
 
     let finalDateString: string;
@@ -112,7 +115,7 @@ export class IrratPrices extends FlatfilePrices {
       finalDateString = `${finalDay}-${finalMonth}-${finalYear}`;
     }
 
-    const responseText: string = kol.visitUrl(
+    const responseText: string = provider().visitUrl(
       `https://kolprices.lib.co.nz/file/${finalDateString}`,
     );
 
@@ -124,7 +127,10 @@ export class IrratPrices extends FlatfilePrices {
       }
     }
 
-    kol.print(`Now resolving prices with date: ${finalDateString}`, "blue");
+    provider().print(
+      `Now resolving prices with date: ${finalDateString}`,
+      "blue",
+    );
     this.ofThePast = true;
 
     return responseText;

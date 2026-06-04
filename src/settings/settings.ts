@@ -1,225 +1,266 @@
-import { kol } from "../api/apiSupplier";
 import {
   AccountValColors,
-  getAccountvalColors,
+  getAccountvalColors as getColorSchemes,
   loadAccountvalColors,
 } from "../utils/colors";
-import { AccountValPreset, getPresets } from "./presets";
-import {
-  ValItem,
-  FieldType,
-  SortBy,
-  ValSetting,
-  PresetSetting,
-} from "../models/typings";
-import { AccountValUtils } from "../utils/utils";
+import { getPresets } from "./presets";
+import { ValItem, SortBy, PresetSetting } from "../models/typings";
+import { ParseError, Args } from "./grimoireArgs";
+import { provider } from "../api/apiSupplier";
+import { Item } from "kolmafia";
 
-const sortByAliases: Map<string, SortBy> = new Map([
-  ["count", SortBy.QUANTITY],
-  ["amount", SortBy.QUANTITY],
-  ["meat", SortBy.PRICE],
-  ["price", SortBy.PRICE],
-  ["totalmeat", SortBy.TOTAL_PRICE],
-  ["totalprice", SortBy.TOTAL_PRICE],
-  ["id", SortBy.ITEM_ID],
-  ["sales", SortBy.SALES_VOLUME],
-  ["sold", SortBy.SALES_VOLUME],
-]);
+const sortBys: SortBy[] = [
+  {
+    name: "TOTAL_PRICE",
+    aliases: ["TOTAL_MEAT"],
+    assignValue(item, price, owned, maxPrice) {
+      item.sortValue =
+        price.price <= 0
+          ? maxPrice
+          : (1 / item.worthMultiplier) * price.price * owned.get(item);
+    },
+  },
+  {
+    name: "PRICE",
+    aliases: ["MEAT"],
+    assignValue(item, price, owned, maxPrice) {
+      item.sortValue =
+        price.price <= 0 ? maxPrice : (1 / item.worthMultiplier) * price.price;
+    },
+  },
+  {
+    name: "QUANTITY",
+    aliases: ["COUNT", "AMOUNT"],
+    assignValue(item, price, owned, maxPrice) {
+      item.sortValue = owned.get(item);
+    },
+  },
+  {
+    name: "NAME",
+    aliases: [],
+    assignValue: undefined,
+    fallback: (v1, v2) => v1.name.localeCompare(v2.name),
+  },
+  {
+    name: "ITEM_ID",
+    aliases: ["ID"],
+    assignValue(item, price, owned, maxPrice) {
+      item.sortValue = item.tradeableItem.id;
+    },
+  },
+  {
+    name: "SALES_VOLUME",
+    aliases: ["SALES", "SOLD"],
+    assignValue(item, price, owned, maxPrice) {
+      item.sortValue = price.volume;
+    },
+  },
+];
 
-export class AccountValSettings {
-  fetchCloset: boolean;
-  fetchStorage: boolean;
-  fetchInventory: boolean;
-  fetchShop: boolean;
-  fetchDisplaycase: boolean;
-  fetchSession: boolean = false;
-  fetchClan: boolean = false;
-  fetchingEverywhereish: boolean = true;
-  fetchingNonItems: boolean = true;
-  doSuperFast: boolean = false;
-  doTradeables: boolean;
-  doNontradeables: boolean;
-  doBound: boolean;
-  fetchFamiliars: boolean;
-  fetchSnapshot: boolean;
-  playerId: number = 0;
-  displayLimit = 100;
-  minimumMeat = 0;
-  minimumAmount = 1;
-  maxAge: number = 999_999;
-  sales: number = 0;
-  sortBy: SortBy = SortBy.TOTAL_PRICE;
-  reverseSort: boolean = false;
-  shopWorth: boolean = false;
-  javascriptFilter: string = "";
-  useLastSold: boolean = false;
-  settingsDebug: boolean = false;
-  static timingsDebug: boolean = false;
-  brief: boolean = false;
-  oldPricing: boolean = false;
-  colorScheme: string;
-  presets: PresetSetting[] = [];
-  doCategories: boolean = false;
+function numberParser(arg: string): number | ParseError {
+  let cleaned = arg;
 
-  static defaultMaxNaturalPrice =
-    (new Date().getFullYear() - 2021) * 2_000_000_000;
-
-  maxNaturalPrice = AccountValSettings.defaultMaxNaturalPrice;
-  showSingleItemWorth: boolean = false;
-  dateToFetch: string;
-  logOutputAs: "fancy" | "plain" = "fancy";
-  logOutputTo: string;
-  pricegun: boolean = false;
-
-  private static settingsCache: ValSetting[] = null;
-
-  constructor() {
-    this.colorScheme = "default";
+  while (cleaned.includes(",") || cleaned.includes("_")) {
+    cleaned = cleaned.replace(/[,_]/g, "");
   }
 
-  static getSettings(): ValSetting[] {
-    if (this.settingsCache) {
-      return this.settingsCache;
+  const match = cleaned.match(/^((?:\d+)|(?:\d*\.\d+))([mkbt]?)$/i);
+
+  if (match == null) {
+    return new ParseError("Invalid number format");
+  }
+
+  let num = parseFloat(match[1]);
+  const mod = match[2]?.toLowerCase();
+
+  if (mod == "t") {
+    num *= 1_000_000_000_000;
+  } else if (mod == "b") {
+    num *= 1_000_000_000;
+  } else if (mod == "m") {
+    num *= 1_000_000;
+  } else if (mod == "k") {
+    num *= 1_000;
+  }
+
+  return num;
+}
+
+function playerParser(arg: string): number | ParseError {
+  let v = arg;
+
+  if (!v.match(/^[0-9]+$/)) {
+    v = provider().getPlayerId(v);
+
+    if (!v.match(/^[0-9]+$/)) {
+      return new ParseError(`Failed to convert ${arg} into a player ID`);
     }
+  }
 
-    const settings: ValSetting[] = [];
+  return parseInt(v);
+}
 
-    function makeSetting(
-      type: FieldType,
-      name: string,
-      aliases: string[],
-      desc: string,
-      groupUnder?: string,
-      preset?: AccountValPreset,
+function sortByParser(arg: string): SortBy | ParseError {
+  const neg = /^[-!]/.test(arg);
+  const v = arg
+    .toLowerCase()
+    .replace("_", "")
+    .substring(neg ? 1 : 0);
+
+  for (const sort of sortBys) {
+    if (
+      sort.name.toLowerCase().replace("_", "") != v &&
+      !sort.aliases.some((a) => a.toLowerCase().replace("_", "") == v)
     ) {
-      const setting: ValSetting = {
-        groupUnder,
-        type,
-        field: name,
-        names: aliases.map((s) => s.toLowerCase()),
-        desc,
-        preset: preset,
-      };
-      settings.push(setting);
-
-      return setting;
+      continue;
     }
 
-    makeSetting(
-      FieldType.BOOLEAN,
-      "fetchCloset",
-      ["closet", "clos"],
-      "Should it fetch from the closet",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "fetchStorage",
-      ["storage", "stor", "hagnk", "hagnks"],
-      "Should it fetch from storage",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "fetchShop",
-      ["store", "mall", "shop"],
-      "Should it fetch from the shop",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "fetchInventory",
-      ["inventory", "inv"],
-      "Should it fetch from your inventory",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "fetchDisplaycase",
-      ["displaycase", "display", "dc"],
-      "Should it fetch from the displaycase",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "fetchClan",
-      ["clan", "stash"],
-      "Should it check clan's stash? False by default",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "fetchSession",
-      ["session"],
-      "Should it fetch using your current session of items acquired? False by default",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "doTradeables",
-      ["tradeable", "tradeables", "trade", "tradable"],
-      "Should it do tradeables",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "doNontradeables",
-      [
-        "notrade",
-        "nontrade",
-        "notradeable",
-        "notradable",
-        "nontradeable",
-        "notradeables",
-        "nontradeables",
-        "untrade",
-        "untradeable",
-        "untradeables",
-      ],
-      "Should it do non-tradeables",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "fetchFamiliars",
-      ["familiar", "familiars", "fam", "fams"],
-      "Should it do familiars. Bound being true also means this is true if not set",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "fetchSnapshot",
-      ["snapshot"],
-      "Should it attempt to use av-snapshot?",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "doBound",
-      ["bound", "bind", "bounded", "binds", "binded"],
-      "Should it do items that are bound to your account",
-    );
+    // Negate the sort
+    if (neg) {
+      return {
+        ...sort,
+        assignValue: sort.assignValue
+          ? (item, price, owned, maxPrice) => {
+              sort.assignValue(item, price, owned, maxPrice);
+              item.sortValue = -item.sortValue;
+            }
+          : undefined,
+        fallback: sort.fallback
+          ? (item1, item2) => {
+              return -sort.fallback(item1, item2);
+            }
+          : undefined,
+      };
+    }
 
-    makeSetting(
-      FieldType.NUMBER,
-      "minimumMeat",
-      [
-        "meat",
-        "minmeat",
-        "minimummeat",
-        "minmeat",
-        "min-meat",
-        "minprice",
-        "price",
-      ],
-      "Each item total worth, at least this amount.",
-    );
-    makeSetting(
-      FieldType.NUMBER,
-      "minimumAmount",
-      ["amount", "count", "minimumamount", "minamount"],
-      "At least this many items",
-    );
-    makeSetting(
-      FieldType.NUMBER,
-      "displayLimit",
-      ["limit", "displaylimit", "maxdisplay", "lines"],
-      "Limit results to display this amount",
-    );
-    makeSetting(
-      FieldType.NAME,
-      "playerId",
-      [
-        "player",
+    return sort;
+  }
+
+  return new ParseError(`Unknown sort option: ${arg}`);
+}
+
+function colorSchemeParser(arg: string): string | ParseError {
+  const v = arg.toLowerCase();
+
+  if (!getColorSchemes().includes(v)) {
+    return new ParseError(`Unknown color scheme: ${arg}`);
+  }
+
+  return v;
+}
+
+function logTypeParser(arg: string): "plain" | "fancy" | ParseError {
+  const v = arg.toLowerCase();
+
+  if (v !== "plain" && v !== "fancy") {
+    return new ParseError(`Unknown log type: ${arg}`);
+  }
+
+  return v as "plain" | "fancy";
+}
+
+export const defaultMaxNaturalPrice =
+  (new Date().getFullYear() - 2021) * 2_000_000_000;
+
+const staticAccountValSpec = {
+  fetchCloset: Args.boolean({
+    key: "closet",
+    aliases: ["clos"],
+    help: "Should it fetch from the closet",
+  }),
+  fetchStorage: Args.boolean({
+    key: "storage",
+    aliases: ["stor", "hagnk", "hagnks"],
+    help: "Should it fetch from storage",
+  }),
+  fetchShop: Args.boolean({
+    key: "store",
+    aliases: ["mall", "shop"],
+    help: "Should it fetch from the shop",
+  }),
+  fetchInventory: Args.boolean({
+    key: "inventory",
+    aliases: ["inv"],
+    help: "Should it fetch from your inventory",
+  }),
+  fetchDisplaycase: Args.boolean({
+    key: "displaycase",
+    aliases: ["display", "dc"],
+    help: "Should it fetch from the displaycase",
+  }),
+  fetchClan: Args.boolean({
+    key: "clan",
+    aliases: ["stash"],
+    help: "Should it check clan's stash? False by default",
+  }),
+  fetchSession: Args.boolean({
+    key: "session",
+    help: "Should it fetch using your current session of items acquired? False by default",
+  }),
+  doTradeables: Args.boolean({
+    key: "tradeable",
+    aliases: ["tradeables", "trade", "tradable"],
+    help: "Should it do tradeables",
+  }),
+  doNonTradeables: Args.boolean({
+    key: "notrade",
+    aliases: [
+      "nontrade",
+      "notradeable",
+      "notradable",
+      "nontradeable",
+      "notradeables",
+      "nontradeables",
+      "untrade",
+      "untradeable",
+      "untradeables",
+    ],
+    help: "Should it do non-tradeables",
+  }),
+  fetchFamiliars: Args.boolean({
+    key: "familiar",
+    aliases: ["familiars", "fam", "fams"],
+    help: "Should it do familiars. Bound being true also means this is true if not set",
+  }),
+  fetchSnapshot: Args.boolean({
+    key: "snapshot",
+    help: "Should it attempt to use av-snapshot?",
+  }),
+  doBound: Args.boolean({
+    key: "bound",
+    aliases: ["bind", "bounded", "binds", "binded"],
+    help: "Should it do items that are bound to your account",
+  }),
+  minimumMeat: Args.custom(
+    {
+      key: "meat",
+      aliases: ["minmeat", "minimummeat", "min-meat", "minprice", "price"],
+      help: "Each item total worth, at least this amount.",
+      default: 0,
+    },
+    numberParser,
+    "NUMBER",
+  ),
+  minimumAmount: Args.custom(
+    {
+      key: "amount",
+      aliases: ["count", "minimumamount", "minamount"],
+      help: "At least this many items",
+      default: 1,
+    },
+    numberParser,
+    "NUMBER",
+  ),
+  displayLimit: Args.number({
+    key: "limit",
+    aliases: ["displaylimit", "maxdisplay", "lines"],
+    help: "Limit results to display this amount",
+    default: 100,
+  }),
+  playerId: Args.custom(
+    {
+      key: "player",
+      aliases: [
         "playerid",
         "playername",
         "user",
@@ -228,373 +269,252 @@ export class AccountValSettings {
         "name",
         "username",
       ],
-      "Target another player's DC and Shop.",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "doSuperFast",
-      ["fast", "superfast", "speed", "quick", "rough"],
-      "Try resolve everything with historical price",
-    );
-    makeSetting(
-      FieldType.NUMBER,
-      "maxAge",
-      ["age", "maxage", "days"],
-      "The max days a price is allowed to be outdated",
-    );
-    makeSetting(
-      FieldType.SORTBY,
-      "sortBy",
-      ["sort", "sortby", "sorted"],
-      "What we should sort the results by",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "shopWorth",
-      ["worth", "shopworth", "pricing", "prices"],
-      "Seperates items in shop from the other items",
-    );
-    makeSetting(
-      FieldType.STRING,
-      "javascriptFilter",
-      ["jsfilter", "javascriptfilter", "javascript", "js"],
-      "Filters if an item can be shown",
-    );
-    makeSetting(
-      FieldType.NUMBER,
-      "sales",
-      ["sales", "sold"],
-      "Hides items that have less than this amount of sales",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "useLastSold",
-      ["useLastSold", "lastsold", "soldprice"],
-      "Resolve prices by their last sold",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "brief",
-      ["brief"],
-      "Prints out a single line as the final result, the total meat.",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "oldPricing",
-      ["oldpricing"],
-      "Has accountval calculate prices from the old slower method",
-    );
-    makeSetting(
-      FieldType.COLOR_SCHEME,
-      "colorScheme",
-      ["color", "colors", "colorscheme", "scheme"],
-      "What color schemes to use",
-    );
-    makeSetting(
-      FieldType.NUMBER,
-      "maxNaturalPrice",
-      ["max", "mallmax"],
-      "The max natural price an item will reach before it's capped",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "doCategories",
-      ["category", "categories", "shelf", "shelves"],
-      "Seperates the items into categories",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "showSingleItemWorth",
-      ["each"],
-      "Displays the individual price of each item",
-    );
-    makeSetting(
-      FieldType.STRING,
-      "dateToFetch",
-      ["date", "fetchdate", "historical", "time", "when", "at"],
-      "View everything with the prices of the past",
-    );
-    makeSetting(
-      FieldType.TEXT_TYPE,
-      "logOutputAs",
-      ["text", "logtype", "formatting"],
-      "If accountval should log everything with plain or fancy text",
-    );
-    makeSetting(
-      FieldType.STRING,
-      "logOutputTo",
-      ["output"],
-      "Send the output of accountval to a file instead of printing into cli",
-    );
-    makeSetting(
-      FieldType.BOOLEAN,
-      "pricegun",
-      ["pricegun"],
-      "Resolve prices using pricegun. This will be slow.",
-    );
+      help: `Target another player's DC, shop, av-snapshot (if exists). Can do player="John Smith" for spaces`,
+      default: 0,
+    },
+    playerParser,
+    "PLAYER_ID",
+  ),
+  doSuperFast: Args.boolean({
+    key: "fast",
+    aliases: ["superfast", "speed", "quick", "rough"],
+    help: "Try resolve everything with historical price",
+    default: false,
+  }),
+  maxAge: Args.number({
+    key: "age",
+    aliases: ["maxage", "days"],
+    help: "The max days a price is allowed to be outdated",
+    default: 999_999,
+  }),
+  sortBy: Args.custom<SortBy>(
+    {
+      key: "sort",
+      aliases: ["sortby", "sorted"],
+      help: `What we should sort the results by, prefix with ! or - to reverse sort. Supports: ${sortBys
+        .map((s) => `${s.name} (${s.aliases.join(", ")})`)
+        .join(", ")
+        .toUpperCase()}`,
+      default: sortByParser("TOTAL_PRICE") as SortBy,
+    },
+    sortByParser,
+    "SORT_BY",
+  ),
+  reverseSort: Args.boolean({
+    key: "reverse",
+    aliases: ["desc", "descending"],
+    help: "Reverse the sort order",
+    default: false,
+  }),
+  shopWorth: Args.boolean({
+    key: "worth",
+    aliases: ["shopworth", "pricing", "prices"],
+    help: "Seperates items in shop from the other items, and shows how under/overpriced they are. This can be inaccurate",
+  }),
+  javascriptFilter: Args.string({
+    key: "jsfilter",
+    aliases: ["javascriptfilter", "javascript", "js"],
+    help: [
+      `Filters if an item can be shown, provides an item & amount and expects a boolean.`,
+      `"quotes" must be escaped if the next character is a space.`,
+      `Example: jsfilter="(item, amount, worth, sales) => itemType(item) == "booze\\" && item.name.includes("beer")`,
+    ].join(" "),
+    default: "",
+  }),
+  sales: Args.number({
+    key: "sales",
+    aliases: ["sold"],
+    help: "Hides items that have less than this amount of sales",
+    default: 0,
+  }),
+  useLastSold: Args.boolean({
+    key: "useLastSold",
+    aliases: ["lastSold", "soldprice"],
+    help: "Resolve prices by their last sold",
+    default: false,
+  }),
+  brief: Args.boolean({
+    key: "brief",
+    help: "Prints out a single line as the final result, the total meat.",
+    default: false,
+  }),
+  colorScheme: Args.custom(
+    {
+      key: "color",
+      aliases: ["colors", "colorscheme", "scheme"],
+      help:
+        "What color schemes to use, set `accountvalColorScheme` pref to change the default. Supports: " +
+        getColorSchemes().join(", "),
+      default: "default",
+      options: ["default", ...getColorSchemes()].map((s) => [s]),
+    },
+    colorSchemeParser,
+    "COLOR_SCHEME",
+  ),
+  maxNaturalPrice: Args.custom(
+    {
+      key: "max",
+      aliases: ["mallmax"],
+      help: "The max natural price an item will reach before it's capped and called mall extinct. Default increases by 2b every year.",
+      default: defaultMaxNaturalPrice,
+      setting: "accountval_maxNaturalPrice",
+    },
+    numberParser,
+    "NUMBER",
+  ),
+  doCategories: Args.boolean({
+    key: "category",
+    aliases: ["categories", "shelf", "shelves"],
+    help: "Used only for Display Cases at this point, seperates the items into categories",
+  }),
+  showSingleItemWorth: Args.boolean({
+    key: "each",
+    help: "Displays the individual price of each item instead of the total, works best with `sort=meat`",
+  }),
+  dateToFetch: Args.string({
+    key: "date",
+    aliases: ["fetchdate", "historical", "time", "when", "at"],
+    help: [
+      `View everything with the prices of the past, either provide a '1d2m3y' which will automatically be converted and capped,`,
+      `or a specified date 'DD-MM-YYYY' which cannot be older than 22-08-2023.`,
+      `This obviously won't work for items that didn't exist then, and will make a backend call to 'kolprices.lib.co.nz/files/:date'`,
+    ].join(" "),
+  }),
+  logOutputAs: Args.custom(
+    {
+      key: "text",
+      aliases: ["logtype", "formatting"],
+      help: [
+        `If accountval should log everything with "fancy" text, which means html, or "plain" which means the output is also logged to your session log,`,
+        `but will have no hover text or colors.`,
+        `Try looking into kolmafia \'mirror\' if you want the output as html. Example usage: "text=plain". Change the default by using "set accountval_text=plain"`,
+      ].join(" "),
+      default: "fancy",
+      setting: "accountval_text",
+      options: [["plain"], ["fancy"]],
+    },
+    logTypeParser,
+    "TEXT_TYPE",
+  ),
+  logOutputTo: Args.string({
+    key: "output",
+    help: [
+      `Send the output of accountval to a file instead of printing into cli, eg 'output=accountval.html' would send it into the 'data/accountval.html'.`,
+      `If the file ends with .html, it will entity encode all non-html lines.`,
+    ].join(" "),
+    default: "",
+  }),
+  pricegun: Args.boolean({
+    key: "pricegun",
+    help: "Resolve prices using pricegun. This will be slower.",
+    default: false,
+  }),
+  mallPrice: Args.boolean({
+    key: "mallPrice",
+    help: [
+      `Has accountval calculate prices from mallprice, it will load (and cache) ${Math.ceil(Item.all().filter((i) => i.tradeable).length / 30)} pages of items if needed.`,
+      `Beware that although this is cached, you should avoid using this setting if you're going to be running accountval a dozen times, restarting after each or something,`,
+      `as that many mall searches can't be differnated from mall abuse by TPTB`,
+    ].join(" "),
+    default: false,
+  }),
+  showPresetFilters: Args.boolean({
+    key: "presets",
+    help: "Show the preset filters",
+    setting: "",
+  }),
 
-    for (const preset of getPresets()) {
-      makeSetting(
-        FieldType.BOOLEAN,
-        preset.name()[0],
-        preset.name(),
-        preset.desc(),
-        "Preset Filters",
-        preset,
-      );
-    }
+  debug: Args.boolean({ hidden: true, default: false }),
+  settings: Args.boolean({ hidden: true, default: false }),
+  timings: Args.boolean({ hidden: true, default: false }),
+};
 
-    this.settingsCache = settings;
+export interface AccountValSettings extends ReturnType<
+  typeof Args.create<typeof staticAccountValSpec>
+> {}
 
-    return settings;
-  }
+export class AccountValSettings {
+  static timingsDebug: boolean = false;
+  static defaultMaxNaturalPrice = defaultMaxNaturalPrice;
 
-  getSetting(alias: string): ValSetting {
-    alias = alias.toLowerCase();
+  // These are not exposed
+  fetchingEverywhereish: boolean = true;
+  fetchingNonItems: boolean = true;
+  presets: PresetSetting[] = [];
+  settingsDebug: boolean = false;
 
-    return (
-      AccountValSettings.getSettings().find((s) => s.names.includes(alias)) ||
-      null
-    );
-  }
-
-  doSettings(args: string[]): string[] {
+  doSettings(command: string): string[] {
     const errors: string[] = [];
 
-    this.colorScheme = kol.isDarkMode() ? "dark" : "default";
+    const presetSpec: any = {};
 
-    if (
-      kol.retrieveCache("accountval_maxNaturalPrice", "small_persist").length >
-      0
-    ) {
-      this.maxNaturalPrice = this.toNumber(
-        kol.retrieveCache("accountval_maxNaturalPrice", "small_persist"),
-      );
+    for (const preset of getPresets()) {
+      const names = preset.name();
+      presetSpec[`preset_${names[0]}`] = Args.boolean({
+        key: names[0],
+        aliases: names.slice(1),
+        help: preset.desc(),
+        setting: `accountval_preset_${names[0]}`,
+        hidden: true,
+      });
     }
 
-    if (kol.retrieveCache("accountval_text", "small_persist").length > 0) {
-      const str = kol.retrieveCache("accountval_text", "small_persist");
-
-      if (str == "plain" || str == "fancy") {
-        this.logOutputAs = str;
-      } else {
-        errors.push(
-          `The property 'accountval_text' has been set to '${str}' which is invalid.`,
-        );
-      }
-    }
-
-    const wasSet: string[] = [];
-    const settings = AccountValSettings.getSettings();
-
-    const addUnknown = (arg) => {
-      errors.push(
-        `Failed to handle parameter: <font color='${AccountValColors.failedToParseSettings}'>${arg}</font>`,
-      );
+    const fullSpec = {
+      ...staticAccountValSpec,
+      presetFilters: Args.group("Preset Filters", presetSpec, true),
     };
 
-    for (let arg of args) {
-      if (arg.length == 0) {
-        continue;
-      }
+    const scriptHelp = [
+      `<font color=${AccountValColors.helpfulStateInfo}>AccountVal is a script to check what your account is worth, and find the good stuff fast.</font>`,
+      `<font color=${AccountValColors.helpfulStateInfo}>You can provide these as a parameter to accountval to do other stuff than the base script.</font>`,
+      `<font color='${AccountValColors?.helpfulStateInfo ?? "blue"}'>Use ! or - to negate a boolean, or use '='. Eg:</font><font color='gray'> -bound !bound bound=false</font>`,
+      `<font color='${AccountValColors?.minorNote ?? "gray"}'>Disclaimer: The prices shown are not absolute, and can over/understate what it really is worth.</font>`,
+    ];
 
-      if (arg == "debug") {
-        this.settingsDebug = true;
-        AccountValSettings.timingsDebug = true;
-        continue;
-      }
+    try {
+      Object.assign(
+        this,
+        Args.parse("accountval", scriptHelp.join("\n"), fullSpec, command),
+      );
+    } catch (e: any) {
+      errors.push(e.message || e.toString());
 
-      if (arg == "timings") {
-        AccountValSettings.timingsDebug = true;
-        continue;
-      } else if (arg == "settings") {
-        this.settingsDebug = true;
-        continue;
-      }
+      return errors;
+    }
 
-      const name = arg.split("=")[0].toLowerCase().replace(/[-+!]/g, "");
-      const setting = settings.find((s) => s.names.includes(name));
+    loadAccountvalColors(this.colorScheme);
 
-      if (setting == null) {
-        addUnknown(arg);
-        continue;
-      }
+    // Resolve Presets dynamically
+    for (const preset of getPresets()) {
+      const names = preset.name();
+      const presetVal = (this as any).presetFilters?.[`preset_${names[0]}`];
 
-      let isTrue = !arg.startsWith("-") && !arg.startsWith("!");
-
-      if (arg.startsWith("-") || arg.startsWith("+") || arg.startsWith("!")) {
-        arg = arg.substring(1);
-      } else if (arg.includes("=") && setting.type == FieldType.BOOLEAN) {
-        const v = arg.substring(arg.indexOf("=") + 1);
-
-        if (!v.toLowerCase().match("^(0|1|(true)|(false)|(yes)|(no))$")) {
-          addUnknown(arg);
-          continue;
-        }
-
-        isTrue = AccountValUtils.toBoolean(v);
-      }
-
-      switch (setting.type) {
-        case FieldType.SORTBY:
-          this.parseSortBy(arg, isTrue, addUnknown);
-          break;
-        case FieldType.COLOR_SCHEME:
-          this.parseColorScheme(arg, addUnknown);
-          break;
-        case FieldType.TEXT_TYPE:
-          this.parseTextType(arg, addUnknown);
-          break;
-        case FieldType.NUMBER:
-        case FieldType.NAME:
-          this.parseNumberOrName(setting, arg, addUnknown, errors);
-          break;
-        case FieldType.STRING:
-          this.parseString(setting, arg, addUnknown);
-          break;
-        default: // BOOLEAN
-          if (setting.preset != null) {
-            this.presets.push({ preset: setting.preset, negated: !isTrue });
-          } else {
-            this[setting.field] = isTrue;
-          }
-
-          wasSet.push(setting.field);
-          break;
+      if (presetVal !== undefined) {
+        this.presets.push({ preset: preset, negated: !presetVal });
       }
     }
 
-    this.resolveFetchSources(wasSet);
+    this.resolveFetchSources();
+
+    if (this.debug || this.settings) {
+      this.settingsDebug = true;
+    }
+
+    if (this.debug || this.timings) {
+      AccountValSettings.timingsDebug = true;
+    }
 
     if (this.settingsDebug) {
       for (const setting of Object.keys(this)) {
-        kol.print(setting + " = " + this[setting]);
+        provider().print(`${setting} = ${this[setting]}`);
       }
     }
 
     return errors;
   }
 
-  private parseSortBy(
-    arg: string,
-    isTrue: boolean,
-    addUnknown: (arg: string) => void,
-  ) {
-    if (!arg.includes("=")) {
-      return addUnknown(arg);
-    }
-
-    const v = arg.substring(arg.indexOf("=") + 1);
-
-    if (v.length == 0) {
-      return addUnknown(arg);
-    }
-
-    let sortBy: SortBy =
-      SortBy[
-        Object.keys(SortBy).find((k) => k.toLowerCase() == v.toLowerCase())
-      ];
-
-    if (sortBy == null) {
-      sortBy = sortByAliases.get(v.toLowerCase());
-    }
-
-    if (sortBy == null) {
-      return addUnknown(arg);
-    }
-
-    this.sortBy = sortBy;
-    this.reverseSort = !isTrue;
-  }
-
-  private parseColorScheme(arg: string, addUnknown: (arg: string) => void) {
-    if (!arg.includes("=")) {
-      return addUnknown(arg);
-    }
-
-    const v = arg.substring(arg.indexOf("=") + 1);
-
-    if (v.length == 0 || !getAccountvalColors().includes(v)) {
-      return addUnknown(arg);
-    }
-
-    this.colorScheme = v;
-    loadAccountvalColors(v);
-  }
-
-  private parseTextType(arg: string, addUnknown: (arg: string) => void) {
-    if (!arg.includes("=")) {
-      return addUnknown(arg);
-    }
-
-    const v = arg.substring(arg.indexOf("=") + 1).toLowerCase();
-
-    if (v.length == 0 || (v != "plain" && v != "fancy")) {
-      return addUnknown(arg);
-    }
-
-    this.logOutputAs = v as "plain" | "fancy";
-  }
-
-  private parseNumberOrName(
-    setting: ValSetting,
-    arg: string,
-    addUnknown: (arg: string) => void,
-    errors: string[],
-  ) {
-    if (!arg.includes("=")) {
-      return addUnknown(arg);
-    }
-
-    let v = arg.substring(arg.indexOf("=") + 1);
-
-    if (v.length == 0) {
-      return addUnknown(arg);
-    }
-
-    if (setting.type == FieldType.NAME) {
-      if (!v.match(/^[0-9]+$/)) {
-        v = kol.getPlayerId(v);
-
-        if (!v.match(/^[0-9]+$/)) {
-          errors.push(
-            `Failed to convert <font color='${AccountValColors.failedToParseSettings}'>${v}</font> into a player ID`,
-          );
-
-          return;
-        }
-      }
-    }
-
-    const num = this.toNumber(v);
-
-    if (num == null) {
-      return addUnknown(arg);
-    }
-
-    this[setting.field] = num;
-  }
-
-  private parseString(
-    setting: ValSetting,
-    arg: string,
-    addUnknown: (arg: string) => void,
-  ) {
-    if (!arg.includes("=")) {
-      return addUnknown(arg);
-    }
-
-    const v = arg.substring(arg.indexOf("=") + 1);
-
-    if (v.length == 0) {
-      return addUnknown(arg);
-    }
-
-    this[setting.field] = v;
-  }
-
-  private resolveFetchSources(wasSet: string[]) {
-    const fetchSources: string[] = [
+  private resolveFetchSources() {
+    const fetchSources: (keyof typeof staticAccountValSpec)[] = [
       "fetchCloset",
       "fetchStorage",
       "fetchShop",
@@ -605,22 +525,29 @@ export class AccountValSettings {
       "fetchFamiliars",
       "fetchSnapshot",
     ];
+    const wasSet = Object.entries(this)
+      .filter(([k, v]) => v !== undefined)
+      .map(([k]) => k as keyof AccountValSettings);
 
+    // Unsupplied properties are undefined
     this.fetchingEverywhereish =
       !this.fetchSession &&
       !this.fetchClan &&
       fetchSources.find((v) => wasSet.includes(v) && this[v]) == null;
 
+    this.fetchClan = this.fetchClan ?? false;
+    this.fetchSession = this.fetchSession ?? false;
+
     if (!wasSet.includes("doTradeables")) {
       this.doTradeables = this.doBound
         ? false
-        : wasSet.includes("doNontradeables")
-          ? !this.doNontradeables
+        : wasSet.includes("doNonTradeables")
+          ? !this.doNonTradeables
           : true;
     }
 
-    if (!wasSet.includes("doNontradeables")) {
-      this.doNontradeables = this.doBound
+    if (!wasSet.includes("doNonTradeables")) {
+      this.doNonTradeables = this.doBound
         ? false
         : wasSet.includes("doTradeables")
           ? !this.doTradeables
@@ -630,10 +557,13 @@ export class AccountValSettings {
     if (!wasSet.includes("doBound")) {
       this.doBound =
         (this.doTradeables || this.fetchingEverywhereish) &&
-        this.doNontradeables;
+        this.doNonTradeables;
     }
 
-    if (!wasSet.includes("fetchFamiliars") && wasSet.includes("hatchling")) {
+    if (
+      wasSet.includes("fetchFamiliars") &&
+      this.presets.find((p) => p.preset.name().includes("hatchling"))
+    ) {
       this.fetchFamiliars = false;
     } else if (
       !wasSet.includes("fetchFamiliars") &&
@@ -643,11 +573,11 @@ export class AccountValSettings {
     }
 
     for (const fetchSource of fetchSources) {
-      if (this[fetchSource] != null) {
+      if ((this as any)[fetchSource] !== undefined) {
         continue;
       }
 
-      this[fetchSource] = this.fetchingEverywhereish;
+      (this as any)[fetchSource] = this.fetchingEverywhereish;
     }
 
     this.fetchingNonItems = this.fetchingEverywhereish;
@@ -668,38 +598,6 @@ export class AccountValSettings {
           : pre.preset.isProcessed(item.actualItem, worth)) != pre.negated,
     );
   }
-
-  isArg(arg: string, args: string[]): boolean {
-    arg = arg.toLowerCase().split("=")[0];
-
-    return args.some((a) => arg === a);
-  }
-
-  toNumber(arg: string): number {
-    while (arg.includes(",") || arg.includes("_")) {
-      arg = arg.replace(",", "").replace("_", "");
-    }
-
-    const match = arg.match(/^((?:\d+)|(?:\d*\.\d+))([mkbt]?)$/);
-
-    if (match == null) {
-      return null;
-    }
-
-    let num = AccountValUtils.toFloat(match[1]);
-
-    if (match[2] == "t") {
-      num *= 1_000_000_000_000;
-    } else if (match[2] == "b") {
-      num *= 1_000_000_000;
-    } else if (match[2] == "m") {
-      num *= 1_000_000;
-    } else if (match[2] == "k") {
-      num *= 1_000;
-    }
-
-    return num;
-  }
 }
 
 export class PricingSettings {
@@ -707,7 +605,7 @@ export class PricingSettings {
   public cheapTotalsLessThan: number = 20_000_000;
   public cheapPricesLessThan: number = 2_000_000;
   public maxPriceAge: number;
-  public oldPricing: boolean;
+  public mallPrice: boolean;
   public dateToFetch: string;
   public globalSettings: AccountValSettings;
 

@@ -1,9 +1,11 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 import { AccountValUtils } from "./utils";
 import { AccountValSettings } from "../settings/settings";
+import { printHtml } from "kolmafia";
 
 export class AccValTiming {
   static tracking: ["STARTED" | "STOPPED", AccValTiming][] = [];
+  static trackingMap: Map<string, AccValTiming> = new Map();
   static timingsSlowdown: number = 0;
 
   name: string;
@@ -19,6 +21,14 @@ export class AccValTiming {
     if (isSteps) {
       this.totalTimeTaken = 0;
       this.start();
+    }
+  }
+
+  static printHtml(line: string) {
+    if (provider == null) {
+      printHtml(line);
+    } else {
+      provider().printHtml(line);
     }
   }
 
@@ -46,7 +56,7 @@ export class AccValTiming {
     this.stopped = Date.now();
 
     if (print) {
-      kol.printHtml(
+      AccValTiming.printHtml(
         `<font color='blue'>${this.getName()}<font color='green'> time taken: </font>${this.getTimeStr()}</font>`,
       );
     }
@@ -78,28 +88,30 @@ export class AccValTiming {
     }
 
     const started = Date.now();
-    let existing = this.tracking.find(([, t]) => t.getName() == name);
+    let existing = this.trackingMap.get(name);
 
     if (
       existing != null &&
-      (existing[1].totalTimeTaken == null || existing[1].stepStarted != null)
+      (existing.totalTimeTaken == null || existing.stepStarted != null)
     ) {
       throw "The timing for " + name + " was already started";
     }
 
     if (existing == null) {
-      this.tracking.push(
-        (existing = ["STARTED", new AccValTiming(name, withSteps)]),
-      );
-      existing[1].depth =
-        this.tracking.filter(([state, t]) => t.stopped == null).length - 1;
+      existing = new AccValTiming(name, withSteps);
+      this.trackingMap.set(name, existing);
+      this.tracking.push(["STARTED", existing]);
+      existing.depth =
+        this.tracking.filter(
+          ([state, t]) => t.stopped == null && state == "STARTED",
+        ).length - 1;
     } else {
-      existing[1].start();
+      existing.start();
     }
 
     this.timingsSlowdown += Date.now() - started;
 
-    return existing[1];
+    return existing;
   }
 
   static stop(name: string, print: boolean = false): AccValTiming {
@@ -108,21 +120,34 @@ export class AccValTiming {
     }
 
     const started = Date.now();
-    const existing = this.tracking.find(([, t]) => t.getName() == name);
+    const existing = this.trackingMap.get(name);
 
     if (existing == null) {
       throw "There was no time tracking created for " + name;
     }
 
-    this.tracking = this.tracking.filter(
-      ([s, t]) => s != "STOPPED" || t != existing[1],
-    );
-    this.tracking.push(["STOPPED", existing[1]]);
+    let lastStopIndex = -1;
 
-    existing[1].stop(print);
+    for (let i = this.tracking.length - 1; i >= 0; i--) {
+      if (
+        this.tracking[i][0] === "STOPPED" &&
+        this.tracking[i][1] === existing
+      ) {
+        lastStopIndex = i;
+        break;
+      }
+    }
+
+    if (lastStopIndex !== -1) {
+      this.tracking.splice(lastStopIndex, 1);
+    }
+
+    this.tracking.push(["STOPPED", existing]);
+
+    existing.stop(print);
     this.timingsSlowdown += Date.now() - started;
 
-    return existing[1];
+    return existing;
   }
 
   static printTracked(
@@ -146,16 +171,16 @@ export class AccValTiming {
           continue;
         }
 
-        kol.printHtml(
+        this.printHtml(
           `${depthStr}<font color='blue'>${timing.getName()} <font color='green'>time taken:</font> ${timing.getTimeStr()}</font>`,
         );
       } else if (method == "PRINT_START_AND_END") {
         if (state == "STARTED") {
-          kol.printHtml(
+          this.printHtml(
             `${depthStr}<font color='blue'>${timing.getName()}</font> <font color='green'>started</font>`,
           );
         } else {
-          kol.printHtml(
+          this.printHtml(
             `${depthStr}<font color='blue'>${timing.getName()}<font color='green'> stopped, time taken: </font>${timing.getTimeStr()}</font>`,
           );
         }
@@ -164,13 +189,13 @@ export class AccValTiming {
           continue;
         }
 
-        kol.printHtml(
+        this.printHtml(
           `${depthStr}<font color='blue'>${timing.getName()}<font color='green'> time taken: </font>${timing.getTimeStr()}</font>`,
         );
       }
     }
 
-    kol.printHtml(
+    this.printHtml(
       `<font color='green'>The usage of timings took an extra: </font><font color='blue'>${AccountValUtils.getNumber(this.timingsSlowdown)}ms</font>`,
     );
   }

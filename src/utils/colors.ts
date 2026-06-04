@@ -1,6 +1,6 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 
-export interface ColorsInterface {
+export type ColorsInterface = {
   attentionGrabbingWarning: string;
   failedToParseSettings: string;
   minorNote: string;
@@ -10,13 +10,13 @@ export interface ColorsInterface {
   shopPricedOk: string;
   shopPricesOverpriced: string;
   noteUntradeable: string;
-}
+};
 
 export let AccountValColors: ColorsInterface;
 
 const map: Map<string, ColorsInterface> = new Map();
 
-map.set("default", {
+map.set("light", {
   attentionGrabbingWarning: "red",
   failedToParseSettings: "purple",
   minorNote: "gray",
@@ -41,6 +41,10 @@ map.set("dark", {
 });
 
 export function loadAccountvalColors(name: string): boolean {
+  if (name == "default") {
+    name = provider().isDarkMode() ? "dark" : "light";
+  }
+
   if (!map.has(name)) {
     return false;
   }
@@ -51,12 +55,12 @@ export function loadAccountvalColors(name: string): boolean {
 }
 
 export function getAccountvalColors(): string[] {
-  return [...map.keys()];
+  return ["default", ...map.keys()];
 }
 
 export function showAccountvalColors(name: string) {
   if (!map.has(name)) {
-    kol.print("Can't find any colors by that name", "red");
+    provider().print("Can't find any colors by that name", "red");
 
     return;
   }
@@ -64,15 +68,15 @@ export function showAccountvalColors(name: string) {
   const colors = map.get(name);
 
   for (const [k, v] of Object.entries(colors)) {
-    kol.printHtml(`<font color='${v}'>${k}</font>`);
+    provider().printHtml(`<font color='${v}'>${k}</font>`);
   }
 }
 
 export function initAccountValColors() {
-  const def = kol.isDarkMode() ? "dark" : "default";
+  const def = provider().isDarkMode() ? "dark" : "default";
   loadAccountvalColors(
-    kol.retrieveCache("accountvalColorScheme", "small_persist")
-      ? kol.retrieveCache("accountvalColorScheme", "small_persist")
+    provider().retrieveCache("accountvalColorScheme", "small_persist")
+      ? provider().retrieveCache("accountvalColorScheme", "small_persist")
       : def,
   );
 }

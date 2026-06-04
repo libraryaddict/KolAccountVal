@@ -1,4 +1,4 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 import { PricingSettings } from "../settings/settings";
 import { AccValTiming } from "../utils/timings";
 import { ItemPrice, PriceType } from "../models/typings";
@@ -20,17 +20,18 @@ export class PriceResolver {
 
     if (settings.globalSettings.pricegun) {
       specialResolver = new PricegunResolver();
+    } else if (settings.globalSettings.mallPrice) {
+      specialResolver = new MallPricing();
     } else {
       specialResolver = new IrratPrices(settings);
     }
 
-    if (specialResolver && specialResolver.load) {
-      specialResolver.load();
+    if (specialResolver && specialResolver.loadLastState) {
+      specialResolver.loadLastState();
     }
 
     this.resolvers.push(specialResolver);
     this.resolvers.push(new HistoricalPricing());
-    this.resolvers.push(new MallPricing());
 
     this.fillSpecialCase();
   }
@@ -58,30 +59,31 @@ export class PriceResolver {
   }
 
   bulkLoad(items: KoLItem[]) {
-    const toCheck = items.filter((i, ind) => items.lastIndexOf(i) == ind);
-    const checked: KoLItem[] = [];
-
-    for (const item of items) {
-      if (checked.includes(item)) {
-        continue;
-      }
-
-      const foldables = Object.keys(kol.getRelated(item, "fold"));
-
-      if (foldables == null || foldables.length <= 1) {
-        continue;
-      }
-
-      const itemsRelated = foldables
-        .map((s) => KoLItem.get(s))
-        .filter((i) => !checked.includes(i));
-      checked.push(...itemsRelated);
-      itemsRelated
-        .filter((i) => !toCheck.includes(i))
-        .forEach((i) => toCheck.push(i));
+    if (!this.resolvers[0].bulkResolve) {
+      return;
     }
 
-    this.resolvers[0].bulkResolve(toCheck);
+    const toCheck = new Set(items);
+    const checked = new Set<KoLItem>();
+
+    for (const item of toCheck) {
+      if (checked.has(item)) {
+        continue;
+      }
+
+      const folds = provider().getFoldables(item, "fold");
+
+      if (!folds.length) {
+        continue;
+      }
+
+      for (const i of folds) {
+        checked.add(i);
+        toCheck.add(i);
+      }
+    }
+
+    this.resolvers[0].bulkResolve(Array.from(toCheck));
   }
 
   itemPrice(
@@ -90,30 +92,25 @@ export class PriceResolver {
     forcePricing: PriceType = null,
     doSuperFast: boolean = false,
     doEstimates: boolean = false,
+    timingsKey: string = "",
   ): ItemPrice {
     if (this.settings.globalSettings.pricegun) {
       ignoreFold = true;
     }
 
     if (!ignoreFold) {
-      AccValTiming.start("Check Foldable", true);
+      AccValTiming.start(timingsKey + "Check Foldable", true);
 
       try {
-        const foldables = Object.keys(kol.getRelated(item, "fold"));
+        const foldables = provider().getFoldables(item, "fold");
 
-        if (foldables != null && foldables.length > 1) {
-          AccValTiming.start("Deeper Foldable Check", true);
+        if (foldables.length) {
+          AccValTiming.start(timingsKey + "Deeper Foldable Check", true);
 
           try {
             const foldPrices = foldables
               .map((f) =>
-                this.itemPrice(
-                  KoLItem.get(f),
-                  true,
-                  forcePricing,
-                  doSuperFast,
-                  doEstimates,
-                ),
+                this.itemPrice(f, true, forcePricing, doSuperFast, doEstimates),
               )
               .filter((p) => p != null);
 
@@ -136,15 +133,15 @@ export class PriceResolver {
 
             return foldPrices[0];
           } finally {
-            AccValTiming.stop("Deeper Foldable Check");
+            AccValTiming.stop(timingsKey + "Deeper Foldable Check");
           }
         }
       } finally {
-        AccValTiming.stop("Check Foldable");
+        AccValTiming.stop(timingsKey + "Check Foldable");
       }
     }
 
-    AccValTiming.start("Check Pricing Misc", true);
+    AccValTiming.start(timingsKey + "Check Pricing Misc", true);
 
     try {
       if (this.specialCase.has(item)) {
@@ -159,25 +156,29 @@ export class PriceResolver {
       if (!item.tradeable) {
         return new ItemPrice(
           item,
-          kol.autosellPrice(item),
+          provider().autosellPrice(item),
           PriceType.AUTOSELL,
           0,
         );
       }
     } finally {
-      AccValTiming.stop("Check Pricing Misc");
+      AccValTiming.stop(timingsKey + "Check Pricing Misc");
     }
 
-    AccValTiming.start("Run Final Pricing Check", true);
+    AccValTiming.start(timingsKey + "Final Pricing Check", true);
 
-    for (const resolver of this.resolvers) {
-      const price = resolver.resolve(item);
+    try {
+      for (const resolver of this.resolvers) {
+        const price = resolver.resolve(item);
 
-      if (price == null && this.settings.dateToFetch == null) {
-        continue;
+        if (price == null && this.settings.dateToFetch == null) {
+          continue;
+        }
+
+        return price;
       }
-
-      return price;
+    } finally {
+      AccValTiming.stop(timingsKey + "Final Pricing Check");
     }
 
     throw "Failed to resolve price for " + item;

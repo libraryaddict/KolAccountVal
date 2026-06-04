@@ -3,8 +3,8 @@ import { KoLItem } from "../api/supplierTypings";
 
 export interface PriceVolunteer {
   isViable(): boolean;
-  bulkResolve(items: KoLItem[]): ItemPrice[];
+  bulkResolve?(items: KoLItem[]): void;
   resolve(item: KoLItem): ItemPrice;
-  load?(): void;
+  loadLastState?(): void;
   stop?(): void;
 }

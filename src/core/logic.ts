@@ -1,4 +1,4 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 import { KoLItem, KoLFamiliar, KoLSkill } from "../api/supplierTypings";
 import { ItemResolver } from "../resolvers/items";
 import { PageResolver } from "../resolvers/pages";
@@ -12,7 +12,6 @@ import {
   ValItem,
   ItemPrice,
   PriceType,
-  SortBy,
 } from "../models/typings";
 import { AccountValUtils } from "../utils/utils";
 
@@ -61,19 +60,19 @@ export class AccountValLogic {
       return;
     }
 
-    kol.print(
+    provider().print(
       "JS Filter has been set to: " + this.settings.javascriptFilter,
       AccountValColors.minorNote,
     );
 
     try {
-      this.jsFilter = kol.evalJsFilter(this.settings.javascriptFilter);
+      this.jsFilter = provider().evalJsFilter(this.settings.javascriptFilter);
     } catch (e) {
-      kol.print(
+      provider().print(
         "Invalid jsfilter provided! Error as follows:",
         AccountValColors.attentionGrabbingWarning,
       );
-      kol.print("");
+      provider().print("");
       throw e;
     }
   }
@@ -116,7 +115,7 @@ export class AccountValLogic {
 
     if (this.settings.fetchSnapshot == true) {
       const snapshot = pager.getSnapshot(
-        kol.getPlayerName(this.settings.playerId),
+        provider().getPlayerName(this.settings.playerId),
       );
       const familiars: KoLFamiliar[] = [];
       const skills: KoLSkill[] = [];
@@ -224,7 +223,7 @@ export class AccountValLogic {
     AccValTiming.stop("Resolve Familiar Items");
 
     AccValTiming.start("Resolve Session");
-    const sessionItems = kol.mySessionItems();
+    const sessionItems = provider().mySessionItems();
     AccValTiming.stop("Resolve Session");
 
     const mega: Map<KoLItem, number> = new Map();
@@ -239,25 +238,25 @@ export class AccountValLogic {
 
     if (this.settings.fetchInventory) {
       AccValTiming.start("Resolve and Add Inventory");
-      add(kol.getInventory());
+      add(provider().getInventory());
       AccValTiming.stop("Resolve and Add Inventory");
     }
 
     if (this.settings.fetchCloset) {
       AccValTiming.start("Resolve and Add Closet");
-      add(kol.getCloset());
+      add(provider().getCloset());
       AccValTiming.stop("Resolve and Add Closet");
     }
 
     if (this.settings.fetchStorage) {
       AccValTiming.start("Resolve and Add Storage");
-      add(kol.getStorage());
+      add(provider().getStorage());
       AccValTiming.stop("Resolve and Add Storage");
     }
 
     if (this.settings.fetchClan) {
       AccValTiming.start("Resolve and Add Clan Stash");
-      add(kol.getStash());
+      add(provider().getStash());
       AccValTiming.stop("Resolve and Add Clan Stash");
     }
 
@@ -265,7 +264,9 @@ export class AccountValLogic {
       if (this.settings.doCategories) {
         AccValTiming.start("Resolve and Add Display Case with Shelves");
         const pager = new PageResolver();
-        const items = pager.getDisplaycase(AccountValUtils.toInt(kol.myId()));
+        const items = pager.getDisplaycase(
+          AccountValUtils.toInt(provider().myId()),
+        );
         items.forEach((v, k) => {
           if (!this.categoryOrder.includes(k.shelf)) {
             this.categoryOrder.push(k.shelf);
@@ -276,13 +277,13 @@ export class AccountValLogic {
         AccValTiming.stop("Resolve and Add Display Case with Shelves");
       } else {
         AccValTiming.start("Resolve and Add Display Case");
-        add(kol.getDisplay());
+        add(provider().getDisplay());
         AccValTiming.stop("Resolve and Add Display Case");
       }
     }
 
     AccValTiming.start("Resolve Shop");
-    const shop = this.settings.fetchShop ? kol.getShop() : null;
+    const shop = this.settings.fetchShop ? provider().getShop() : null;
     AccValTiming.stop("Resolve Shop");
 
     if (this.settings.fetchShop && !this.settings.shopWorth) {
@@ -301,7 +302,7 @@ export class AccountValLogic {
       }
 
       if (this.settings.fetchInventory) {
-        amount += kol.equippedAmount(item) + (famItems.get(item) ?? 0);
+        amount += provider().equippedAmount(item) + (famItems.get(item) ?? 0);
       }
 
       let category: string;
@@ -314,7 +315,7 @@ export class AccountValLogic {
       if (this.settings.shopWorth && (shop.get(item) ?? 0) > 0) {
         const i = new ValItem(item).withCategory(category);
         i.bound = ItemStatus.SHOP_WORTH;
-        i.shopWorth = kol.shopPrice(item);
+        i.shopWorth = provider().shopPrice(item);
         this.ownedItems.set(i, shop.get(item));
         continue;
       }
@@ -331,7 +332,7 @@ export class AccountValLogic {
     if (this.settings.fetchFamiliars != false) {
       AccValTiming.start("Resolve Familiars");
       this.resolver.resolveFamiliars(
-        KoLFamiliar.all().filter((f) => kol.haveFamiliar(f)),
+        KoLFamiliar.all().filter((f) => provider().haveFamiliar(f)),
         this.ownedItems,
       );
       AccValTiming.stop("Resolve Familiars");
@@ -341,7 +342,7 @@ export class AccountValLogic {
       AccValTiming.start("Resolve Workshed");
 
       if (this.settings.doBound || this.settings.doTradeables) {
-        const i = kol.getWorkshed();
+        const i = provider().getWorkshed();
 
         if (
           i != null &&
@@ -385,10 +386,10 @@ export class AccountValLogic {
       copy[k.tradeableItem.name] = [k, v];
     });
 
-    if (this.settings.doBound || this.settings.doNontradeables) {
+    if (this.settings.doBound || this.settings.doNonTradeables) {
       this.resolver.resolveBoundToTradeables(copy, this.ownedItems, [
         this.settings.doBound ? ItemType.UNTRADEABLE_ITEM : null,
-        this.settings.doNontradeables ? ItemType.CURRENCY : null,
+        this.settings.doNonTradeables ? ItemType.CURRENCY : null,
       ]);
     }
 
@@ -407,7 +408,7 @@ export class AccountValLogic {
       if (
         !item.isBound() &&
         (!item.tradeableItem.tradeable || item.tradeableItem.gift) &&
-        kol.autosellPrice(item.tradeableItem) == 0
+        provider().autosellPrice(item.tradeableItem) == 0
       ) {
         this.ownedItems.delete(item);
         continue;
@@ -446,7 +447,7 @@ export class AccountValLogic {
       }
 
       if (
-        !this.settings.doNontradeables &&
+        !this.settings.doNonTradeables &&
         !item.tradeableItem.tradeable &&
         !item.isBound()
       ) {
@@ -462,7 +463,6 @@ export class AccountValLogic {
 
   doPricing() {
     let lastPrinted = 0;
-    const toCheck: [ValItem, ItemPrice][] = [];
     const settings = this.settings;
     const prices = this.prices;
     const ownedItems = this.ownedItems;
@@ -494,21 +494,22 @@ export class AccountValLogic {
           (p) => !p.negated && p.preset.name().includes("autosell"),
         )
       ) {
-        price.price = kol.autosellPrice(item.actualItem);
+        price.price = provider().autosellPrice(item.actualItem);
       }
 
       prices.push([item, price]);
     };
 
     AccValTiming.start("Add Logic Prices");
+    const toCheck: [ValItem, ItemPrice][] = [];
     this.priceResolver.bulkLoad(
       [...this.ownedItems.keys()].map((i) => i.tradeableItem),
     );
 
-    for (const i of this.ownedItems.keys()) {
+    for (const item of this.ownedItems.keys()) {
       AccValTiming.start("Price Item", true);
       const price: ItemPrice = this.priceResolver.itemPrice(
-        i.tradeableItem,
+        item.tradeableItem,
         false,
         this.settings.doSuperFast
           ? PriceType.HISTORICAL
@@ -517,6 +518,7 @@ export class AccountValLogic {
             : null,
         this.settings.doSuperFast,
         true,
+        "Logic Item Prices - ",
       );
       AccValTiming.stop("Price Item");
 
@@ -524,10 +526,10 @@ export class AccountValLogic {
         continue;
       } else if (price.price > 0 || price.accuracy == PriceType.NEW_PRICES) {
         AccValTiming.start("Add Item Price", true);
-        addPrice(i, price);
+        addPrice(item, price);
         AccValTiming.stop("Add Item Price");
       } else {
-        toCheck.push([i, price]);
+        toCheck.push([item, price]);
       }
     }
 
@@ -536,7 +538,7 @@ export class AccountValLogic {
     let checked = -1;
 
     if (toCheck.length > 200) {
-      kol.print(
+      provider().print(
         "Think this will take too long? Use the parameter 'fast', it's less accurate!",
         AccountValColors.helpfulStateInfo,
       );
@@ -544,14 +546,13 @@ export class AccountValLogic {
 
     if (toCheck.length > 0) {
       AccValTiming.start("Check Remaining Logic Item Prices");
-      this.priceResolver.bulkLoad(toCheck.map((i) => i[0].tradeableItem));
 
       for (const check of toCheck) {
         const i = check[0];
 
         if (++checked % 20 == 0 && lastPrinted + 1000 < Date.now()) {
           lastPrinted = Date.now();
-          kol.print(
+          provider().print(
             "Checking value of " +
               i.name +
               " (" +
@@ -567,6 +568,9 @@ export class AccountValLogic {
           i.tradeableItem,
           false,
           check[1].accuracy,
+          undefined,
+          undefined,
+          "Remaining Logic Item Prices - ",
         );
 
         if (price == null) {
@@ -585,38 +589,21 @@ export class AccountValLogic {
   }
 
   doSort() {
-    let sorter = (v1: [ValItem, ItemPrice], v2: [ValItem, ItemPrice]) => 0;
-
-    if (this.settings.sortBy == SortBy.TOTAL_PRICE) {
-      sorter = (v1, v2) =>
-        (v1[1].price <= 0
-          ? this.settings.maxNaturalPrice
-          : (1 / v1[0].worthMultiplier) * v1[1].price) *
-          this.ownedItems.get(v1[0]) -
-        (v2[1].price <= 0
-          ? this.settings.maxNaturalPrice
-          : (1 / v2[0].worthMultiplier) * v2[1].price) *
-          this.ownedItems.get(v2[0]);
-    } else if (this.settings.sortBy == SortBy.PRICE) {
-      sorter = (v1, v2) =>
-        (v1[1].price <= 0
-          ? this.settings.maxNaturalPrice
-          : (1 / v1[0].worthMultiplier) * v1[1].price) -
-        (v2[1].price <= 0
-          ? this.settings.maxNaturalPrice
-          : (1 / v2[0].worthMultiplier) * v2[1].price);
-    } else if (this.settings.sortBy == SortBy.QUANTITY) {
-      sorter = (v1, v2) =>
-        this.ownedItems.get(v1[0]) - this.ownedItems.get(v2[0]);
-    } else if (this.settings.sortBy == SortBy.NAME) {
-      sorter = (v1, v2) => v1[0].name.localeCompare(v2[0].name);
-    } else if (this.settings.sortBy == SortBy.ITEM_ID) {
-      sorter = (v1, v2) => v1[0].tradeableItem.id - v2[0].tradeableItem.id;
-    } else if (this.settings.sortBy == SortBy.SALES_VOLUME) {
-      sorter = (v1, v2) => v1[1].volume - v2[1].volume;
-    } else {
-      kol.abort("Unknown sort option " + this.settings.sortBy);
+    if (!this.settings.sortBy.fallback) {
+      for (const [v, p] of this.prices) {
+        this.settings.sortBy.assignValue(
+          v,
+          p,
+          this.ownedItems,
+          this.settings.maxNaturalPrice,
+        );
+      }
     }
+
+    const sorter = (v1: [ValItem, ItemPrice], v2: [ValItem, ItemPrice]) =>
+      this.settings.sortBy.fallback
+        ? this.settings.sortBy.fallback(v1[0], v2[0])
+        : v1[0].sortValue - v2[0].sortValue;
 
     if (this.settings.doCategories && this.categoryOrder != null) {
       this.prices.sort((v1, v2) => {

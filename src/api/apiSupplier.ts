@@ -1,7 +1,15 @@
 import { KoLAPI } from "./supplierTypings";
 
-export let kol: KoLAPI;
+let api: KoLAPI;
+
+export function provider(): KoLAPI {
+  if (!api) {
+    throw `Trying to access api provider before setting it`;
+  }
+
+  return api;
+}
 
 export function setProvider(provider: KoLAPI) {
-  kol = provider;
+  api = provider;
 }

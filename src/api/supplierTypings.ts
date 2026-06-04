@@ -1,6 +1,10 @@
-import { kol } from "./apiSupplier";
+import { provider } from "./apiSupplier";
 
 export type DataType = "large_persist" | "small_persist" | "transient";
+export type MallPricesOutcome =
+  | "not_loaded" // We haven't tried to load it this session
+  | "unsure" // We've tried to load it, but we're not 100% if it was loaded
+  | "loaded"; // We've loaded it, any attempts to fetch mall prices anew is a mistake
 
 export interface KoLCoinmaster {
   item: KoLItem;
@@ -26,15 +30,15 @@ export interface KoLItem {
 
 export class KoLItem implements KoLItem {
   static get(key: string | number): KoLItem {
-    return kol.getItem(key);
+    return provider().getItem(key);
   }
 
   static get none() {
-    return kol.noItem();
+    return provider().noItem();
   }
 
   static all(): KoLItem[] {
-    return kol.allItems();
+    return provider().allItems();
   }
 }
 
@@ -45,7 +49,7 @@ export interface KoLFamiliar {
 
 export class KoLFamiliar {
   static all() {
-    return kol.allFamiliars();
+    return provider().allFamiliars();
   }
 }
 
@@ -53,7 +57,7 @@ export interface KoLSlot {}
 
 export class KoLSlot implements KoLSlot {
   static get none() {
-    return kol.noSlot();
+    return provider().noSlot();
   }
 }
 export interface KoLSkill {
@@ -62,15 +66,15 @@ export interface KoLSkill {
 
 export class KoLSkill implements KoLSkill {
   static all(): KoLSkill[] {
-    return kol.allSkills();
+    return provider().allSkills();
   }
 
   static get none() {
-    return kol.noSkill();
+    return provider().noSkill();
   }
 
   static get(key: string): KoLSkill {
-    return kol.getSkill(key);
+    return provider().getSkill(key);
   }
 }
 
@@ -104,8 +108,10 @@ export interface KoLAPI {
   autosellPrice(item: KoLItem): number;
   shopPrice(item: KoLItem): number;
   sellPrice(coinmaster: KoLCoinmaster, item: KoLItem): number;
+  mallPrice(item: KoLItem): number;
   historicalPrice(item: KoLItem): number;
   historicalAge(item: KoLItem): number;
+  resolveAllMallPrices(previous: MallPricesOutcome): MallPricesOutcome;
   equippedAmount(item: KoLItem): number;
   familiarEquippedEquipment(fam: KoLFamiliar): KoLItem;
   getInventory(): Map<KoLItem, number>;
@@ -123,7 +129,7 @@ export interface KoLAPI {
   associatedSkill(item: KoLItem): KoLSkill;
   myGardenType(): string;
   getWorkshed(): KoLItem;
-  getRelated(item: KoLItem, type: "fold"): Map<KoLItem, number>;
+  getFoldables(item: KoLItem, type: "fold"): KoLItem[];
   allNormalOutfits(): string[];
   itemType(item: KoLItem): string;
 

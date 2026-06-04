@@ -1,5 +1,11 @@
-import { StoreItem } from "../../resolvers/pages";
-import { DataType, KoLAPI, KoLCoinmaster, KoLItem } from "../supplierTypings";
+import { StoreItem } from "../resolvers/pages";
+import {
+  DataType,
+  KoLAPI,
+  KoLCoinmaster,
+  KoLItem,
+  MallPricesOutcome,
+} from "../api/supplierTypings";
 
 const KEY_PREFIX = "kol-accountval-";
 
@@ -9,6 +15,14 @@ export class BrowserProvider implements KoLAPI {
   myFamiliars: Familiar[];
   myShop: StoreItem[];
   mySkills: Skill[];
+
+  mallPrice(item: KoLItem): number {
+    throw new Error("Method not implemented.");
+  }
+
+  resolveAllMallPrices(previous: MallPricesOutcome): MallPricesOutcome {
+    throw new Error("Method not implemented.");
+  }
 
   storeCache(key: string, value: string, dataType: DataType): void {
     if (dataType == "transient") {
@@ -164,7 +178,7 @@ export class BrowserProvider implements KoLAPI {
     throw new Error("Method not implemented.");
   }
 
-  getRelated(item: KoLItem, type: "fold"): Map<KoLItem, number> {
+  getFoldables(item: KoLItem, type: "fold"): Map<KoLItem, number> {
     throw new Error("Method not implemented.");
   }
 

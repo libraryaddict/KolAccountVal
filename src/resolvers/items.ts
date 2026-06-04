@@ -1,4 +1,4 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 import { KoLItem, KoLSkill, KoLFamiliar } from "../api/supplierTypings";
 import { ItemStatus, ItemType, ValItem } from "../models/typings";
 import { AccountValColors } from "../utils/colors";
@@ -34,7 +34,7 @@ export class ItemResolver {
   }
 
   loadCache() {
-    const prop: string[] = kol
+    const prop: string[] = provider()
       .retrieveCache(this.accountValVisitCachePropName, "transient")
       .split(",");
 
@@ -61,12 +61,15 @@ export class ItemResolver {
     const val = values.join(",");
 
     if (
-      kol.retrieveCache(this.accountValVisitCachePropName, "transient") == val
+      provider().retrieveCache(
+        this.accountValVisitCachePropName,
+        "transient",
+      ) == val
     ) {
       return;
     }
 
-    kol.storeCache(
+    provider().storeCache(
       this.accountValVisitCachePropName,
       values.join(","),
       "transient",
@@ -79,7 +82,7 @@ export class ItemResolver {
 
     for (const s of this.accValStuff) {
       if (s.itemType == ItemType.BOOK) {
-        if (kol.haveSkill(s.skill)) {
+        if (provider().haveSkill(s.skill)) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.EUDORA) {
@@ -101,15 +104,15 @@ export class ItemResolver {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.GARDEN) {
-        if (kol.myGardenType() == s.garden) {
+        if (provider().myGardenType() == s.garden) {
           items.push([s.actualItem, ItemStatus.IN_USE]);
         }
       } else if (s.itemType == ItemType.SKILL) {
-        if (kol.getPermedSkills()[s.skill.name]) {
+        if (provider().getPermedSkills()[s.skill.name]) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.CAMPGROUND) {
-        if (kol.getCampground()[s.actualItem.name] != null) {
+        if (provider().getCampground()[s.actualItem.name] != null) {
           items.push([s.actualItem, ItemStatus.BOUND]);
         }
       } else if (s.itemType == ItemType.SCRIPT) {
@@ -131,7 +134,7 @@ export class ItemResolver {
 
     for (const prop of property.split("&")) {
       const isTrue = AccountValUtils.toBoolean(
-        kol.retrieveCache(prop.replace("!", ""), "small_persist"),
+        provider().retrieveCache(prop.replace("!", ""), "small_persist"),
       );
       const isNotNegated = !prop.includes("!");
       result = result && isTrue == isNotNegated;
@@ -208,7 +211,7 @@ export class ItemResolver {
           s.currencyAmount ?? 1,
         );
       } catch (e) {
-        kol.print(
+        provider().print(
           "You probably need to update mafia! Got an error! " + e,
           AccountValColors.attentionGrabbingWarning,
         );
@@ -237,11 +240,11 @@ export class ItemResolver {
     const famEquipped: Map<KoLItem, number> = new Map();
 
     for (const fam of KoLFamiliar.all()) {
-      if (!kol.haveFamiliar(fam) || kol.myFamiliar() == fam) {
+      if (!provider().haveFamiliar(fam) || provider().myFamiliar() == fam) {
         continue;
       }
 
-      const item = kol.familiarEquippedEquipment(fam);
+      const item = provider().familiarEquippedEquipment(fam);
 
       if (item == null || item == KoLItem.none) {
         continue;
@@ -261,7 +264,7 @@ export class ItemResolver {
     let page = this.visitCache.get(url);
 
     if (page == null) {
-      page = kol.visitUrl(url);
+      page = provider().visitUrl(url);
       this.visitCache.set(url, page);
     }
 
@@ -291,7 +294,7 @@ export class ItemResolver {
       try {
         v.actualItem = KoLItem.get(spl[1]);
       } catch (e) {
-        kol.print(
+        provider().print(
           "Error! Update mafia? " + e,
           AccountValColors.attentionGrabbingWarning,
         );
@@ -345,7 +348,7 @@ export class ItemResolver {
           continue loop;
           break;
         default:
-          kol.print(
+          provider().print(
             "Found line '" + line + "' which I can't handle!",
             AccountValColors.attentionGrabbingWarning,
           );
@@ -380,7 +383,7 @@ export class ItemResolver {
         continue loop;
       }
 
-      kol.print(
+      provider().print(
         "Missing a tradeable item for " + v.actualItem,
         AccountValColors.attentionGrabbingWarning,
       );
@@ -394,7 +397,7 @@ export class ItemResolver {
   loadSkills(values: AccValStuff[]) {
     const itemsSkills: Map<KoLItem, KoLSkill> = new Map(
       KoLItem.all()
-        .map((i) => [i, kol.associatedSkill(i)] as [KoLItem, KoLSkill])
+        .map((i) => [i, provider().associatedSkill(i)] as [KoLItem, KoLSkill])
         .filter(
           ([i, skill]) =>
             !i.reusable && !i.quest && !i.gift && skill != KoLSkill.none,

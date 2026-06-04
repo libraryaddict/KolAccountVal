@@ -1,4 +1,4 @@
-import { kol } from "../../api/apiSupplier";
+import { provider } from "../../api/apiSupplier";
 import { ItemPrice, PriceType } from "../../models/typings";
 import { PriceVolunteer } from "../priceInterface";
 import { KoLItem } from "../../api/supplierTypings";
@@ -14,9 +14,12 @@ type PricegunItem = {
 export class PricegunResolver implements PriceVolunteer {
   items: Map<number, PricegunItem> = new Map();
 
-  load(): void {
+  loadLastState(): void {
     this.items.clear();
-    const buffer = kol.retrieveCache("pricegun_prices.txt", "large_persist");
+    const buffer = provider().retrieveCache(
+      "pricegun_prices.txt",
+      "large_persist",
+    );
 
     if (!buffer) {
       return;
@@ -40,7 +43,7 @@ export class PricegunResolver implements PriceVolunteer {
 
   stop(): void {
     const cutoff = Math.floor(Date.now() / 1000) - 23 * 60 * 60;
-    kol.storeCache(
+    provider().storeCache(
       "pricegun_prices.txt",
       JSON.stringify(
         [...this.items.values()].filter((i) => i.retrieved > cutoff),
@@ -74,23 +77,21 @@ export class PricegunResolver implements PriceVolunteer {
 
     const now = Math.floor(Date.now() / 1000);
 
-    return items
-      .map((i) => {
-        const price = this.items.get(i.id);
+    return items.map((i) => {
+      const price = this.items.get(i.id);
 
-        if (!price || price.volume < 0) {
-          return null;
-        }
+      if (!price || price.volume < 0) {
+        return null;
+      }
 
-        return new ItemPrice(
-          i,
-          Math.round(price.value),
-          PriceType.NEW_PRICES,
-          now - price.dateTime,
-          price.volume,
-        );
-      })
-      .filter((p): p is ItemPrice => p !== null);
+      return new ItemPrice(
+        i,
+        Math.round(price.value),
+        PriceType.NEW_PRICES,
+        now - price.dateTime,
+        price.volume,
+      );
+    });
   }
 
   private fetch(items: KoLItem[]) {
@@ -109,7 +110,7 @@ export class PricegunResolver implements PriceVolunteer {
 
       try {
         const url = `https://pricegun.loathers.net/api/${batch.map((i) => i.id).join(",")}`;
-        const response = JSON.parse(kol.visitUrl(url));
+        const response = JSON.parse(provider().visitUrl(url));
         const parsed = batch.length === 1 ? [response] : response;
 
         for (const item of parsed) {
@@ -144,14 +145,14 @@ export class PricegunResolver implements PriceVolunteer {
         }
       }
 
-      kol.print(
+      provider().print(
         `Pricegun progress: ${totalLength - items.length} / ${totalLength} (+${batch.length})`,
       );
     }
   }
 
   resolve(item: KoLItem): ItemPrice {
-    return this.bulkResolve([item])[0];
+    return this.bulkResolve([item])[1];
   }
 
   isViable(): boolean {

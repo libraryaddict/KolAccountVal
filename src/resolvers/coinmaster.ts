@@ -1,4 +1,4 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 import { KoLCoinmaster, KoLItem } from "../api/supplierTypings";
 import { PriceResolver } from "../pricing/priceResolver";
 
@@ -31,7 +31,7 @@ export class CoinmasterResolver {
         continue;
       }
 
-      const price = kol.sellPrice(item.seller, item);
+      const price = provider().sellPrice(item.seller, item);
 
       if (price <= 0) {
         continue;

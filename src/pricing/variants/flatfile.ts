@@ -19,10 +19,6 @@ export abstract class FlatfilePrices implements PriceVolunteer {
     this.settings = settings;
   }
 
-  bulkResolve(items: KoLItem[]): ItemPrice[] {
-    return items.map((i) => this.resolve(i));
-  }
-
   resolve(item: KoLItem): ItemPrice {
     const price = this.prices[item.id];
 
@@ -43,7 +39,7 @@ export abstract class FlatfilePrices implements PriceVolunteer {
   abstract loadDataFile(): string;
   abstract loadDataItem(line: string[]): [number, ItemPriceMap];
 
-  load() {
+  loadLastState() {
     const buffer = this.loadDataFile();
 
     if (buffer.length <= 10) {

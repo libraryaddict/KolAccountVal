@@ -61,13 +61,38 @@ import {
   sessionStorage,
   setProperty,
   getProperty,
+  mallPrice,
+  gitExists,
+  cliExecute,
+  mallPrices,
 } from "kolmafia";
 import * as kolmafia from "kolmafia";
-import { DataType, KoLAPI } from "../supplierTypings";
+import { DataType, KoLAPI, MallPricesOutcome } from "../api/supplierTypings";
 
 const requiredRevision = 28933;
 
 export class KolmafiaProvider implements KoLAPI {
+  mallPrice(item: Item): number {
+    return mallPrice(item);
+  }
+
+  resolveAllMallPrices(previous: MallPricesOutcome): MallPricesOutcome {
+    if (previous != "not_loaded" && previous != "unsure") {
+      throw `Illegal mall loaded state: ${previous}`;
+    }
+
+    if (previous == "not_loaded" && gitExists("loathers-mall-check")) {
+      cliExecute("mallcheck");
+
+      // It's possible mallcheck was aborted, or didn't run!
+      return "unsure";
+    }
+
+    mallPrices("allitems");
+
+    return "loaded";
+  }
+
   print(message: string, color?: string): void {
     print(message, color);
   }
@@ -306,8 +331,14 @@ export class KolmafiaProvider implements KoLAPI {
     return getWorkshed();
   }
 
-  getRelated(item: Item, type: string): Map<Item, number> {
-    return this.itemsToMap(getRelated(item, type));
+  getFoldables(item: Item, type: string): Item[] {
+    const keys = Object.keys(getRelated(item, type));
+
+    if (keys.length <= 1) {
+      return [];
+    }
+
+    return keys.map((s) => Item.get(s));
   }
 
   allNormalOutfits(): string[] {

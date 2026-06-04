@@ -1,4 +1,4 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 import { KoLItem, KoLFamiliar, KoLSkill } from "../api/supplierTypings";
 import { AccountValColors } from "../utils/colors";
 import { AccountValUtils } from "../utils/utils";
@@ -27,11 +27,14 @@ export class PageResolver {
           name = name.replace(/<\/?i>/, "");
         }
 
-        return [kol.entityDecode(name).toLowerCase(), i];
+        return [provider().entityDecode(name).toLowerCase(), i];
       }),
     );
     const skills: Map<string, KoLSkill> = new Map(
-      KoLSkill.all().map((s) => [kol.entityDecode(s.name).toLowerCase(), s]),
+      KoLSkill.all().map((s) => [
+        provider().entityDecode(s.name).toLowerCase(),
+        s,
+      ]),
     );
     const fams: Map<string, KoLFamiliar> = new Map(
       KoLFamiliar.all().map((f) => [f.toString().toLowerCase(), f]),
@@ -40,11 +43,13 @@ export class PageResolver {
       f.hatchling.toString().toLowerCase(),
     );
     ignore.push(
-      ...Object.values(kol.allNormalOutfits()).map((s) => s.toLowerCase()),
+      ...Object.values(provider().allNormalOutfits()).map((s) =>
+        s.toLowerCase(),
+      ),
     );
     ignore.push("miming regalia");
 
-    let page = kol.visitUrl(
+    let page = provider().visitUrl(
       "https://api.aventuristo.net/av-snapshot?u=" + username,
     );
 
@@ -68,7 +73,7 @@ export class PageResolver {
         continue;
       }
 
-      let name = kol.entityDecode(link[2]).toLowerCase();
+      let name = provider().entityDecode(link[2]).toLowerCase();
 
       if (ignore.includes(name)) {
         continue;
@@ -81,7 +86,7 @@ export class PageResolver {
         if (fams.has(name)) {
           has.push(fams.get(name));
         } else {
-          kol.print(
+          provider().print(
             "Unable to resolve the familiar '" + name + "' from av-snapshot",
             AccountValColors.attentionGrabbingWarning,
           );
@@ -118,7 +123,7 @@ export class PageResolver {
       }
 
       if (!items.has(name)) {
-        kol.print(
+        provider().print(
           "Unable to resolve the item '" + name + "' from av-snapshot",
           AccountValColors.attentionGrabbingWarning,
         );
@@ -132,14 +137,14 @@ export class PageResolver {
   }
 
   getFamiliars(userId: number): KoLFamiliar[] {
-    let page = kol.visitUrl("showfamiliars.php?who=" + userId);
+    let page = provider().visitUrl("showfamiliars.php?who=" + userId);
     const regex = /onClick='fam\((\d+)\)'/;
     let match: string[];
     const familiars: KoLFamiliar[] = [];
 
     while ((match = page.match(regex)) != null) {
       page = page.replace(match[0], "");
-      familiars.push(kol.toFamiliar(AccountValUtils.toInt(match[1])));
+      familiars.push(provider().toFamiliar(AccountValUtils.toInt(match[1])));
     }
 
     return familiars;
@@ -147,7 +152,7 @@ export class PageResolver {
 
   getStore(userId: number): StoreItem[] {
     const items: StoreItem[] = [];
-    const page = kol.visitUrl("mallstore.php?whichstore=" + userId);
+    const page = provider().visitUrl("mallstore.php?whichstore=" + userId);
 
     for (const s of page.split("<tr>")) {
       const match = s.match(
@@ -174,7 +179,7 @@ export class PageResolver {
     const descs: Map<string, KoLItem> = new Map(
       KoLItem.all().map((i) => [i.descid, i]),
     );
-    const page = kol.visitUrl("displaycollection.php?who=" + userId);
+    const page = provider().visitUrl("displaycollection.php?who=" + userId);
     let lastShelf: string;
     const itemRegex =
       /<td width=30 height=30><img src=".+?" class=hand onClick='descitem\((\d+),(\d+)\)'><\/td><td valign=center><b>.+?<\/b>(?: \(((?:\d|,)+)\))?<\/td><\/tr>/;
@@ -184,7 +189,7 @@ export class PageResolver {
       const shelfMatch = s.match(shelfRegex);
 
       if (shelfMatch != null) {
-        lastShelf = kol.entityDecode(shelfMatch[1]);
+        lastShelf = provider().entityDecode(shelfMatch[1]);
       }
 
       const match = s.match(itemRegex);
@@ -196,7 +201,7 @@ export class PageResolver {
       const item = descs.get(match[1]);
 
       if (item == null) {
-        kol.print(
+        provider().print(
           "Unknown item description: " + match[1] + ", update mafia?",
           AccountValColors.attentionGrabbingWarning,
         );

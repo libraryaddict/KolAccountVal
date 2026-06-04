@@ -1,4 +1,4 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 import { AccountValLogic } from "../core/logic";
 import { AccountValSettings } from "../settings/settings";
 import { AccountValUtils } from "../utils/utils";
@@ -43,11 +43,11 @@ export class ValuationReport {
     this.pronoun = this.settings.fetchClan
       ? "The clan stash is"
       : !this.settings.playerId ||
-          this.settings.playerId == AccountValUtils.toInt(kol.myId())
+          this.settings.playerId == AccountValUtils.toInt(provider().myId())
         ? this.settings.fetchSession
           ? "Your session is"
           : "You are"
-        : kol.getPlayerName(this.settings.playerId) + " is";
+        : provider().getPlayerName(this.settings.playerId) + " is";
   }
 
   public run() {
@@ -321,8 +321,8 @@ export class ValuationReport {
       AccountValColors.helpfulStateInfo,
     );
 
-    if (this.settings.fetchSession && kol.mySessionMeat() != 0) {
-      mrAMeat = this.netvalue + kol.mySessionMeat();
+    if (this.settings.fetchSession && provider().mySessionMeat() != 0) {
+      mrAMeat = this.netvalue + provider().mySessionMeat();
       this.out.printLine(
         `Add meat from session, that's ${AccountValUtils.getNumber(mrAMeat)} meat!`,
         "plain",
@@ -392,24 +392,26 @@ export class ValuationReport {
     let meat = 0;
     const meatSources: string[] = [];
 
-    if (this.settings.fetchInventory && kol.myMeat() != 0) {
-      meat += kol.myMeat();
+    if (this.settings.fetchInventory && provider().myMeat() != 0) {
+      meat += provider().myMeat();
       meatSources.push(
-        AccountValUtils.getNumber(kol.myMeat()) + " meat in inventory",
+        AccountValUtils.getNumber(provider().myMeat()) + " meat in inventory",
       );
     }
 
-    if (this.settings.fetchCloset && kol.myClosetMeat() != 0) {
-      meat += kol.myClosetMeat();
+    if (this.settings.fetchCloset && provider().myClosetMeat() != 0) {
+      meat += provider().myClosetMeat();
       meatSources.push(
-        AccountValUtils.getNumber(kol.myClosetMeat()) + " meat in closet",
+        AccountValUtils.getNumber(provider().myClosetMeat()) +
+          " meat in closet",
       );
     }
 
-    if (this.settings.fetchStorage && kol.myStorageMeat() != 0) {
-      meat += kol.myStorageMeat();
+    if (this.settings.fetchStorage && provider().myStorageMeat() != 0) {
+      meat += provider().myStorageMeat();
       meatSources.push(
-        AccountValUtils.getNumber(kol.myStorageMeat()) + " meat in storage",
+        AccountValUtils.getNumber(provider().myStorageMeat()) +
+          " meat in storage",
       );
     }
 

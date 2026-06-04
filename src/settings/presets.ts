@@ -1,4 +1,4 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 import { ValItem } from "../models/typings";
 import { KoLItem, KoLSlot } from "../api/supplierTypings";
 
@@ -23,7 +23,9 @@ export function getPresets(): AccountValPreset[] {
       return ["consumables", "consumable", "diet", "consume", "consumeable"];
     },
     isProcessed: function (item: KoLItem, worth: number): boolean {
-      return ["food", "booze", "spleen item"].includes(kol.itemType(item));
+      return ["food", "booze", "spleen item"].includes(
+        provider().itemType(item),
+      );
     },
     desc: function (): string {
       return "Show only consumables";
@@ -36,7 +38,7 @@ export function getPresets(): AccountValPreset[] {
         return [type];
       },
       isProcessed: function (item: KoLItem): boolean {
-        return kol.itemType(item).replace(" item", "") == type;
+        return provider().itemType(item).replace(" item", "") == type;
       },
       desc: function (): string {
         return "Show only " + type;
@@ -62,13 +64,13 @@ export function getPresets(): AccountValPreset[] {
     },
     isProcessed: function (item: KoLItem, worth: number): boolean {
       if (
-        kol.myFullness() + item.fullness >= kol.fullnessLimit() ||
-        item.levelreq < kol.myLevel()
+        provider().myFullness() + item.fullness >= provider().fullnessLimit() ||
+        item.levelreq < provider().myLevel()
       ) {
         return false;
       }
 
-      return kol.itemType(item) == "food";
+      return provider().itemType(item) == "food";
     },
     desc: function (): string {
       return "Show only food you can fit in stomach";
@@ -81,13 +83,14 @@ export function getPresets(): AccountValPreset[] {
     },
     isProcessed: function (item: KoLItem, worth: number): boolean {
       if (
-        kol.myInebriety() + item.inebriety >= kol.inebrietyLimit() ||
-        item.levelreq < kol.myLevel()
+        provider().myInebriety() + item.inebriety >=
+          provider().inebrietyLimit() ||
+        item.levelreq < provider().myLevel()
       ) {
         return false;
       }
 
-      return kol.itemType(item) == "booze";
+      return provider().itemType(item) == "booze";
     },
     desc: function (): string {
       return "Show only booze you can fit in liver";
@@ -100,13 +103,13 @@ export function getPresets(): AccountValPreset[] {
     },
     isProcessed: function (item: KoLItem, worth: number): boolean {
       if (
-        kol.mySpleenUse() + item.spleen >= kol.spleenLimit() ||
-        item.levelreq < kol.myLevel()
+        provider().mySpleenUse() + item.spleen >= provider().spleenLimit() ||
+        item.levelreq < provider().myLevel()
       ) {
         return false;
       }
 
-      return kol.itemType(item) == "spleen item";
+      return provider().itemType(item) == "spleen item";
     },
     desc: function (): string {
       return "Show only spleen items you can fit in spleen";
@@ -118,7 +121,7 @@ export function getPresets(): AccountValPreset[] {
       return ["equip", "equips", "equipment", "gear"];
     },
     isProcessed: function (item: KoLItem): boolean {
-      return kol.toSlot(item) != KoLSlot.none;
+      return provider().toSlot(item) != KoLSlot.none;
     },
     desc: function (): string {
       return "Show only items that can be equipped";
@@ -142,7 +145,7 @@ export function getPresets(): AccountValPreset[] {
       return ["hatchling", "hatchlings", "larva"];
     },
     isProcessed: function (item: KoLItem, worth: number): boolean {
-      return kol.itemType(item) == "familiar larva";
+      return provider().itemType(item) == "familiar larva";
     },
     desc: function (): string {
       return "Show only items that can turn into familiars";
@@ -158,7 +161,7 @@ export function getPresets(): AccountValPreset[] {
         return false;
       }
 
-      return kol.autosellPrice(item.actualItem) * 2 >= worth;
+      return provider().autosellPrice(item.actualItem) * 2 >= worth;
     },
     desc: function (): string {
       return "Show only items that sell at mall min";

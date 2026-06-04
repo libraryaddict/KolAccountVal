@@ -1,4 +1,4 @@
-import { kol } from "../api/apiSupplier";
+import { provider } from "../api/apiSupplier";
 import { AccountValSettings } from "../settings/settings";
 
 export class ReportOutput {
@@ -29,21 +29,21 @@ export class ReportOutput {
       }
 
       if (textType == "plain" && this.settings.logOutputTo.endsWith(".html")) {
-        line = kol.entityEncode(line);
+        line = provider().entityEncode(line);
       }
 
       this.output.push(line);
     } else if (textType == "html") {
-      kol.printHtml(line);
+      provider().printHtml(line);
     } else if (color != null) {
-      kol.print(line, color);
+      provider().print(line, color);
     } else {
-      kol.print(line);
+      provider().print(line);
     }
   }
 
   escapeHTML(str: string): string {
-    return kol
+    return provider()
       .entityDecode(str)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
@@ -57,12 +57,12 @@ export class ReportOutput {
       return;
     }
 
-    kol.storeCache(
+    provider().storeCache(
       this.settings.logOutputTo,
       this.output.join("\n"),
       "large_persist",
     );
-    kol.print(
+    provider().print(
       `accounval results printed to 'data/${this.settings.logOutputTo}'`,
     );
   }
