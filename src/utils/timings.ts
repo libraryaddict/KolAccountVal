@@ -1,12 +1,12 @@
 import { provider } from "../api/apiSupplier";
 import { AccountValUtils } from "./utils";
-import { AccountValSettings } from "../settings/settings";
 import { printHtml } from "kolmafia";
 
 export class AccValTiming {
   static tracking: ["STARTED" | "STOPPED", AccValTiming][] = [];
   static trackingMap: Map<string, AccValTiming> = new Map();
   static timingsSlowdown: number = 0;
+  static enabled = false;
 
   name: string;
   started: number = Date.now();
@@ -83,7 +83,7 @@ export class AccValTiming {
   }
 
   static start(name: string, withSteps: boolean = false): AccValTiming {
-    if (!AccountValSettings.timingsDebug) {
+    if (!this.enabled) {
       return null;
     }
 
@@ -115,7 +115,7 @@ export class AccValTiming {
   }
 
   static stop(name: string, print: boolean = false): AccValTiming {
-    if (!AccountValSettings.timingsDebug) {
+    if (!this.enabled) {
       return null;
     }
 
@@ -153,6 +153,10 @@ export class AccValTiming {
   static printTracked(
     method: "PRINT_JUST_ONCE" | "PRINT_START_AND_END" | "PRINT_JUST_END",
   ) {
+    if (!this.enabled) {
+      return;
+    }
+
     const sortedTimes: ["STARTED" | "STOPPED", AccValTiming][] = [
       ...this.tracking,
     ];

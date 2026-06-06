@@ -1,4 +1,4 @@
-import { PricingSettings } from "../../settings/settings";
+import { AccountValSettings } from "../../settings/settings";
 import { ItemPrice, PriceType } from "../../models/typings";
 import { PriceVolunteer } from "../priceInterface";
 import { KoLItem } from "../../api/supplierTypings";
@@ -13,11 +13,8 @@ export interface ItemPriceMap {
 export abstract class FlatfilePrices implements PriceVolunteer {
   prices: ItemPriceMap[];
   lastUpdated: number;
-  settings: PricingSettings;
 
-  constructor(settings: PricingSettings) {
-    this.settings = settings;
-  }
+  constructor(protected settings: AccountValSettings) {}
 
   resolve(item: KoLItem): ItemPrice {
     const price = this.prices[item.id];

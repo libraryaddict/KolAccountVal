@@ -1,5 +1,5 @@
 import { AccountValLogic } from "./core/logic";
-import { AccountValSettings, PricingSettings } from "./settings/settings";
+import { AccountValSettings } from "./settings/settings";
 import {
   AccountValColors,
   showAccountvalColors,
@@ -87,12 +87,7 @@ class AccountVal {
 
   start() {
     AccValTiming.start("Construct Logic");
-    const priceSettings = new PricingSettings();
-    priceSettings.maxPriceAge = this.settings.maxAge;
-    priceSettings.mallPrice = this.settings.mallPrice;
-    priceSettings.dateToFetch = this.settings.dateToFetch;
-    priceSettings.globalSettings = this.settings;
-    this.logic = new AccountValLogic(this.settings, priceSettings);
+    this.logic = new AccountValLogic(this.settings);
     AccValTiming.stop("Construct Logic");
 
     AccValTiming.start("Load Logic Items");
@@ -155,7 +150,5 @@ export function run(command: string) {
     AccValTiming.stop("Run AccountVal");
   }
 
-  if (AccountValSettings.timingsDebug) {
-    AccValTiming.printTracked("PRINT_JUST_ONCE");
-  }
+  AccValTiming.printTracked("PRINT_JUST_ONCE");
 }

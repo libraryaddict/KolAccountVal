@@ -178,7 +178,7 @@ export class BrowserProvider implements KoLAPI {
     throw new Error("Method not implemented.");
   }
 
-  getFoldables(item: KoLItem, type: "fold"): Map<KoLItem, number> {
+  getFoldables(item: KoLItem, type: "fold"): Item[] {
     throw new Error("Method not implemented.");
   }
 

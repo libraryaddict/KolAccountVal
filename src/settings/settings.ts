@@ -8,6 +8,7 @@ import { ValItem, SortBy, PresetSetting } from "../models/typings";
 import { ParseError, Args } from "./grimoireArgs";
 import { provider } from "../api/apiSupplier";
 import { Item } from "kolmafia";
+import { AccValTiming } from "../utils/timings";
 
 const sortBys: SortBy[] = [
   {
@@ -424,7 +425,11 @@ const staticAccountValSpec = {
     setting: "",
   }),
 
-  debug: Args.boolean({ hidden: true, default: false }),
+  pricegunBatchSize: Args.number({
+    hidden: true,
+    default: 500,
+    help: "Max amount of items to send per pricegun request",
+  }),
   settings: Args.boolean({ hidden: true, default: false }),
   timings: Args.boolean({ hidden: true, default: false }),
 };
@@ -434,14 +439,16 @@ export interface AccountValSettings extends ReturnType<
 > {}
 
 export class AccountValSettings {
-  static timingsDebug: boolean = false;
   static defaultMaxNaturalPrice = defaultMaxNaturalPrice;
 
   // These are not exposed
   fetchingEverywhereish: boolean = true;
   fetchingNonItems: boolean = true;
   presets: PresetSetting[] = [];
-  settingsDebug: boolean = false;
+  public expensivePricesAt: number = 40_000_000;
+  public cheapTotalsLessThan: number = 20_000_000;
+  public cheapPricesLessThan: number = 2_000_000;
+  public maxPriceAge: number;
 
   doSettings(command: string): string[] {
     const errors: string[] = [];
@@ -482,6 +489,8 @@ export class AccountValSettings {
       return errors;
     }
 
+    AccValTiming.enabled = this.timings;
+
     loadAccountvalColors(this.colorScheme);
 
     // Resolve Presets dynamically
@@ -496,15 +505,7 @@ export class AccountValSettings {
 
     this.resolveFetchSources();
 
-    if (this.debug || this.settings) {
-      this.settingsDebug = true;
-    }
-
-    if (this.debug || this.timings) {
-      AccountValSettings.timingsDebug = true;
-    }
-
-    if (this.settingsDebug) {
+    if (this.settings) {
       for (const setting of Object.keys(this)) {
         provider().print(`${setting} = ${this[setting]}`);
       }
@@ -598,19 +599,9 @@ export class AccountValSettings {
           : pre.preset.isProcessed(item.actualItem, worth)) != pre.negated,
     );
   }
-}
-
-export class PricingSettings {
-  public expensivePricesAt: number = 40_000_000;
-  public cheapTotalsLessThan: number = 20_000_000;
-  public cheapPricesLessThan: number = 2_000_000;
-  public maxPriceAge: number;
-  public mallPrice: boolean;
-  public dateToFetch: string;
-  public globalSettings: AccountValSettings;
 
   getMaxPriceAge(price: number, amount: number): number {
-    return Math.min(this.maxPriceAge, this.internalMaxPriceAge(price, amount));
+    return Math.min(this.maxAge, this.internalMaxPriceAge(price, amount));
   }
 
   internalMaxPriceAge(price: number, amount: number): number {

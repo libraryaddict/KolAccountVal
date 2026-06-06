@@ -3,7 +3,7 @@ import { KoLItem, KoLFamiliar, KoLSkill } from "../api/supplierTypings";
 import { ItemResolver } from "../resolvers/items";
 import { PageResolver } from "../resolvers/pages";
 import { PriceResolver } from "../pricing/priceResolver";
-import { AccountValSettings, PricingSettings } from "../settings/settings";
+import { AccountValSettings } from "../settings/settings";
 import { AccountValColors } from "../utils/colors";
 import { AccValTiming } from "../utils/timings";
 import {
@@ -21,7 +21,6 @@ export class AccountValLogic {
   priceResolver: PriceResolver;
   prices: [ValItem, ItemPrice][] = [];
   categoryOrder: string[] = [];
-  public settings: AccountValSettings;
   jsFilter: (
     item: KoLItem,
     amount: number,
@@ -29,9 +28,8 @@ export class AccountValLogic {
     sales?: number,
   ) => boolean;
 
-  constructor(settings: AccountValSettings, priceSettings: PricingSettings) {
-    this.settings = settings;
-    this.priceResolver = new PriceResolver(priceSettings);
+  constructor(public settings: AccountValSettings) {
+    this.priceResolver = new PriceResolver(this.settings);
     this.resolver = new ItemResolver(this.priceResolver);
   }
 

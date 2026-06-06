@@ -13,6 +13,29 @@ module.exports = {
         test: /\.(ts|js)x?$/,
         //exclude: /node_modules/,
         loader: "babel-loader",
+        resolve: {
+          fullySpecified: false,
+        },
+        options: {
+          presets: [
+            [
+              "@babel/preset-env",
+              {
+                targets: { rhino: "1.9.1" },
+                corejs: "3.49.0",
+              },
+            ],
+            [
+              "@babel/preset-typescript",
+              {
+                targets: { rhino: "1.9.1" },
+                corejs: "3.49.0",
+              },
+            ],
+          ],
+          retainLines: true,
+          compact: false,
+        },
       },
       {
         test: /\.txt/,

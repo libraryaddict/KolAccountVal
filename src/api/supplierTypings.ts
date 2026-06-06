@@ -103,7 +103,7 @@ export interface KoLAPI {
   toFamiliar(val: string | number): KoLFamiliar;
   entityEncode(val: string): string;
   entityDecode(val: string): string;
-  storeCache(key: string, value: string, dataType: DataType): void;
+  storeCache(key: string, data: string, dataType: DataType): void;
   retrieveCache(key: string, dataType: DataType): string;
   autosellPrice(item: KoLItem): number;
   shopPrice(item: KoLItem): number;

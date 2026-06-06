@@ -203,13 +203,13 @@ export class KolmafiaProvider implements KoLAPI {
     return entityDecode(val);
   }
 
-  storeCache(key: string, value: string, dataType: DataType): void {
+  storeCache(key: string, data: string, dataType: DataType): void {
     if (dataType == "large_persist") {
-      bufferToFile(key, value);
+      bufferToFile(data, key);
     } else if (dataType == "small_persist") {
-      setProperty(key, value);
+      setProperty(key, data);
     } else {
-      sessionStorage.setItem(key, value);
+      sessionStorage.setItem(key, data);
     }
   }
 

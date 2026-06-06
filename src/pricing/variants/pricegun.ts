@@ -2,6 +2,7 @@ import { provider } from "../../api/apiSupplier";
 import { ItemPrice, PriceType } from "../../models/typings";
 import { PriceVolunteer } from "../priceInterface";
 import { KoLItem } from "../../api/supplierTypings";
+import { AccountValSettings } from "../../settings/settings";
 
 type PricegunItem = {
   value: number;
@@ -13,6 +14,8 @@ type PricegunItem = {
 
 export class PricegunResolver implements PriceVolunteer {
   items: Map<number, PricegunItem> = new Map();
+
+  constructor(private settings: AccountValSettings) {}
 
   loadLastState(): void {
     this.items.clear();
@@ -95,18 +98,26 @@ export class PricegunResolver implements PriceVolunteer {
   }
 
   private fetch(items: KoLItem[]) {
-    const MAX_AMOUNT = 500;
+    const MAX_AMOUNT = this.settings.pricegunBatchSize;
     const now = Math.floor(Date.now() / 1000);
 
-    // Ensure at least one result
-    if (items.length + 3 < MAX_AMOUNT && !items.find((i) => i.id === 1)) {
-      items.push(KoLItem.get(1));
-    }
-
-    const totalLength = items.length;
-
     for (let start = 0; start < items.length; start += MAX_AMOUNT) {
-      const batch = items.slice(start, start + MAX_AMOUNT);
+      const batch = items.slice(
+        start,
+        Math.min(start + MAX_AMOUNT, items.length),
+      );
+
+      provider().print(
+        `Pricegun progress: ${start + batch.length} / ${items.length}`,
+      );
+
+      // We don't want pricegun to error because it doesn't have a single resolved price
+      const ignoredItem =
+        batch.length + 3 < MAX_AMOUNT && !batch.some((b) => b.id === 1);
+
+      if (ignoredItem) {
+        batch.push(KoLItem.get(1));
+      }
 
       try {
         const url = `https://pricegun.loathers.net/api/${batch.map((i) => i.id).join(",")}`;
@@ -114,23 +125,27 @@ export class PricegunResolver implements PriceVolunteer {
         const parsed = batch.length === 1 ? [response] : response;
 
         for (const item of parsed) {
-          if (item.itemId !== 1) {
-            this.loadItemFromApi(item);
+          if (ignoredItem && item.itemId === 1) {
+            continue;
           }
+
+          this.loadItemFromApi(item);
         }
 
         for (const i of batch) {
           const id = i.id;
 
-          if (!this.items.has(id)) {
-            this.items.set(id, {
-              itemId: id,
-              value: 0,
-              volume: -1,
-              dateTime: 0,
-              retrieved: now,
-            });
+          if ((ignoredItem && id === 1) || this.items.has(id)) {
+            continue;
           }
+
+          this.items.set(id, {
+            itemId: id,
+            value: 0,
+            volume: -1,
+            dateTime: 0,
+            retrieved: now,
+          });
         }
       } catch {
         for (const i of batch) {
@@ -144,10 +159,6 @@ export class PricegunResolver implements PriceVolunteer {
           });
         }
       }
-
-      provider().print(
-        `Pricegun progress: ${start} / ${totalLength} (+${batch.length})`,
-      );
     }
   }
 

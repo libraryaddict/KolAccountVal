@@ -1,5 +1,5 @@
 import { provider } from "../api/apiSupplier";
-import { PricingSettings } from "../settings/settings";
+import { AccountValSettings } from "../settings/settings";
 import { AccValTiming } from "../utils/timings";
 import { ItemPrice, PriceType } from "../models/typings";
 import { PriceVolunteer } from "./priceInterface";
@@ -10,17 +10,14 @@ import { KoLItem } from "../api/supplierTypings";
 
 export class PriceResolver {
   private specialCase: Map<KoLItem, number> = new Map();
-  private settings: PricingSettings;
   private resolvers: PriceVolunteer[] = [];
 
-  constructor(settings: PricingSettings) {
-    this.settings = settings;
-
+  constructor(private settings: AccountValSettings) {
     let specialResolver: PriceVolunteer;
 
-    if (settings.globalSettings.pricegun) {
-      specialResolver = new PricegunResolver();
-    } else if (settings.globalSettings.mallPrice) {
+    if (settings.pricegun) {
+      specialResolver = new PricegunResolver(settings);
+    } else if (settings.mallPrice) {
       specialResolver = new MallPricing();
     } else {
       specialResolver = new IrratPrices(settings);
@@ -94,7 +91,7 @@ export class PriceResolver {
     doEstimates: boolean = false,
     timingsKey: string = "",
   ): ItemPrice {
-    if (this.settings.globalSettings.pricegun) {
+    if (this.settings.pricegun) {
       ignoreFold = true;
     }
 
