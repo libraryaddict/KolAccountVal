@@ -116,6 +116,8 @@ i	Boxed Archaeologist's Spade	Archaeologist's Spade
 i	wrapped Baseball Diamond	Baseball Diamond
 i	Pasta wand loot box	legendary pasta wand
 i	shrink-wrapped Cup of 13s	Cup of 13s
+i	Allied Radio Backpack Pack	Allied Radio Backpack
+i	Packaged Portable Laughing Stock	Portable Laughing Stock
 
 
 
