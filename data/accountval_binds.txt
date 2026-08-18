@@ -170,6 +170,8 @@ p	Undrilled cosmic bowling ball	hasCosmicBowlingBall
 p	MayDay™ contract	hasMaydayContract
 p	boxed autumn-aton	hasAutumnaton
 p	deed to Oliver's Place	ownsSpeakeasy
+p	Interesting Coin Inheritance Letter	hasInterestingCoin
+p	Order of the Green Thumb Order Form	ownsFloristFriar
 
 
 
@@ -188,7 +190,6 @@ e	Black and White Apron Enrollment Form	Black & White Apron
 
 
 # eval(function) => boolean! Starts with s for script
-s	Order of the Green Thumb Order Form	require("kolmafia").floristAvailable()
 
 
 
