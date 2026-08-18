@@ -385,7 +385,9 @@ export class KolmafiaProvider implements KoLAPI {
     return toSlot(item);
   }
 
-  evalJsFilter(js: string) {
+  evalJsFilter(
+    js: string,
+  ): (item: Item, amount: number, price?: number, sales?: number) => boolean {
     return new Function("kolmafia", `with (kolmafia) { return (${js})}`)(
       kolmafia,
     );
